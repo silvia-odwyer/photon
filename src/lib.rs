@@ -59,6 +59,38 @@ fn grayscale(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
+fn inc_brightness(mut img: DynamicImage, brightness: u8) -> DynamicImage {
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            if px.data[0] <= 255 - brightness {
+                px.data[0] += brightness;
+            }
+            else {
+                px.data[0] = 255;
+            }
+            
+            if px.data[1] <= 255 - brightness {
+                px.data[1] += brightness;
+            }
+            else {
+                px.data[1] = 255
+            }
+
+            if px.data[2] <= 255 - brightness {
+                px.data[2] += brightness;
+            }
+            else {
+                px.data[2] = 255
+            }
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
 pub mod channels {
     pub fn alter_channel(mut img: DynamicImage, channel: usize, offset: u8) -> DynamicImage {
         let (width, height) = img.dimensions();
@@ -131,5 +163,34 @@ pub mod filters {
         let filtered_img = alter_two_channels(img, 1, 10, 2, 75);
         return filtered_img;
     }
+}
 
+pub mod noise {
+    fn add_noise(mut img: DynamicImage, offset: u8) -> DynamicImage {
+        // Add Gaussian Noise Sample with offset specified by the user.
+        let (width, height) = img.dimensions();
+
+        for x in 0..width {
+            for y in 0..height {
+                let px = img.get_pixel(x, y).map(|ch| if ch <= 255 - offset { ch + offset } else { 255});
+                img.put_pixel(x, y, px);
+        }
+        }
+        return img;
+    }
+
+    fn add_noise_rand(mut img: DynamicImage) -> DynamicImage {
+        // Add Gaussian Noise Sample by including a random offset to each channel in each pixel.
+        let (width, height) = img.dimensions();
+        let mut rng = rand::thread_rng();
+
+        for x in 0..width {
+            for y in 0..height {
+                let offset = rng.gen_range(0, 150);
+                let px = img.get_pixel(x, y).map(|ch| if ch <= 255 - offset { ch + offset } else { 255});
+                img.put_pixel(x, y, px);
+        }
+        }
+        return img;
+    } 
 }
