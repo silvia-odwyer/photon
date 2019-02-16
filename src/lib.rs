@@ -160,6 +160,60 @@ pub fn decompose_max(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
+pub fn r_grayscale(mut img: DynamicImage) -> DynamicImage {
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+
+            let mut red = px.data[0];
+            
+            px.data[0] = red as u8;
+            px.data[1] = red as u8;
+            px.data[2] = red as u8;
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+pub fn g_grayscale(mut img: DynamicImage) -> DynamicImage {
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+
+            let mut green = px.data[1];
+            
+            px.data[0] = green as u8;
+            px.data[1] = green as u8;
+            px.data[2] = green as u8;
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+pub fn b_grayscale(mut img: DynamicImage) -> DynamicImage {
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+
+            let mut blue = px.data[2];
+            
+            px.data[0] = blue as u8;
+            px.data[1] = blue as u8;
+            px.data[2] = blue as u8;
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
 pub fn inc_brightness(mut img: DynamicImage, brightness: u8) -> DynamicImage {
     let (width, height) = img.dimensions();
 
