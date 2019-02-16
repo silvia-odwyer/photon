@@ -3,8 +3,9 @@ extern crate rand;
 use image::{GenericImage, DynamicImage, ImageBuffer, GenericImageView};
 use image::Pixel;
 use rand::Rng;
+use std::cmp;
 
-struct rgb {
+struct Rgb {
     r: u32,
     g: u32,
     b: u32
@@ -82,6 +83,83 @@ pub fn grayscale_human_corrected(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
+pub fn desaturate(mut img: DynamicImage) -> DynamicImage {
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
+            
+            // get the max and min vals of all 3 rgb values by sorting a vec of these
+            let mut rgb_vals = vec![r_val, g_val, b_val];
+            rgb_vals.sort();
+
+            let mut gray = (rgb_vals[0] + rgb_vals[2]) / 2;
+
+            if (gray >= 255) {
+                gray = 255
+            }
+            
+            px.data[0] = gray as u8;
+            px.data[1] = gray as u8;
+            px.data[2] = gray as u8;
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+pub fn decompose_min(mut img: DynamicImage) -> DynamicImage {
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
+            
+            // get the max and min vals of all 3 rgb values by sorting a vec of these
+            let mut rgb_vals = vec![r_val, g_val, b_val];
+            rgb_vals.sort();
+
+            let mut gray = rgb_vals[0];
+
+            if (gray >= 255) {
+                gray = 255
+            }
+            
+            px.data[0] = gray as u8;
+            px.data[1] = gray as u8;
+            px.data[2] = gray as u8;
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+pub fn decompose_max(mut img: DynamicImage) -> DynamicImage {
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
+            
+            // get the max and min vals of all 3 rgb values by sorting a vec of these
+            let mut rgb_vals = vec![r_val, g_val, b_val];
+            rgb_vals.sort();
+
+            let mut gray = rgb_vals[2];
+            
+            px.data[0] = gray as u8;
+            px.data[1] = gray as u8;
+            px.data[2] = gray as u8;
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
 pub fn inc_brightness(mut img: DynamicImage, brightness: u8) -> DynamicImage {
     let (width, height) = img.dimensions();
 
@@ -116,13 +194,10 @@ pub fn inc_brightness(mut img: DynamicImage, brightness: u8) -> DynamicImage {
 
 pub mod channels {
     extern crate image;
-    extern crate rand;
     use image::{GenericImage, DynamicImage, ImageBuffer, GenericImageView};
     use image::Pixel;
-    use rand::Rng;
     pub fn alter_channel(mut img: DynamicImage, channel: usize, offset: u8) -> DynamicImage {
         let (width, height) = img.dimensions();
-        let mut rng = rand::thread_rng();
 
         for x in 0..width {
             for y in 0..height {
@@ -262,7 +337,6 @@ pub mod effects {
     extern crate image;
     extern crate rand;
     use image::{GenericImage, DynamicImage, ImageBuffer, GenericImageView};
-    use image::Pixel;
     use rand::Rng;
     
     pub fn offset(mut img: DynamicImage) -> DynamicImage {
