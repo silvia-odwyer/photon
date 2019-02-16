@@ -16,8 +16,10 @@ use rand::Rng;
 //     return img;
 // }
 
+/// Add noise to an image.
+///
+/// Adds a Gaussian Noise Sample by including a random offset to each channel in each pixel.
 pub fn add_noise_rand(mut img: DynamicImage) -> DynamicImage {
-    // Add Gaussian Noise Sample by including a random offset to each channel in each pixel.
     let (width, height) = img.dimensions();
     let mut rng = rand::thread_rng();
 
