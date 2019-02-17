@@ -1,13 +1,9 @@
-extern crate image;
-extern crate rand;
 use image::{GenericImage, DynamicImage, ImageBuffer, GenericImageView};
-use image::Pixel;
-use rand::Rng;
-use std::cmp;
 
 pub mod filters;
 pub mod channels;
 pub mod noise;
+pub mod effects;
 
 struct Rgb {
     r: u32,
@@ -15,6 +11,18 @@ struct Rgb {
     b: u32
 }
 
+/// Threshold an image using a standard thresholding algorithm.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `threshold` - The amount the image should be thresholded by.
+/// # Example
+///
+/// ```
+/// // For example, to threshold an image of type `DynamicImage`:
+/// use photon::channels;
+/// photon::channels::threshold(img);
+/// ```
 pub fn threshold(mut img: DynamicImage, threshold: u32) -> DynamicImage {
     let (width, height) = img.dimensions();
 
@@ -26,7 +34,7 @@ pub fn threshold(mut img: DynamicImage, threshold: u32) -> DynamicImage {
             let g: f32 = px.data[1].into();
             let b: f32 = px.data[2].into();
 
-            let mut v = (0.2126 * r + 0.7152 * g + 0.072 * b);
+            let mut v = 0.2126 * r + 0.7152 * g + 0.072 * b;
 
             if v >= threshold as f32 {
                 v = 255.0;
@@ -38,6 +46,72 @@ pub fn threshold(mut img: DynamicImage, threshold: u32) -> DynamicImage {
             px.data[1] = v as u8;
             px.data[2] = v as u8;
 
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+/// Tint an image by adding an offset to averaged RGB channel values.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `r_offset` - The amount the  R channel should be incremented by.
+/// * `g_offset` - The amount the G channel should be incremented by.
+/// * `b_offset` - The amount the B channel should be incremented by.
+/// # Example
+///
+/// ```
+/// // For example, to tint an image of type `DynamicImage`:
+/// photon::tint(img, 10, 20, 15);
+/// ```
+/// 
+pub fn tint(mut img: DynamicImage, r_offset: u32, g_offset: u32, b_offset: u32) -> DynamicImage {
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
+            let mut avg = (r_val + g_val + b_val) / 3;
+            if (avg >= 255) {
+                avg = 255
+            }
+            
+            px.data[0] = if avg as u32 + r_offset < 255 { avg as u8 } else { 255 };
+            px.data[1] = if avg as u32 + g_offset < 255 { avg as u8 } else { 255 };
+            px.data[2] = if avg as u32 + b_offset < 255 { avg as u8 } else { 255 };
+
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+/// Convert an image to sepia.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// # Example
+///
+/// ```
+/// // For example, to tint an image of type `DynamicImage`:
+/// use photon::channels;
+/// photon::channels::sepia(img);
+/// ```
+/// 
+pub fn sepia(mut img: DynamicImage) -> DynamicImage {
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            let (r_val, g_val, b_val) = (px.data[0] as f32, px.data[1] as f32, px.data[2] as f32);
+            let avg = 0.3 * r_val + 0.59 * g_val + 0.11 * b_val;
+
+            px.data[0] = if avg as u32 + 100 < 255 { avg as u8 + 100} else { 255 };
+            px.data[1] = if avg as u32 + 30 < 255 { avg as u8 + 50 } else { 255 };
+      
             img.put_pixel(x, y, px);
         }
     }
@@ -383,30 +457,4 @@ pub fn inc_brightness(mut img: DynamicImage, brightness: u8) -> DynamicImage {
         }
     }
     return img;
-}
-
-pub mod effects {
-    extern crate image;
-    extern crate rand;
-    use image::{GenericImage, DynamicImage, ImageBuffer, GenericImageView};
-    use rand::Rng;
-    
-    pub fn offset(mut img: DynamicImage) -> DynamicImage {
-        let (width, height) = img.dimensions();
-        let mut rng = rand::thread_rng();
-
-        for x in 0..width {
-            for y in 0..height {
-                let offset = rng.gen_range(0, 150);
-                let mut px = img.get_pixel(x, y);
-
-                if x + 10 < width - 1 && y + 10 < height - 1  {
-                    let offset_px = img.get_pixel(x + 10, y + 10);
-                    px = offset_px;
-                }
-
-        }
-    }
-    return img;
-    }
 }
