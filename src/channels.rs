@@ -1,6 +1,5 @@
 extern crate image;
-use image::{GenericImage, DynamicImage, ImageBuffer, GenericImageView};
-use image::Pixel;
+use image::{GenericImage, DynamicImage, GenericImageView};
 
 /// Alter a select channel by incrementing its value by a constant.
 /// 

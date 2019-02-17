@@ -2,6 +2,8 @@ extern crate image;
 extern crate rand;
 use image::{GenericImage, DynamicImage, ImageBuffer, GenericImageView};
 use rand::Rng;
+use std::f64;
+use std::cmp;
     
 pub fn offset(mut img: DynamicImage) -> DynamicImage {
     let (width, height) = img.dimensions();
@@ -20,3 +22,44 @@ pub fn offset(mut img: DynamicImage) -> DynamicImage {
     }
     return img;
 }
+
+pub fn ripple(mut img: DynamicImage) -> DynamicImage {
+    let (width, height) = img.dimensions();
+    
+    let xoff = width / 3; 
+    let yoff = height / 3;
+
+    for x in 0..width {
+        for y in 0..height {
+
+            let mut px = img.get_pixel(x, y);
+            // // calculate sine based on distance
+            // x2 = x - xoff;
+            // y2 = y - yoff;
+            // d = Math.sqrt(x2*x2 + y2*y2);
+            // t = Math.sin(d/6.0);
+            let x2: f64 = x as f64 - xoff as f64;
+            let y2: f64 = y as f64 - yoff as f64;
+
+            let res: f64 = x2*x2  + y2*y2;
+            let d = (res).sqrt();
+		    let t = (d/6.0).sin();
+
+            let r = t * 200.0;
+		    let g = 125.0 + t * 80.0;
+		    let b = 235.0 + t * 20.0;
+            
+                px.data[0] = cmp::max(0, cmp::min(255, r as u32)) as u8;
+                px.data[1] = cmp::max(0, cmp::min(255, g as u32)) as u8;
+                px.data[2] = cmp::max(0, cmp::min(255, b as u32)) as u8;
+
+            
+        }
+    }
+    return img;
+}
+		// // set red, green, blue, and alpha:
+		// imageData.data[pos++] = Math.max(0,Math.min(255, r));
+		// imageData.data[pos++] = Math.max(0,Math.min(255, g));
+		// imageData.data[pos++] = Math.max(0,Math.min(255, b));
+		// imageData.data[pos++] = 255; // opaque alpha
