@@ -44,6 +44,18 @@ pub fn threshold(mut img: DynamicImage, threshold: u32) -> DynamicImage {
     return img;
 }
 
+/// Convert an image to grayscale using the conventional averaging algorithm.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+
+/// # Example
+///
+/// ```
+/// // For example, to convert an image of type `DynamicImage` to greyscale:
+/// use photon::channels;
+/// photon::channels::grayscale(img);
+/// ```
 pub fn grayscale(mut img: DynamicImage) -> DynamicImage {
     let (width, height) = img.dimensions();
 
@@ -64,6 +76,18 @@ pub fn grayscale(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
+/// Convert an image to grayscale with a human corrected factor, to account for human vision.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+
+/// # Example
+///
+/// ```
+/// // For example, to convert an image of type `DynamicImage` to greyscale with a human corrected factor:
+/// use photon::channels;
+/// photon::channels::grayscale_human_corrected(img);
+/// ```
 pub fn grayscale_human_corrected(mut img: DynamicImage) -> DynamicImage {
     let (width, height) = img.dimensions();
 
@@ -87,6 +111,18 @@ pub fn grayscale_human_corrected(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
+/// Desaturate an image by getting the min/max of each pixel's RGB values.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+
+/// # Example
+///
+/// ```
+/// // For example, to desaturate an image:
+/// use photon::channels;
+/// photon::channels::desaturate(img);
+/// ```
 pub fn desaturate(mut img: DynamicImage) -> DynamicImage {
     let (width, height) = img.dimensions();
 
@@ -114,6 +150,17 @@ pub fn desaturate(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
+/// Uses a min. decomposition algorithm to convert an image to greyscale.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+
+/// # Example
+///
+/// ```
+/// // For example, to decompose an image:
+/// photon::channels::decompose_min(img);
+/// ```
 pub fn decompose_min(mut img: DynamicImage) -> DynamicImage {
     let (width, height) = img.dimensions();
 
@@ -141,6 +188,17 @@ pub fn decompose_min(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
+/// Uses a max. decomposition algorithm to convert an image to greyscale.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+
+/// # Example
+///
+/// ```
+/// // For example, to decompose an image with max decomposition:
+/// photon::channels::decompose_max(img);
+/// ```
 pub fn decompose_max(mut img: DynamicImage) -> DynamicImage {
     let (width, height) = img.dimensions();
 
@@ -164,18 +222,25 @@ pub fn decompose_max(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
-pub fn grayscale_shades(mut img: DynamicImage) -> DynamicImage {
+/// Employ only a limited number of gray shades in an image.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+
+/// # Example
+///
+/// ```
+/// // For example, to limit an image to four shades of gray only:
+/// photon::channels::grayscale_shades(img, 4);
+/// ```
+pub fn grayscale_shades(mut img: DynamicImage, num_shades: u8) -> DynamicImage {
     let (width, height) = img.dimensions();
 
     for x in 0..width {
         for y in 0..height {
-            // ConversionFactor = 255 / (NumberOfShades - 1)
-            // AverageValue = (Red + Green + Blue) / 3
-            // Gray = Integer((AverageValue / ConversionFactor) + 0.5) * ConversionFactor
             let mut px = img.get_pixel(x, y);
 
-            let shade_num = 2.0;
-            let conversion: f32 = 255.0 / (shade_num - 1.0);
+            let conversion: f32 = 255.0 / (num_shades as f32 - 1.0);
             let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
             
             let avg: f32 = (r_val + g_val + b_val) as f32 / 3.0;
@@ -194,6 +259,16 @@ pub fn grayscale_shades(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
+/// Convert an image to grayscale by setting all 3 RGB values to the Red channel only.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+
+/// # Example
+///
+/// ```
+/// photon::channels::r_grayscale(img);
+/// ```
 pub fn r_grayscale(mut img: DynamicImage) -> DynamicImage {
     let (width, height) = img.dimensions();
 
@@ -212,6 +287,16 @@ pub fn r_grayscale(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
+/// Convert an image to grayscale by setting all 3 RGB values to the Green channel only.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+
+/// # Example
+///
+/// ```
+/// photon::channels::g_grayscale(img);
+/// ```
 pub fn g_grayscale(mut img: DynamicImage) -> DynamicImage {
     let (width, height) = img.dimensions();
 
@@ -230,6 +315,16 @@ pub fn g_grayscale(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
+/// Convert an image to grayscale by setting all 3 RGB values to the Blue channel only.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+
+/// # Example
+///
+/// ```
+/// photon::channels::b_grayscale(img);
+/// ```
 pub fn b_grayscale(mut img: DynamicImage) -> DynamicImage {
     let (width, height) = img.dimensions();
 
@@ -248,6 +343,16 @@ pub fn b_grayscale(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
+/// Increase the brightness of an image by a factor.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `brightness` - A u8 to add to the brightness.
+/// # Example
+///
+/// ```
+/// photon::channels::g_grayscale(img);
+/// ```
 pub fn inc_brightness(mut img: DynamicImage, brightness: u8) -> DynamicImage {
     let (width, height) = img.dimensions();
 

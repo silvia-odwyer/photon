@@ -16,9 +16,20 @@ use rand::Rng;
 //     return img;
 // }
 
-/// Add noise to an image.
+/// Add randomized noise to an image.
 ///
-/// Adds a Gaussian Noise Sample by including a random offset to each channel in each pixel.
+/// This function adds a Gaussian Noise Sample to each pixel through incrementing each channel by an offset.
+/// # Arguments
+/// * `name` - A DynamicImage that contains a view into the image.
+/// 
+/// # Example
+///
+/// ```
+/// // For example, to increase the Red channel for all pixels by 10:
+/// use photon::noise;
+/// photon::noise::add_noise_rand(img);
+/// ```
+
 pub fn add_noise_rand(mut img: DynamicImage) -> DynamicImage {
     let (width, height) = img.dimensions();
     let mut rng = rand::thread_rng();

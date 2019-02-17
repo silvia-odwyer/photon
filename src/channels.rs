@@ -2,11 +2,10 @@ extern crate image;
 use image::{GenericImage, DynamicImage, ImageBuffer, GenericImageView};
 use image::Pixel;
 
-
 /// Alter a select channel by incrementing its value by a constant.
 /// 
 /// # Arguments
-/// * `name` - A DynamicImage that contains a view into the image.
+/// * `img` - A DynamicImage that contains a view into the image.
 /// * `channel` - The channel you wish to alter, it should be either 0, 1 or 2, 
 /// representing R, G, or B respectively
 /// * `offset` - The amount you want to increment the channel's value by for that pixel.
@@ -40,7 +39,7 @@ pub fn alter_channel(mut img: DynamicImage, channel: usize, offset: u8) -> Dynam
 /// Increment every pixel's Red channel by a constant.
 /// 
 /// # Arguments
-/// * `name` - A DynamicImage that contains a view into the image.
+/// * `img` - A DynamicImage that contains a view into the image.
 /// * `offset` - The amount you want to increment the channel's value by for that pixel.
 /// 
 /// # Example
@@ -58,7 +57,7 @@ pub fn alter_red_channel(mut img: DynamicImage, offset: u8) -> DynamicImage {
 /// Increment every pixel's Green channel by a constant.
 /// 
 /// # Arguments
-/// * `name` - A DynamicImage that contains a view into the image.
+/// * `img` - A DynamicImage that contains a view into the image.
 /// * `offset` - The amount you want to increment the channel's value by for that pixel.
 /// 
 /// # Example
@@ -76,7 +75,7 @@ pub fn alter_green_channel(mut img: DynamicImage, offset: u8) -> DynamicImage {
 /// Increment every pixel's Blue channel by a constant.
 /// 
 /// # Arguments
-/// * `name` - A DynamicImage that contains a view into the image.
+/// * `img` - A DynamicImage that contains a view into the image.
 /// * `offset` - The amount you want to increment the channel's value by for that pixel.
 /// 
 /// # Example
@@ -91,9 +90,23 @@ pub fn alter_blue_channel(mut img: DynamicImage, offset: u8) -> DynamicImage {
     return res_img;
 }
 
+/// Increment two channels' values simultaneously by adding an offset to each channel per pixel.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `channel1` - A usize that represents an index into the RGB vec. 
+/// * `offset1` - The amount you want to increment the channel's value by for that pixel.
+/// * `channel2` - A usize that represents an index into the RGB vec. 0 would return the Red channel. 
+/// * `offset2` - The amount you want to increment the channel's value by for that pixel.
+/// 
+/// # Example
+///
+/// ```
+/// // For example, to increase the values of the Blue and Red channels per pixel:
+/// photon::channels::alter_two_channels(img, 0, 10, 2, 20);
+/// ```
 pub fn alter_two_channels(mut img: DynamicImage, channel1: usize, offset1: u8, channel2: usize, offset2: u8) -> DynamicImage {
     let (width, height) = img.dimensions();
-
     for x in 0..width {
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
