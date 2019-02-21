@@ -4,7 +4,19 @@ use image::{GenericImage, DynamicImage, ImageBuffer, GenericImageView};
 use rand::Rng;
 use std::f64;
 use std::cmp;
-    
+ 
+/// Adds an offset to the image by a certain number of pixels. 
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `offset` - The offset is added to the pixels in the image.  
+/// # Example
+///
+/// ```
+/// // For example, to threshold an image of type `DynamicImage`:
+/// use photon::channels;
+/// photon::channels::threshold(img);
+/// ```
 pub fn offset(mut img: DynamicImage) -> DynamicImage {
     let (width, height) = img.dimensions();
     let mut rng = rand::thread_rng();
@@ -23,6 +35,17 @@ pub fn offset(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
+/// Add a sine wave animation to the pixels by getting a sine wave. 
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// # Example
+///
+/// ```
+/// // For example, to threshold an image of type `DynamicImage`:
+/// use photon::effects;
+/// photon::effects::ripple(img);
+/// ```
 pub fn ripple(mut img: DynamicImage) -> DynamicImage {
     let (width, height) = img.dimensions();
     
@@ -49,17 +72,10 @@ pub fn ripple(mut img: DynamicImage) -> DynamicImage {
 		    let g = 125.0 + t * 80.0;
 		    let b = 235.0 + t * 20.0;
             
-                px.data[0] = cmp::max(0, cmp::min(255, r as u32)) as u8;
-                px.data[1] = cmp::max(0, cmp::min(255, g as u32)) as u8;
-                px.data[2] = cmp::max(0, cmp::min(255, b as u32)) as u8;
-
-            
+            px.data[0] = cmp::max(0, cmp::min(255, r as u32)) as u8;
+            px.data[1] = cmp::max(0, cmp::min(255, g as u32)) as u8;
+            px.data[2] = cmp::max(0, cmp::min(255, b as u32)) as u8;
         }
     }
     return img;
 }
-		// // set red, green, blue, and alpha:
-		// imageData.data[pos++] = Math.max(0,Math.min(255, r));
-		// imageData.data[pos++] = Math.max(0,Math.min(255, g));
-		// imageData.data[pos++] = Math.max(0,Math.min(255, b));
-		// imageData.data[pos++] = 255; // opaque alpha
