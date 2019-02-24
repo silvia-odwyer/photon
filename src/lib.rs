@@ -74,7 +74,7 @@ pub fn tint(mut img: DynamicImage, r_offset: u32, g_offset: u32, b_offset: u32) 
             let mut px = img.get_pixel(x, y);
             let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
             let mut avg = (r_val + g_val + b_val) / 3;
-            if (avg >= 255) {
+            if avg >= 255 {
                 avg = 255
             }
             
@@ -138,7 +138,7 @@ pub fn grayscale(mut img: DynamicImage) -> DynamicImage {
             let mut px = img.get_pixel(x, y);
             let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
             let mut avg = (r_val + g_val + b_val) / 3;
-            if (avg >= 255) {
+            if avg >= 255 {
                 avg = 255
             }
             px.data[0] = avg as u8;
@@ -172,7 +172,7 @@ pub fn grayscale_human_corrected(mut img: DynamicImage) -> DynamicImage {
 
             let mut avg = (r_val * 0.3 + g_val * 0.59 + b_val * 0.11);
             
-            if (avg >= 255.0) {
+            if avg >= 255.0 {
                 avg = 255.0
             }
             
@@ -211,7 +211,7 @@ pub fn desaturate(mut img: DynamicImage) -> DynamicImage {
 
             let mut gray = (rgb_vals[0] + rgb_vals[2]) / 2;
 
-            if (gray >= 255) {
+            if gray >= 255 {
                 gray = 255
             }
             
@@ -249,7 +249,7 @@ pub fn decompose_min(mut img: DynamicImage) -> DynamicImage {
 
             let mut gray = rgb_vals[0];
 
-            if (gray >= 255) {
+            if gray >= 255 {
                 gray = 255
             }
             
@@ -438,11 +438,11 @@ pub fn inc_brightness(mut img: DynamicImage, brightness: u8) -> DynamicImage {
             }
             else {
                 px.data[0] = 255;
-            }
-            
+            }            
             if px.data[1] <= 255 - brightness {
                 px.data[1] += brightness;
             }
+
             else {
                 px.data[1] = 255
             }
@@ -450,9 +450,11 @@ pub fn inc_brightness(mut img: DynamicImage, brightness: u8) -> DynamicImage {
             if px.data[2] <= 255 - brightness {
                 px.data[2] += brightness;
             }
+
             else {
                 px.data[2] = 255
             }
+
             img.put_pixel(x, y, px);
         }
     }

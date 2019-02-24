@@ -99,12 +99,7 @@ pub fn createGradientMap(colorA : Rgb, colorB: Rgb) -> Vec<Rgb> {
 
     for i in 0..maxVal + 1{
         let intensityB = maxVal - i;
-        // println!("i {}", i);
-        // println!("intensity B {}", intensityB);
-        // println!("colorA.r {}", colorA.r);
-        // println!("colorB.r {}", colorB.r);
-        
-        // println!("######");
+
         r_val = (i * colorA.r + intensityB * colorB.r) / maxVal as u32;
         println!("r_val {}", r_val);
         gradient_map.push(Rgb {
@@ -119,7 +114,6 @@ pub fn createGradientMap(colorA : Rgb, colorB: Rgb) -> Vec<Rgb> {
 
 pub fn duotone(mut img: DynamicImage, colorA : Rgb, colorB : Rgb) -> DynamicImage {
     let (width, height) = img.dimensions();
-    println!("hi");
     let gradient_map = createGradientMap(colorA, colorB);
     println!("entering for loop");
 
@@ -140,4 +134,128 @@ pub fn duotone(mut img: DynamicImage, colorA : Rgb, colorB : Rgb) -> DynamicImag
         }
     }
     return img;
+}
+
+pub fn halftone(mut img: DynamicImage) -> DynamicImage {
+    let (width, height) = img.dimensions();
+    
+
+    for x in (0..width).step_by(2 as usize) {
+        for y in (0..height).step_by(2 as usize) {
+
+            let mut px1 = img.get_pixel(x, y);
+            let mut px2 = img.get_pixel(x, y + 1);
+            let mut px3 = img.get_pixel(x + 1, y);
+            let mut px4 = img.get_pixel(x + 1, y + 1);
+
+            let gray1 = (px1[0] as f64 * 0.299) + (px1[1] as f64 * 0.587) + (px1[2] as f64 * 0.114);
+            let gray2 = (px2[0] as f64 * 0.299) + (px2[1] as f64 * 0.587) + (px2[2] as f64 * 0.114);
+            let gray3 = (px3[0] as f64 * 0.299) + (px3[1] as f64 * 0.587) + (px3[2] as f64 * 0.114);            
+            let gray4 = (px4[0] as f64 * 0.299) + (px4[1] as f64 * 0.587) + (px4[2] as f64 * 0.114);
+
+            let sat = (gray1 + gray2 + gray3 + gray4) / 4.0;
+
+            if sat > 200.0 {
+                px1.data[0] = 255;
+                px1.data[1] = 255;
+                px1.data[2] = 255;
+
+                px2.data[0] = 255;
+                px2.data[1] = 255;
+                px2.data[2] = 255;
+
+                px3.data[0] = 255;
+                px3.data[1] = 255;
+                px3.data[2] = 255;
+
+                px4.data[0] = 255;
+                px4.data[1] = 255;
+                px4.data[2] = 255;
+
+            }
+
+            else if sat > 159.0 {
+                px1.data[0] = 255;
+                px1.data[1] = 255;
+                px1.data[2] = 255;
+
+                px2.data[0] = 0;
+                px2.data[1] = 0;
+                px2.data[2] = 0;
+
+                px3.data[0] = 255;
+                px3.data[1] = 255;
+                px3.data[2] = 255;
+
+                px4.data[0] = 255;
+                px4.data[1] = 255;
+                px4.data[2] = 255;
+            }
+
+            else if sat > 95.0 {
+                px1.data[0] = 255;
+                px1.data[1] = 255;
+                px1.data[2] = 255;
+
+                px2.data[0] = 0;
+                px2.data[1] = 0;
+                px2.data[2] = 0;
+
+                px3.data[0] = 0;
+                px3.data[1] = 0;
+                px3.data[2] = 0;
+
+                px4.data[0] = 255;
+                px4.data[1] = 255;
+                px4.data[2] = 255;
+            }
+
+            else if sat > 32.0 {
+                px1.data[0] = 0;
+                px1.data[1] = 0;
+                px1.data[2] = 0;
+
+                px2.data[0] = 255;
+                px2.data[0] = 255;
+                px2.data[0] = 255;
+
+                px3.data[0] = 0;
+                px3.data[1] = 0;
+                px3.data[2] = 0;                
+                
+                px4.data[0] = 0;
+                px4.data[1] = 0;
+                px4.data[2] = 0;
+            }
+
+            else {
+                px1.data[0] = 0;
+                px1.data[1] = 0;
+                px1.data[2] = 0;                
+                
+                px2.data[0] = 0;
+                px2.data[1] = 0;
+                px2.data[2] = 0;                
+                
+                px3.data[0] = 0;
+                px3.data[1] = 0;
+                px3.data[2] = 0;
+
+                px4.data[0] = 0;
+                px4.data[1] = 0;
+                px4.data[2] = 0;
+            }
+
+
+            img.put_pixel(x, y, px1);
+            img.put_pixel(x, y + 1, px2);
+         }
+    }
+    return img;
+}
+
+fn setToWhitePixel(px: Pixel) -> Pixel {
+    px.data[0] = 255;
+    px.data[1] = 255;
+    px.data[2] = 255;
 }
