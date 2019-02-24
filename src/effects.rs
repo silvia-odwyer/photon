@@ -254,8 +254,46 @@ pub fn halftone(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
-fn setToWhitePixel(px: Pixel) -> Pixel {
-    px.data[0] = 255;
-    px.data[1] = 255;
-    px.data[2] = 255;
+pub fn primary(mut img: DynamicImage) -> DynamicImage {
+    let (width, height) = img.dimensions();
+
+    for x in 0..width{
+        for y in 0..height {
+
+            let mut px = img.get_pixel(x, y);
+
+            let mut r_val = px.data[0];
+            let mut g_val = px.data[1];
+            let mut b_val = px.data[2];
+
+            if r_val > 128 {
+                r_val = 255;
+            }
+
+            else {
+                r_val = 0;
+            }
+
+            if g_val > 128 {
+                g_val = 255;
+            }
+            else {
+                g_val = 0;
+            }
+
+            if b_val > 128 {
+                g_val = 255;
+            }
+            else {
+                g_val = 0;
+            }
+
+            px.data[0] = r_val;
+            px.data[1] = g_val;
+            px.data[2] = b_val;
+
+            img.put_pixel(x, y, px);
+         }
+    }
+    return img;
 }
