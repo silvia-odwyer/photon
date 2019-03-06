@@ -1,6 +1,6 @@
 extern crate image;
 extern crate rand;
-use image::{GenericImage, DynamicImage, ImageBuffer, GenericImageView};
+use image::{GenericImage, DynamicImage, GenericImageView};
 use image::Pixel;
 use rand::Rng;
 // pub fn add_noise(mut img: DynamicImage, offset: u8) -> DynamicImage {

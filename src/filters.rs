@@ -1,7 +1,6 @@
 /// Preset filters you can apply to images.
 
-use image::{GenericImage, DynamicImage, ImageBuffer, GenericImageView};
-use image::Pixel;
+use image::{DynamicImage};
 
 /// Add an aquamarine-tinted hue to an image.
 pub fn oceanic(mut img: DynamicImage) -> DynamicImage {

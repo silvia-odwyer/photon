@@ -7,9 +7,9 @@ use std::cmp;
 
 #[derive(Debug)]
 pub struct Rgb {
-    pub r: u32,
-    pub g: u32,
-    pub b: u32
+    pub r: u8,
+    pub g: u8,
+    pub b: u8
 }
  
 /// Adds an offset to the image by a certain number of pixels. 
@@ -80,9 +80,9 @@ pub fn ripple(mut img: DynamicImage) -> DynamicImage {
 		    let g = 125.0 + t * 80.0;
 		    let b = 235.0 + t * 20.0;
             
-            px.data[0] = cmp::max(0, cmp::min(255, r as u32)) as u8;
-            px.data[1] = cmp::max(0, cmp::min(255, g as u32)) as u8;
-            px.data[2] = cmp::max(0, cmp::min(255, b as u32)) as u8;
+            px.data[0] = cmp::max(0, cmp::min(255, r as u8)) as u8;
+            px.data[1] = cmp::max(0, cmp::min(255, g as u8)) as u8;
+            px.data[2] = cmp::max(0, cmp::min(255, b as u8)) as u8;
             img.put_pixel(x, y, px);
         }
     }
@@ -100,12 +100,12 @@ pub fn createGradientMap(colorA : Rgb, colorB: Rgb) -> Vec<Rgb> {
     for i in 0..maxVal + 1{
         let intensityB = maxVal - i;
 
-        r_val = (i * colorA.r + intensityB * colorB.r) / maxVal as u32;
+        r_val = (i * colorA.r + intensityB * colorB.r) / maxVal as u8;
         println!("r_val {}", r_val);
         gradient_map.push(Rgb {
             r: r_val , 
-            g: (i * colorA.g + intensityB * colorB.g) / maxVal as u32 ,
-            b: (i * colorA.b + intensityB * colorB.b) / maxVal as u32
+            g: (i * colorA.g + intensityB * colorB.g) / maxVal as u8 ,
+            b: (i * colorA.b + intensityB * colorB.b) / maxVal as u8
         });
     }
     println!("{:?}", gradient_map);
@@ -253,7 +253,17 @@ pub fn halftone(mut img: DynamicImage) -> DynamicImage {
     }
     return img;
 }
-
+/// Reduces an image to the primary colours.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// # Example
+///
+/// ```
+/// // For example, to add a primary colour effect to an image of type `DynamicImage`:
+/// use photon::effects;
+/// photon::effects::primary(img);
+/// ```
 pub fn primary(mut img: DynamicImage) -> DynamicImage {
     let (width, height) = img.dimensions();
 
@@ -296,4 +306,56 @@ pub fn primary(mut img: DynamicImage) -> DynamicImage {
          }
     }
     return img;
+}
+
+/// Colorizes the green channels of the image.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// # Example
+///
+/// ```
+/// // For example, to colorize an image of type `DynamicImage`:
+/// use photon::effects;
+/// photon::effects::colorize(img);
+/// ```
+pub fn colorize(mut img: DynamicImage) -> DynamicImage {
+    let threshold = 220;
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            let px_as_rgb = Rgb{r: px.data[0], g: px.data[1], b: px.data[2]};
+
+            let baseline_color = Rgb{r: 0, g: 255, b: 255};
+
+            let square_distance = square_distance(baseline_color, px_as_rgb);
+
+            let mut r = px.data[0] as f32;
+            let mut g = px.data[1] as f32;
+            let mut b = px.data[2] as f32;
+
+            if square_distance < i32::pow(threshold, 2) {
+                r = r * 0.5;
+                g = g * 1.25;
+                b = b * 0.5;
+            }
+
+            px.data[0] = r as u8;
+            px.data[1] = g as u8;
+            px.data[2] = b as u8;
+
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+
+}
+
+// Gets the square distance between two colours
+pub fn square_distance(color1 : Rgb, color2 : Rgb) -> i32{
+    let (r1, g1, b1) = (color1.r as i32, color1.g as i32, color1.b as i32);
+    let (r2, g2, b2) = (color2.r as i32, color2.g as i32, color2.b as i32);
+    return i32::pow(r1 - r2, 2) + i32::pow(g1 - g2, 2) + i32::pow(b1 - b2, 2);
 }
