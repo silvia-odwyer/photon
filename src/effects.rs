@@ -24,19 +24,108 @@ pub struct Rgb {
 /// use photon::channels;
 /// photon::channels::threshold(img);
 /// ```
-pub fn offset(mut img: DynamicImage) -> DynamicImage {
+pub fn offset(mut img: DynamicImage, mut channel_index: usize, offset: u32) -> DynamicImage {
     let (width, height) = img.dimensions();
     let mut rng = rand::thread_rng();
-    let offset = rng.gen_range(0, 150);
+
     for x in 0..width {
         for y in 0..height {
 
             let mut px = img.get_pixel(x, y);
 
             if x + offset < width - 1 && y + offset < height - 1  {
+
                 let offset_px = img.get_pixel(x + offset, y + offset);
-                px = offset_px;
+
+                px.data[channel_index] = offset_px.data[channel_index];
+                
             }
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+/// Adds an offset to the red channel by a certain number of pixels. 
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `offset` - The offset you want to move the red channel by. 
+/// # Example
+///
+/// ```
+/// // For example, to threshold an image of type `DynamicImage`:
+/// use photon::channels;
+/// photon::channels::threshold(img);
+/// ```
+pub fn offset_red(mut img: DynamicImage, offset_amt: u32) -> DynamicImage {
+    offset(img, 0, offset_amt)
+}
+
+/// Adds an offset to the green channel by a certain number of pixels. 
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `offset` - The offset you want to move the green channel by.
+/// # Example
+///
+/// ```
+/// // For example, to threshold an image of type `DynamicImage`:
+/// use photon::channels;
+/// photon::channels::threshold(img);
+/// ```
+pub fn offset_green(mut img: DynamicImage, offset_amt: u32) -> DynamicImage {
+    offset(img, 1, offset_amt)
+}
+
+/// Adds an offset to the blue channel by a certain number of pixels. 
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `offset_amt` - The offset you want to move the blue channel by.
+/// # Example
+///
+pub fn offset_blue(mut img: DynamicImage, offset_amt: u32) -> DynamicImage {
+    offset(img, 2, offset_amt)
+}
+
+/// Adds multiple offsets to the image by a certain number of pixels. 
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `offset` - The offset is added to the pixels in the image.  
+/// # Example
+///
+/// ```
+/// // For example, to threshold an image of type `DynamicImage`:
+/// use photon::channels;
+/// photon::channels::threshold(img);
+/// ```
+pub fn multiple_offsets(mut img: DynamicImage, offset: u32, channel_index: usize, channel_index2: usize) -> DynamicImage {
+    let (width, height) = img.dimensions();
+    let mut rng = rand::thread_rng();
+
+    for x in 0..width {
+        for y in 0..height {
+
+            let mut px = img.get_pixel(x, y);
+
+            if x + offset < width - 1 && y + offset < height - 1  {
+
+                let offset_px = img.get_pixel(x + offset, y);
+
+                px.data[channel_index] = offset_px.data[channel_index];
+                
+            }
+            
+            if x as i32 - offset as i32 > 0 && y as i32 - offset as i32 > 0  {
+                let offset_px2 = img.get_pixel(x - offset, y );
+
+                px.data[channel_index2] = offset_px2.data[channel_index2];
+                
+            }
+
+
             img.put_pixel(x, y, px);
         }
     }
@@ -351,6 +440,54 @@ pub fn colorize(mut img: DynamicImage) -> DynamicImage {
     }
     return img;
 
+}
+
+pub fn inc_luminosity(mut img: DynamicImage) -> DynamicImage {
+    let (width, height) = img.dimensions();
+    let mut min_intensity = 255;
+    let mut max_intensity = 0;
+
+    for x in 0..width {
+        for y in 0..height {
+            let px = img.get_pixel(x, y);
+            let intensity = (px.data[0] as u32 + px.data[1] as u32 + px.data[2] as u32) / 3;
+            if intensity > 0{
+                min_intensity = cmp::min(min_intensity, intensity);
+                max_intensity = cmp::max(max_intensity, intensity);
+            }
+            
+        }
+    }
+
+    // we have found the max and min intensities in the image
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            let px_as_rgb = Rgb{r: px.data[0], g: px.data[1], b: px.data[2]};
+
+            let mut r = px.data[0] as f32;
+            let mut g = px.data[1] as f32;
+            let mut b = px.data[2] as f32;
+
+            let lum = (r + g + b) / 3.0;
+
+            let new_lum = 255.0 * (lum - min_intensity as f32) / (max_intensity / min_intensity) as f32;
+
+            r = r * new_lum / lum;
+            g = g * new_lum / lum;
+            b = b * new_lum / lum;
+            
+
+
+            px.data[0] = r as u8;
+            px.data[1] = g as u8;
+            px.data[2] = b as u8;
+
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
 }
 
 // Gets the square distance between two colours
