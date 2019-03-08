@@ -73,20 +73,39 @@ pub fn tint(mut img: DynamicImage, r_offset: u32, g_offset: u32, b_offset: u32) 
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
             let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
-            let mut avg = (r_val + g_val + b_val) / 3;
-            if avg >= 255 {
-                avg = 255
-            }
             
-            px.data[0] = if avg as u32 + r_offset < 255 { avg as u8 } else { 255 };
-            px.data[1] = if avg as u32 + g_offset < 255 { avg as u8 } else { 255 };
-            px.data[2] = if avg as u32 + b_offset < 255 { avg as u8 } else { 255 };
+            px.data[0] = if r_val as u32 + r_offset < 255 { r_val as u8 + r_offset as u8} else { 255 };
+            px.data[1] = if g_val as u32 + g_offset < 255 { g_val as u8 + g_offset as u8} else { 255 };
+            px.data[2] = if b_val as u32 + b_offset < 255 { b_val as u8 + b_offset as u8} else { 255 };
 
             img.put_pixel(x, y, px);
         }
     }
     return img;
 }
+
+pub fn monochrome(mut img: DynamicImage, r_offset: u32, g_offset: u32, b_offset: u32) -> DynamicImage {
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
+            let mut avg = (r_val + g_val + b_val) / 3;
+            if avg >= 255 {
+                avg = 255
+            }
+            
+            px.data[0] = if avg as u32 + r_offset < 255 { avg as u8 + r_offset as u8} else { 255 };
+            px.data[1] = if avg as u32 + g_offset < 255 { avg as u8 + g_offset as u8} else { 255 };
+            px.data[2] = if avg as u32 + b_offset < 255 { avg as u8 + b_offset as u8} else { 255 };
+
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
 
 /// Convert an image to sepia.
 /// 
