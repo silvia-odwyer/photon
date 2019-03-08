@@ -108,3 +108,28 @@ pub fn ryo(mut img: DynamicImage) -> DynamicImage {
     }
     return img;
 }
+
+pub fn radio(mut img: DynamicImage) -> DynamicImage {
+    let filtered_img = crate::monochrome(img, 5, 40, 20);
+    return filtered_img;
+}
+
+pub fn twenties(mut img: DynamicImage) -> DynamicImage {
+    let filtered_img = crate::monochrome(img, 18, 12, 20);
+    return filtered_img;
+}
+
+pub fn rosetint(mut img: DynamicImage) -> DynamicImage {
+    let filtered_img = crate::monochrome(img, 80, 20, 31);
+    return filtered_img;
+}
+
+pub fn mauve(mut img: DynamicImage) -> DynamicImage {
+    let filtered_img = crate::monochrome(img, 90, 40, 80);
+    return filtered_img;
+}
+
+pub fn bluechrome(mut img: DynamicImage) -> DynamicImage {
+    let filtered_img = crate::monochrome(img, 20, 30, 60);
+    return filtered_img;
+}
