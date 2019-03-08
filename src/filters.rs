@@ -133,3 +133,18 @@ pub fn bluechrome(mut img: DynamicImage) -> DynamicImage {
     let filtered_img = crate::monochrome(img, 20, 30, 60);
     return filtered_img;
 }
+
+pub fn vintage(mut img: DynamicImage) -> DynamicImage {
+    let filtered_img = crate::tint(img, 120, 70, 13);
+    return filtered_img;
+}
+
+pub fn perfume(mut img: DynamicImage) -> DynamicImage {
+    let filtered_img = crate::tint(img, 80, 40, 120);
+    return filtered_img;
+}
+
+pub fn serenity(mut img: DynamicImage) -> DynamicImage {
+    let filtered_img = crate::tint(img, 10, 40, 90);
+    return filtered_img;
+}
