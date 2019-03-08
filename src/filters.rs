@@ -1,6 +1,7 @@
 /// Preset filters you can apply to images.
+extern crate image;
 
-use image::{DynamicImage};
+use image::{GenericImage, DynamicImage, GenericImageView};
 
 /// Add an aquamarine-tinted hue to an image.
 pub fn oceanic(mut img: DynamicImage) -> DynamicImage {
@@ -39,4 +40,71 @@ pub fn diamante(mut img: DynamicImage) -> DynamicImage {
 pub fn liquid(mut img: DynamicImage) -> DynamicImage {
     let filtered_img = crate::channels::alter_two_channels(img, 1, 10, 2, 75);
     return filtered_img;
+}
+
+pub fn solange(mut img: DynamicImage) -> DynamicImage {
+
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            if 200 as i32 - px.data[0] as i32 > 0 {
+                px.data[0] = 200 - px.data[0];
+            }
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+pub fn neue(mut img: DynamicImage) -> DynamicImage {
+
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            if 255 as i32 - px.data[2] as i32 > 0 {
+                px.data[2] = 255 - px.data[2];
+            }
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+pub fn lix(mut img: DynamicImage) -> DynamicImage {
+
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            
+            px.data[0] = 255 - px.data[0];
+            px.data[1] = 255 - px.data[1];
+            
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+
+pub fn ryo(mut img: DynamicImage) -> DynamicImage {
+
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            if 255 as i32 - px.data[2] as i32 > 0 {
+                px.data[0] = 255 - px.data[0];
+                px.data[2] = 255 - px.data[2];
+            }
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
 }
