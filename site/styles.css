@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
 html, body {
     margin: 0;
     padding: 0;
@@ -7,12 +9,22 @@ img {
     width: 100%;
 }
 
+h1 {
+    color: white;
+}
 
 .intro {
     left: 10vh;
-    top:50vh;
-    color: white;
+    top:30vh;
     position: absolute;
+    font-family: Arial, Helvetica, sans-serif;
+
+    text-decoration: none;
+    font-size: 0.75em;
+    font-family: "Open Sans", "Arial", sans-serif;
+    text-transform: uppercase;
+    color: rgba(255,255,255, .7);
+    letter-spacing: 1px;
 }
 
 nav ul li {
@@ -35,8 +47,64 @@ nav {
 nav ul li a {
     color: white;
     text-decoration: none;
-    font-size: 0.9em;
+    font-size: 0.45em;
+    font-family: "Open Sans", "Arial", sans-serif;
+    text-transform: uppercase;
+    color: rgba(255,255,255, .7);
+    letter-spacing: 1px;
 }
+/* 
+#imgs {
+    position:relative;
+    margin:0 auto;
+  }
+  
+  #imgs img {
+    position:absolute;
+    -webkit-transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -o-transition: opacity 1s ease-in-out;
+    transition: opacity 1s ease-in-out;
+  }
+  
+  #imgs img.top:hover {
+    opacity:0;
+  } */
+
+   ul {
+     list-style: none;
+     margin: 0;
+     padding: 0;
+     position: relative;
+   }
+   li {
+     position: absolute;
+   }
+   img{
+     border: 1px solid #000;
+     border-radius: 3px;
+     box-shadow: 0 0 5px 0 hsla(0,0%,30%, .3);
+   }
+  #imgs:nth-child(4) {
+    animation: xfade 16s 0s infinite;
+  }
+  #imgs:nth-child(3) {
+    animation: xfade 16s 4s infinite;
+  }
+  #imgs:nth-child(2) {
+    animation: xfade 16s 8s infinite;
+  }
+  #imgs:nth-child(1) {
+    animation: xfade 16s 12s infinite;
+  }
+  @keyframes xfade{
+    17% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
 
 @media screen and (min-width: 76em) {
 	body {
