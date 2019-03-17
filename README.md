@@ -1,8 +1,10 @@
 # photon
-An image processing library in Rust, that also compiles to Web Assembly.
 
-The library provides low-level access to pixel and channel manipulation, and provides presets 
-for common image processing functions. 
+![Photon is a Rust image processing library.](https://github.com/silvia-odwyer/photon/blob/master/photon_banner.JPG)
+
+A Rust image processing library, that acts as a high-level wrapper for the image crate.
+
+The library provides low-level access to pixel and channel manipulation, and provides presets for common image processing functions. 
 
 Standard functions include:
 - thresholding
@@ -44,6 +46,3 @@ View the official [Cargo documentation here](https://cargo.io/photon-rs).
 
 ## Issues/New Filters
 Photon is always ready for new filters and functions, so if you'd like to contribute, just submit a Pull Request. :)
-
-### Maintainers
-Creator and Maintainer - [Silvia O'Dwyer](https://github.com/silvia-odwyer)
