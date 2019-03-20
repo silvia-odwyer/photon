@@ -305,7 +305,7 @@ pub fn decompose_max(mut img: DynamicImage) -> DynamicImage {
             let mut rgb_vals = vec![r_val, g_val, b_val];
             rgb_vals.sort();
 
-            let mut gray = rgb_vals[2];
+            let gray = rgb_vals[2];
             
             px.data[0] = gray as u8;
             px.data[1] = gray as u8;
@@ -332,7 +332,7 @@ pub fn grayscale_shades(mut img: DynamicImage, num_shades: u8) -> DynamicImage {
 
     for x in 0..width {
         for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+            let px = img.get_pixel(x, y);
 
             let conversion: f32 = 255.0 / (num_shades as f32 - 1.0);
             let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
@@ -398,7 +398,7 @@ pub fn g_grayscale(mut img: DynamicImage) -> DynamicImage {
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
 
-            let mut green = px.data[1];
+            let green = px.data[1];
             
             px.data[0] = green as u8;
             px.data[1] = green as u8;
@@ -426,7 +426,7 @@ pub fn b_grayscale(mut img: DynamicImage) -> DynamicImage {
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
 
-            let mut blue = px.data[2];
+            let blue = px.data[2];
             
             px.data[0] = blue as u8;
             px.data[1] = blue as u8;

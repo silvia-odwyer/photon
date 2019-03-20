@@ -24,9 +24,9 @@ pub struct Rgb {
 /// use photon::channels;
 /// photon::channels::threshold(img);
 /// ```
-pub fn offset(mut img: DynamicImage, mut channel_index: usize, offset: u32) -> DynamicImage {
+pub fn offset(mut img: DynamicImage, channel_index: usize, offset: u32) -> DynamicImage {
     let (width, height) = img.dimensions();
-    let mut rng = rand::thread_rng();
+    let rng = rand::thread_rng();
 
     for x in 0..width {
         for y in 0..height {
@@ -58,7 +58,7 @@ pub fn offset(mut img: DynamicImage, mut channel_index: usize, offset: u32) -> D
 /// use photon::channels;
 /// photon::channels::threshold(img);
 /// ```
-pub fn offset_red(mut img: DynamicImage, offset_amt: u32) -> DynamicImage {
+pub fn offset_red(img: DynamicImage, offset_amt: u32) -> DynamicImage {
     offset(img, 0, offset_amt)
 }
 
@@ -74,7 +74,7 @@ pub fn offset_red(mut img: DynamicImage, offset_amt: u32) -> DynamicImage {
 /// use photon::channels;
 /// photon::channels::threshold(img);
 /// ```
-pub fn offset_green(mut img: DynamicImage, offset_amt: u32) -> DynamicImage {
+pub fn offset_green(img: DynamicImage, offset_amt: u32) -> DynamicImage {
     offset(img, 1, offset_amt)
 }
 
@@ -85,7 +85,7 @@ pub fn offset_green(mut img: DynamicImage, offset_amt: u32) -> DynamicImage {
 /// * `offset_amt` - The offset you want to move the blue channel by.
 /// # Example
 ///
-pub fn offset_blue(mut img: DynamicImage, offset_amt: u32) -> DynamicImage {
+pub fn offset_blue(img: DynamicImage, offset_amt: u32) -> DynamicImage {
     offset(img, 2, offset_amt)
 }
 
@@ -103,7 +103,7 @@ pub fn offset_blue(mut img: DynamicImage, offset_amt: u32) -> DynamicImage {
 /// ```
 pub fn multiple_offsets(mut img: DynamicImage, offset: u32, channel_index: usize, channel_index2: usize) -> DynamicImage {
     let (width, height) = img.dimensions();
-    let mut rng = rand::thread_rng();
+    let rng = rand::thread_rng();
 
     for x in 0..width {
         for y in 0..height {
@@ -384,7 +384,7 @@ pub fn primary(mut img: DynamicImage) -> DynamicImage {
                 g_val = 255;
             }
             else {
-                g_val = 0;
+                b_val = 0;
             }
 
             px.data[0] = r_val;
@@ -464,7 +464,7 @@ pub fn inc_luminosity(mut img: DynamicImage) -> DynamicImage {
     for x in 0..width {
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
-            let px_as_rgb = Rgb{r: px.data[0], g: px.data[1], b: px.data[2]};
+            // let px_as_rgb = Rgb{r: px.data[0], g: px.data[1], b: px.data[2]};
 
             let mut r = px.data[0] as f32;
             let mut g = px.data[1] as f32;

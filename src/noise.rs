@@ -43,16 +43,16 @@ pub fn pink_noise(mut img: DynamicImage) -> DynamicImage {
             let ran2: f64 = rng.gen();
             let ran3: f64 = rng.gen();
 
-            let ranColor1: f64 = 0.6 + ran1 * 0.6;
-            let ranColor2: f64 = 0.6 + ran2 * 0.1;
-            let ranColor3: f64 = 0.6 + ran3 * 0.4;
+            let ran_color1: f64 = 0.6 + ran1 * 0.6;
+            let ran_color2: f64 = 0.6 + ran2 * 0.1;
+            let ran_color3: f64 = 0.6 + ran3 * 0.4;
 
         
             let offset = rng.gen_range(0, 150);
             let mut px = img.get_pixel(x, y);
-            px.data[0] = (px.data[0] as f64 * 0.99 * ranColor1) as u8;
-            px.data[1] = (px.data[1] as f64 * 0.99 * ranColor2) as u8;
-            px.data[2] = (px.data[2] as f64 * 0.99 * ranColor3) as u8;
+            px.data[0] = (px.data[0] as f64 * 0.99 * ran_color1) as u8;
+            px.data[1] = (px.data[1] as f64 * 0.99 * ran_color2) as u8;
+            px.data[2] = (px.data[2] as f64 * 0.99 * ran_color3) as u8;
             img.put_pixel(x, y, px);
         }
     }

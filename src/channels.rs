@@ -48,7 +48,7 @@ pub fn alter_channel(mut img: DynamicImage, channel: usize, offset: u8) -> Dynam
 /// use photon::channels;
 /// photon::channels::alter_red_channel(img, 10);
 /// ```
-pub fn alter_red_channel(mut img: DynamicImage, offset: u8) -> DynamicImage {
+pub fn alter_red_channel(img: DynamicImage, offset: u8) -> DynamicImage {
     let res_img = alter_channel(img, 0, offset);
     return res_img;
 }
@@ -66,7 +66,7 @@ pub fn alter_red_channel(mut img: DynamicImage, offset: u8) -> DynamicImage {
 /// use photon::channels;
 /// photon::channels::alter_green_channel(img, 10);
 /// ```
-pub fn alter_green_channel(mut img: DynamicImage, offset: u8) -> DynamicImage {
+pub fn alter_green_channel(img: DynamicImage, offset: u8) -> DynamicImage {
     let res_img = alter_channel(img, 1, offset);
     return res_img;
 }
@@ -84,7 +84,7 @@ pub fn alter_green_channel(mut img: DynamicImage, offset: u8) -> DynamicImage {
 /// use photon::channels;
 /// photon::channels::alter_blue_channel(img, 10);
 /// ```
-pub fn alter_blue_channel(mut img: DynamicImage, offset: u8) -> DynamicImage {
+pub fn alter_blue_channel(img: DynamicImage, offset: u8) -> DynamicImage {
     let res_img = alter_channel(img, 2, offset);
     return res_img;
 }
@@ -142,17 +142,17 @@ pub fn remove_channel(mut img: DynamicImage, min_filter: u8, channel: usize) -> 
     return img;
 }
 
-pub fn remove_red_channel(mut img: DynamicImage, min_filter: u8) -> DynamicImage {
+pub fn remove_red_channel(img: DynamicImage, min_filter: u8) -> DynamicImage {
     let filtered_img = remove_channel(img, min_filter, 0);
     return filtered_img;
 }
 
-pub fn remove_green_channel(mut img: DynamicImage, min_filter: u8) -> DynamicImage {
+pub fn remove_green_channel(img: DynamicImage, min_filter: u8) -> DynamicImage {
     let filtered_img = remove_channel(img, min_filter, 1);
     return filtered_img;
 }
 
-pub fn remove_blue_channel(mut img: DynamicImage, min_filter: u8) -> DynamicImage {
+pub fn remove_blue_channel(img: DynamicImage, min_filter: u8) -> DynamicImage {
     let filtered_img = remove_channel(img, min_filter, 2);
     return filtered_img;
 }
