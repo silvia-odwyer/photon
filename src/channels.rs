@@ -127,3 +127,32 @@ pub fn alter_two_channels(mut img: DynamicImage, channel1: usize, offset1: u8, c
     }
     return img;
 }
+
+pub fn remove_channel(mut img: DynamicImage, min_filter: u8, channel: usize) -> DynamicImage {
+    let (width, height) = img.dimensions();
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            if px.data[channel] < min_filter{
+                px.data[channel] = 0;
+            }
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+pub fn remove_red_channel(mut img: DynamicImage, min_filter: u8) -> DynamicImage {
+    let filtered_img = remove_channel(img, min_filter, 0);
+    return filtered_img;
+}
+
+pub fn remove_green_channel(mut img: DynamicImage, min_filter: u8) -> DynamicImage {
+    let filtered_img = remove_channel(img, min_filter, 1);
+    return filtered_img;
+}
+
+pub fn remove_blue_channel(mut img: DynamicImage, min_filter: u8) -> DynamicImage {
+    let filtered_img = remove_channel(img, min_filter, 2);
+    return filtered_img;
+}

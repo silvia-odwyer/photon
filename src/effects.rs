@@ -178,32 +178,32 @@ pub fn ripple(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
-pub fn createGradientMap(colorA : Rgb, colorB: Rgb) -> Vec<Rgb> {
+pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
     println!("hi");
-    println!("{}", colorA.r);
+    println!("{}", color_a.r);
     let mut gradient_map = vec![];
 
-    let maxVal = 255;
+    let max_val = 255;
     let mut r_val = 0;
 
-    for i in 0..maxVal + 1{
-        let intensityB = maxVal - i;
+    for i in 0..max_val + 1{
+        let intensity_b = max_val - i;
 
-        r_val = (i * colorA.r + intensityB * colorB.r) / maxVal as u8;
+        r_val = (i * color_a.r + intensity_b * color_b.r) / max_val as u8;
         println!("r_val {}", r_val);
         gradient_map.push(Rgb {
             r: r_val , 
-            g: (i * colorA.g + intensityB * colorB.g) / maxVal as u8 ,
-            b: (i * colorA.b + intensityB * colorB.b) / maxVal as u8
+            g: (i * color_a.g + intensity_b * color_b.g) / max_val as u8 ,
+            b: (i * color_a.b + intensity_b * color_b.b) / max_val as u8
         });
     }
     println!("{:?}", gradient_map);
     return gradient_map;
 }
 
-pub fn duotone(mut img: DynamicImage, colorA : Rgb, colorB : Rgb) -> DynamicImage {
+pub fn duotone(mut img: DynamicImage, color_a : Rgb, color_b : Rgb) -> DynamicImage {
     let (width, height) = img.dimensions();
-    let gradient_map = createGradientMap(colorA, colorB);
+    let gradient_map = create_gradient_map(color_a, color_b);
     println!("entering for loop");
 
     for x in 0..width {

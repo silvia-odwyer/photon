@@ -4,6 +4,7 @@ pub mod filters;
 pub mod channels;
 pub mod noise;
 pub mod effects;
+pub mod conv;
 
 struct Rgb {
     r: u32,
