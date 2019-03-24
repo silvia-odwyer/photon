@@ -128,6 +128,19 @@ pub fn alter_two_channels(mut img: DynamicImage, channel1: usize, offset1: u8, c
     return img;
 }
 
+/// Set a certain channel to zero, thus removing the channel's influence in the pixels' final colours.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `min_filter` - Only remove the channel if the current pixel's channel value is less than this minimum filter. 
+/// * `channel` - The channel to be removed; must be a usize from 0 to 2, with 0 representing Red, 1 representing Green, and 2 representing Blue.
+/// 
+/// # Example
+///
+/// ```
+/// // For example, to remove the Red channel with a min_filter of 100:
+/// photon::channels::remove_channel(img, 100, 0);
+/// ```
 pub fn remove_channel(mut img: DynamicImage, min_filter: u8, channel: usize) -> DynamicImage {
     let (width, height) = img.dimensions();
     for x in 0..width {
@@ -142,16 +155,52 @@ pub fn remove_channel(mut img: DynamicImage, min_filter: u8, channel: usize) -> 
     return img;
 }
 
+/// Remove the Red channel's influence in an image, by setting its value to zero.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `min_filter` - Only remove the channel if the current pixel's channel value is less than this minimum filter. 
+/// 
+/// # Example
+///
+/// ```
+/// // For example, to remove the red channel for red channel pixel values less than 50:
+/// photon::channels::remove_red_channel(img, 50);
+/// ```
 pub fn remove_red_channel(img: DynamicImage, min_filter: u8) -> DynamicImage {
     let filtered_img = remove_channel(img, min_filter, 0);
     return filtered_img;
 }
 
+/// Remove the Green channel's influence in an image, by setting its value to zero.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `min_filter` - Only remove the channel if the current pixel's channel value is less than this minimum filter. 
+/// 
+/// # Example
+///
+/// ```
+/// // For example, to remove the green channel for green channel pixel values less than 50:
+/// photon::channels::remove_green_channel(img, 50);
+/// ```
 pub fn remove_green_channel(img: DynamicImage, min_filter: u8) -> DynamicImage {
     let filtered_img = remove_channel(img, min_filter, 1);
     return filtered_img;
 }
 
+/// Remove the Blue channel's influence in an image, by setting its value to zero.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `min_filter` - Only remove the channel if the current pixel's channel value is less than this minimum filter. 
+/// 
+/// # Example
+///
+/// ```
+/// // For example, to remove the blue channel for blue channel pixel values less than 50:
+/// photon::channels::remove_blue_channel(img, 50);
+/// ```
 pub fn remove_blue_channel(img: DynamicImage, min_filter: u8) -> DynamicImage {
     let filtered_img = remove_channel(img, min_filter, 2);
     return filtered_img;
