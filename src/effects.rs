@@ -1,7 +1,6 @@
 extern crate image;
 extern crate rand;
-use image::{GenericImage, DynamicImage, ImageBuffer, GenericImageView};
-use rand::Rng;
+use image::{GenericImage, DynamicImage, GenericImageView};
 use std::f64;
 use std::cmp;
 
@@ -26,7 +25,6 @@ pub struct Rgb {
 /// ```
 pub fn offset(mut img: DynamicImage, channel_index: usize, offset: u32) -> DynamicImage {
     let (width, height) = img.dimensions();
-    let rng = rand::thread_rng();
 
     for x in 0..width {
         for y in 0..height {
@@ -103,7 +101,6 @@ pub fn offset_blue(img: DynamicImage, offset_amt: u32) -> DynamicImage {
 /// ```
 pub fn multiple_offsets(mut img: DynamicImage, offset: u32, channel_index: usize, channel_index2: usize) -> DynamicImage {
     let (width, height) = img.dimensions();
-    let rng = rand::thread_rng();
 
     for x in 0..width {
         for y in 0..height {
@@ -419,7 +416,7 @@ pub fn colorize(mut img: DynamicImage) -> DynamicImage {
 
             let baseline_color = Rgb{r: 0, g: 255, b: 255};
 
-            let square_distance = square_distance(baseline_color, px_as_rgb);
+            let square_distance = crate::helpers::square_distance(baseline_color, px_as_rgb);
 
             let mut r = px.data[0] as f32;
             let mut g = px.data[1] as f32;
@@ -490,9 +487,29 @@ pub fn inc_luminosity(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
-// Gets the square distance between two colours
-pub fn square_distance(color1 : Rgb, color2 : Rgb) -> i32{
-    let (r1, g1, b1) = (color1.r as i32, color1.g as i32, color1.b as i32);
-    let (r2, g2, b2) = (color2.r as i32, color2.g as i32, color2.b as i32);
-    return i32::pow(r1 - r2, 2) + i32::pow(g1 - g2, 2) + i32::pow(b1 - b2, 2);
+/// Applies a solarizing effect to an image.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// # Example
+///
+/// ```
+/// // For example, to colorize an image of type `DynamicImage`:
+/// use photon::effects;
+/// photon::effects::solarize(img);
+/// ```
+pub fn solarize(mut img: DynamicImage) -> DynamicImage {
+
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            if 200 as i32 - px.data[0] as i32 > 0 {
+                px.data[0] = 200 - px.data[0];
+            }
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
 }

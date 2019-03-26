@@ -1,6 +1,6 @@
 extern crate image;
 use crate::effects::Rgb;
-use image::{GenericImage, DynamicImage, GenericImageView};
+use image::{DynamicImage};
 
 // Gets the square distance between two colours
 pub fn square_distance(color1 : Rgb, color2 : Rgb) -> i32{

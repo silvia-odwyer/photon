@@ -17,7 +17,7 @@
 //! This crate contains built-in preset functions, which provide default image processing functionality, as well as functions
 //! that allow for direct, low-level access to channel manipulation.
 
-use image::{GenericImage, DynamicImage, ImageBuffer, GenericImageView};
+use image::{GenericImage, DynamicImage, GenericImageView};
 
 pub mod filters;
 pub mod channels;
@@ -25,12 +25,7 @@ pub mod noise;
 pub mod effects;
 pub mod conv;
 pub mod monochrome;
-
-struct Rgb {
-    r: u32,
-    g: u32,
-    b: u32
-}
+pub mod helpers;
 
 /// Threshold an image using a standard thresholding algorithm.
 /// 
@@ -104,8 +99,6 @@ pub fn tint(mut img: DynamicImage, r_offset: u32, g_offset: u32, b_offset: u32) 
     }
     return img;
 }
-
-
 
 /// Increase the brightness of an image by a factor.
 /// 

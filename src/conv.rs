@@ -1,5 +1,5 @@
 extern crate image;
-use image::{GenericImage, DynamicImage, GenericImageView};
+use image::{DynamicImage};
 
 /// Sharpen an image. 
 /// 
@@ -268,3 +268,36 @@ pub fn sobel_vertical(img: DynamicImage) -> DynamicImage {
     return filtered_img;
 }
 
+// pub fn sobel_color(img: DynamicImage) -> DynamicImage {
+
+//     let kernel = [-1.0f32, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0];
+
+//     let mut filtered_img = img.filter3x3(&kernel);
+
+//     let (width, height) = filtered_img.dimensions();
+
+//     for x in 0..width {
+//         for y in 0..height {
+//             let mut px = filtered_img.get_pixel(x, y);
+            
+//             let r_val = px.data[0];
+//             let g_val = px.data[1];
+//             let b_val = px.data[2];
+//             if r_val > 150 {
+//                 let addition = 90;
+//                 px.data[0] = if r_val as u32 + addition < 255 { r_val as u8 + addition as u8} else { 255 };
+//             }
+//             if g_val > 150 {
+//                 let addition = 60;
+//                 px.data[1] = if g_val as u32 + addition < 255 { g_val as u8 + addition as u8} else { 255 };
+//             }
+//             if b_val > 150 {
+//                 let addition = 110;
+//                 px.data[2] = if b_val as u32 + addition < 255 { b_val as u8 + addition as u8} else { 255 };
+//             }
+
+//             filtered_img.put_pixel(x, y, px);
+//         }
+//     }
+//     return filtered_img;
+// }

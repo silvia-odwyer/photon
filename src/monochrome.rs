@@ -1,7 +1,25 @@
 extern crate image;
 use image::{GenericImage, DynamicImage, GenericImageView};
 
-pub fn monochrome(mut img: DynamicImage, r_offset: u32, g_offset: u32, b_offset: u32) -> DynamicImage {
+/// Apply a monochrome effect of a certain colour.
+/// 
+/// It does so by averaging the R, G, and B values of a pixel, and then adding a 
+/// separate value to that averaged value for each channel to produce a tint.
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `r_offset` - The value to add to the Red channel per pixel.
+/// * `g_offset` - The value to add to the Green channel per pixel.
+/// * `b_offset` - The value to add to the Blue channel per pixel.
+///
+/// # Example
+///
+/// ```
+/// // For example, to apply a monochrome effect to an image:
+/// use photon::monochrome;
+/// photon::monochrome::monochroma(img, 40, 50, 100);
+/// ```
+/// 
+pub fn monochroma(mut img: DynamicImage, r_offset: u32, g_offset: u32, b_offset: u32) -> DynamicImage {
     let (width, height) = img.dimensions();
 
     for x in 0..width {
@@ -285,7 +303,7 @@ pub fn r_grayscale(mut img: DynamicImage) -> DynamicImage {
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
 
-            let mut red = px.data[0];
+            let red = px.data[0];
             
             px.data[0] = red as u8;
             px.data[1] = red as u8;

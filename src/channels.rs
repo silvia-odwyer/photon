@@ -148,6 +148,7 @@ pub fn remove_channel(mut img: DynamicImage, min_filter: u8, channel: usize) -> 
             let mut px = img.get_pixel(x, y);
             if px.data[channel] < min_filter{
                 px.data[channel] = 0;
+                px.data[1] += 2;
             }
             img.put_pixel(x, y, px);
         }

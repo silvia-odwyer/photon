@@ -213,7 +213,7 @@ pub fn twenties(img: DynamicImage) -> DynamicImage {
 /// # Example
 ///
 /// ```
-/// photon::filters::ryo(img);
+/// photon::filters::rosetint(img);
 /// ```
 pub fn rosetint(img: DynamicImage) -> DynamicImage {
     let filtered_img = crate::monochrome::monochroma(img, 80, 20, 31);
@@ -227,7 +227,7 @@ pub fn rosetint(img: DynamicImage) -> DynamicImage {
 /// # Example
 ///
 /// ```
-/// photon::filters::ryo(img);
+/// photon::filters::mauve(img);
 /// ```
 pub fn mauve(img: DynamicImage) -> DynamicImage {
     let filtered_img = crate::monochrome::monochroma(img, 90, 40, 80);
@@ -255,7 +255,7 @@ pub fn bluechrome(img: DynamicImage) -> DynamicImage {
 /// # Example
 ///
 /// ```
-/// photon::filters::ryo(img);
+/// photon::filters::vintage(img);
 /// ```
 pub fn vintage(img: DynamicImage) -> DynamicImage {
     let filtered_img = crate::tint(img, 120, 70, 13);
@@ -269,7 +269,7 @@ pub fn vintage(img: DynamicImage) -> DynamicImage {
 /// # Example
 ///
 /// ```
-/// photon::filters::ryo(img);
+/// photon::filters::perfume(img);
 /// ```
 pub fn perfume(img: DynamicImage) -> DynamicImage {
     let filtered_img = crate::tint(img, 80, 40, 120);
@@ -283,7 +283,7 @@ pub fn perfume(img: DynamicImage) -> DynamicImage {
 /// # Example
 ///
 /// ```
-/// photon::filters::ryo(img);
+/// photon::filters::serenity(img);
 /// ```
 pub fn serenity(img: DynamicImage) -> DynamicImage {
     let filtered_img = crate::tint(img, 10, 40, 90);
