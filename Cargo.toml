@@ -2,8 +2,9 @@
 name = "photon"
 version = "0.1.0"
 authors = ["silvi <silviaodwyerdev@gmail.com>"]
-edition = "2019"
+edition = "2018"
 
 [dependencies]
 image = "*"
 rand = "*"
+time = "*"
