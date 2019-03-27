@@ -10,6 +10,7 @@ The library provides low-level access to pixel and channel manipulation, and pro
 Functions include:
 - thresholding
 - convolutions
+- sharpening
 - edge-detection
 - Sobel filters
 - Laplace effects
@@ -24,17 +25,8 @@ Functions include:
 View the [official website](https://silvia-odwyer.github.io/photon).
 
 ## Examples
-![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/laplace.PNG)
+![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/streetlamp_collage.png)
 
-![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/remove_red_150.PNG)
-
-![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/emboss.PNG)
-
-![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/sepia.PNG)
-
-![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/threshold.PNG)
-
-![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/sobel_vertical.PNG)
 
 
 ## Install The Crate via Cargo
