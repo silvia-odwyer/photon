@@ -27,6 +27,7 @@ View the [official website](https://silvia-odwyer.github.io/photon).
 ## Examples
 ![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/streetlamp_collage.png)
 
+![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/cubes_collage.png)
 
 
 ## Install The Crate via Cargo
