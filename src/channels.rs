@@ -5,7 +5,7 @@ use image::{GenericImage, DynamicImage, GenericImageView};
 /// 
 /// # Arguments
 /// * `img` - A DynamicImage that contains a view into the image.
-/// * `channel` - The channel you wish to alter, it should be either 0, 1 or 2, 
+/// * `channel` - The channel you wish to inc, it should be either 0, 1 or 2, 
 /// representing R, G, or B respectively
 /// * `offset` - The amount you want to increment the channel's value by for that pixel.
 /// 
@@ -14,22 +14,37 @@ use image::{GenericImage, DynamicImage, GenericImageView};
 /// ```
 /// // For example, to increase the Red channel for all pixels by 10:
 /// use photon::channels;
-/// photon::channels::alter_channel(img, 0, 10);
+/// photon::channels::inc_channel(img, 0, 10);
 /// ```
 /// Adds a constant to a select R, G, or B channel's value.
-pub fn alter_channel(mut img: DynamicImage, channel: usize, offset: u8) -> DynamicImage {
+pub fn inc_channel(mut img: DynamicImage, channel: usize, offset: i16) -> DynamicImage {
     let (width, height) = img.dimensions();
 
     for x in 0..width {
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
-            if px.data[channel] <= 255 - offset {
-                px.data[channel] += offset;
+            
+            if px.data[channel] <= 255 - offset as u8 {
+                let px_data = px.data[channel];
+                let final_px_data = px_data + offset as u8;
+                px.data[channel] = final_px_data as u8;
             }
             else {
                 px.data[channel] = 255;
             }
-            img.put_pixel(x, y, px)
+
+            // else if offset < 0 {
+            //     if 255 as u16 + offset as u16 > 0 as u16 {
+            //         let px_data = px.data[channel];
+            //         let final_px_data = px_data + offset as u8;
+            //         px.data[channel] = final_px_data as u8;
+            //     }
+            //     else {
+            //         px.data[channel] = 255;
+            //     }
+            // }
+
+            img.put_pixel(x, y, px);
         }
     }
     return img;
@@ -46,10 +61,10 @@ pub fn alter_channel(mut img: DynamicImage, channel: usize, offset: u8) -> Dynam
 /// ```
 /// // For example, to increase the Red channel for all pixels by 10:
 /// use photon::channels;
-/// photon::channels::alter_red_channel(img, 10);
+/// photon::channels::inc_red_channel(img, 10);
 /// ```
-pub fn alter_red_channel(img: DynamicImage, offset: u8) -> DynamicImage {
-    let res_img = alter_channel(img, 0, offset);
+pub fn inc_red_channel(img: DynamicImage, offset: i16) -> DynamicImage {
+    let res_img = inc_channel(img, 0, offset);
     return res_img;
 }
 
@@ -64,10 +79,10 @@ pub fn alter_red_channel(img: DynamicImage, offset: u8) -> DynamicImage {
 /// ```
 /// // For example, to increase the Green channel for all pixels by 20:
 /// use photon::channels;
-/// photon::channels::alter_green_channel(img, 10);
+/// photon::channels::inc_green_channel(img, 10);
 /// ```
-pub fn alter_green_channel(img: DynamicImage, offset: u8) -> DynamicImage {
-    let res_img = alter_channel(img, 1, offset);
+pub fn inc_green_channel(img: DynamicImage, offset: i16) -> DynamicImage {
+    let res_img = inc_channel(img, 1, offset);
     return res_img;
 }
 
@@ -82,10 +97,10 @@ pub fn alter_green_channel(img: DynamicImage, offset: u8) -> DynamicImage {
 /// ```
 /// // For example, to increase the Blue channel for all pixels by 10:
 /// use photon::channels;
-/// photon::channels::alter_blue_channel(img, 10);
+/// photon::channels::inc_blue_channel(img, 10);
 /// ```
-pub fn alter_blue_channel(img: DynamicImage, offset: u8) -> DynamicImage {
-    let res_img = alter_channel(img, 2, offset);
+pub fn inc_blue_channel(img: DynamicImage, offset: i16) -> DynamicImage {
+    let res_img = inc_channel(img, 2, offset);
     return res_img;
 }
 
@@ -102,22 +117,26 @@ pub fn alter_blue_channel(img: DynamicImage, offset: u8) -> DynamicImage {
 ///
 /// ```
 /// // For example, to increase the values of the Blue and Red channels per pixel:
-/// photon::channels::alter_two_channels(img, 0, 10, 2, 20);
+/// photon::channels::inc_two_channels(img, 0, 10, 2, 20);
 /// ```
-pub fn alter_two_channels(mut img: DynamicImage, channel1: usize, offset1: u8, channel2: usize, offset2: u8) -> DynamicImage {
+pub fn inc_two_channels(mut img: DynamicImage, channel1: usize, offset1: i16, channel2: usize, offset2: i16) -> DynamicImage {
     let (width, height) = img.dimensions();
     for x in 0..width {
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
-            if px.data[channel1] <= 255 - offset1 {
-                px.data[channel1] += offset1;
+            if px.data[channel1] <= 255 - offset1 as u8 {
+                let px_data = px.data[channel1];
+                let final_px_data = px_data + offset1 as u8;
+                px.data[channel1] = final_px_data;
             }
             else {
                 px.data[channel1] = 255;
             }
                 
-            if px.data[channel2] <= 255 - offset2 {
-                px.data[channel2] += offset2;
+            if px.data[channel2] <= 255 - offset2 as u8 {
+                let px_data = px.data[channel2];
+                let final_px_data = px_data + offset2 as u8;
+                px.data[channel2] = final_px_data;
             }
             else {
                 px.data[channel2] = 255
@@ -132,8 +151,10 @@ pub fn alter_two_channels(mut img: DynamicImage, channel1: usize, offset1: u8, c
 /// 
 /// # Arguments
 /// * `img` - A DynamicImage that contains a view into the image.
-/// * `min_filter` - Only remove the channel if the current pixel's channel value is less than this minimum filter. 
 /// * `channel` - The channel to be removed; must be a usize from 0 to 2, with 0 representing Red, 1 representing Green, and 2 representing Blue.
+/// * `min_filter` - Value between 0 and 255. Only remove the channel if the current pixel's channel value is less than this minimum filter. To completely 
+/// remove the channel, set this value to 255, to leave the channel as is, set to 0, and to set a channel to zero for a pixel whose red value is greater than 50, 
+/// then channel would be 0 and min_filter would be 50.
 /// 
 /// # Example
 ///
@@ -141,7 +162,7 @@ pub fn alter_two_channels(mut img: DynamicImage, channel1: usize, offset1: u8, c
 /// // For example, to remove the Red channel with a min_filter of 100:
 /// photon::channels::remove_channel(img, 100, 0);
 /// ```
-pub fn remove_channel(mut img: DynamicImage, min_filter: u8, channel: usize) -> DynamicImage {
+pub fn remove_channel(mut img: DynamicImage, channel: usize, min_filter: u8) -> DynamicImage {
     let (width, height) = img.dimensions();
     for x in 0..width {
         for y in 0..height {
@@ -169,7 +190,7 @@ pub fn remove_channel(mut img: DynamicImage, min_filter: u8, channel: usize) -> 
 /// photon::channels::remove_red_channel(img, 50);
 /// ```
 pub fn remove_red_channel(img: DynamicImage, min_filter: u8) -> DynamicImage {
-    let filtered_img = remove_channel(img, min_filter, 0);
+    let filtered_img = remove_channel(img, 0, min_filter);
     return filtered_img;
 }
 
@@ -186,7 +207,7 @@ pub fn remove_red_channel(img: DynamicImage, min_filter: u8) -> DynamicImage {
 /// photon::channels::remove_green_channel(img, 50);
 /// ```
 pub fn remove_green_channel(img: DynamicImage, min_filter: u8) -> DynamicImage {
-    let filtered_img = remove_channel(img, min_filter, 1);
+    let filtered_img = remove_channel(img, 1, min_filter);
     return filtered_img;
 }
 
@@ -203,6 +224,6 @@ pub fn remove_green_channel(img: DynamicImage, min_filter: u8) -> DynamicImage {
 /// photon::channels::remove_blue_channel(img, 50);
 /// ```
 pub fn remove_blue_channel(img: DynamicImage, min_filter: u8) -> DynamicImage {
-    let filtered_img = remove_channel(img, min_filter, 2);
+    let filtered_img = remove_channel(img, 2, min_filter);
     return filtered_img;
 }

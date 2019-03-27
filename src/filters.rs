@@ -13,7 +13,7 @@ use image::{GenericImage, DynamicImage, GenericImageView};
 /// photon::filters::oceanic(img);
 /// ```
 pub fn oceanic(img: DynamicImage) -> DynamicImage {
-    let filtered_img = crate::channels::alter_two_channels(img, 1, 9, 2, 173);
+    let filtered_img = crate::channels::inc_two_channels(img, 1, 9, 2, 173);
     return filtered_img;
 }
 
@@ -27,7 +27,7 @@ pub fn oceanic(img: DynamicImage) -> DynamicImage {
 /// photon::filters::islands(img);
 /// ```
 pub fn islands(img: DynamicImage) -> DynamicImage {
-    let filtered_img = crate::channels::alter_two_channels(img, 1, 24, 2, 95);
+    let filtered_img = crate::channels::inc_two_channels(img, 1, 24, 2, 95);
     return filtered_img;
 }
 
@@ -41,7 +41,7 @@ pub fn islands(img: DynamicImage) -> DynamicImage {
 /// photon::filters::marine(img);
 /// ```
 pub fn marine(img: DynamicImage) -> DynamicImage {
-    let filtered_img = crate::channels::alter_two_channels(img, 1, 14, 2, 119);
+    let filtered_img = crate::channels::inc_two_channels(img, 1, 14, 2, 119);
     return filtered_img;
 }
 
@@ -55,7 +55,7 @@ pub fn marine(img: DynamicImage) -> DynamicImage {
 /// photon::filters::seagreen(img);
 /// ```
 pub fn seagreen(img: DynamicImage) -> DynamicImage {
-    let filtered_img = crate::channels::alter_two_channels(img, 1, 68, 2, 62);
+    let filtered_img = crate::channels::inc_two_channels(img, 1, 68, 2, 62);
     return filtered_img;
 }
 
@@ -69,7 +69,7 @@ pub fn seagreen(img: DynamicImage) -> DynamicImage {
 /// photon::filters::flagblue(img);
 /// ```
 pub fn flagblue(img: DynamicImage) -> DynamicImage {
-    let filtered_img = crate::channels::alter_blue_channel(img, 131);
+    let filtered_img = crate::channels::inc_blue_channel(img, 131);
     return filtered_img;
 }
 
@@ -83,7 +83,7 @@ pub fn flagblue(img: DynamicImage) -> DynamicImage {
 /// photon::filters::diamante(img);
 /// ```
 pub fn diamante(img: DynamicImage) -> DynamicImage {
-    let filtered_img = crate::channels::alter_two_channels(img, 1, 82, 2, 87);
+    let filtered_img = crate::channels::inc_two_channels(img, 1, 82, 2, 87);
     return filtered_img;
 }
 
@@ -97,7 +97,7 @@ pub fn diamante(img: DynamicImage) -> DynamicImage {
 /// photon::filters::islands(img);
 /// ```
 pub fn liquid(img: DynamicImage) -> DynamicImage {
-    let filtered_img = crate::channels::alter_two_channels(img, 1, 10, 2, 75);
+    let filtered_img = crate::channels::inc_two_channels(img, 1, 10, 2, 75);
     return filtered_img;
 }
 
