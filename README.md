@@ -1,7 +1,5 @@
 # photon
 
-![Photon is a Rust image processing library.](https://github.com/silvia-odwyer/photon/blob/master/photon_banner.JPG)
-
 A Rust image processing library, which provides a suite of functions for low-level pixel manipulation, as well as functions to apply effects to imagery 
 through convolution, thresholding, and edge-detection. 
 
@@ -20,7 +18,7 @@ Functions include:
 - increasing saturation
 - brightness adjustment 
 
-`photon` can be thought of as a high-level wrapper to the Rust image crate, but conversely also includes functions which provide low-level access to pixel and channel manipulation to developers who wish to do work with this data directly.
+`photon` can be thought of as a high-level wrapper to the Rust image crate, but conversely also includes functions which provide low-level access to pixel and channel manipulation, perfect for developers who wish to work with this data directly.
 
 View the [official website](https://silvia-odwyer.github.io/photon).
 
@@ -29,6 +27,7 @@ View the [official website](https://silvia-odwyer.github.io/photon).
 
 ![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/cubes_collage.png)
 
+![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/daisy_collage.png)
 
 ## Install The Crate via Cargo
 `photon` can be installed via Cargo by declaring the following dependency in your Cargo.toml file:
