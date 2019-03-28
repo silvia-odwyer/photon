@@ -63,7 +63,7 @@ pub fn sepia(mut img: DynamicImage) -> DynamicImage {
             let avg = 0.3 * r_val + 0.59 * g_val + 0.11 * b_val;
 
             px.data[0] = if avg as u32 + 100 < 255 { avg as u8 + 100} else { 255 };
-            px.data[1] = if avg as u32 + 30 < 255 { avg as u8 + 50 } else { 255 };
+            px.data[1] = if avg as u32 + 50 < 255 { avg as u8 + 50 } else { 255 };
       
             img.put_pixel(x, y, px);
         }

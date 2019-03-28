@@ -4,9 +4,9 @@ use time::PreciseTime;
 // use photon::effects::Rgb;
 
 fn main() {
-    let img = photon::helpers::open_image("noir.JPG");
+    let img = photon::helpers::open_image("daisies.JPG");
     
-    let filtered_img = photon::channels::inc_channel(img, 0, 60);
+    let filtered_img = photon::conv::canny_horizontal(img);
     
     // Write the contents of this image in PNG format.
     photon::helpers::save_image(filtered_img, "new_image.PNG");

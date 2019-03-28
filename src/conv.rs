@@ -249,6 +249,25 @@ pub fn sobel_horizontal(img: DynamicImage) -> DynamicImage {
     return filtered_img;
 }
 
+/// Apply a Canny edge detection convolution to an image.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// 
+/// # Example
+///
+/// ```
+/// // For example, to apply a horizontal Sobel filter:
+/// use photon::conv;
+/// photon::conv::sobel_horizontal(img);
+/// ```
+pub fn canny_horizontal(img: DynamicImage) -> DynamicImage {
+    let kernel = [-1.0f32, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0];
+
+    let filtered_img = img.filter3x3(&kernel);
+    return filtered_img;
+}
+
 /// Apply a vertical Sobel filter to an image.
 /// 
 /// # Arguments
