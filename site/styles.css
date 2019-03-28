@@ -85,54 +85,92 @@ img {
 
 }
 
-img:nth-child(15) {
- animation: xfade 36s 0s infinite;
- }
-img:nth-child(14) {
- animation: xfade 36s 4s infinite;
- }
-img:nth-child(13) {
-  animation: xfade 36s 8s infinite;
-}
-img:nth-child(12) {
-  animation: xfade 36s 12s infinite;
-}
-img:nth-child(11) {
- animation: xfade 36s 16s infinite;
- }
-img:nth-child(10) {
-  animation: xfade 36s 20s infinite;
- }
 
-img:nth-child(9) {
-  animation: xfade 36s 24s infinite;
-} 
+.fadeIn {
+    opacity: 0;
+    -moz-animation: cssAnimation 7s;
+    /* Firefox */
+    -webkit-animation: cssAnimation 7s;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 7s;
+    /* Opera */
+    animation: cssAnimation 7s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
 
-img:nth-child(8) {
- animation: xfade 36s 28s infinite;
+.fadeInNine {
+  opacity: 0;
+  -moz-animation: cssAnimation 10s;
+  /* Firefox */
+  -webkit-animation: cssAnimation 10s;
+  /* Safari and Chrome */
+  -o-animation: cssAnimation 10s;
+  /* Opera */
+  animation: cssAnimation 10s;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
 }
-img:nth-child(7) {
- animation: xfade 36s 32s infinite;
+@keyframes cssAnimation {
+  17% {
+    opacity:0;
+  }
+  25% {
+    opacity:0.3;
+  }
+  92% {
+    opacity:1;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-img:nth-child(6) {
- animation: xfade 36s 36s infinite;
-} 
-img:nth-child(5) {
- animation: xfade 36s 40s infinite;
+@-webkit-keyframes cssAnimation {
+    17% {
+      opacity:0;
+    }
+    25% {
+      opacity:0.3;
+    }
+    92% {
+      opacity:1;
+    }
 }
-img:nth-child(4) {
- animation: xfade 36s 44s infinite;
+
+ul li, .func_list p {
+  font-size: 0.7em;
 }
-img:nth-child(3) {
- animation: xfade 36s 48s infinite;
+img:nth-child(1) {
+  animation: xfade 20s 18s infinite;
 }
 img:nth-child(2) {
- animation: xfade 36s 52s infinite;
+  animation: xfade 20s 16s infinite;
+}
+img:nth-child(3) {
+  animation: xfade 20s 14s infinite;
+}
+img:nth-child(4) {
+  animation: xfade 20s 12s infinite;
+}
+img:nth-child(5) {
+  animation: xfade 20s 10s infinite;
+}
+img:nth-child(6) {
+  animation: xfade 20s 8s infinite;
+}
+img:nth-child(7) {
+  animation: xfade 20s 6s infinite;
+}
+img:nth-child(8) {
+  animation: xfade 20s 4s infinite;
+}
+img:nth-child(9) {
+  animation: xfade 20s 2s infinite;
+}
+img:nth-child(10) {
+  animation: xfade 20s 0s infinite;
 }
 
-img:nth-child(1) {
- animation: xfade 36s 56s infinite;
-}
 @keyframes xfade{
  17% {
    opacity:1;
@@ -189,4 +227,43 @@ z-index: -1;
   position: absolute;
   bottom: 3px;
   left: 1vh;
+}
+
+.typewriter {
+  font-family: Courier, monospace;
+display: inline-block;
+}
+
+.typewriter-text {
+  display: inline-block;
+  overflow: hidden;
+  letter-spacing: 2px;
+ animation: typing 5s steps(30, end), blink .75s step-end infinite;
+  white-space: nowrap;
+  font-size: 30px;
+  font-weight: 700;
+  border-right: 4px solid orange;
+  box-sizing: border-box;
+}
+
+@keyframes typing {
+  from { 
+      width: 0% 
+  }
+  to { 
+      width: 100% 
+  }
+}
+
+@keyframes blink {
+  from, to { 
+      border-color: transparent 
+  }
+  50% { 
+      border-color: orange; 
+  }
+}
+
+img {
+  width: 100%;
 }
