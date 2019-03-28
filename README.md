@@ -25,9 +25,9 @@ View the [official website](https://silvia-odwyer.github.io/photon).
 ## Examples
 ![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/streetlamp_collage.png)
 
-![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/cubes_collage.png)
-
 ![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/daisy_collage.png)
+
+![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/cube_demo.gif)
 
 ## Install The Crate via Cargo
 `photon` can be installed via Cargo by declaring the following dependency in your Cargo.toml file:
