@@ -3,6 +3,8 @@
 html, body {
     margin: 0;
     padding: 0;
+
+    background-color: black;
 }
 
 #imgs img {
@@ -23,26 +25,10 @@ h1 {
     text-transform: uppercase;
     color: #ffffffb3;
     letter-spacing: 1px;
-}
- 
 
-/* 
-#imgs {
-    position:relative;
-    margin:0 auto;
-  }
-  
-  #imgs img {
-    position:absolute;
-    -webkit-transition: opacity 1s ease-in-out;
-    -moz-transition: opacity 1s ease-in-out;
-    -o-transition: opacity 1s ease-in-out;
-    transition: opacity 1s ease-in-out;
-  }
-  
-  #imgs img.top:hover {
-    opacity:0;
-  } */
+    max-height: 100vh;
+    margin-bottom: 10vh;
+}
 
 
   @media screen and (max-width: 40em) {
@@ -74,16 +60,16 @@ h1 {
     position: absolute;
   }
 
-  
  #imgs {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-img {
+#imgs img {
   position: absolute;
 
 }
+
 
 
 .fadeIn {
@@ -137,37 +123,77 @@ img {
     }
 }
 
+.end {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  margin-bottom: 5vh;
+}
+
+.demo {
+  margin-top: 30vh;
+}
+
+.grid article {
+  display: flex;
+  flex-direction: column;
+}
+
+.end .slide {
+  margin: 0.8em;
+}
+.fadeInFooter {
+  opacity: 0;
+  -moz-animation: cssAnimation 12s;
+  /* Firefox */
+  -webkit-animation: cssAnimation 12s;
+  /* Safari and Chrome */
+  -o-animation: cssAnimation 12s;
+  /* Opera */
+  animation: cssAnimation 12s;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+@-webkit-keyframes slide {
+  100% { left: 0; opacity: 1}
+}
+
+@keyframes slide {
+  100% { left: 0; opacity: 1}
+}
+
 ul li, .func_list p {
   font-size: 0.7em;
 }
-img:nth-child(1) {
+#imgs img:nth-child(1) {
   animation: xfade 20s 18s infinite;
 }
-img:nth-child(2) {
+#imgs img:nth-child(2) {
   animation: xfade 20s 16s infinite;
 }
-img:nth-child(3) {
+#imgs img:nth-child(3) {
   animation: xfade 20s 14s infinite;
 }
-img:nth-child(4) {
+#imgs img:nth-child(4) {
   animation: xfade 20s 12s infinite;
 }
-img:nth-child(5) {
+#imgs img:nth-child(5) {
   animation: xfade 20s 10s infinite;
 }
-img:nth-child(6) {
+#imgs img:nth-child(6) {
   animation: xfade 20s 8s infinite;
 }
-img:nth-child(7) {
+#imgs img:nth-child(7) {
   animation: xfade 20s 6s infinite;
 }
-img:nth-child(8) {
+#imgs img:nth-child(8) {
   animation: xfade 20s 4s infinite;
 }
-img:nth-child(9) {
+#imgs img:nth-child(9) {
   animation: xfade 20s 2s infinite;
 }
-img:nth-child(10) {
+#imgs img:nth-child(10) {
   animation: xfade 20s 0s infinite;
 }
 
@@ -184,18 +210,17 @@ img:nth-child(10) {
 } 
 }
 
-
 @viewport {
 	width: device-width
 }
 
 
-nav ul li {
+nav ul li, .end ul li {
   list-style: none;
   padding-right: 1em;
 }
 
-nav ul {
+nav ul, .end {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -207,14 +232,15 @@ nav {
   right: 10vh;
 } 
 
-nav ul li a {
+ul li a{
   text-decoration: none;
-  font-size: 0.8em;
   font-family: "Open Sans", "Arial", sans-serif;
   text-transform: uppercase;
   color: rgba(255,255,255, .7); 
   letter-spacing: 1px;
 } 
+
+
 .nav {
 color: white;
 position: absolute;
@@ -223,47 +249,17 @@ right: 10vh;
 z-index: -1;
 }
 
-.wasm_logo {
-  position: absolute;
-  bottom: 3px;
-  left: 1vh;
-}
-
-.typewriter {
-  font-family: Courier, monospace;
-display: inline-block;
-}
-
-.typewriter-text {
-  display: inline-block;
-  overflow: hidden;
-  letter-spacing: 2px;
- animation: typing 5s steps(30, end), blink .75s step-end infinite;
-  white-space: nowrap;
-  font-size: 30px;
-  font-weight: 700;
-  border-right: 4px solid orange;
-  box-sizing: border-box;
-}
-
-@keyframes typing {
-  from { 
-      width: 0% 
-  }
-  to { 
-      width: 100% 
-  }
-}
-
-@keyframes blink {
-  from, to { 
-      border-color: transparent 
-  }
-  50% { 
-      border-color: orange; 
-  }
-}
-
 img {
   width: 100%;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding-right: 5vh;
+}
+
+.grid article {
+  flex: 1 0 21%;
 }
