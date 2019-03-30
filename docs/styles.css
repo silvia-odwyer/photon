@@ -1,62 +1,54 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
 html, body {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 
-    background-color: black;
+  background-color: black;
 }
 
 #imgs img {
-    width: 100%;
+  width: 100%;
 }
 
 h1 {
-    color: white;
+  color: white;
 }
 
 .intro {
   left: 10vh;
   top:30vh;
 
-    text-decoration: none;
-    font-size: 1em;
-    font-family: "Open Sans", "Arial", sans-serif;
-    text-transform: uppercase;
-    color: #ffffffb3;
-    letter-spacing: 1px;
+  text-decoration: none;
+  font-size: 1em;
+  font-family: "Open Sans", "Arial", sans-serif;
+  text-transform: uppercase;
+  color: #ffffffb3;
+  letter-spacing: 1px;
 
-    max-height: 100vh;
-    margin-bottom: 10vh;
+  max-height: 100vh;
+  margin-bottom: 10vh;
 }
 
 
-  @media screen and (max-width: 40em) {
-    .intro  {
-      margin-top: 6em;
-      font-size: 0.8em;
-      text-align: center;
-    }
+@media screen and (max-width: 30em) {
+  .intro  {
+    margin-top: 6em;
+    font-size: 0.8em;
+    text-align: center;
+  }
 
-    #imgs {
-      margin-top: 14em;
-    }
+  #imgs {
+    margin-top: 14em;
+  }
 
-    html {
-      background-color: black;
-    }
-
-    #imgs img {
-      display: flex;
-      flex-wrap: wrap;
-      flex-direction: row;
-      display: relative;
+  #imgs img {
+    display: none;
     }
   }
 
- @media screen and (min-width: 76em) {
+ @media screen and (min-width: 50em) {
   .intro {
-
     position: absolute;
   }
 
@@ -70,19 +62,17 @@ h1 {
 
 }
 
-
-
 .fadeIn {
-    opacity: 0;
-    -moz-animation: cssAnimation 7s;
-    /* Firefox */
-    -webkit-animation: cssAnimation 7s;
-    /* Safari and Chrome */
-    -o-animation: cssAnimation 7s;
-    /* Opera */
-    animation: cssAnimation 7s;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
+  opacity: 0;
+  -moz-animation: cssAnimation 7s;
+  /* Firefox */
+  -webkit-animation: cssAnimation 7s;
+  /* Safari and Chrome */
+  -o-animation: cssAnimation 7s;
+   /* Opera */
+  animation: cssAnimation 7s;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
 }
 
 .fadeInNine {
