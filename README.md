@@ -27,28 +27,46 @@ View the [official website](https://silvia-odwyer.github.io/photon).
 
 ![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/daisy_collage.png)
 
+## Live Demo
+To show a live demo of some effects available, take a look at the original image below:
+
+**Original Image**
+
+![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/cubes.png)
+
+**Filters/Effects**
+The GIF below shows the image cycling through various effects available. Don't take heed of the quality, since this is a GIF and 
+merely for demonstration purposes. You should run the library's binary for a more thorough analysis.
+
 ![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/cube_demo.gif)
 
-## Install The Crate via Cargo
-`photon` can be installed via Cargo by declaring the following dependency in your Cargo.toml file:
+<!-- ## Cargo Status -->
+<!-- `photon` can be installed via Cargo by declaring the following dependency in your Cargo.toml file:
 ```toml
 [dependencies]
 photon-rs = "*"
+``` -->
+
+## Install 
+Clone this repo, then run:
+```bash
+cargo run --release 
 ```
+which will run the binary file. Ensure you have an image with the same name as that in the bin file. 
+
 
 ## Use 
 ```rust
 extern crate photon;
-extern crate image;
-
 fn main() {
-    let img = image::open("background3.JPG").unwrap();
+    let img = photon::helpers::open_image("daisies.JPG");
     
-    let filtered_img = photon::effects::threshold(img);
+    let filtered_img = photon::conv::sobel_vertical(img);
     
     // Write the contents of this image in PNG format.
-    filtered_img.save("test.png").unwrap();
+    photon::helpers::save_image(filtered_img, "new_image.PNG");
 }
+
 ```
 
 ## Modules 
