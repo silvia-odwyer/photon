@@ -167,34 +167,16 @@ ul li, .func_list p {
   font-size: 0.7em;
 }
 #imgs img:nth-child(1) {
-  animation: xfade 20s 18s infinite;
+  animation: xfade 8s 6s infinite;
 }
 #imgs img:nth-child(2) {
-  animation: xfade 20s 16s infinite;
+  animation: xfade 8s 4s infinite;
 }
 #imgs img:nth-child(3) {
-  animation: xfade 20s 14s infinite;
+  animation: xfade 8s 2s infinite;
 }
 #imgs img:nth-child(4) {
-  animation: xfade 20s 12s infinite;
-}
-#imgs img:nth-child(5) {
-  animation: xfade 20s 10s infinite;
-}
-#imgs img:nth-child(6) {
-  animation: xfade 20s 8s infinite;
-}
-#imgs img:nth-child(7) {
-  animation: xfade 20s 6s infinite;
-}
-#imgs img:nth-child(8) {
-  animation: xfade 20s 4s infinite;
-}
-#imgs img:nth-child(9) {
-  animation: xfade 20s 2s infinite;
-}
-#imgs img:nth-child(10) {
-  animation: xfade 20s 0s infinite;
+  animation: xfade 8s 0s infinite;
 }
 
 @keyframes xfade{
