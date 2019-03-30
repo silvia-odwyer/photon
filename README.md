@@ -22,20 +22,13 @@ Functions include:
 
 View the [official website](https://silvia-odwyer.github.io/photon).
 
+Documentation can be found [here](https://silvia-odwyer.github.io/photon/docs/photon/index.html).
+
 ## Examples
 ![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/streetlamp_collage.png)
 
-![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/daisy_collage.png)
-
 ## Live Demo
-To show a live demo of some effects available, take a look at the original image below:
-
-**Original Image**
-
-![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/cubes.png)
-
-**Filters/Effects**
-The GIF below shows the image cycling through various effects available. Don't take heed of the quality, since this is a GIF and 
+The GIF below shows an image cycling through various effects available. Don't take heed of the quality, since this is a GIF and 
 merely for demonstration purposes. You should run the library's binary for a more thorough analysis.
 
 ![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/cube_demo.gif)
@@ -81,7 +74,7 @@ Photon contains a series of modules, which include:
 All effects and filters can be viewed below and on the official website.
 
 ## Documentation
-View the official [Cargo documentation here](https://cargo.io/photon-rs). 
+View the official [documentation here](https://silvia-odwyer.github.io/photon/docs/photon/index.html). 
 
 ## To Do 
 - Error detection and exception handling.
