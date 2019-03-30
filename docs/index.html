@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <!-- <script src="script.js"></script> -->
+    <link rel="stylesheet" href="styles.css" />
+    <title>Photon: A WebAssembly Image Processing Library</title>
+</head>
+
+<body>
+        <nav style="z-index: 1">
+
+            <ul>
+                <li><a href="">Demo</a></li>
+                <li><a href="https://github.com/silvia-odwyer/photon">GitHub</a></li>
+                <li><a href="">Cargo</a></li>
+            </ul>
+        </nav>
+
+    <section id="imgs" style="z-index: -1; position: relative;">
+            <img src="colorize.png"/>
+            <img src="offset_red.png"/>
+            <img src="offset_green.png"/>
+            <img src="offset_blue.png"/>
+            <img src="decompose_max.png"/>
+            <img src="primary.png"/>
+            <img src="grayscale.png"/>
+            <img src="remove_blue_channel.png"/>
+            <img src="remove_green_channel.png"/>
+            <img src="remove_red_channel.png"/>
+        </section>
+
+    <section class="intro">
+        <h1>photon</h1>
+        <p>A Rust image processing library</p>
+        <p>that's fast and memory safe</p>
+
+        <section class="func_list fadeIn">
+            <p>Functions include:</p>
+            <ul>
+                <li>edge detection</li>
+                <li>Sobel filters</li>
+                <li>Laplace</li>
+                <li>preset filters</li>
+                <li>Blurring/Sharpening</li>
+                <li>altering R, G, B channel values</li>
+                <li>Thresholding</li>
+
+            </ul>
+
+            <section>
+                <ul class="end">
+                    <li class="slide slideInOne"><a href="https://github.com/silvia-odwyer/photon">GitHub</a></li>
+                    <li class="slide slideInTwo"><a href="https://github.com/silvia-odwyer/photon"></a>Docs</li>
+                    <li class="slide slideInThree"><a href="https://github.com/silvia-odwyer/photon"></a>Cargo</li>
+                </ul>
+
+            </section>
+
+            <section class="demo">
+                <h1>All Effects Available</h1>
+                <h2>Filters</h2>
+                <section class="grid">
+                    <article>
+                        <p>islands</p>
+                        <img src="../img_examples/islands.png"/>
+                    </article>
+
+                    <article>
+                        <p>mauve</p>
+                        <img src="../img_examples/mauve.PNG"/>
+                    </article>
+
+                    <article>
+                        <p>mauve</p>
+                        <img src="../img_examples/perfume.PNG"/>
+                    </article>
+
+                    <article>
+                        <p>remove_blue</p>
+                        <img src="../img_examples/remove_blue_150.PNG"/>
+                    </article>
+
+                    <article>
+                        <p>remove_green</p>
+                        <img src="../img_examples/remove_green_150.PNG"/>
+                    </article>
+
+                    <article>
+                        <p>remove_green</p>
+                        <img src="../img_examples/remove_red_150.PNG"/>
+                    </article>
+                    <article>
+                        <p>add_green_20</p>
+                        <img src="../img_examples/add_green_20.PNG"/>
+                    </article>
+
+                    <article>
+                        <p>liquid</p>
+                        <img src="../img_examples/liquid.PNG"/>
+                    </article>
+                </section>
+                    
+
+                <h2>Convolution</h2>
+                <section class="grid">
+                    <article>
+                        <p>emboss</p>
+                        <img src="../img_examples/emboss.PNG"/>
+                    </article>
+<!-- 
+                    <article>
+                        <p>sepia</p>
+                        <img src="../img_examples/sepia.PNG"/>
+                    </article> -->
+                    
+                    <article>
+                        <p>sobel_vertical</p>
+                        <img src="../img_examples/sobel_vertical.PNG"/>
+                    </article>
+                    
+                    <article>
+                        <p>sobel_vertical</p>
+                        <img src="../img_examples/sobel_vertical.PNG"/>
+                    </article>
+
+                    <article>
+                        <p>sobel_horizontal</p>
+                        <img src="../img_examples/sobel_horizontal.PNG"/>
+                    </article>
+
+                    <article>
+                        <p>laplace</p>
+                        <img src="../img_examples/laplace.PNG"/>
+                    </article>
+
+                    <article>
+                        <p>gaussian_blur</p>
+                        <img src="../img_examples/gaussian_blur.PNG"/>
+                    </article>
+
+                    <article>
+                        <p>threshold</p>
+                        <img src="../img_examples/threshold.PNG"/>
+                    </article>
+
+                    <article>
+                        <p>prewitt_horizontal</p>
+                        <img src="../img_examples/prewitt_horizontal.PNG"/>
+                    </article>
+                </section>
+                
+                <h2>Effects</h2>
+                <section class="grid">
+                    <article>
+                        <p>original</p>
+                        <img src="../img_examples/urban_decay/original.jpg"/>
+                    </article>
+                    <article>
+                        <p>solarize</p>
+                        <img src="../img_examples/urban_decay/solarize.PNG"/>
+                    </article>
+
+                    <article>
+                        <p>colorize</p>
+                        <img src="../img_examples/urban_decay/colorize.PNG"/>
+                    </article>
+
+                    <article>
+                        <p>primary</p>
+                        <img src="../img_examples/urban_decay/primary.PNG"/>
+                    </article>
+
+                    <article>
+                        <p>original</p>
+                        <img src="../img_examples/train/original.jpg"/>
+                    </article>  
+
+                    
+                    <article>
+                        <p>offset_red</p>
+                        <img src="../img_examples/train/offset_red.PNG"/>
+                    </article>  
+                </section>
+
+                </section>
+            </section>
+
+
+        </section>
+
+    </section>
+
+</body>
+
+</html>
