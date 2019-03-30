@@ -1,9 +1,8 @@
 # photon
 
-A Rust image processing library, which provides a suite of functions for low-level pixel manipulation, as well as functions to apply effects to imagery 
-through convolution, thresholding, and edge-detection. 
+A high-performance Rust image processing library.
 
-The library provides low-level access to pixel and channel manipulation, and provides presets for common image processing functions. 
+The library provides low-level access to pixel and channel manipulation, as well as high-level functions for convolution, thresholding, and edge-detection.
 
 Functions include:
 - thresholding
@@ -25,13 +24,13 @@ View the [official website](https://silvia-odwyer.github.io/photon).
 Documentation can be found [here](https://silvia-odwyer.github.io/photon/docs/photon/index.html).
 
 ## Examples
-![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/streetlamp_collage.png)
+![](https://github.com/silvia-odwyer/photon/blob/master/docs/img_examples/streetlamp_collage.png)
 
 ## Live Demo
 The GIF below shows an image cycling through various effects available. Don't take heed of the quality, since this is a GIF and 
 merely for demonstration purposes. You should run the library's binary for a more thorough analysis.
 
-![](https://github.com/silvia-odwyer/photon/blob/master/img_examples/cube_demo.gif)
+![](https://github.com/silvia-odwyer/photon/blob/master/docs/img_examples/cube_demo.gif)
 
 <!-- ## Cargo Status -->
 <!-- `photon` can be installed via Cargo by declaring the following dependency in your Cargo.toml file:
