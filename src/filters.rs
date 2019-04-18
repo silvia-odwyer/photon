@@ -94,7 +94,7 @@ pub fn diamante(img: DynamicImage) -> DynamicImage {
 /// # Example
 ///
 /// ```
-/// photon::filters::islands(img);
+/// photon::filters::liquid(img);
 /// ```
 pub fn liquid(img: DynamicImage) -> DynamicImage {
     let filtered_img = crate::channels::inc_two_channels(img, 1, 10, 2, 75);
@@ -199,7 +199,7 @@ pub fn radio(img: DynamicImage) -> DynamicImage {
 /// # Example
 ///
 /// ```
-/// photon::filters::ryo(img);
+/// photon::filters::twenties(img);
 /// ```
 pub fn twenties(img: DynamicImage) -> DynamicImage {
     let filtered_img = crate::monochrome::monochroma(img, 18, 12, 20);

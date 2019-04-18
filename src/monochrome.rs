@@ -185,7 +185,7 @@ pub fn desaturate(mut img: DynamicImage) -> DynamicImage {
 /// # Example
 ///
 /// ```
-/// // For example, to decompose an image:
+/// // For example, to decompose an image with min decomposition:
 /// photon::channels::decompose_min(img);
 /// ```
 pub fn decompose_min(mut img: DynamicImage) -> DynamicImage {

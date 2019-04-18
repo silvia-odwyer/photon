@@ -19,9 +19,9 @@ pub struct Rgb {
 /// # Example
 ///
 /// ```
-/// // For example, to threshold an image of type `DynamicImage`:
-/// use photon::channels;
-/// photon::channels::threshold(img);
+/// // For example, to offset pixels by 30 pixels on the red channel:
+/// use photon::effects;
+/// photon::effects::offset(img, 0, 30);
 /// ```
 pub fn offset(mut img: DynamicImage, channel_index: usize, offset: u32) -> DynamicImage {
     let (width, height) = img.dimensions();
@@ -52,9 +52,9 @@ pub fn offset(mut img: DynamicImage, channel_index: usize, offset: u32) -> Dynam
 /// # Example
 ///
 /// ```
-/// // For example, to threshold an image of type `DynamicImage`:
-/// use photon::channels;
-/// photon::channels::threshold(img);
+/// // For example, to add an offset to the red channel by 30 pixels.
+/// use photon::effects;
+/// photon::effects::offset_red(img, 30);
 /// ```
 pub fn offset_red(img: DynamicImage, offset_amt: u32) -> DynamicImage {
     offset(img, 0, offset_amt)
@@ -68,9 +68,9 @@ pub fn offset_red(img: DynamicImage, offset_amt: u32) -> DynamicImage {
 /// # Example
 ///
 /// ```
-/// // For example, to threshold an image of type `DynamicImage`:
-/// use photon::channels;
-/// photon::channels::threshold(img);
+/// // For example, to add an offset to the green channel by 30 pixels.
+/// use photon::effects;
+/// photon::effects::offset_green(img, 40);
 /// ```
 pub fn offset_green(img: DynamicImage, offset_amt: u32) -> DynamicImage {
     offset(img, 1, offset_amt)
@@ -82,12 +82,15 @@ pub fn offset_green(img: DynamicImage, offset_amt: u32) -> DynamicImage {
 /// * `img` - A DynamicImage that contains a view into the image.
 /// * `offset_amt` - The offset you want to move the blue channel by.
 /// # Example
-///
+/// // For example, to add an offset to the green channel by 40 pixels.
+/// use photon::effects;
+/// photon::effects::offset_blue(img, 40);
+/// ```
 pub fn offset_blue(img: DynamicImage, offset_amt: u32) -> DynamicImage {
     offset(img, 2, offset_amt)
 }
 
-/// Adds multiple offsets to the image by a certain number of pixels. 
+/// Adds multiple offsets to the image by a certain number of pixels (on two channels).
 /// 
 /// # Arguments
 /// * `img` - A DynamicImage that contains a view into the image.
@@ -95,9 +98,9 @@ pub fn offset_blue(img: DynamicImage, offset_amt: u32) -> DynamicImage {
 /// # Example
 ///
 /// ```
-/// // For example, to threshold an image of type `DynamicImage`:
-/// use photon::channels;
-/// photon::channels::threshold(img);
+/// // For example, to add a 30-pixel offset to both the red and blue channels:
+/// use photon::effects;
+/// photon::effects::multiple_offsets(img, 30, 0, 2);
 /// ```
 pub fn multiple_offsets(mut img: DynamicImage, offset: u32, channel_index: usize, channel_index2: usize) -> DynamicImage {
     let (width, height) = img.dimensions();
@@ -140,44 +143,47 @@ pub fn multiple_offsets(mut img: DynamicImage, offset: u32, channel_index: usize
 /// use photon::effects;
 /// photon::effects::ripple(img);
 /// ```
-pub fn ripple(mut img: DynamicImage) -> DynamicImage {
-    let (width, height) = img.dimensions();
+// pub fn ripple(mut img: DynamicImage) -> DynamicImage {
+//     let (width, height) = img.dimensions();
     
-    let xoff = width / 3; 
-    let yoff = height / 3;
+//     let xoff = width / 3; 
+//     let yoff = height / 3;
 
-    for x in 0..width {
-        for y in 0..height {
+//     for x in 0..width {
+//         for y in 0..height {
 
-            let mut px = img.get_pixel(x, y);
-            // // calculate sine based on distance
-            // x2 = x - xoff;
-            // y2 = y - yoff;
-            // d = Math.sqrt(x2*x2 + y2*y2);
-            // t = Math.sin(d/6.0);
-            let x2: f64 = x as f64 - xoff as f64;
-            let y2: f64 = y as f64 - yoff as f64;
+//             let mut px = img.get_pixel(x, y);
+//             // // calculate sine based on distance
+//             // x2 = x - xoff;
+//             // y2 = y - yoff;
+//             // d = Math.sqrt(x2*x2 + y2*y2);
+//             // t = Math.sin(d/6.0);
+//             let x2: f64 = x as f64 - xoff as f64;
+//             let y2: f64 = y as f64 - yoff as f64;
 
-            let res: f64 = x2*x2  + y2*y2;
-            let d = (res).sqrt();
-		    let t = (d/6.0).sin();
+//             let res: f64 = x2*x2  + y2*y2;
+//             let d = (res).sqrt();
+// 		    let t = (d/6.0).sin();
 
-            let r = t * 200.0;
-		    let g = 125.0 + t * 80.0;
-		    let b = 235.0 + t * 20.0;
+//             let r = t * 200.0;
+// 		    let g = 125.0 + t * 80.0;
+// 		    let b = 235.0 + t * 20.0;
             
-            px.data[0] = cmp::max(0, cmp::min(255, r as u8)) as u8;
-            px.data[1] = cmp::max(0, cmp::min(255, g as u8)) as u8;
-            px.data[2] = cmp::max(0, cmp::min(255, b as u8)) as u8;
-            img.put_pixel(x, y, px);
-        }
-    }
-    return img;
-}
+//             px.data[0] = cmp::max(0, cmp::min(255, r as u8)) as u8;
+//             px.data[1] = cmp::max(0, cmp::min(255, g as u8)) as u8;
+//             px.data[2] = cmp::max(0, cmp::min(255, b as u8)) as u8;
+//             img.put_pixel(x, y, px);
+//         }
+//     }
+//     return img;
+// }
 
+/// Create a gradient map between two RGB colours.
+/// 
+/// # Arguments
+/// * `color_a`: An RGB colour
+/// * `color_b`: An RGB colour
 pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
-    println!("hi");
-    println!("{}", color_a.r);
     let mut gradient_map = vec![];
 
     let max_val = 255;
@@ -187,21 +193,18 @@ pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
         let intensity_b = max_val - i;
 
         r_val = (i * color_a.r + intensity_b * color_b.r) / max_val as u8;
-        println!("r_val {}", r_val);
         gradient_map.push(Rgb {
             r: r_val , 
-            g: (i * color_a.g + intensity_b * color_b.g) / max_val as u8 ,
+            g: (i * color_a.g + intensity_b * color_b.g) / max_val as u8,
             b: (i * color_a.b + intensity_b * color_b.b) / max_val as u8
         });
     }
-    println!("{:?}", gradient_map);
     return gradient_map;
 }
 
 pub fn duotone(mut img: DynamicImage, color_a : Rgb, color_b : Rgb) -> DynamicImage {
     let (width, height) = img.dimensions();
     let gradient_map = create_gradient_map(color_a, color_b);
-    println!("entering for loop");
 
     for x in 0..width {
         for y in 0..height {

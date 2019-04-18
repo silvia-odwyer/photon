@@ -147,7 +147,7 @@ pub fn inc_two_channels(mut img: DynamicImage, channel1: usize, offset1: i16, ch
     return img;
 }
 
-/// Set a certain channel to zero, thus removing the channel's influence in the pixels' final colours.
+/// Set a certain channel to zero, thus removing the channel's influence in the pixels' final rendered colour.
 /// 
 /// # Arguments
 /// * `img` - A DynamicImage that contains a view into the image.
@@ -160,7 +160,7 @@ pub fn inc_two_channels(mut img: DynamicImage, channel1: usize, offset1: i16, ch
 ///
 /// ```
 /// // For example, to remove the Red channel with a min_filter of 100:
-/// photon::channels::remove_channel(img, 100, 0);
+/// photon::channels::remove_channel(img, 0, 100);
 /// ```
 pub fn remove_channel(mut img: DynamicImage, channel: usize, min_filter: u8) -> DynamicImage {
     let (width, height) = img.dimensions();
