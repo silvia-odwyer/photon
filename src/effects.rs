@@ -181,8 +181,8 @@ pub fn multiple_offsets(mut img: DynamicImage, offset: u32, channel_index: usize
 /// Create a gradient map between two RGB colours.
 /// 
 /// # Arguments
-/// * `color_a`: An RGB colour
-/// * `color_b`: An RGB colour
+/// * `color_a`: An RGB color
+/// * `color_b`: An RGB color
 pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
     let mut gradient_map = vec![];
 
@@ -342,6 +342,7 @@ pub fn halftone(mut img: DynamicImage) -> DynamicImage {
     }
     return img;
 }
+
 /// Reduces an image to the primary colours.
 /// 
 /// # Arguments
@@ -447,6 +448,7 @@ pub fn inc_luminosity(mut img: DynamicImage) -> DynamicImage {
     let mut min_intensity = 255;
     let mut max_intensity = 0;
 
+    // find the max and min intensities in the image
     for x in 0..width {
         for y in 0..height {
             let px = img.get_pixel(x, y);
@@ -458,8 +460,6 @@ pub fn inc_luminosity(mut img: DynamicImage) -> DynamicImage {
             
         }
     }
-
-    // we have found the max and min intensities in the image
 
     for x in 0..width {
         for y in 0..height {
@@ -477,8 +477,6 @@ pub fn inc_luminosity(mut img: DynamicImage) -> DynamicImage {
             r = r * new_lum / lum;
             g = g * new_lum / lum;
             b = b * new_lum / lum;
-            
-
 
             px.data[0] = r as u8;
             px.data[1] = g as u8;
@@ -511,6 +509,83 @@ pub fn solarize(mut img: DynamicImage) -> DynamicImage {
             if 200 as i32 - px.data[0] as i32 > 0 {
                 px.data[0] = 200 - px.data[0];
             }
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+
+/// Increase the brightness of an image by a factor.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `brightness` - A u8 to add to the brightness.
+/// # Example
+///
+/// ```
+/// photon::channels::g_grayscale(img);
+/// ```
+pub fn inc_brightness(mut img: DynamicImage, brightness: u8) -> DynamicImage {
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            if px.data[0] <= 255 - brightness {
+                px.data[0] += brightness;
+            }
+            else {
+                px.data[0] = 255;
+            }            
+            if px.data[1] <= 255 - brightness {
+                px.data[1] += brightness;
+            }
+
+            else {
+                px.data[1] = 255
+            }
+
+            if px.data[2] <= 255 - brightness {
+                px.data[2] += brightness;
+            }
+
+            else {
+                px.data[2] = 255
+            }
+
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+/// Tint an image by adding an offset to averaged RGB channel values.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `r_offset` - The amount the  R channel should be incremented by.
+/// * `g_offset` - The amount the G channel should be incremented by.
+/// * `b_offset` - The amount the B channel should be incremented by.
+/// # Example
+///
+/// ```
+/// // For example, to tint an image of type `DynamicImage`:
+/// photon::tint(img, 10, 20, 15);
+/// ```
+/// 
+pub fn tint(mut img: DynamicImage, r_offset: u32, g_offset: u32, b_offset: u32) -> DynamicImage {
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
+            
+            px.data[0] = if r_val as u32 + r_offset < 255 { r_val as u8 + r_offset as u8} else { 255 };
+            px.data[1] = if g_val as u32 + g_offset < 255 { g_val as u8 + g_offset as u8} else { 255 };
+            px.data[2] = if b_val as u32 + b_offset < 255 { b_val as u8 + b_offset as u8} else { 255 };
+
             img.put_pixel(x, y, px);
         }
     }

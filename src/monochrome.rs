@@ -369,3 +369,44 @@ pub fn b_grayscale(mut img: DynamicImage) -> DynamicImage {
     }
     return img;
 }
+
+/// Threshold an image using a standard thresholding algorithm.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `threshold` - The amount the image should be thresholded by.
+/// # Example
+///
+/// ```
+/// // For example, to threshold an image of type `DynamicImage`:
+/// use photon::channels;
+/// photon::monochrome::threshold(img, 30);
+/// ```
+pub fn threshold(mut img: DynamicImage, threshold: u32) -> DynamicImage {
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+
+            let r: f32 = px.data[0].into();
+            let g: f32 = px.data[1].into();
+            let b: f32 = px.data[2].into();
+
+            let mut v = 0.2126 * r + 0.7152 * g + 0.072 * b;
+
+            if v >= threshold as f32 {
+                v = 255.0;
+            }
+            else {
+                v = 0.0;
+            }
+            px.data[0] = v as u8;
+            px.data[1] = v as u8;
+            px.data[2] = v as u8;
+
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
