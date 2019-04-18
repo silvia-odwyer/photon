@@ -88,9 +88,9 @@
 <span class="kw">fn</span> <span class="ident">main</span>() {
     <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">PreciseTime</span>::<span class="ident">now</span>();
 
-    <span class="kw">let</span> <span class="ident">img</span> <span class="op">=</span> <span class="ident">photon</span>::<span class="ident">helpers</span>::<span class="ident">open_image</span>(<span class="string">&quot;valley.PNG&quot;</span>);
+    <span class="kw">let</span> <span class="ident">img</span> <span class="op">=</span> <span class="ident">photon</span>::<span class="ident">helpers</span>::<span class="ident">open_image</span>(<span class="string">&quot;forev.JPG&quot;</span>);
     
-    <span class="kw">let</span> <span class="ident">filtered_img</span> <span class="op">=</span> <span class="ident">photon</span>::<span class="ident">effects</span>::<span class="ident">solarize</span>(<span class="ident">img</span>);
+    <span class="kw">let</span> <span class="ident">filtered_img</span> <span class="op">=</span> <span class="ident">photon</span>::<span class="ident">inc_brightness</span>(<span class="ident">img</span>, <span class="number">80</span>);
     
     <span class="comment">// // Write the contents of this image in PNG format.</span>
     <span class="ident">photon</span>::<span class="ident">helpers</span>::<span class="ident">save_image</span>(<span class="ident">filtered_img</span>, <span class="string">&quot;new_image.PNG&quot;</span>);

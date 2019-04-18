@@ -373,7 +373,7 @@
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// // For example, to apply an identity kernel convolution:</span>
 <span class="doccomment">/// use photon::channels;</span>
-<span class="doccomment">/// photon::conv::edge_detection(img);</span>
+<span class="doccomment">/// photon::conv::identity(img);</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">identity</span>(<span class="ident">img</span>: <span class="ident">DynamicImage</span>) <span class="op">-&gt;</span> <span class="ident">DynamicImage</span> {
     <span class="kw">let</span> <span class="ident">kernel</span> <span class="op">=</span> [<span class="number">0.0f32</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">1.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>];

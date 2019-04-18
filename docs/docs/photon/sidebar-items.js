@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["inc_brightness","Increase the brightness of an image by a factor."],["threshold","Threshold an image using a standard thresholding algorithm."],["tint","Tint an image by adding an offset to averaged RGB channel values."]],"mod":[["channels",""],["conv",""],["effects",""],["filters",""],["helpers",""],["monochrome",""],["noise",""]]});
+initSidebarItems({"mod":[["channels",""],["conv",""],["effects",""],["filters",""],["helpers",""],["monochrome",""],["noise",""]]});

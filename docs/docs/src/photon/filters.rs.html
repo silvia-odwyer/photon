@@ -386,7 +386,7 @@
 <span class="doccomment">/// # Example</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
-<span class="doccomment">/// photon::filters::islands(img);</span>
+<span class="doccomment">/// photon::filters::liquid(img);</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">liquid</span>(<span class="ident">img</span>: <span class="ident">DynamicImage</span>) <span class="op">-&gt;</span> <span class="ident">DynamicImage</span> {
     <span class="kw">let</span> <span class="ident">filtered_img</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">channels</span>::<span class="ident">inc_two_channels</span>(<span class="ident">img</span>, <span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">75</span>);
@@ -491,7 +491,7 @@
 <span class="doccomment">/// # Example</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
-<span class="doccomment">/// photon::filters::ryo(img);</span>
+<span class="doccomment">/// photon::filters::twenties(img);</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">twenties</span>(<span class="ident">img</span>: <span class="ident">DynamicImage</span>) <span class="op">-&gt;</span> <span class="ident">DynamicImage</span> {
     <span class="kw">let</span> <span class="ident">filtered_img</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">monochrome</span>::<span class="ident">monochroma</span>(<span class="ident">img</span>, <span class="number">18</span>, <span class="number">12</span>, <span class="number">20</span>);
@@ -550,7 +550,7 @@
 <span class="doccomment">/// photon::filters::vintage(img);</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vintage</span>(<span class="ident">img</span>: <span class="ident">DynamicImage</span>) <span class="op">-&gt;</span> <span class="ident">DynamicImage</span> {
-    <span class="kw">let</span> <span class="ident">filtered_img</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">tint</span>(<span class="ident">img</span>, <span class="number">120</span>, <span class="number">70</span>, <span class="number">13</span>);
+    <span class="kw">let</span> <span class="ident">filtered_img</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">effects</span>::<span class="ident">tint</span>(<span class="ident">img</span>, <span class="number">120</span>, <span class="number">70</span>, <span class="number">13</span>);
     <span class="kw">return</span> <span class="ident">filtered_img</span>;
 }
 
@@ -564,7 +564,7 @@
 <span class="doccomment">/// photon::filters::perfume(img);</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">perfume</span>(<span class="ident">img</span>: <span class="ident">DynamicImage</span>) <span class="op">-&gt;</span> <span class="ident">DynamicImage</span> {
-    <span class="kw">let</span> <span class="ident">filtered_img</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">tint</span>(<span class="ident">img</span>, <span class="number">80</span>, <span class="number">40</span>, <span class="number">120</span>);
+    <span class="kw">let</span> <span class="ident">filtered_img</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">effects</span>::<span class="ident">tint</span>(<span class="ident">img</span>, <span class="number">80</span>, <span class="number">40</span>, <span class="number">120</span>);
     <span class="kw">return</span> <span class="ident">filtered_img</span>;
 }
 
@@ -578,7 +578,7 @@
 <span class="doccomment">/// photon::filters::serenity(img);</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serenity</span>(<span class="ident">img</span>: <span class="ident">DynamicImage</span>) <span class="op">-&gt;</span> <span class="ident">DynamicImage</span> {
-    <span class="kw">let</span> <span class="ident">filtered_img</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">tint</span>(<span class="ident">img</span>, <span class="number">10</span>, <span class="number">40</span>, <span class="number">90</span>);
+    <span class="kw">let</span> <span class="ident">filtered_img</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">effects</span>::<span class="ident">tint</span>(<span class="ident">img</span>, <span class="number">10</span>, <span class="number">40</span>, <span class="number">90</span>);
     <span class="kw">return</span> <span class="ident">filtered_img</span>;
 }</pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "photon";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

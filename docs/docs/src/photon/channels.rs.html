@@ -377,7 +377,7 @@
     <span class="kw">return</span> <span class="ident">img</span>;
 }
 
-<span class="doccomment">/// Set a certain channel to zero, thus removing the channel&#39;s influence in the pixels&#39; final colours.</span>
+<span class="doccomment">/// Set a certain channel to zero, thus removing the channel&#39;s influence in the pixels&#39; final rendered colour.</span>
 <span class="doccomment">/// </span>
 <span class="doccomment">/// # Arguments</span>
 <span class="doccomment">/// * `img` - A DynamicImage that contains a view into the image.</span>
@@ -390,7 +390,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// // For example, to remove the Red channel with a min_filter of 100:</span>
-<span class="doccomment">/// photon::channels::remove_channel(img, 100, 0);</span>
+<span class="doccomment">/// photon::channels::remove_channel(img, 0, 100);</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_channel</span>(<span class="kw-2">mut</span> <span class="ident">img</span>: <span class="ident">DynamicImage</span>, <span class="ident">channel</span>: <span class="ident">usize</span>, <span class="ident">min_filter</span>: <span class="ident">u8</span>) <span class="op">-&gt;</span> <span class="ident">DynamicImage</span> {
     <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> <span class="ident">img</span>.<span class="ident">dimensions</span>();
