@@ -258,7 +258,7 @@ pub fn bluechrome(img: DynamicImage) -> DynamicImage {
 /// photon::filters::vintage(img);
 /// ```
 pub fn vintage(img: DynamicImage) -> DynamicImage {
-    let filtered_img = crate::tint(img, 120, 70, 13);
+    let filtered_img = crate::effects::tint(img, 120, 70, 13);
     return filtered_img;
 }
 
@@ -272,7 +272,7 @@ pub fn vintage(img: DynamicImage) -> DynamicImage {
 /// photon::filters::perfume(img);
 /// ```
 pub fn perfume(img: DynamicImage) -> DynamicImage {
-    let filtered_img = crate::tint(img, 80, 40, 120);
+    let filtered_img = crate::effects::tint(img, 80, 40, 120);
     return filtered_img;
 }
 
@@ -286,6 +286,6 @@ pub fn perfume(img: DynamicImage) -> DynamicImage {
 /// photon::filters::serenity(img);
 /// ```
 pub fn serenity(img: DynamicImage) -> DynamicImage {
-    let filtered_img = crate::tint(img, 10, 40, 90);
+    let filtered_img = crate::effects::tint(img, 10, 40, 90);
     return filtered_img;
 }

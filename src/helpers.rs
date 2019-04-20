@@ -18,3 +18,10 @@ pub fn open_image(img_path: &'static str) -> DynamicImage {
 pub fn save_image(img: DynamicImage, filtered_img_path: &'static str) {
     img.save(filtered_img_path).unwrap();
 }
+
+pub fn get_pixels(img_path: &'static str) -> Vec<u8>{
+    // get an image's raw pixels, and return as a vec of u8s
+    let image = image::open(img_path).unwrap();
+    let raw_pixels: Vec<u8> = image.raw_pixels();
+    raw_pixels
+}
