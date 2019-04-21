@@ -19,6 +19,15 @@ Functions include:
 
 `photon` can be thought of as a high-level wrapper to the Rust image crate, but conversely also includes functions which provide low-level access to pixel and channel manipulation, perfect for developers who wish to work with this data directly.
 
+## WebAssembly Support
+Photon will also support WebAssembly in the near-future, compilable to wasm via Emscripten/wasm32-unknown-unknown. 
+
+This will allow for universal image processing, including native-speed image processing within the browser. 
+To support this, raw pixel vectors (of `u8s`) will be converted to `DynamicImages` and can be processed via the regular Rust functions already found 
+within this library. 
+
+Benchmarks show that converting raw pixel vecs to `DynamicImage`s and writing to disk is similar in performance (faster in some cases) to operating on `DynamicImage`s directly.
+
 View the [official website](https://silvia-odwyer.github.io/photon).
 
 Documentation can be found [here](https://silvia-odwyer.github.io/photon/docs/photon/index.html).

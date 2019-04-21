@@ -1,6 +1,7 @@
 extern crate image;
 use crate::effects::Rgb;
-use image::{DynamicImage};
+use crate::filters;
+use image::{DynamicImage, ImageBuffer};
 
 // Gets the square distance between two colours
 pub fn square_distance(color1 : Rgb, color2 : Rgb) -> i32{
@@ -24,4 +25,13 @@ pub fn get_pixels(img_path: &'static str) -> Vec<u8>{
     let image = image::open(img_path).unwrap();
     let raw_pixels: Vec<u8> = image.raw_pixels();
     raw_pixels
+}
+
+pub fn dyn_image_from_raw(raw_pixels: Vec<u8>, width: u32, height: u32) -> DynamicImage {
+    // convert a vec of raw pixels (as u8s) to a DynamicImage type 
+    let len_vec = raw_pixels.len() as u128;
+
+    let img_buffer = ImageBuffer::from_vec(width, height, raw_pixels).unwrap();
+    let dynimage = image::ImageRgb8(img_buffer);
+    dynimage
 }

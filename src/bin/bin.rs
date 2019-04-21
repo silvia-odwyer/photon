@@ -2,7 +2,8 @@ extern crate photon;
 extern crate time;
 extern crate image;
 use time::PreciseTime;
-use image::{GenericImage, DynamicImage, GenericImageView};
+use image::{GenericImage, DynamicImage, GenericImageView, ImageBuffer, Rgba};
+use std::fs::File;
 
 // use photon::effects::Rgb;
 
@@ -16,12 +17,19 @@ fn main() {
     // get an image's raw pixels as a vec of u8s
     // this is useful for direct raw pixel manipulation 
     let raw_pixels = photon::helpers::get_pixels("noir.JPG");
+
+    // Create an image buffer from a vec of u8s
+    let start_dyn_raw = PreciseTime::now();
+    test_dyn_image_from_raw();
+    let end_dyn_raw = PreciseTime::now();
+    let total_dyn_raw = start_dyn_raw.to(end_dyn_raw);
+    println!("RAW PIXEL VEC to DYNAMICIMAGE: Took {} second to process image.", total_dyn_raw);
     
     // Write the contents of this image in PNG format.
     photon::helpers::save_image(filtered_img, "new_image.PNG");
 
     let end = PreciseTime::now();
-    println!("Took {} seconds to process image.", start.to(end));
+    println!("Regular. Took {} seconds to process image.", start.to(end));
 
     //testDuration();
 }
@@ -81,7 +89,28 @@ fn dynImage(mut img: DynamicImage) -> DynamicImage {
     return img;
 }
 
-fn get_raw_pixels() {
-    // get the image's pixels as a vector
-    let raw_pixels = photon::helpers::get_pixels("forev.JPG");
+fn test_dyn_image_from_raw() {
+    // save image from a raw pixel vec of u8s
+    let mut raw_pixels = photon::helpers::get_pixels("train.JPG");
+
+    let len_vec = raw_pixels.len() as u128;
+
+    // for i in 0..len_vec.step_by(2) {
+    //     raw_pixels[i] = 189;
+    // }
+    // println!("{:?}", raw_pixels);
+    let image = photon::helpers::open_image("train.JPG");
+
+    let (width, height) = image.dimensions();
+    let dynimage = photon::helpers::dyn_image_from_raw(raw_pixels, width, height);
+
+    let new_img = photon::filters::islands(dynimage);
+    photon::helpers::save_image(new_img, "dynimage.JPG");
+
+    //benchmark results
+    // raw pixels to dynamic image:
+    // dynamic image immediate: 0.14
+
+    // image::save_buffer("image.png", &raw_pixels, width, height, image::RGB(8)).unwrap();
+
 }
