@@ -1,5 +1,11 @@
 extern crate image;
 use image::{GenericImage, DynamicImage, GenericImageView};
+extern crate palette;
+use palette::{Srgb, Xyz, Lab};
+use palette::{Color, Shade, Saturate};
+use palette::{Hsv, LinSrgb, Pixel};
+use image::{RgbImage};
+use crate::effects::{Rgb};
 
 /// Alter a select channel by incrementing its value by a constant.
 /// 
@@ -226,4 +232,94 @@ pub fn remove_green_channel(img: DynamicImage, min_filter: u8) -> DynamicImage {
 pub fn remove_blue_channel(img: DynamicImage, min_filter: u8) -> DynamicImage {
     let filtered_img = remove_channel(img, 2, min_filter);
     return filtered_img;
+}
+
+/// Swap two channels.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `channel1` - An index from 0 to 2, representing either the Red, Green or Blue channels respectively.
+/// * `channel2` - An index from 0 to 2, representing either the Red, Green or Blue channels respectively.
+/// 
+/// # Example
+///
+/// ```
+/// // For example, to swap the values of the Red channel with the values of the Blue channel:
+/// photon::channels::swap_channels(img, 0, 2);
+/// ```
+pub fn swap_channels(mut img: DynamicImage, channel1: usize, channel2: usize) -> DynamicImage {
+    let (width, height) = img.dimensions();
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            let temp_channel1 = px.data[channel1];
+            px.data[channel1] = px.data[channel2];
+            px.data[channel2] = temp_channel1;
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+/// Selective colour change.
+/// Only changes the colour of a pixel if its RGB values are within a specified range.
+/// This function only changes a pixel's colour to another colour if it is visually similar to the colour specified.
+/// For example, if a user wishes all pixels that are yellow to be changed to red, they can selectively specify  only the yellow pixels to be changed.
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `r_val_min` - The minimum value the R channel must be.
+/// * `r_val_max` - The maximum value the R channel must be.
+/// 
+/// # Example
+///
+/// ```
+/// // For example, to only change the colour of the ranges specified:
+/// photon::channels::selective_color_change(img, 100, 120);
+/// ```
+pub fn selective_color_change(mut img: DynamicImage, ref_color: Rgb, new_color: Rgb) -> DynamicImage {
+    let (width, height) = img.dimensions();
+    for x in 0..width {
+        for y in 0..height {
+
+            let mut px = img.get_pixel(x, y);
+
+            let color: Color = Srgb::new(ref_color.r as f32 / 255.0, ref_color.g as f32 / 255.0, ref_color.b as f32 / 255.0).into_linear().into();
+            let lighter = color.lighten(0.1);
+            let desaturated = color.desaturate(0.5);
+
+            // Reference colour to compare the current pixel's colour to
+            let lab: Lab = Srgb::new(0.9, 0.7, 0.07).into();
+
+            // Convert the current pixel's colour to the l*a*b colour space
+            let r_val: f32 = px.data[0] as f32 / 255.0;
+            let g_val: f32 = px.data[1] as f32 / 255.0;
+            let b_val: f32 = px.data[2] as f32 / 255.0;
+
+            let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
+
+            let sim = color_sim(lab, px_lab);
+            if sim > 0 && sim < 40 {
+                px.data[0] = new_color.r;
+                px.data[1] = new_color.g;
+                px.data[2] = new_color.b;
+            }
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+pub fn color_sim(lab1: Lab, lab2: Lab) -> i64 {
+    let l_comp = lab2.l - lab1.l;
+    let a_comp = lab2.a - lab1.a;
+    let b_comp = lab2.b - lab1.b;
+
+    let l_comp_sq = l_comp.powf(2.0);   
+    let a_comp_sq = a_comp.powf(2.0);   
+    let b_comp_sq = b_comp.powf(2.0);  
+
+    let total = l_comp_sq + a_comp_sq + b_comp_sq;
+    let sq_rt = (total as f64).sqrt() as i64 + 1;
+
+    return sq_rt;
 }
