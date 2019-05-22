@@ -15,15 +15,17 @@ pub struct Rgb {
 /// 
 /// # Arguments
 /// * `img` - A DynamicImage that contains a view into the image.
-/// * `offset` - The offset is added to the pixels in the image.  
+/// * `offset` - The watermark to be placed onto the `img` image.
+/// * `x` - The x coordinate where the watermark's top corner should be positioned.
+/// * `y` - The y coordinate where the watermark's top corner should be positioned.
 /// # Example
 ///
 /// ```
 /// // For example, to offset pixels by 30 pixels on the red channel:
 /// use photon::effects;
-/// photon::effects::offset(img, 0, 30);
+/// photon::multiple::watermark(img, watermark, 30, 40);
 /// ```
-pub fn watermark(mut img: DynamicImage, watermark: DynamicImage) -> DynamicImage {
+pub fn watermark(mut img: DynamicImage, watermark: DynamicImage, x: u32, y: u32) -> DynamicImage {
     let (width, height) = img.dimensions();
     image::imageops::overlay(&mut img, &watermark, 40, 10);
     

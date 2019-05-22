@@ -202,6 +202,20 @@ pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
     return gradient_map;
 }
 
+/// Pass the image through a duotone filter (comprising two colours, and their gradient from one colour to the other).
+/// This is similar to greyscaling an image, but rather than having the gradient transition from black to white, it should
+/// be between two other colours, red to green, for example. 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `color_a` - An RGB color. 
+/// * `color_b` - An RGB color.
+/// # Example
+///
+/// ```
+/// // For example, to pass an image through a duotone filter:
+/// use photon::effects;
+/// photon::effects::duotone(img, colour_a, colour_b);
+/// ```
 pub fn duotone(mut img: DynamicImage, color_a : Rgb, color_b : Rgb) -> DynamicImage {
     let (width, height) = img.dimensions();
     let gradient_map = create_gradient_map(color_a, color_b);
@@ -524,7 +538,7 @@ pub fn solarize(mut img: DynamicImage) -> DynamicImage {
 /// # Example
 ///
 /// ```
-/// photon::channels::g_grayscale(img);
+/// photon::effects::inc_brightness(img, 10);
 /// ```
 pub fn inc_brightness(mut img: DynamicImage, brightness: u8) -> DynamicImage {
     let (width, height) = img.dimensions();

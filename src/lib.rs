@@ -13,13 +13,13 @@
 //! 
 //! This crate contains built-in preset functions, which provide default image processing functionality, as well as functions
 //! that allow for direct, low-level access to channel manipulation.
-
-use image::{GenericImage, DynamicImage, GenericImageView};
+//! To view a full demo of filtered imagery, visit the [official website](https://silvia-odwyer.github.io/photon).
 
 pub mod filters;
 pub mod channels;
 pub mod noise;
 pub mod effects;
 pub mod conv;
+pub mod multiple;
 pub mod monochrome;
 pub mod helpers;

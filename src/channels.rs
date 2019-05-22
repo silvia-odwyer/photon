@@ -267,14 +267,17 @@ pub fn swap_channels(mut img: DynamicImage, channel1: usize, channel2: usize) ->
 /// For example, if a user wishes all pixels that are yellow to be changed to red, they can selectively specify  only the yellow pixels to be changed.
 /// # Arguments
 /// * `img` - A DynamicImage that contains a view into the image.
-/// * `r_val_min` - The minimum value the R channel must be.
-/// * `r_val_max` - The maximum value the R channel must be.
+/// * `ref_color` - The `RGB` value of the reference color (to be compared to)
+/// * `new_color` - The `RGB` value of the new color to replace the reference color.
 /// 
 /// # Example
 ///
 /// ```
-/// // For example, to only change the colour of the ranges specified:
-/// photon::channels::selective_color_change(img, 100, 120);
+/// // For example, to only change those pixels that are of RGB value RGB{20, 40, 60} and replace 
+/// // them with RGB value{90, 30, 10}:
+/// let ref_color = Rgb{20, 40, 60};
+/// let new_color = Rgb{90, 30, 10};
+/// photon::channels::selective_color_change(img, ref_color, new_color);
 /// ```
 pub fn selective_color_change(mut img: DynamicImage, ref_color: Rgb, new_color: Rgb) -> DynamicImage {
     let (width, height) = img.dimensions();
@@ -309,6 +312,7 @@ pub fn selective_color_change(mut img: DynamicImage, ref_color: Rgb, new_color: 
     return img;
 }
 
+// Get the similarity of two colours in the l*a*b colour space using the CIE76 formula.
 pub fn color_sim(lab1: Lab, lab2: Lab) -> i64 {
     let l_comp = lab2.l - lab1.l;
     let a_comp = lab2.a - lab1.a;
