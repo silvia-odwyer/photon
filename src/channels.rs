@@ -3,9 +3,10 @@ use image::{GenericImage, DynamicImage, GenericImageView};
 extern crate palette;
 use palette::{Srgb, Xyz, Lab};
 use palette::{Color, Shade, Saturate};
-use palette::{Hsv, LinSrgb, Pixel};
+use palette::{Hsv, LinSrgb, Pixel, Lch};
 use image::{RgbImage};
 use crate::effects::{Rgb};
+use crate::channels::palette::Hue;
 
 /// Alter a select channel by incrementing its value by a constant.
 /// 
@@ -283,15 +284,10 @@ pub fn selective_color_change(mut img: DynamicImage, ref_color: Rgb, new_color: 
     let (width, height) = img.dimensions();
     for x in 0..width {
         for y in 0..height {
-
             let mut px = img.get_pixel(x, y);
 
-            let color: Color = Srgb::new(ref_color.r as f32 / 255.0, ref_color.g as f32 / 255.0, ref_color.b as f32 / 255.0).into_linear().into();
-            let lighter = color.lighten(0.1);
-            let desaturated = color.desaturate(0.5);
-
             // Reference colour to compare the current pixel's colour to
-            let lab: Lab = Srgb::new(0.9, 0.7, 0.07).into();
+            let lab: Lab = Srgb::new(ref_color.r as f32 / 255.0, ref_color.g as f32 / 255.0, ref_color.b as f32 / 255.0).into();
 
             // Convert the current pixel's colour to the l*a*b colour space
             let r_val: f32 = px.data[0] as f32 / 255.0;
@@ -305,6 +301,52 @@ pub fn selective_color_change(mut img: DynamicImage, ref_color: Rgb, new_color: 
                 px.data[0] = new_color.r;
                 px.data[1] = new_color.g;
                 px.data[2] = new_color.b;
+            }
+            img.put_pixel(x, y, px);
+        }
+    }
+    return img;
+}
+
+/// Selective hue rotation.
+/// Only rotate the hue of a pixel if its RGB values are within a specified range.
+/// This function only rotates a pixel's hue to another  if it is visually similar to the colour specified.
+/// For example, if a user wishes all pixels that are yellow to be changed to red, they can selectively specify  only the yellow pixels to be changed.
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `ref_color` - The `RGB` value of the reference color (to be compared to)
+/// * `degrees` - The amount of degrees to hue rotate by.
+/// 
+/// # Example
+///
+/// ```
+/// // For example, to only rotate the pixels that are of RGB value RGB{20, 40, 60}:
+/// let ref_color = Rgb{20, 40, 60};
+/// photon::channels::selective_hue_rotate(img, ref_color, 180);
+/// ```
+pub fn selective_hue_rotate(mut img: DynamicImage, ref_color: Rgb, degrees: f32) -> DynamicImage {
+    let (width, height) = img.dimensions();
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+
+            // Reference colour to compare the current pixel's colour to
+            let lab: Lab = Srgb::new(ref_color.r as f32 / 255.0, ref_color.g as f32 / 255.0, ref_color.b as f32 / 255.0).into();
+      
+            // Convert the current pixel's colour to the l*a*b colour space
+            let r_val: f32 = px.data[0] as f32 / 255.0;
+            let g_val: f32 = px.data[1] as f32 / 255.0;
+            let b_val: f32 = px.data[2] as f32 / 255.0;
+
+            let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
+
+            let sim = color_sim(lab, px_lab);
+            if sim > 0 && sim < 40 {
+                let lch_color: Lch = Srgb::new(r_val, g_val, b_val).into();
+                let new_color = LinSrgb::from(lch_color.shift_hue(degrees));
+                px.data[0] = new_color.red as u8 * 255;
+                px.data[1] = new_color.green as u8 * 255;
+                px.data[2] = new_color.blue as u8 * 255;
             }
             img.put_pixel(x, y, px);
         }

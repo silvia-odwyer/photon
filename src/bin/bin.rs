@@ -9,16 +9,19 @@ fn main() {
     let start = PreciseTime::now();
 
     let img = photon::helpers::open_image("daisies.jpg");
-       
+    
+    let ref_colour = Rgb{r: 241, g: 194, b: 18};
+    let filtered_img = photon::channels::selective_hue_rotate(img, ref_colour, 180.0);
+    
     // Write the contents of this image in PNG format.
     photon::helpers::save_image(filtered_img, "new_image.PNG");
 
     let end = PreciseTime::now();
     println!("DYNAMICIMAGE (prev impl): Took {} seconds to process image.", start.to(end));
 
-    selective_color_change();
+    // selective_color_change();
     
-    bench();
+    // bench();
 }
 
 // Compare two methods of pixel manipulation; one involves creating a DynamicImage from a raw vec of u8s, the other involves 
@@ -31,8 +34,9 @@ fn bench() {
 }
 
 fn selective_color_change() {
-    let color = Rgb{r: 10, g: 50, b: 70};
+    let color = Rgb{r: 241, g: 194, b: 18};
     let new_color = Rgb{r: 90, g: 50, b: 20};
+    let img = photon::helpers::open_image("daisies.jpg");
     let filtered_img = photon::channels::selective_color_change(img, color, new_color);
     photon::helpers::save_image(filtered_img, "selective_color_change.PNG");
 
