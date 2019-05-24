@@ -2,8 +2,7 @@ extern crate image;
 use image::{GenericImage, DynamicImage, GenericImageView};
 extern crate palette;
 use palette::{Srgb, Lab};
-use palette::{Color};
-use palette::{Hsv, LinSrgb, Pixel, Lch};
+use palette::{Pixel, Lch, Shade, Saturate};
 use crate::effects::{Rgb};
 use crate::channels::palette::Hue;
 
@@ -323,12 +322,12 @@ pub fn selective_color_change(mut img: DynamicImage, ref_color: Rgb, new_color: 
 /// let ref_color = Rgb{20, 40, 60};
 /// photon::channels::selective_hue_rotate(img, ref_color, 180);
 /// ```
-pub fn selective_hue_rotate(mut img: DynamicImage, ref_color: Rgb, degrees: f32) -> DynamicImage {
+pub fn selective_hue_rotate(img: DynamicImage, ref_color: Rgb, degrees: f32) -> DynamicImage {
     let (_width, _height) = img.dimensions();
     let mut img = img.to_rgb();
     for x in 0.._width {
         for y in 0.._height {
-            let mut px = img.get_pixel(x, y);
+            let px = img.get_pixel(x, y);
 
             // Reference colour to compare the current pixel's colour to
             let lab: Lab = Srgb::new(ref_color.r as f32 / 255.0, ref_color.g as f32 / 255.0, ref_color.b as f32 / 255.0).into();
@@ -357,11 +356,12 @@ pub fn selective_hue_rotate(mut img: DynamicImage, ref_color: Rgb, degrees: f32)
 }
 
 /// Selectively lighten an image.
-pub fn selective_lighten(mut img: DynamicImage, ref_color: Rgb, amt: u8) -> DynamicImage {
+pub fn selective_lighten(img: DynamicImage, ref_color: Rgb, amt: u8) -> DynamicImage {
     let (_width, _height) = img.dimensions();
+    let mut img = img.to_rgb();
     for x in 0.._width {
         for y in 0.._height {
-            let mut px = img.get_pixel(x, y);
+            let px = img.get_pixel(x, y);
 
             // Reference colour to compare the current pixel's colour to
             let lab: Lab = Srgb::new(ref_color.r as f32 / 255.0, ref_color.g as f32 / 255.0, ref_color.b as f32 / 255.0).into();
@@ -375,14 +375,18 @@ pub fn selective_lighten(mut img: DynamicImage, ref_color: Rgb, amt: u8) -> Dyna
 
             let sim = color_sim(lab, px_lab);
             if sim > 0 && sim < 40 {
-                if px.data[0] as u8 + amt < 255 {px.data[0] = px.data[0] as u8 + amt};
-                if px.data[1] as u8 + amt < 255 {px.data[1] = px.data[1] as u8 + amt};
-                if px.data[2] as u8 + amt < 255 {px.data[2] = px.data[2] as u8 + amt};
+                let px_data = img.get_pixel(x, y).data;
+                let color = Srgb::from_raw(&px_data).into_format();
+
+                let lightened = Lch::from(color).lighten(0.1);
+                img.put_pixel(x, y, image::Rgb {
+                    data: Srgb::from_linear(lightened.into()).into_format().into_raw()
+                });
             }
-            img.put_pixel(x, y, px);
         }
     }
-    return img;
+    let dynimage = image::ImageRgb8(img);
+    return dynimage;
 }
 
 /// Selectively desaturate pixel colours which are similar to the reference colour provided.
@@ -401,49 +405,112 @@ pub fn selective_lighten(mut img: DynamicImage, ref_color: Rgb, amt: u8) -> Dyna
 /// let ref_color = Rgb{20, 40, 60};
 /// photon::channels::selective_desaturate(img, ref_color, 0.1);
 /// ```
-// pub fn selective_desaturate(mut img: DynamicImage, ref_color: Rgb, amt: f32) -> DynamicImage {
-//     let (_width, _height) = img.dimensions();
-//     for x in 0.._width {
-//         for y in 0.._height {
-//             let mut px = img.get_pixel(x, y);
+pub fn selective_desaturate(mut img: DynamicImage, ref_color: Rgb, amt: f32) -> DynamicImage {
+    let (_width, _height) = img.dimensions();
+    let mut img = img.to_rgb();
+    for x in 0.._width {
+        for y in 0.._height {
+            let mut px = img.get_pixel(x, y);
 
-//             // Reference colour to compare the current pixel's colour to
-//             let lab: Lab = Srgb::new(ref_color.r as f32 / 255.0, ref_color.g as f32 / 255.0, ref_color.b as f32 / 255.0).into();
+            // Reference colour to compare the current pixel's colour to
+            let lab: Lab = Srgb::new(ref_color.r as f32 / 255.0, ref_color.g as f32 / 255.0, ref_color.b as f32 / 255.0).into();
       
-//             // Convert the current pixel's colour to the l*a*b colour space
-//             let r_val: f32 = px.data[0] as f32 / 255.0;
-//             let g_val: f32 = px.data[1] as f32 / 255.0;
-//             let b_val: f32 = px.data[2] as f32 / 255.0;
+            // Convert the current pixel's colour to the l*a*b colour space
+            let r_val: f32 = px.data[0] as f32 / 255.0;
+            let g_val: f32 = px.data[1] as f32 / 255.0;
+            let b_val: f32 = px.data[2] as f32 / 255.0;
 
-//             let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
+            let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
 
-//             let sim = color_sim(lab, px_lab);
-//             if sim > 0 && sim < 40 {
-//                 let color: Color = Srgb::new(r_val, g_val, b_val).into_linear().into();
-//                 let desaturated = color.lighten(amt);
-//                 let new_color = LinSrgb::from(desaturated);
+            let sim = color_sim(lab, px_lab);
+            if sim > 0 && sim < 40 {
+                let px_data = img.get_pixel(x, y).data;
+                let lch_colour: Lch = Srgb::from_raw(&px_data)
+                    .into_format()
+                    .into_linear()
+                    .into();
 
+                let desaturated = lch_colour.desaturate(amt);
+                img.put_pixel(x, y, image::Rgb {
+                    data: Srgb::from_linear(desaturated.into()).into_format().into_raw()
+                });        
+            }
+        }
+    }
+    let dynimage = image::ImageRgb8(img);
+    return dynimage;
+}
+
+/// Selectively saturate pixel colours which are similar to the reference colour provided.
+/// Similarity between two colours is calculated via the CIE76 formula.
+/// Only saturates the hue of a pixel if its similarity to the reference colour is within the range in the algorithm.
+/// For example, if a user wishes all pixels that are yellow to have an increase in saturation by 10%, they can selectively specify only the yellow pixels to be changed.
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `ref_color` - The `RGB` value of the reference color (to be compared to)
+/// * `amt` - The amount of saturate the colour by. 
+/// 
+/// # Example
+///
+/// ```
+/// // For example, to only increase the saturation of pixels that are similar to the RGB value RGB{20, 40, 60}:
+/// let ref_color = Rgb{20, 40, 60};
+/// photon::channels::selective_saturate(img, ref_color, 0.1);
+/// ```
+pub fn selective_saturate(mut img: DynamicImage, ref_color: Rgb, amt: f32) -> DynamicImage {
+    let img = selective(img, "saturate", ref_color, amt);
+    img
+}
+
+fn selective(mut img: DynamicImage, mode: &'static str, ref_color:Rgb, amt: f32) -> DynamicImage {
+    let (_width, _height) = img.dimensions();
+    let mut img = img.to_rgb();
+    for x in 0.._width {
+        for y in 0.._height {
+            let mut px = img.get_pixel(x, y);
+
+            // Reference colour to compare the current pixel's colour to
+            let lab: Lab = Srgb::new(ref_color.r as f32 / 255.0, ref_color.g as f32 / 255.0, ref_color.b as f32 / 255.0).into();
+      
+            // Convert the current pixel's colour to the l*a*b colour space
+            let r_val: f32 = px.data[0] as f32 / 255.0;
+            let g_val: f32 = px.data[1] as f32 / 255.0;
+            let b_val: f32 = px.data[2] as f32 / 255.0;
+
+            let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
+
+            let sim = color_sim(lab, px_lab);
+            if sim > 0 && sim < 40 {
+                let px_data = img.get_pixel(x, y).data;
+                let lch_colour: Lch = Srgb::from_raw(&px_data)
+                    .into_format()
+                    .into_linear()
+                    .into();
+
+                let new_color = match mode {
+                // Match a single value
+                "desaturate" => lch_colour.desaturate(amt),
+                "saturate" => lch_colour.saturate(amt),
+                "lighten" => lch_colour.lighten(amt), 
+                "darken" => lch_colour.darken(amt),
+                _ => lch_colour.saturate(amt),
+                };
             
-//             let rgb = LinSrgb::new(ref_color.r, ref_color.g, ref_color.b);
-//             let rgb2 = Srgb::from_linear(rgb.desaturate(0.05 as f32))
-//             .into_format()
-//             .into_raw();
+                img.put_pixel(x, y, image::Rgb {
+                        data: Srgb::from_linear(new_color.into()).into_format().into_raw()
+                });
 
-
-//                 px.data[0] = new_color.red as u8 * 255;
-//                 px.data[1] = new_color.green as u8 * 255;
-//                 px.data[2] = new_color.blue as u8 * 255;
-//             }
-//             img.put_pixel(x, y, px);
-//         }
-//     }
-//     return img;
-// }
+            }
+        }
+    }
+    let dynimage = image::ImageRgb8(img);
+    return dynimage;
+}
 
 /// Selective colour change.
 /// Only changes the colour of a pixel if its RGB values are within a specified range.
 /// This function only changes a pixel's colour to another colour if it is visually similar to the colour specified.
-pub fn selective_monochrome(mut img: DynamicImage, ref_color: Rgb, new_color: Rgb) -> DynamicImage {
+pub fn selective_monochrome(mut img: DynamicImage, ref_color: Rgb) -> DynamicImage {
     let (_width, _height) = img.dimensions();
     for x in 0.._width {
         for y in 0.._height {
