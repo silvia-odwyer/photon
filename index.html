@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>Photon WASM Demo</title>
+    </head>
+  <body>
+    <h2>Welcome to Photon Wasm :-)</h2>
+    <div id="image_container"></div>
+
+<canvas id="canvas" width="3104" height="4656"></canvas>
+
+<ul>
+  <li class="filter" id="oceanic">Oceanic</li>
+  <li class="filter" id="islands">Islands</li>
+  <li class="filter" id="twenties">Twenties</li>
+  <li class="filter" id="radio">Radio</li>
+  <li class="filter" id="rosetint">Rosetint</li>
+  <li class="filter" id="mauve">Mauve</li>
+  <li class="filter" id="bluechrome">Bluechrome</li>
+  <li class="filter" id="vintage">Vintage</li>
+  <li class="filter" id="perfume">Perfume</li>
+  <li class="filter" id="serenity">Serenity</li>
+  <li class="filter" id="marine">Marine</li>
+  <li class="filter" id="seagreen">Seagreen</li>
+  <li class="filter" id="flagblue">Flagblue</li>
+  <li class="filter" id="diamante">Diamante</li>
+  <li id="hue_rotate">JavaScript</li>
+  <li id="saturate">WebAssembly</li>
+
+</ul>
+
+<p id="change_image">Change Image</p>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/jimp@0.6.4/browser/lib/jimp.min.js"></script>
+<script>
+
+Jimp.read("https://upload.wikimedia.org/wikipedia/commons/4/43/Ambersweet_oranges.jpg").then(function (lenna) {
+  console.time("jimp");
+        lenna
+         .greyscale()                 // set greyscale
+         .getBase64(Jimp.AUTO, function (err, src) {
+             var img = document.createElement("img");
+             img.setAttribute("src", src);
+             document.body.appendChild(img);
+         });
+    console.timeEnd("jimp");
+});
+
+</script> -->
+</body>
+</html>
