@@ -35,14 +35,12 @@ pub fn inc_channel(mut photon_image: PhotonImage, channel: usize, offset: u32) -
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
             
-            if px.data[channel] <= 255 - offset as u8 {
-                let px_data = px.data[channel];
-                let final_px_data = px_data + offset as u8;
-                px.data[channel] = final_px_data as u8;
-            }
-            else {
-                px.data[channel] = 255;
-            }
+            let px_data = px.data[channel];
+            let mut final_px_data: u32 = px_data as u32 + offset as u32;
+                
+            final_px_data = num::clamp(final_px_data, 0, 255);
+            px.data[channel] = final_px_data as u8;
+            
             img.put_pixel(x, y, px);
         }
     }
@@ -128,23 +126,19 @@ pub fn inc_two_channels(mut photon_image: PhotonImage, channel1: usize, offset1:
     for x in 0..width {
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
-            if px.data[channel1] <= 255 - offset1 as u8 {
-                let px_data = px.data[channel1];
-                let final_px_data = px_data + offset1 as u8;
-                px.data[channel1] = final_px_data;
-            }
-            else {
-                px.data[channel1] = 255;
-            }
+
+            let px_data_1 = px.data[channel1];
+            let mut final_px_data_1: u32 = px_data_1 as u32 + offset1 as u32;
                 
-            if px.data[channel2] <= 255 - offset2 as u8 {
-                let px_data = px.data[channel2];
-                let final_px_data = px_data + offset2 as u8;
-                px.data[channel2] = final_px_data;
-            }
-            else {
-                px.data[channel2] = 255
-            }
+            final_px_data_1 = num::clamp(final_px_data_1, 0, 255);
+            px.data[channel1] = final_px_data_1 as u8;
+
+            let px_data_2 = px.data[channel2];
+            let mut final_px_data_2: u32 = px_data_2 as u32 + offset2 as u32;
+                
+            final_px_data_2 = num::clamp(final_px_data_2, 0, 255);
+            px.data[channel2] = final_px_data_2 as u8;
+
             img.put_pixel(x, y, px);
         }
     }
@@ -176,7 +170,7 @@ pub fn remove_channel(mut photon_image: PhotonImage, channel: usize, min_filter:
     for x in 0..width {
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
-            if px.data[channel] < min_filter{
+            if px.data[channel] < min_filter {
                 px.data[channel] = 0;
                 px.data[1] += 2;
             }
