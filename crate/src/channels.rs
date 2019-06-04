@@ -27,7 +27,7 @@ use crate::channels::palette::Hue;
 /// ```
 /// Adds a constant to a select R, G, or B channel's value.
 #[wasm_bindgen]
-pub fn inc_channel(mut photon_image: PhotonImage, channel: usize, offset: u32) -> PhotonImage {
+pub fn inc_channel(mut photon_image: PhotonImage, channel: usize, offset: i32) -> PhotonImage {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -35,13 +35,11 @@ pub fn inc_channel(mut photon_image: PhotonImage, channel: usize, offset: u32) -
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
             
-            let px_data = px.data[channel];
-            let mut final_px_data: u32 = px_data as u32 + offset as u32;
-                
-            final_px_data = num::clamp(final_px_data, 0, 255);
-            px.data[channel] = final_px_data as u8;
+            let final_px_data_1: i32 = px.data[channel] as i32 + offset as i32;
+            px.data[channel] = num::clamp(final_px_data_1, 0, 255) as u8;
             
             img.put_pixel(x, y, px);
+
         }
     }
     let mut raw_pixels = img.raw_pixels();
@@ -64,7 +62,7 @@ pub fn inc_channel(mut photon_image: PhotonImage, channel: usize, offset: u32) -
 /// photon::channels::inc_red_channel(img, 10);
 /// ```
 #[wasm_bindgen]
-pub fn inc_red_channel(img: PhotonImage, offset: u32) -> PhotonImage {
+pub fn alter_red_channel(img: PhotonImage, offset: i32) -> PhotonImage {
     return inc_channel(img, 0, offset);
 }
 
@@ -82,7 +80,7 @@ pub fn inc_red_channel(img: PhotonImage, offset: u32) -> PhotonImage {
 /// photon::channels::inc_green_channel(img, 10);
 /// ```
 #[wasm_bindgen]
-pub fn inc_green_channel(img: PhotonImage, offset: u32) -> PhotonImage {
+pub fn alter_green_channel(img: PhotonImage, offset: i32) -> PhotonImage {
     return inc_channel(img, 1, offset);
 }
 
@@ -100,7 +98,7 @@ pub fn inc_green_channel(img: PhotonImage, offset: u32) -> PhotonImage {
 /// photon::channels::inc_blue_channel(img, 10);
 /// ```
 #[wasm_bindgen]
-pub fn inc_blue_channel(img: PhotonImage, offset: u32) -> PhotonImage {
+pub fn alter_blue_channel(img: PhotonImage, offset: i32) -> PhotonImage {
     return inc_channel(img, 2, offset);
 }
 
@@ -116,11 +114,11 @@ pub fn inc_blue_channel(img: PhotonImage, offset: u32) -> PhotonImage {
 /// # Example
 ///
 /// ```
-/// // For example, to increase the values of the Blue and Red channels per pixel:
+/// // For example, to increase the values of the Red and Blue channels per pixel:
 /// photon::channels::inc_two_channels(img, 0, 10, 2, 20);
 /// ```
 #[wasm_bindgen]
-pub fn inc_two_channels(mut photon_image: PhotonImage, channel1: usize, offset1: u32, channel2: usize, offset2: u32) -> PhotonImage {
+pub fn alter_two_channels(mut photon_image: PhotonImage, channel1: usize, offset1: i32, channel2: usize, offset2: i32) -> PhotonImage {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
     for x in 0..width {
@@ -138,6 +136,48 @@ pub fn inc_two_channels(mut photon_image: PhotonImage, channel1: usize, offset1:
                 
             final_px_data_2 = num::clamp(final_px_data_2, 0, 255);
             px.data[channel2] = final_px_data_2 as u8;
+
+            img.put_pixel(x, y, px);
+        }
+    }
+    let mut raw_pixels = img.raw_pixels();
+    photon_image.raw_pixels = raw_pixels;
+    return photon_image;
+}
+
+/// Increment all 3 channels' values by adding an offset to each channel per pixel.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `r_offset` - The amount you want to increment the Red channel by.
+/// * `g_offset` - The amount you want to increment the Green channel by.
+/// * `b_offset` - The amount you want to increment the Blue channel by. 
+/// 
+/// # Example
+///
+/// ```
+/// // For example, to increase the values of the Red channel by 10, the Green channel by 20, 
+/// // and the Blue channel by 50:
+/// // photon::channels::alter_channels(img, 10, 20, 50);
+/// ```
+#[wasm_bindgen]
+pub fn alter_channels(mut photon_image: PhotonImage, r_offset: i8, g_offset: i8, b_offset: i8) -> PhotonImage {
+    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+
+            let final_px_data_1: i32 = px.data[0] as i32 + r_offset as i32;
+                
+            px.data[0] = num::clamp(final_px_data_1, 0, 255) as u8;
+
+            let final_px_data_2: i32 = px.data[1] as i32 + g_offset as i32;
+                
+            px.data[1] = num::clamp(final_px_data_2, 0, 255) as u8;
+
+            let final_px_data_3: i32 = px.data[2] as i32 + b_offset as i32;
+            px.data[2] = num::clamp(final_px_data_3, 0, 255) as u8;
 
             img.put_pixel(x, y, px);
         }
