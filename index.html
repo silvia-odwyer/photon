@@ -3,34 +3,314 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
     <title>Photon WASM Demo</title>
+    <!-- <link rel="stylesheet" href="./static/styles.css"> -->
+
     </head>
+    <style>
+    
+      @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap');
+
+      body {
+        background-color: rgb(34, 34, 34);
+      }
+
+      .default {
+        background-color: rgb(34, 34, 34);
+        font-family: "Roboto", sans-serif;
+        height: 100%;
+      }
+
+
+      .main-sidebar, .main-navbar, .dark {
+        background-color: rgb(34, 34, 34);
+        color: rgb(105, 105, 105);
+      }
+
+      .main {
+        margin-left: 40vh;
+        padding: 0px 10px;
+        background-color: rgb(34, 34, 34);
+      }
+
+      .main_content {
+        padding-top: 14vh;
+      }
+
+      .sidebar {
+        height: 100%;
+        width: 40vh;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: rgb(31, 31, 31);
+        overflow-x: hidden;
+        padding-top: 20px;
+      }
+
+
+
+      .sidebar li {
+        display: block;
+        color: rgb(105, 105, 105);
+        cursor: pointer;
+
+      }
+
+      @media screen and (max-height: 450px) {
+        .sidebar {padding-top: 15px;}
+        .sidebar a {font-size: 18px;}
+      }
+
+      nav {
+        overflow: hidden;
+        background-color: rgb(29, 29, 29);
+        position: fixed; /* Set the navbar to fixed position */
+        top: 0; /* Position the navbar at the top of the page */
+        width: 100%; /* Full width */
+      }
+
+      nav li {
+        float: left;
+        display: block;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-family: "Roboto", sans-serif;
+      }
+
+      ul li {
+        text-decoration: none;
+        list-style: none;
+        padding-right: 4em;
+      }
+
+      ul li:active {
+        color: white;
+      }
+
+      .tab_nav {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-left: 0;
+      }
+
+      .logo {
+        color: white;
+        font-size: 1em;
+        margin-left: 1em;
+      }
+
+      h2, h3, h4 {
+        color: white;
+        font-family: "Roboto", sans-serif;
+        font-weight: 300;
+      }
+
+      h4 {
+        text-transform: uppercase;
+        font-size: 0.7em;
+        letter-spacing: 4px;
+      }
+
+      .content {
+        grid-area: "main_left";
+        width: 80%;
+        
+      }
+
+      .colour_scheme {
+        border: solid transparent 0.1em;
+        border-radius: 0.5em;
+        background-color: rgb(29, 27, 27);
+        padding: 2em;
+        padding-right:4em;
+        padding-left: 4em;
+      }
+
+      .benchmarks {
+        color: white;
+        font-size: 2em;
+        grid-area: "main_right";
+      }
+
+      .main_content {
+        display: grid;
+        grid-template-columns: 75% 25%;
+        grid-template-rows: auto;
+        grid-template-areas: "main_left main_right";
+      }
+
+      #code {
+        font-size: 0.5em;
+
+        font-family: 'Courier New', Courier, monospace;
+
+      }
+    
+    </style>
   <body>
-    <h2>Welcome to Photon Wasm :-)</h2>
-    <div id="image_container"></div>
+      <div class="default">
+          <div class="sidebar">
+            <h3 class="logo">Photon</h3>
+            <ul>
+              <h4>Channels</h4>
+              <li class="effect" id="inc_red_channel">Inc Red Channel</li>
+              <li class="effect" id="inc_blue_channel">Inc Blue Channel</li>
+              <li class="effect" id="inc_green_channel">Inc Green Channel</li>
+              <li class="effect" id="inc_two_channels">Inc 2 Channels</li>
+              <li class="effect" id="swap_rg_channels">Swap R+G Channels</li>
+              <li class="effect" id="swap_gb_channels">Swap B+G Channels</li>
+              <li class="effect" id="swap_rb_channels">Swap R+B Channels</li>
+              <li class="effect" id="remove_red_channel">Remove Red Channel</li>
+              <li class="effect" id="remove_green_channel">Remove Green Channel</li>
+              <li class="effect" id="remove_blue_channel">Remove Blue Channel</li>
+              <li class="effect" id="dec_red_channel">Dec Red Channel</li>
+              <li class="effect" id="dec_blue_channel">Dec Blue Channel</li>
+              <li class="effect" id="dec_green_channel">Dec Green Channel</li>
 
-<canvas id="canvas" width="3104" height="4656"></canvas>
+              <h4>Filters</h4>
+              <li class="filter" id="oceanic">Oceanic</li>
+              <li class="filter" id="islands">Islands</li>
+              <li class="filter" id="marine">Marine</li>
+              <li class="filter" id="seagreen">Seagreen</li>
+              <li class="filter" id="flagblue">Flagblue</li>
+              <li class="filter" id="liquid">Liquid</li>
+              <li class="filter" id="diamante">Diamante</li>
+              <li class="filter" id="radio">Radio</li>
+              <li class="filter" id="twenties">Twenties</li>
+              <li class="filter" id="rosetint">Rosetint</li>
+              <li class="filter" id="mauve">Mauve</li>
+              <li class="filter" id="bluechrome">Bluechrome</li>
+              <li class="filter" id="vintage">Vintage</li>
+              <li class="filter" id="perfume">Perfume</li>
+              <li class="filter" id="serenity">Serenity</li>
 
-<ul>
-  <li class="filter" id="oceanic">Oceanic</li>
-  <li class="filter" id="islands">Islands</li>
-  <li class="filter" id="twenties">Twenties</li>
-  <li class="filter" id="radio">Radio</li>
-  <li class="filter" id="rosetint">Rosetint</li>
-  <li class="filter" id="mauve">Mauve</li>
-  <li class="filter" id="bluechrome">Bluechrome</li>
-  <li class="filter" id="vintage">Vintage</li>
-  <li class="filter" id="perfume">Perfume</li>
-  <li class="filter" id="serenity">Serenity</li>
-  <li class="filter" id="marine">Marine</li>
-  <li class="filter" id="seagreen">Seagreen</li>
-  <li class="filter" id="flagblue">Flagblue</li>
-  <li class="filter" id="diamante">Diamante</li>
-  <li id="hue_rotate">JavaScript</li>
-  <li id="saturate">WebAssembly</li>
 
-</ul>
+              <h4>Monochrome</h4>
+              <li class="effect" id="grayscale">Grayscale</li>
+              <li class="effect" id="grayscale_human_corrected">Grayscale Human Corrected</li>
+              <li class="effect" id="threshold">Threshold</li>
+              <li class="effect" id="decompose_min">Decompose Min</li>
+              <li class="effect" id="decompose_max">Decompose Max</li>
+              <li class="effect" id="sepia">Sepia</li>
+              <li class="effect" id="grayscale_shades">Grayscale Shades</li>
+              <li class="effect" id="red_channel_grayscale">Red Grayscale</li>
+              <li class="effect" id="green_channel_grayscale">Green Grayscale</li>
+              <li class="effect" id="blue_channel_grayscale">Blue Grayscale</li>
 
-<p id="change_image">Change Image</p>
+              <h4>Effects</h4>
+              <li class="effect" id="primary">Primary</li>
+              <li class="effect" id="solarize">Solarize</li>
+              <li class="effect" id="offset_red">Offset Red</li>
+              <li class="effect" id="offset_green">Offset Green</li>
+              <li class="effect" id="offset_blue">Offset Blue</li>
+              <li class="effect" id="lix">Lix</li>
+              <li class="effect" id="neue">Neue</li>
+              <li class="effect" id="ryo">Ryo</li>
+              <li class="effect" id="inc_brightness">Increase Brightness</li>
+              <li class="effect" id="inc_lum">Increase Luminosity</li>
+              
+              <h4>Colour Spaces</h4>
+              <li class="effect" id="hue_rotate_hsl">Hue Rotate HSL</li>
+              <li class="effect" id="hue_rotate_hsv">Hue Rotate HSV</li>
+              <li class="effect" id="hue_rotate_lch">Hue Rotate LCh</li>
+              <li class="effect" id="lighten_hsl">Lighten HSL</li>
+              <li class="effect" id="lighten_hsv">Lighten HSV</li>
+              <li class="effect" id="lighten_lch">Lighten LCh</li>
+              <li class="effect" id="darken_hsl">Darken HSL</li>
+              <li class="effect" id="darken_hsv">Darken HSV</li>
+              <li class="effect" id="darken_lch">Darken LCh</li>
+              <li class="effect" id="saturate_hsl">Saturate HSL</li>
+              <li class="effect" id="saturate_hsv">Saturate HSV</li>
+              <li class="effect" id="saturate_lch">Saturate LCh</li>
+              <li class="effect" id="desaturate_hsl">Desaturate HSL</li>
+              <li class="effect" id="desaturate_hsv">Desaturate HSV</li>
+              <li class="effect" id="desaturate_lch">Desaturate LCh</li>
+              
+              <h4>Conv</h4>
+              <li class="effect" id="emboss">Emboss</li>
+              <li class="effect" id="box_blur">Box Blur</li>
+              <li class="effect" id="gaussian_blur">Gaussian Blur</li>
+              <li class="effect" id="sharpen">Sharpen</li>
+              <li id="hue_rotate">JavaScript</li>
+
+              <h4>Multiple</h4>
+              <h5>Blend</h5>
+              <li class="effect" id="blend">Blend</li>
+              <li class="effect" id="overlay">Overlay</li>
+              <li class="effect" id="atop">Atop</li>
+              <li class="effect" id="xor">XOR</li>
+              <li class="effect" id="plus">Plus</li>
+              <li class="effect" id="multiply">Multiply</li>
+              <li class="effect" id="burn">Burn</li>
+              <li class="effect" id="difference">Difference</li>
+              <li class="effect" id="soft_light">Soft Light</li>
+              <li class="effect" id="hard_light">Hard Light</li>
+              <li class="effect" id="dodge">Dodge</li>
+              <li class="effect" id="exclusion">Exclusion</li>
+              <li class="effect" id="lighten">Lighten</li>
+              <li class="effect" id="darken">Darken</li>
+
+              <h5>Watermark</h5>
+              <li class="effect" id="watermark">Watermark</li>
+            </ul>
+            
+            <h3>Change Image</h3>
+            <ul>
+              <li class="change_image" id="lemons">Lemons</li>
+              <li class="change_image" id="blue_metro">Blue Metro</li>
+              <li class="change_image" id="underground">Underground</li>
+              <li class="change_image" id="nine_yards">Nine Yards</li>
+              <li class="change_image" id="fruit">Fruit</li>
+              <li class="change_image" id="daisies">Daisies</li>
+
+              <li class="change_watermark" id="watermark1">Watermark 1</li>
+            </ul>
+
+          </div>
+          
+          <nav>
+            <ul>
+              <li>Hi there </li>
+              <li>About</li>
+              <li v-on:click="signOut">Logout</li>
+            </ul>
+          
+          </nav>
+          
+          <div class="main">
+            <div class="main_content">
+              <!-- <ul class="tab_nav">
+                <li>Design</li>
+                <li>Plan</li>
+                <li>Collaborate</li>
+                <li>Share</li>
+              </ul>
+            -->
+            
+              <section class="content">
+                  <h4>Photon WebAssembly Demo</h4>
+                  <h2>Original</h2>
+                <div id="image_container"></div>
+
+                <canvas id="canvas"></canvas>
+              </section>
+
+              <section class="benchmarks">
+                <div id="time"></div>
+                <div id="code"></div>
+              </section>
+          
+          </div>
+          
+          </div>
+          
+          </div>
+
+
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/jimp@0.6.4/browser/lib/jimp.min.js"></script>
 <script>

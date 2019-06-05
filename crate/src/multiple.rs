@@ -1,10 +1,10 @@
 extern crate image;
 extern crate rand;
 use image::{DynamicImage, GenericImageView};
-use palette::{Blend, Srgb, Pixel, LinSrgb, Lab};
-use image::FilterType::Nearest;
+use palette::{Srgba, LinSrgba, Lab, Blend, Pixel, Srgb};
 use crate::channels::color_sim;
 use crate::{PhotonImage, Rgb, helpers, GenericImage};
+use wasm_bindgen::prelude::*;
 
 /// Add a watermark to an image.
 /// 
@@ -20,9 +20,12 @@ use crate::{PhotonImage, Rgb, helpers, GenericImage};
 /// use photon::multiple;
 /// photon::multiple::watermark(img, watermark, 30, 40);
 /// ```
-pub fn watermark(mut img: DynamicImage, watermark: DynamicImage, x: u32, y: u32) -> DynamicImage {
-    image::imageops::overlay(&mut img, &watermark, x, y);
-    
+#[wasm_bindgen]
+pub fn watermark(mut img: PhotonImage, watermark: PhotonImage, x: u32, y: u32) -> PhotonImage {
+    let dyn_watermark: DynamicImage = crate::helpers::dyn_image_from_raw(&watermark);
+    let mut dyn_img: DynamicImage = crate::helpers::dyn_image_from_raw(&img);
+    image::imageops::overlay(&mut dyn_img, &dyn_watermark, x, y);
+    img.raw_pixels = dyn_img.raw_pixels();
     return img;
 }
 
@@ -66,7 +69,11 @@ pub fn watermark(mut img: DynamicImage, watermark: DynamicImage, x: u32, y: u32)
 /// use photon::multiple;
 /// photon::multiple::watermark(img, watermark, 30, 40);
 /// ```
-pub fn blend(img: DynamicImage, img2: DynamicImage, blend_mode: &'static str) -> DynamicImage {
+#[wasm_bindgen]
+pub fn blend(mut photon_image: PhotonImage, photon_image2: PhotonImage, blend_mode: &str) -> PhotonImage {
+    let img = crate::helpers::dyn_image_from_raw(&photon_image);
+    let img2 = crate::helpers::dyn_image_from_raw(&photon_image2);
+
     let (width, height) = img.dimensions();
     let (width2, height2) = img2.dimensions();
 
@@ -74,7 +81,7 @@ pub fn blend(img: DynamicImage, img2: DynamicImage, blend_mode: &'static str) ->
 
         panic!("img must be smaller than img2! First image parameter must be smaller than second image parameter.To fix, swap img and img2 params.");
     }
-    let mut img = img.to_rgb();
+    let mut img = img.to_rgba();
 
     for x in 0..width {
         for y in 0..height {
@@ -82,11 +89,11 @@ pub fn blend(img: DynamicImage, img2: DynamicImage, blend_mode: &'static str) ->
             
             let px_data = img.get_pixel(x, y).data;
 
-            let color: LinSrgb = LinSrgb::from_raw(&px_data).into_format();
+            let color: LinSrgba = LinSrgba::from_raw(&px_data).into_format();
 
             let px_data2 = img2.get_pixel(x, y).data;
 
-            let color2: LinSrgb = LinSrgb::from_raw(&px_data2).into_format();
+            let color2: LinSrgba = LinSrgba::from_raw(&px_data2).into_format();
 
             let blended = match blend_mode {
                 // Match a single value
@@ -107,14 +114,15 @@ pub fn blend(img: DynamicImage, img2: DynamicImage, blend_mode: &'static str) ->
                 _ => color2.overlay(color),
                 };
             
-            img.put_pixel(x, y, image::Rgb {
-                    data: Srgb::from_linear(blended.into()).into_format().into_raw()
+            img.put_pixel(x, y, image::Rgba {
+                    data: Srgba::from_linear(blended.into()).into_format().into_raw()
             });
 
         }
     }
-    let dynimage = image::ImageRgb8(img);
-    return dynimage;
+    let dynimage = image::ImageRgba8(img);
+    photon_image.raw_pixels = dynimage.raw_pixels();
+    return photon_image;
 
 }
 
