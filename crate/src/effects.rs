@@ -1,18 +1,15 @@
 extern crate image;
-use image::{GenericImage, DynamicImage, GenericImageView};
+use image::{GenericImage, GenericImageView, Rgba, DynamicImage};
 use std::f64;
-use std::cmp;
-// extern crate imageproc;
-// extern crate rusttype;
+extern crate imageproc;
+extern crate rusttype;
 use crate::{PhotonImage, Rgb};
 use crate::helpers;
 use wasm_bindgen::prelude::*;
-use wasm_bindgen::Clamped;
-// use imageproc::drawing::draw_text_mut;
-// use imageproc::morphology::dilate_mut;
-// use imageproc::distance_transform::Norm;
-use image::{Rgba};
-// use rusttype::{FontCollection, Scale};
+use imageproc::drawing::draw_text_mut;
+use imageproc::morphology::dilate_mut;
+use imageproc::distance_transform::Norm;
+use rusttype::{FontCollection, Scale};
  
 /// Adds an offset to the image by a certain number of pixels. 
 /// 
@@ -46,7 +43,7 @@ pub fn offset(mut photon_image: PhotonImage, channel_index: usize, offset: u32) 
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
     return photon_image;
 }
@@ -141,7 +138,7 @@ pub fn multiple_offsets(mut photon_image: PhotonImage, offset: u32, channel_inde
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
     return photon_image;
 }
@@ -252,7 +249,7 @@ pub fn duotone(mut photon_image: PhotonImage, color_a : Rgb, color_b : Rgb) -> P
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
     return photon_image;
 }
@@ -373,7 +370,7 @@ pub fn halftone(mut photon_image: PhotonImage) -> PhotonImage {
             // img.put_pixel(x, y + 1, px2);
          }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
     return photon_image;
 }
@@ -432,7 +429,7 @@ pub fn primary(mut photon_image: PhotonImage) -> PhotonImage {
             img.put_pixel(x, y, px);
          }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
     return photon_image;
 }
@@ -480,60 +477,60 @@ pub fn colorize(mut photon_image: PhotonImage) -> PhotonImage {
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
     return photon_image;
 
 }
 
-#[wasm_bindgen]
-pub fn inc_luminosity(mut photon_image: PhotonImage) -> PhotonImage {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
-    let mut min_intensity = 255;
-    let mut max_intensity = 0;
+// #[wasm_bindgen]
+// pub fn inc_luminosity(mut photon_image: PhotonImage) -> PhotonImage {
+//     let mut img = helpers::dyn_image_from_raw(&photon_image);
+//     let (width, height) = img.dimensions();
+//     let mut min_intensity = 255;
+//     let mut max_intensity = 0;
 
-    // find the max and min intensities in the image
-    for x in 0..width {
-        for y in 0..height {
-            let px = img.get_pixel(x, y);
-            let intensity = (px.data[0] as u32 + px.data[1] as u32 + px.data[2] as u32) / 3;
-            if intensity > 0{
-                min_intensity = cmp::min(min_intensity, intensity);
-                max_intensity = cmp::max(max_intensity, intensity);
-            }
+//     // find the max and min intensities in the image
+//     for x in 0..width {
+//         for y in 0..height {
+//             let px = img.get_pixel(x, y);
+//             let intensity = (px.data[0] as u32 + px.data[1] as u32 + px.data[2] as u32) / 3;
+//             if intensity > 0{
+//                 min_intensity = cmp::min(min_intensity, intensity);
+//                 max_intensity = cmp::max(max_intensity, intensity);
+//             }
             
-        }
-    }
+//         }
+//     }
 
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            // let px_as_rgb = Rgb{r: px.data[0], g: px.data[1], b: px.data[2]};
+//     for x in 0..width {
+//         for y in 0..height {
+//             let mut px = img.get_pixel(x, y);
+//             // let px_as_rgb = Rgb{r: px.data[0], g: px.data[1], b: px.data[2]};
 
-            let mut r = px.data[0] as f32;
-            let mut g = px.data[1] as f32;
-            let mut b = px.data[2] as f32;
+//             let mut r = px.data[0] as f32;
+//             let mut g = px.data[1] as f32;
+//             let mut b = px.data[2] as f32;
 
-            let lum = (r + g + b) / 3.0;
+//             let lum = (r + g + b) / 3.0;
 
-            let new_lum = 255.0 * (lum - min_intensity as f32) / (max_intensity / min_intensity) as f32;
+//             let new_lum = 255.0 * (lum - min_intensity as f32) / (max_intensity / min_intensity) as f32;
 
-            r = r * new_lum / lum;
-            g = g * new_lum / lum;
-            b = b * new_lum / lum;
+//             r = r * new_lum / lum;
+//             g = g * new_lum / lum;
+//             b = b * new_lum / lum;
 
-            px.data[0] = r as u8;
-            px.data[1] = g as u8;
-            px.data[2] = b as u8;
+//             px.data[0] = r as u8;
+//             px.data[1] = g as u8;
+//             px.data[2] = b as u8;
 
-            img.put_pixel(x, y, px);
-        }
-    }
-    let mut raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
-    return photon_image;
-}
+//             img.put_pixel(x, y, px);
+//         }
+//     }
+//     let mut raw_pixels = img.raw_pixels();
+//     photon_image.raw_pixels = raw_pixels;
+//     return photon_image;
+// }
 
 /// Applies a solarizing effect to an image.
 /// 
@@ -560,7 +557,7 @@ pub fn solarize(mut photon_image: PhotonImage) -> PhotonImage {
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
     return photon_image;
 }
@@ -609,8 +606,7 @@ pub fn inc_brightness(mut photon_image: PhotonImage, brightness: u8) -> PhotonIm
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
+    photon_image.raw_pixels = img.raw_pixels();
     return photon_image;
 }
 
@@ -645,46 +641,7 @@ pub fn tint(mut photon_image: PhotonImage, r_offset: u32, g_offset: u32, b_offse
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
     return photon_image;
 }
-
-
-// pub fn draw_text() {
-
-//     let text = "Welcome to our domain! We are here to serve you, fellow humans and fellow friends.";
-
-//     let sb_img = image::open(("saturate.PNG");
-
-//     let mut image = sb_img.to_rgba();
-
-//     // let mut image2 : DynamicImage = DynamicImage::new_luma8(502, 353);
-//     let mut image2 : DynamicImage = DynamicImage::new_luma8(
-//         image.width(), image.height());
-
-//     let font = Vec::from(include_bytes!("../Roboto-Black.ttf") as &[u8]);
-//     let font = FontCollection::from_bytes(font).unwrap().into_font().unwrap();
-
-//     let height = 100f32;
-//     let scale = Scale { x: height * 1.0, y: height };
-//     draw_text_mut(&mut image2, Rgba([255u8, 255u8, 255u8, 255u8]), 10, 10, scale, &font, text);
-
-//     let mut image2 = image2.to_luma();
-//     dilate_mut(&mut image2, Norm::LInf, 4u8);
-
-//     // Add a border to the text.
-//     for x in 0..image2.width() {
-//         for y in 0..image2.height() {
-//             let pixval = 255 - image2.get_pixel(x, y).data[0];
-//             if pixval != 255 {
-//                 let new_pix = Rgba([pixval, pixval, pixval, 255]);
-//                 image.put_pixel(x, y, new_pix);
-//             }
-//         }
-//     }
-
-//     draw_text_mut(&mut image, Rgba([255u8, 255u8, 255u8, 255u8]), 10, 10, scale, &font, text);
-
-//     let _ = image.save("new_pic.PNG").unwrap();
-// }
