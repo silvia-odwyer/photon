@@ -6,7 +6,7 @@
   <meta name="Description" content="A WebAssembly image processing library that delivers blazing performance and safety/security.">
 
   <!-- Open Graph data / Facebook Card data -->
-  <meta property="og:title" content="tris webpack boilerplate">
+  <meta property="og:title" content="Photon: A high-performance WebAssembly image processing library.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://github.com/tr1s/tris-webpack-boilerplate">
   <meta property="og:image" content="https://i.imgur.com/lxRBpeb.jpg">
@@ -26,6 +26,9 @@
 
   <link rel="stylesheet" href="styles.css" />
   <title>📦Photon: A Rust Image Processing Library</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glorious/demo/dist/gdemo.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@glorious/demo/dist/gdemo.min.js"></script>
+
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script src="//instant.page/1.2.2" type="module" integrity="sha384-2xV8M5griQmzyiY3CDqh1dn4z3llDVqZDqzjzcY+jCBCk/a5fXJmuZ/40JJAPeoU"></script> -->
 </head>
@@ -120,10 +123,15 @@
   
           <section class="guide_pane">
             <section>
-              <h2>WHAT</h2>
-              <p>Photon is a high-performance Rust image processing library, which compiles to WebAssembly, allowing for safe, blazing-fast image processing both natively and on the web. 
-                      
-              The library provides low-level access to pixel and channel manipulation, as well as high-level functions for image correction, filtering, watermarking, and convolutions.     
+              <h2>Write once, run anywhere.</h2>
+              <p>Photon can be executed:</p>
+              <ul>
+                <li>In the browser via JS</li>
+                <li>On Node.JS</li>
+                <li>Natively on any machine</li>
+              </ul>
+              <p>Photon compiles to WebAssembly, which allows the execution of native-speed code in the browser and on Node.JS. 
+                This means incredible performance and since Photon's core library is written in Rust, it promises security and safety.
               </p>
               <button class="btn btn_fill">Animate</button>
             </section>
@@ -205,18 +213,39 @@
             
             <section class="guide_pane"> 
               <section>
-                <h2>3. Assets</h2>
-                <p>Save assets, find inspiration and a whole lot more.</p>
-                <button class="btn btn_fill">Animate</button>
+                <h2>View The Demo</h2>
+                <p>To see WebAssembly in action and all effects available, make sure to check out our</p>
+                <a href="demo.html">demo
+                </a>
+                <p>, where you can test out the effects, view performance, and see if Photon is the right
+                    library for your needs.</p>
+                <button class="btn btn_fill">View The Demo</button>
               </section>
 
+            </section>
+
+            <section class="guide_pane"> 
+                <section>
+                  <h2>View The Demo</h2>
+                  <p>To see WebAssembly in action and all effects available, make sure to check out our</p>
+                  <a href="demo.html">demo
+                  </a>
+                  <p>, where you can test out the effects, view performance, and see if Photon is the right
+                      library for your needs.</p>
+                  <button class="btn btn_fill">View The Demo</button>
+                </section>
+
+                <div id="code">
+
+                </div>
+  
             </section>
   
           </section>
   
       </article>
 
-      <h2>Compare WebAsembly versus JavaScript</h2>
+      <h2>Compare WebAssembly versus JavaScript</h2>
       <button id="compare_js" class="pulse">Start JS</button>
       <button id="compare_wasm" class="pulse">Start WASM</button>
 
@@ -242,12 +271,11 @@
        </article>
   
       <article class="guide center cta">
-        <h2>Ready To Get Started?</h2>
-        <p>Getting started couldn't be easier. Once you've signed up for an account, 
-          you can begin to take charge of your design workflow once more. </p>
+        <h2>Quick Links</h2>
+        <p></p>
   
-        <button class="btn btn_fill">Sign Up</button>
-        <button class="btn btn_outline">Read More</button>
+        <button class="btn btn_fill">View The Docs</button>
+        <button class="btn btn_outline">PhotonPRO</button>
   
       </article>    
 
@@ -255,9 +283,9 @@
   
       <footer>
         <div class="footer_lhs">
-          <h1 class="logo">DesignVision</h1>
-          <p>Helping designers to plan and design with confidence. </p>
-          <p>Copyright 2018 copy All Rights Reserved. Software open-sourced under MIT. </p>
+          <h1 class="logo">Photon</h1>
+          <p>Image processing with WebAssembly.</p>
+          <p>Copyright 2019 copy All Rights Reserved. Software open-sourced under MIT. </p>
   
         </div>
   
@@ -265,13 +293,49 @@
           <ul>
             <li>Home</li>
             <li>About</li>
-            <li>Services</li>
-            <li>Contact</li>
+            <li>GitHub</li>
+            <li>Docs</li>
           </ul>
         </div>
       </footer>
       </div>
      </div>
+
+     <script>
+        // Constructor receives a selector that indicates
+      // where to inject the demonstration in your page.
+      const demo = new GDemo('#code');
+      
+      const code = `
+      extern crate photon;
+      fn main() {
+         // Open the image as a PhotonImage type
+         let img = photon::helpers::open_image("daisies.JPG");
+         
+         // Apply a Sobel effect to the image 
+         let filtered_img = photon::conv::sobel_vertical(img);
+         
+         // Write the contents of this image in PNG format.
+         photon::helpers::save_image(filtered_img, "new_image.PNG");
+     }
+      `
+      
+      demo
+
+        .openApp('terminal', {minHeight: '350px', promptString: '$'})
+        .command('git clone https://github.com/silvia-odwyer/photon', {onCompleteDelay: 500})
+        // .respond('')
+        .command('cd photon')
+        .command('npm start')
+        .respond('This will start a webpack build pipeline, and contains a quick demo to help you get started.')
+        .command('cd crate')
+        .command('cargo run --release')
+        .respond('This will natively run the Rust binary code.')
+        .openApp('editor', {minHeight: '350px', windowTitle: 'demo.js'})
+        .write(code, {onCompleteDelay: 1500})
+        .end();
+      
+      </script>
   
      
      #####
@@ -286,20 +350,12 @@
      1. ***Core Rust library***: This provides universal image processing functions, which can be used either natively or in the browser. The WASM component of this repo relies on this for all image processing functionality. 
      2. ***WebAssembly helpers and starter demo***: This section of the library contains helpers for exporting pixel data to and from the browser, and communicates directly with the core Rust library. The starter demo demonstrates calling the compiled WebAssembly code using JS functions and hooks into a webpack build pipeline. 
      
-     ### Live Demo
-     View the [official demo of WASM in action](https://silvia-odwyer.github.io/photon).
-     
      ### Documentation
      Documentation can be found [here](https://silvia-odwyer.github.io/photon/docs/photon/index.html).
      
      ## Examples
      ![](https://github.com/silvia-odwyer/photon/blob/master/docs/img_examples/streetlamp_collage.png)
-     
-     ## Live Demo
-     The GIF below shows an image cycling through various effects available. Don't take heed of the quality, since this is a GIF and 
-     merely for demonstration purposes. You should run the library's binary for a more thorough analysis.
-     
-     ![](https://github.com/silvia-odwyer/photon/blob/master/docs/img_examples/cube_demo.gif)
+    
      
      ## 🚴Getting Started
      
@@ -308,27 +364,7 @@
      ### Prerequisites
      
      To use Photon, you must have Rust and Node installed. Builds of Photon are compiled using the rust nightly toolchain.
-     
-     ### Installing
-     <!-- ## Cargo Status -->
-     <!-- `photon` can be installed via Cargo by declaring the following dependency in your Cargo.toml file:
-     ```toml
-     [dependencies]
-     photon-rs = "*"
-     ``` -->
-     
-     Clone this repo:
-     ```sh
-     git clone https://github.com/silvia-odwyer/photon
-     ```
-     
-     Run the binary, which will perform an image processing function on an image:
-     ```sh
-     cd crate
-     cargo run --release 
-     ```
-     
-     Compare the original image with the outputted image, and you'll see the desired effect has been applied.
+
      
      ### Native Use
      Photon contains native-only functions for opening files from the filesystem. 
