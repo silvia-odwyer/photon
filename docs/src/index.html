@@ -74,23 +74,19 @@
       <article class="landing_hero">
         <article class="landing_text">
           <h1>WebAssembly image processing</h1>
-          <p>Photon is a high-performance WebAssembly image processing library that runs both natively and on the web. 
+          <p>High-performance WebAssembly image processing that runs both natively and on the web. 
               Bring native speed image processing back to the browser. Powered by Rust, keeping it safe and secure.
           </p>
           
           <div class="buttons">
-            <button class="btn btn-default btn_fill" @click.prevent="signIn">Get Started</button>
-            <button class="btn btn-default btn_outline">Learn More</button>
+            <button class="btn btn-default btn_fill pulse">Get Started</button>
+            <button class=" slide">Docs</button>
           </div>
         </article>
   
         <article class="landing_image">
           <img src="images/nine_yards.jpg" id="img"/>
           <canvas id="canvas"></canvas>
-          <ul>
-            <li id="hue_rotate">JS</li>
-            <li id="saturate">Saturate</li>
-          </ul>
         </article>
       </article>
   
@@ -131,18 +127,79 @@
               </p>
               <button class="btn btn_fill">Animate</button>
             </section>
-            <img src=""/>
+            <div class="container">
+              <div class="w">
+                  <div class="p a"></div>
+                  <div class="p b"></div>
+                  <div class="p c"></div>
+                  <div class="p d"></div>
+              </div>
+
+            </div>
           </section>
   
           <section class="guide_pane">
             <section>
-              <h2>2. Project Boards </h2>
-              <p>Create project boards, set goals, write to-dos, whatever you need to keep track of your design life.</p>
+              <h2> Functions </h2>
+              <p> Functions include:</p>
+              <ul>
+                <li>  <b>Image correction:</b> Hue rotation, sharpening, brightness adjustment, adjusting saturation, lightening/darkening all within various colour spaces. 
+                  </li>
+                <li><b>Convolutions</b>: Sobel filters, blurs, Laplace effects, edge detection, etc., </li>
+                <li><b>Channel manipulation</b>: Increasing/decreasing RGB channel values, swapping channels, removing channels, etc.</li>
+                <li><b>onochrome effects</b>: Duotoning, greyscaling of various forms, thresholding, sepia, averaging RGB values</li>
+                <li><b>Colour manipulation</b>: Work with the image in various colour spaces such as HSL, LCh, and sRGB, and adjust the colours accordingly. </li>
+                <li><b>Filters</b>: Over 30 pre-set filters available, incorporating various effects and transformations. </li>
+                <li> <b>Text</b>: Apply text to imagery in artistic ways, or to watermark, etc.,</li>
+                <li><b>Watermarking</b>: Watermark images in multiple formats. </li>
+                <li><b>Blending</b>: Blend images together using 10 different techniques, change image backgrounds. </li>
+
+        
+                View all [functions here](https://silvia-odwyer.github.io/photon/docs/photon/all.html).
+              </ul>
               <button class="btn btn_fill">Animate</button>
             </section>
-  
-            <img src=""/>
+            <div class="container">
+                <div class="background anim_img"></div>
+                <div class="foreground anim_img"></div>
+            </div>
           </section>
+
+            
+          <section class="guide_pane">
+              <section>
+                <h2>Channel/Colour Manipulation</h2>
+                <p>     
+                The library provides low-level access to pixel and channel manipulation, as well as high-level functions for image correction, filtering, watermarking, and convolutions.     
+                </p>
+                <button class="btn btn_fill">Animate</button>
+              </section>
+              <div class="container">
+                <div class="w">
+                    <div class="p a"></div>
+                    <div class="p b"></div>
+                    <div class="p c"></div>
+                    <div class="p d"></div>
+                </div>
+  
+              </div>
+            </section>
+
+          <section class="guide_pane">
+              <section>
+                <h2> Blend Images </h2>
+                <p> Functions include:</p>
+              <b>Blending</b>:<p> Blend images together using 10 different techniques. </p>
+
+              <p>Create new images from existing ones, or create new worlds from source images.</p>
+  
+                <button class="btn btn_fill">Animate</button>
+              </section>
+              <div class="container">
+                  <div class="background anim_img"></div>
+                  <div class="foreground anim_img"></div>
+              </div>
+            </section>
   
           <section>
             
@@ -152,12 +209,37 @@
                 <p>Save assets, find inspiration and a whole lot more.</p>
                 <button class="btn btn_fill">Animate</button>
               </section>
-              <img src=""/>
+
             </section>
   
           </section>
   
       </article>
+
+      <h2>Compare WebAsembly versus JavaScript</h2>
+      <button id="compare_js" class="pulse">Start JS</button>
+      <button id="compare_wasm" class="pulse">Start WASM</button>
+
+      <p>Below are two identical images of size 40MB, the left image being edited by JavaScript and the right image edited 
+        by WebAssembly. 
+      </p>
+
+      <article class="comparison">
+        <article>
+          <h4>JavaScript</h4>
+          <p id="js_time">JS time: </p>
+            <img id="js_img" src="../fruit.jpg" />
+            <canvas id="js_canvas"></canvas>
+        
+        </article>
+
+        <article>
+            <h4>WebAssembly</h4>
+            <p id="wasm_time">WASM time: </p>
+            <canvas id="wasm_canvas"></canvas>
+    
+        </article>
+       </article>
   
       <article class="guide center cta">
         <h2>Ready To Get Started?</h2>
@@ -168,6 +250,8 @@
         <button class="btn btn_outline">Read More</button>
   
       </article>    
+
+
   
       <footer>
         <div class="footer_lhs">
@@ -190,26 +274,10 @@
      </div>
   
      
-     ##### Photon vs Other Libraries:
-     - **ImageMagick** - Benchmarks show that Photon is approximately 3x faster than ImageMagick.  
-     - **ImageFlow** - ImageFlow is 60% Rust, and still relies on C++ for its image encoding and decoding, however Photon is 100% Rust, guaranteeing full safety and security. ImageFlow also does not contain JS functions for front-end development. 
-     - **CamanJS** - Photon is approximately 8x faster than CamanJS, and contains over 50 more functions. 
-     
-     ##### Functions
+     #####
      96 customisable functions are available, for varying image effects.
      
-     Functions include:
-     - *Image correction*: Hue rotation, sharpening, brightness adjustment, adjusting saturation, lightening/darkening all within various colour spaces. 
-     - *Convolutions*: Sobel filters, blurs, Laplace effects, edge detection, etc., 
-     - *Channel manipulation*: Increasing/decreasing RGB channel values, swapping channels, removing channels, etc.
-     - *Monochrome effects*: Duotoning, greyscaling of various forms, thresholding, sepia, averaging RGB values
-     - *Colour manipulation*: Work with the image in various colour spaces such as HSL, LCh, and sRGB, and adjust the colours accordingly. 
-     - *Filters*: Over 30 pre-set filters available, incorporating various effects and transformations. 
-     - *Text*: Apply text to imagery in artistic ways, or to watermark, etc.,
-     - *Watermarking*: Watermark images in multiple formats. 
-     - *Blending*: Blend images together using 10 different techniques, change image backgrounds. 
-     
-     View all [functions here](https://silvia-odwyer.github.io/photon/docs/photon/all.html).
+    
      
      `photon` can be thought of as a high-level wrapper to the Rust `image` crate, but conversely also includes functions which provide low-level access to pixel and channel manipulation, perfect for developers who wish to work with this data directly.
      
