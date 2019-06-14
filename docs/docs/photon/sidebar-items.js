@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["channels",""],["conv",""],["effects",""],["filters",""],["helpers",""],["monochrome",""],["noise",""]]});
