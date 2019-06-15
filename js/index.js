@@ -4,13 +4,16 @@ import Lemons from "./lemons.jpg";
 import Underground from "./underground.jpg";
 import NineYards from "./nine_yards.jpg";
 import BlueMetro from "./blue_metro.jpg";
-import Watermark from "./watermark.jpg"
+import Watermark from "./wasm_logo.png"
+import LargeFruit from "./fruit.jpg";
 
 // Setup global variables
 var canvas, canvas2, watermark_canvas;
 var ctx, ctx2, watermark_ctx;
 
 import("../crate/pkg").then(module => {
+
+
   var startTime;
   var endTime;
   module.run();
@@ -53,30 +56,27 @@ import("../crate/pkg").then(module => {
     button.addEventListener("click", function(){applyEffect(event)}, false);
   }
 
+  let blend_buttons = document.getElementsByClassName("blend");
+  for (let i = 0; i < blend_buttons.length; i++) {
+    let button = blend_buttons[i];
+    button.addEventListener("click", function(){blendImages(event)}, false);
+  }
+
   function applyEffect(event) {
+    console.time("wasm_time"); 
+
     ctx.drawImage(newimg, 0, 0);
     startTime = performance.now();
 
     // Get the name of the effect the user wishes to apply to the image
     // This is the id of the element they clicked on
     let filter_name = event.originalTarget.id;
-    
-    // Get the image data from the image
-    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
     // Convert the ImageData to a PhotonImage (so that it can communicate with the core Rust library)
-    let rust_image = module.open_image(imgData, canvas.width, canvas.height);
-
-    let imgData2 = ctx2.getImageData(0, 0, canvas2.width, canvas2.height);
-
-    let rust_image2 = module.open_image(imgData2, canvas2.width, canvas2.height);
+    let rust_image = module.open_image(canvas, ctx);
 
     // Setup watermark
-    let watermarkImgData = watermark_ctx.getImageData(0, 0, watermark_canvas.width, watermark_canvas.height);
-
-    let watermark_img = module.open_image(watermarkImgData, watermark_canvas.width, watermark_canvas.height);
-
-    console.time("wasm_time"); 
+    let watermark_img = module.open_image(watermark_canvas, watermark_ctx);
 
     // Maps the name of an effect to its relevant function in the Rust library
     let filter_dict = {"grayscale" : function(){return module.grayscale(rust_image)}, 
@@ -91,23 +91,23 @@ import("../crate/pkg").then(module => {
                       "decompose_max" : function(){return module.decompose_max(rust_image)},
                       "grayscale_shades": function(){return module.grayscale_shades(rust_image)},
                       "red_channel_grayscale": function() {single_channel_grayscale(rust_image, 0)},
-                      "green_channel_grayscale": function() {single_channel_grayscale(rust_image, 1)},
-                      "blue_channel_grayscale": function() {single_channel_grayscale(rust_image, 2)},
-                      "hue_rotate_hsl": function() {colour_space(rust_image, "hsl", "shift_hue")}, 
-                      "hue_rotate_hsv": function() {colour_space(rust_image, "hsv", "shift_hue")}, 
-                      "hue_rotate_lch": function() {colour_space(rust_image, "lch", "shift_hue")}, 
-                      "lighten_hsl": function() {colour_space(rust_image, "hsl", "lighten")}, 
-                      "lighten_hsv": function() {colour_space(rust_image, "hsv", "lighten")}, 
-                      "lighten_lch": function() {colour_space(rust_image, "lch", "lighten")}, 
-                      "darken_hsl": function() {colour_space(rust_image, "hsl", "darken")}, 
-                      "darken_hsv": function() {colour_space(rust_image, "hsv", "darken")}, 
-                      "darken_lch": function() {colour_space(rust_image, "lch", "darken")}, 
-                      "desaturate_hsl": function() {colour_space(rust_image, "hsl", "desaturate")}, 
-                      "desaturate_hsv": function() {colour_space(rust_image, "hsv", "desaturate")}, 
-                      "desaturate_lch": function() {colour_space(rust_image, "lch", "desaturate")}, 
-                      "saturate_hsl": function() {colour_space(rust_image, "hsl", "saturate")}, 
-                      "saturate_hsv": function() {colour_space(rust_image, "hsv", "saturate")}, 
-                      "saturate_lch": function() {colour_space(rust_image, "lch", "saturate")}, 
+                      "green_channel_grayscale": function() {module.single_channel_grayscale(rust_image, 1)},
+                      "blue_channel_grayscale": function() {module.single_channel_grayscale(rust_image, 2)},
+                      "hue_rotate_hsl": function() {module.hue_rotate_hsl(rust_image, 0.3)}, 
+                      "hue_rotate_hsv": function() {module.hue_rotate_hsv(rust_image, 0.3)}, 
+                      "hue_rotate_lch": function() {module.hue_rotate_lch(rust_image, 0.3)}, 
+                      "lighten_hsl": function() {module.lighten_hsl(rust_image, 0.3)}, 
+                      "lighten_hsv": function() {module.lighten_hsv(rust_image, 0.3)}, 
+                      "lighten_lch": function() {module.lighten_lch(rust_image, 0.3)}, 
+                      "darken_hsl": function() {module.darken_hsl(rust_image, 0.3)}, 
+                      "darken_hsv": function() {module.darken_hsv(rust_image, 0.3)}, 
+                      "darken_lch": function() {module.darken_lch(rust_image, 0.3 )}, 
+                      "desaturate_hsl": function() {module.desaturate_hsl(rust_image, 0.3)}, 
+                      "desaturate_hsv": function() {module.desaturate_hsv(rust_image, 0.3)}, 
+                      "desaturate_lch": function() {module.desaturate_lch(rust_image, 0.3)}, 
+                      "saturate_hsl": function() {module.saturate_hsl(rust_image, 0.3)}, 
+                      "saturate_hsv": function() {module.saturate_hsv(rust_image, 0.3)}, 
+                      "saturate_lch": function() {module.saturate_lch(rust_image, 0.3)}, 
                       "inc_red_channel": function() {return module.alter_channel(rust_image, 0, 120)}, 
                       "inc_blue_channel": function() {return module.alter_channel(rust_image, 2, 100)}, 
                       "inc_green_channel": function() {return module.alter_channel(rust_image, 1, 100)}, 
@@ -146,51 +146,68 @@ import("../crate/pkg").then(module => {
                       "lighten": function() {return module.blend(rust_image, rust_image2, "lighten")},
                       "darken": function() {return module.blend(rust_image, rust_image2, "darken")},
                       "watermark": function() {return module.watermark(rust_image, watermark_img, 10, 30)},
-
+                      "text": function() {return module.draw_text(rust_image, "welcome to WebAssembly", 10, 20)},
+                      "text_border": function() {return module.draw_text_with_border(rust_image, "welcome to the edge", 10, 20)},
+                      "test": function() {return module.filter(rust_image, "rosetint")},
                     };
 
     // Filter the image, the PhotonImage's raw pixels are modified and 
     // the PhotonImage is returned
-    let new_image = filter_dict[filter_name]();
-
-    let effect_to_code = {"inc_red_channel": "extern crate photon;<br>use photon::channels;<br>channels::alter_red_channel(12)"};
-    let code_elem = document.getElementById("code");
-    code_elem.innerHTML = effect_to_code[filter_name];
+    filter_dict[filter_name]();
 
     // Update the canvas with the new imagedata
-    updateCanvas(new_image)
+    module.putImageData(canvas, ctx, rust_image);
     console.timeEnd("wasm_time");
+    endTime = performance.now();
+    updateBenchmarks();
+  }
+
+  function blendImages(event) {
+    console.time("wasm_blend_time"); 
+
+    ctx.drawImage(newimg, 0, 0);
+    startTime = performance.now();
+
+    // Get the name of the effect the user wishes to apply to the image
+    // This is the id of the element they clicked on
+    let filter_name = event.originalTarget.id;
+
+    // Convert the ImageData to a PhotonImage (so that it can communicate with the core Rust library)
+    let rust_image = module.open_image(canvas, ctx);
+
+    let rust_image2 = module.open_image(canvas2, ctx2);
+
+    // Maps the name of an effect to its relevant function in the Rust library
+    let filter_dict = {
+                      "blend": function() {return module.blend(rust_image, rust_image2, "over")},
+                      "overlay": function() {return module.blend(rust_image, rust_image2, "overlay")},
+                      "atop": function() {return module.blend(rust_image, rust_image2, "atop")},
+                      "plus": function() {return module.blend(rust_image, rust_image2, "plus")},
+                      "multiply": function() {return module.blend(rust_image, rust_image2, "multiply")},
+                      "burn": function() {return module.blend(rust_image, rust_image2, "burn")},
+                      "difference": function() {return module.blend(rust_image, rust_image2, "difference")},
+                      "soft_light": function() {return module.blend(rust_image, rust_image2, "soft_light")},
+                      "hard_light": function() {return module.blend(rust_image, rust_image2, "hard_light")},
+                      "dodge": function() {return module.blend(rust_image, rust_image2, "dodge")},
+                      "exclusion": function() {return module.blend(rust_image, rust_image2, "exclusion")},
+                      "lighten": function() {return module.blend(rust_image, rust_image2, "lighten")},
+                      "darken": function() {return module.blend(rust_image, rust_image2, "darken")},
+                      "watermark": function() {return module.watermark(rust_image, watermark_img, 10, 30)},
+                      "text": function() {return module.draw_text(rust_image, "welcome to WebAssembly", 10, 20)},
+                      "text_border": function() {return module.draw_text_with_border(rust_image, "welcome to the edge", 10, 20)},
+                    };
+
+    // Filter the image, the PhotonImage's raw pixels are modified and 
+    // the PhotonImage is returned
+    filter_dict[filter_name]();
+
+    // Update the canvas with the new imagedata
+    module.putImageData(canvas, ctx, rust_image);
+    console.timeEnd("wasm_blend_time");
     endTime = performance.now()
     updateBenchmarks()
   }
-
-  function colour_space(rust_image, colour_space, effect) {
-    let new_image;
-    if (colour_space == "hsl") {
-      new_image = module.lch(rust_image, effect, 0.3);
-    }
-    else if (colour_space == "hsv") {
-      new_image = module.hsv(rust_image, effect, 0.3)
-    }
-    else {
-      new_image = module.lch(rust_image, effect, 0.3);
-    }
-    updateCanvas(new_image);
-  }
   
-
-  function grayscale_shades(rust_image) {
-    let new_image = module.grayscale_shades(rust_image, 100);
-
-    updateCanvas(new_image);
-  }
-
-  
-  function single_channel_grayscale(rust_image, channel) {
-    let new_image = module.single_channel_grayscale(rust_image, channel);
-    updateCanvas(new_image);
-  }
-
   function updateCanvas(new_image) {
     let new_pixels = module.to_image_data(new_image);
     
@@ -205,24 +222,19 @@ import("../crate/pkg").then(module => {
     let filter_name = event.originalTarget.id;
   
     console.time("wasm_time"); 
-    
-    // Get the image data from the image
-    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
     // Convert the ImageData to a PhotonImage (so that it can communicate with the core Rust library)
-    let rust_image = module.open_image(imgData, canvas.width, canvas.height);
+    let rust_image = module.open_image(canvas, ctx);
 
     // Filter the image, the PhotonImage's raw pixels are modified and 
     // the PhotonImage is returned
-    let new_image = module.filter(rust_image, filter_name);
+    module.filter(rust_image, filter_name);
 
-    // Convert the PhotonImage's raw pixels to JS-compatible ImageData
-    let new_pixels = module.to_image_data(new_image);
-    
+    // Place the pixels back on the canvas
+    module.putImageData(canvas, ctx, rust_image);
+
     endTime = performance.now();
     updateBenchmarks();
-    // Place the pixels back on the canvas
-    ctx.putImageData(new_pixels, 0, 0);
     console.timeEnd("wasm_time");
   }
 
@@ -278,7 +290,7 @@ import("../crate/pkg").then(module => {
     change_image_elem.addEventListener("click", function(event) {
       console.log("image changed")
       let img_name = event.originalTarget.id;
-      let imgNamesToImages = {"lemons": Lemons, "underground": Underground, "blue_metro": BlueMetro, "nine_yards": NineYards, "daisies": Daisies, "fruit": Fruit};
+      let imgNamesToImages = {"largefruit": LargeFruit, "lemons": Lemons, "underground": Underground, "blue_metro": BlueMetro, "nine_yards": NineYards, "daisies": Daisies, "fruit": Fruit};
       newimg.src = imgNamesToImages[img_name];
       newimg.onload = () => {
         canvas.width = newimg.width;
@@ -288,26 +300,13 @@ import("../crate/pkg").then(module => {
     }, false);
   }
 
-});
-
-function editImage(canvas, ctx) {
-  let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  for (let i = 0; i < imgData.data.length; i += 4) {
-    imgData[i] += 30;
+    
+  function editImage(canvas, ctx) {
+    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < imgData.data.length; i += 4) {
+      imgData[i] += 30;
+    }
+    ctx.putImageData(imgData, 0, 0);
   }
-  ctx.putImageData(imgData, 0, 0);
-}
 
-  
-//   ctx.drawImage(img, 0, 0);
-//   console.time("js");
-
-//   let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-//   for (i = 0; i < imgData.data.length; i += 4) {
-//     imgData.data[i] += 50;
-// }
-
-//   ctx.putImageData(imgData, 0, 0);
-
-
-//   console.timeEnd("js");
+});
