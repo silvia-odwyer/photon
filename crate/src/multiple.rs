@@ -70,7 +70,7 @@ pub fn watermark(mut img: PhotonImage, watermark: PhotonImage, x: u32, y: u32) -
 /// photon::multiple::watermark(img, watermark, 30, 40);
 /// ```
 #[wasm_bindgen]
-pub fn blend(mut photon_image: PhotonImage, photon_image2: PhotonImage, blend_mode: &str) -> PhotonImage {
+pub fn blend(mut photon_image: &mut PhotonImage, photon_image2: &PhotonImage, blend_mode: &str) {
     let img = crate::helpers::dyn_image_from_raw(&photon_image);
     let img2 = crate::helpers::dyn_image_from_raw(&photon_image2);
 
@@ -85,7 +85,6 @@ pub fn blend(mut photon_image: PhotonImage, photon_image2: PhotonImage, blend_mo
 
     for x in 0..width {
         for y in 0..height {
-            let px2 = img2.get_pixel(x, y);
             
             let px_data = img.get_pixel(x, y).data;
 
@@ -122,8 +121,6 @@ pub fn blend(mut photon_image: PhotonImage, photon_image2: PhotonImage, blend_mo
     }
     let dynimage = image::ImageRgba8(img);
     photon_image.raw_pixels = dynimage.raw_pixels();
-    return photon_image;
-
 }
 
 /// Change the background of an image (using a green screen/color screen).
@@ -140,13 +137,13 @@ pub fn blend(mut photon_image: PhotonImage, photon_image2: PhotonImage, blend_mo
 /// let rgb = Rgb{20, 40, 60};
 /// photon::multiple::replace_background(img_b, img_a, rgb);
 /// ```
-pub fn replace_background(mut photon_image: PhotonImage, mut img2: PhotonImage, background_color: Rgb) -> PhotonImage {
+pub fn replace_background(mut photon_image: PhotonImage, img2: &PhotonImage, background_color: Rgb) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let img2 = helpers::dyn_image_from_raw(&img2);
     let (width, height) = img.dimensions();
     for x in 0..width {
         for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+            let px = img.get_pixel(x, y);
 
             // Convert the current pixel's colour to the l*a*b colour space
             let lab: Lab = Srgb::new(background_color.r as f32 / 255.0, background_color.g as f32 / 255.0, background_color.b as f32 / 255.0).into();
@@ -168,7 +165,6 @@ pub fn replace_background(mut photon_image: PhotonImage, mut img2: PhotonImage, 
             }
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }

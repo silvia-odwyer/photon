@@ -1,33 +1,43 @@
 extern crate image;
-use image::{GenericImage, DynamicImage, GenericImageView};
+use image::{GenericImage, GenericImageView};
 extern crate wasm_bindgen;
 use crate::helpers;
 use crate::{PhotonImage, Rgb};
 extern crate palette;
 use palette::{Pixel, Lch, Shade, Saturate, Srgba, Srgb, Lab};
 use wasm_bindgen::prelude::*;
-use wasm_bindgen::Clamped;
-use web_sys::ImageData;
 use crate::channels::palette::Hue;
 
-/// Alter a select channel by incrementing its value by a constant.
+/// Alter a select channel by incrementing or decrementing its value by a constant.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
-/// * `channel` - The channel you wish to inc, it should be either 0, 1 or 2, 
-/// representing R, G, or B respectively
-/// * `offset` - The amount you want to increment the channel's value by for that pixel.
+/// * `img` - A PhotonImage.
+/// * `channel` - The channel you wish to alter, it should be either 0, 1 or 2, 
+/// representing R, G, or B respectively. (O = Red, 1=Green, 2=Blue)
+/// * `amount` - The amount you want to increment or decrement the channel's value by for that pixel.
+/// A positive value will increment the channel's value, a negative value will decrement the channel's value.
 /// 
 /// # Example
 ///
 /// ```
 /// // For example, to increase the Red channel for all pixels by 10:
 /// use photon::channels;
-/// photon::channels::inc_channel(img, 0, 10);
+/// let img = photon::open_image("img.jpg");
+/// let new_img = photon::channels::alter_channel(img, 0, 10);
+/// // Write the contents of this image in JPG format.
+/// photon::helpers::save_image(new_img, "new_image.png");
+/// 
 /// ```
 /// Adds a constant to a select R, G, or B channel's value.
+/// 
+/// ### Decrease a channel's value
+/// // For example, to decrease the Green channel for all pixels by 20:
+/// use photon::channels;
+/// photon::channels::alter_channel(img, 1, -20);
+/// ```
+/// **NOTE**: Note the use of a minus symbol when decreasing the channel. 
 #[wasm_bindgen]
-pub fn inc_channel(mut photon_image: PhotonImage, channel: usize, offset: i32) -> PhotonImage {
+pub fn alter_channel(mut photon_image: &mut PhotonImage, channel: usize, offset: i32) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -42,16 +52,14 @@ pub fn inc_channel(mut photon_image: PhotonImage, channel: usize, offset: i32) -
 
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
-
-/// Increment every pixel's Red channel by a constant.
+/// Increment or decrement every pixel's Red channel by a constant.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage. See the PhotonImage struct for details on how to create one.
 /// * `offset` - The amount you want to increment the channel's value by for that pixel.
 /// 
 /// # Example
@@ -59,14 +67,14 @@ pub fn inc_channel(mut photon_image: PhotonImage, channel: usize, offset: i32) -
 /// ```
 /// // For example, to increase the Red channel for all pixels by 10:
 /// use photon::channels;
-/// photon::channels::inc_red_channel(img, 10);
+/// photon::channels::alter_red_channel(img, 10);
 /// ```
 #[wasm_bindgen]
-pub fn alter_red_channel(img: PhotonImage, offset: i32) -> PhotonImage {
-    return inc_channel(img, 0, offset);
+pub fn alter_red_channel(img: &mut PhotonImage, offset: i32) {
+    return alter_channel(img, 0, offset);
 }
 
-/// Increment every pixel's Green channel by a constant.
+/// Increment or decrement every pixel's Green channel by a constant.
 /// 
 /// # Arguments
 /// * `img` - A DynamicImage that contains a view into the image.
@@ -77,14 +85,14 @@ pub fn alter_red_channel(img: PhotonImage, offset: i32) -> PhotonImage {
 /// ```
 /// // For example, to increase the Green channel for all pixels by 20:
 /// use photon::channels;
-/// photon::channels::inc_green_channel(img, 10);
+/// photon::channels::alter_green_channel(img, 10);
 /// ```
 #[wasm_bindgen]
-pub fn alter_green_channel(img: PhotonImage, offset: i32) -> PhotonImage {
-    return inc_channel(img, 1, offset);
+pub fn alter_green_channel(img: &mut PhotonImage, offset: i32) {
+    return alter_channel(img, 1, offset);
 }
 
-/// Increment every pixel's Blue channel by a constant.
+/// Increment or decrement every pixel's Blue channel by a constant.
 /// 
 /// # Arguments
 /// * `img` - A DynamicImage that contains a view into the image.
@@ -95,14 +103,14 @@ pub fn alter_green_channel(img: PhotonImage, offset: i32) -> PhotonImage {
 /// ```
 /// // For example, to increase the Blue channel for all pixels by 10:
 /// use photon::channels;
-/// photon::channels::inc_blue_channel(img, 10);
+/// photon::channels::alter_blue_channel(img, 10);
 /// ```
 #[wasm_bindgen]
-pub fn alter_blue_channel(img: PhotonImage, offset: i32) -> PhotonImage {
-    return inc_channel(img, 2, offset);
+pub fn alter_blue_channel(img: &mut PhotonImage, offset: i32) {
+    return alter_channel(img, 2, offset);
 }
 
-/// Increment two channels' values simultaneously by adding an offset to each channel per pixel.
+/// Increment/decrement two channels' values simultaneously by adding an offset to each channel per pixel.
 /// 
 /// # Arguments
 /// * `img` - A DynamicImage that contains a view into the image.
@@ -118,7 +126,7 @@ pub fn alter_blue_channel(img: PhotonImage, offset: i32) -> PhotonImage {
 /// photon::channels::inc_two_channels(img, 0, 10, 2, 20);
 /// ```
 #[wasm_bindgen]
-pub fn alter_two_channels(mut photon_image: PhotonImage, channel1: usize, offset1: i32, channel2: usize, offset2: i32) -> PhotonImage {
+pub fn alter_two_channels(mut photon_image: &mut PhotonImage, channel1: usize, offset1: i32, channel2: usize, offset2: i32) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
     for x in 0..width {
@@ -140,9 +148,8 @@ pub fn alter_two_channels(mut photon_image: PhotonImage, channel1: usize, offset
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Increment all 3 channels' values by adding an offset to each channel per pixel.
@@ -161,7 +168,7 @@ pub fn alter_two_channels(mut photon_image: PhotonImage, channel1: usize, offset
 /// // photon::channels::alter_channels(img, 10, 20, 50);
 /// ```
 #[wasm_bindgen]
-pub fn alter_channels(mut photon_image: PhotonImage, r_offset: i8, g_offset: i8, b_offset: i8) -> PhotonImage {
+pub fn alter_channels(mut photon_image: &mut PhotonImage, r_offset: i8, g_offset: i8, b_offset: i8) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
     for x in 0..width {
@@ -182,9 +189,8 @@ pub fn alter_channels(mut photon_image: PhotonImage, r_offset: i8, g_offset: i8,
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Set a certain channel to zero, thus removing the channel's influence in the pixels' final rendered colour.
@@ -203,7 +209,7 @@ pub fn alter_channels(mut photon_image: PhotonImage, r_offset: i8, g_offset: i8,
 /// photon::channels::remove_channel(img, 0, 100);
 /// ```
 #[wasm_bindgen]
-pub fn remove_channel(mut photon_image: PhotonImage, channel: usize, min_filter: u8) -> PhotonImage {
+pub fn remove_channel(mut photon_image: &mut PhotonImage, channel: usize, min_filter: u8) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
 
     let (width, height) = img.dimensions();
@@ -212,14 +218,12 @@ pub fn remove_channel(mut photon_image: PhotonImage, channel: usize, min_filter:
             let mut px = img.get_pixel(x, y);
             if px.data[channel] < min_filter {
                 px.data[channel] = 0;
-                px.data[1] += 2;
             }
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Remove the Red channel's influence in an image, by setting its value to zero.
@@ -235,9 +239,11 @@ pub fn remove_channel(mut photon_image: PhotonImage, channel: usize, min_filter:
 /// photon::channels::remove_red_channel(img, 50);
 /// ```
 #[wasm_bindgen]
-pub fn remove_red_channel(img: PhotonImage, min_filter: u8) -> PhotonImage {
+pub fn remove_red_channel(img: &mut PhotonImage, min_filter: u8) {
     return remove_channel(img, 0, min_filter);
 }
+
+
 
 /// Remove the Green channel's influence in an image, by setting its value to zero.
 /// 
@@ -252,7 +258,7 @@ pub fn remove_red_channel(img: PhotonImage, min_filter: u8) -> PhotonImage {
 /// photon::channels::remove_green_channel(img, 50);
 /// ```
 #[wasm_bindgen]
-pub fn remove_green_channel(img: PhotonImage, min_filter: u8) -> PhotonImage {
+pub fn remove_green_channel(img: &mut PhotonImage, min_filter: u8) {
     return remove_channel(img, 1, min_filter);
 }
 
@@ -269,7 +275,7 @@ pub fn remove_green_channel(img: PhotonImage, min_filter: u8) -> PhotonImage {
 /// photon::channels::remove_blue_channel(img, 50);
 /// ```
 #[wasm_bindgen]
-pub fn remove_blue_channel(img: PhotonImage, min_filter: u8) -> PhotonImage {
+pub fn remove_blue_channel(img: &mut PhotonImage, min_filter: u8) {
     return remove_channel(img, 2, min_filter);
 }
 
@@ -287,7 +293,7 @@ pub fn remove_blue_channel(img: PhotonImage, min_filter: u8) -> PhotonImage {
 /// photon::channels::swap_channels(img, 0, 2);
 /// ```
 #[wasm_bindgen]
-pub fn swap_channels(mut photon_image: PhotonImage, channel1: usize, channel2: usize) -> PhotonImage {
+pub fn swap_channels(mut photon_image: &mut PhotonImage, channel1: usize, channel2: usize) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
     for x in 0..width {
@@ -299,9 +305,8 @@ pub fn swap_channels(mut photon_image: PhotonImage, channel1: usize, channel2: u
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Selective hue rotation.
@@ -322,8 +327,8 @@ pub fn swap_channels(mut photon_image: PhotonImage, channel1: usize, channel2: u
 /// photon::channels::selective_hue_rotate(img, ref_color, 180);
 /// ```
 #[wasm_bindgen]
-pub fn selective_hue_rotate(mut photon_image: PhotonImage, ref_color: Rgb, degrees: f32) -> PhotonImage {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+pub fn selective_hue_rotate(mut photon_image: &mut PhotonImage, ref_color: Rgb, degrees: f32) {
+    let img = helpers::dyn_image_from_raw(&photon_image);
     
     let (_width, _height) = img.dimensions();
     let mut img = img.to_rgba();
@@ -354,7 +359,6 @@ pub fn selective_hue_rotate(mut photon_image: PhotonImage, ref_color: Rgb, degre
         }
     }
     photon_image.raw_pixels = img.to_vec();
-    return photon_image
 }
 
 // Get the similarity of two colours in the l*a*b colour space using the CIE76 formula.
@@ -391,7 +395,7 @@ pub fn color_sim(lab1: Lab, lab2: Lab) -> i64 {
 /// photon::channels::selective_lighten(img, ref_color, 0.2);
 /// ```
 #[wasm_bindgen]
-pub fn selective_lighten(img: PhotonImage, ref_color: Rgb, amt: f32) -> PhotonImage {
+pub fn selective_lighten(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
     return selective(img, "lighten", ref_color, amt);
 }
 
@@ -413,7 +417,7 @@ pub fn selective_lighten(img: PhotonImage, ref_color: Rgb, amt: f32) -> PhotonIm
 /// photon::channels::selective_desaturate(img, ref_color, 0.1);
 /// ```
 #[wasm_bindgen]
-pub fn selective_desaturate(img: PhotonImage, ref_color: Rgb, amt: f32) -> PhotonImage {
+pub fn selective_desaturate(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
     return selective(img, "desaturate", ref_color, amt);
 }
 
@@ -435,13 +439,13 @@ pub fn selective_desaturate(img: PhotonImage, ref_color: Rgb, amt: f32) -> Photo
 /// photon::channels::selective_saturate(img, ref_color, 0.1);
 /// ```
 #[wasm_bindgen]
-pub fn selective_saturate(img: PhotonImage, ref_color: Rgb, amt: f32) -> PhotonImage {
-    return selective(img, "saturate", ref_color, amt);
+pub fn selective_saturate(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
+    selective(img, "saturate", ref_color, amt);
 }
 
 
-fn selective(mut photon_image: PhotonImage, mode: &'static str, ref_color:Rgb, amt: f32) -> PhotonImage {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+fn selective(mut photon_image: &mut PhotonImage, mode: &'static str, ref_color:Rgb, amt: f32) {
+    let img = helpers::dyn_image_from_raw(&photon_image);
     let (_width, _height) = img.dimensions();
     let mut img = img.to_rgba();
     for x in 0.._width {
@@ -483,7 +487,6 @@ fn selective(mut photon_image: PhotonImage, mode: &'static str, ref_color:Rgb, a
         }
     }
     photon_image.raw_pixels = img.to_vec();
-    return photon_image;
 }
 
 /// Selectively changes a pixel to greyscale if it is *not* visually similar or close to the colour specified.
@@ -504,7 +507,7 @@ fn selective(mut photon_image: PhotonImage, mode: &'static str, ref_color:Rgb, a
 /// photon::channels::selective_greyscale(img, ref_color);
 /// ```
 #[wasm_bindgen]
-pub fn selective_greyscale(mut photon_image: PhotonImage, ref_color: Rgb) -> PhotonImage {
+pub fn selective_greyscale(mut photon_image: PhotonImage, ref_color: Rgb) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     for x in 0..photon_image.width {
         for y in 0..photon_image.height {
@@ -532,5 +535,4 @@ pub fn selective_greyscale(mut photon_image: PhotonImage, ref_color: Rgb) -> Pho
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }

@@ -1,20 +1,16 @@
 extern crate image;
-use image::{GenericImage, GenericImageView, Rgba, DynamicImage};
+use image::{GenericImage, GenericImageView};
 use std::f64;
 extern crate imageproc;
 extern crate rusttype;
 use crate::{PhotonImage, Rgb};
 use crate::helpers;
 use wasm_bindgen::prelude::*;
-use imageproc::drawing::draw_text_mut;
-use imageproc::morphology::dilate_mut;
-use imageproc::distance_transform::Norm;
-use rusttype::{FontCollection, Scale};
  
 /// Adds an offset to the image by a certain number of pixels. 
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage that contains a view into the image.
 /// * `offset` - The offset is added to the pixels in the image.  
 /// # Example
 ///
@@ -24,7 +20,7 @@ use rusttype::{FontCollection, Scale};
 /// photon::effects::offset(img, 0, 30);
 /// ```
 #[wasm_bindgen]
-pub fn offset(mut photon_image: PhotonImage, channel_index: usize, offset: u32) -> PhotonImage {
+pub fn offset(mut photon_image: &mut PhotonImage, channel_index: usize, offset: u32) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -45,13 +41,12 @@ pub fn offset(mut photon_image: PhotonImage, channel_index: usize, offset: u32) 
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Adds an offset to the red channel by a certain number of pixels. 
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage that contains a view into the image.
 /// * `offset` - The offset you want to move the red channel by. 
 /// # Example
 ///
@@ -61,14 +56,14 @@ pub fn offset(mut photon_image: PhotonImage, channel_index: usize, offset: u32) 
 /// photon::effects::offset_red(img, 30);
 /// ```
 #[wasm_bindgen]
-pub fn offset_red(img: PhotonImage, offset_amt: u32) -> PhotonImage {
+pub fn offset_red(img: &mut PhotonImage, offset_amt: u32) {
     offset(img, 0, offset_amt)
 }
 
 /// Adds an offset to the green channel by a certain number of pixels. 
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage that contains a view into the image.
 /// * `offset` - The offset you want to move the green channel by.
 /// # Example
 ///
@@ -78,14 +73,14 @@ pub fn offset_red(img: PhotonImage, offset_amt: u32) -> PhotonImage {
 /// photon::effects::offset_green(img, 40);
 /// ```
 #[wasm_bindgen]
-pub fn offset_green(img: PhotonImage, offset_amt: u32) -> PhotonImage {
+pub fn offset_green(img: &mut PhotonImage, offset_amt: u32) {
     offset(img, 1, offset_amt)
 }
 
 /// Adds an offset to the blue channel by a certain number of pixels. 
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage that contains a view into the image.
 /// * `offset_amt` - The offset you want to move the blue channel by.
 /// # Example
 /// // For example, to add an offset to the green channel by 40 pixels.
@@ -93,14 +88,14 @@ pub fn offset_green(img: PhotonImage, offset_amt: u32) -> PhotonImage {
 /// photon::effects::offset_blue(img, 40);
 /// ```
 #[wasm_bindgen]
-pub fn offset_blue(img: PhotonImage, offset_amt: u32) -> PhotonImage {
+pub fn offset_blue(img: &mut PhotonImage, offset_amt: u32) {
     offset(img, 2, offset_amt)
 }
 
 /// Adds multiple offsets to the image by a certain number of pixels (on two channels).
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage that contains a view into the image.
 /// * `offset` - The offset is added to the pixels in the image.  
 /// # Example
 ///
@@ -110,7 +105,7 @@ pub fn offset_blue(img: PhotonImage, offset_amt: u32) -> PhotonImage {
 /// photon::effects::multiple_offsets(img, 30, 0, 2);
 /// ```
 #[wasm_bindgen]
-pub fn multiple_offsets(mut photon_image: PhotonImage, offset: u32, channel_index: usize, channel_index2: usize) -> PhotonImage {
+pub fn multiple_offsets(mut photon_image: &mut PhotonImage, offset: u32, channel_index: usize, channel_index2: usize) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -140,13 +135,12 @@ pub fn multiple_offsets(mut photon_image: PhotonImage, offset: u32, channel_inde
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Add a sine wave animation to the pixels by distributing the pixels along a sine curve.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage that contains a view into the image.
 /// # Example
 ///
 /// ```
@@ -217,7 +211,7 @@ pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
 /// This is similar to greyscaling an image, but rather than having the gradient transition from black to white, it should
 /// be between two other colours, red to green, for example. 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage that contains a view into the image.
 /// * `color_a` - An RGB color. 
 /// * `color_b` - An RGB color.
 /// # Example
@@ -228,7 +222,7 @@ pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
 /// photon::effects::duotone(img, colour_a, colour_b);
 /// ```
 #[wasm_bindgen]
-pub fn duotone(mut photon_image: PhotonImage, color_a : Rgb, color_b : Rgb) -> PhotonImage {
+pub fn duotone(mut photon_image: &mut PhotonImage, color_a : Rgb, color_b : Rgb) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
     let gradient_map = create_gradient_map(color_a, color_b);
@@ -251,10 +245,9 @@ pub fn duotone(mut photon_image: PhotonImage, color_a : Rgb, color_b : Rgb) -> P
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
-pub fn halftone(mut photon_image: PhotonImage) -> PhotonImage {
+pub fn halftone(mut photon_image: PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
     
@@ -372,13 +365,12 @@ pub fn halftone(mut photon_image: PhotonImage) -> PhotonImage {
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Reduces an image to the primary colours.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage that contains a view into the image.
 /// # Example
 ///
 /// ```
@@ -387,7 +379,7 @@ pub fn halftone(mut photon_image: PhotonImage) -> PhotonImage {
 /// photon::effects::primary(img);
 /// ```
 #[wasm_bindgen]
-pub fn primary(mut photon_image: PhotonImage) -> PhotonImage {
+pub fn primary(mut photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -431,13 +423,12 @@ pub fn primary(mut photon_image: PhotonImage) -> PhotonImage {
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Colorizes the green channels of the image.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage that contains a view into the image.
 /// # Example
 ///
 /// ```
@@ -446,7 +437,7 @@ pub fn primary(mut photon_image: PhotonImage) -> PhotonImage {
 /// photon::effects::colorize(img);
 /// ```
 #[wasm_bindgen]
-pub fn colorize(mut photon_image: PhotonImage) -> PhotonImage {
+pub fn colorize(mut photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let threshold = 220;
     let (width, height) = img.dimensions();
@@ -479,8 +470,6 @@ pub fn colorize(mut photon_image: PhotonImage) -> PhotonImage {
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
-
 }
 
 // #[wasm_bindgen]
@@ -535,7 +524,7 @@ pub fn colorize(mut photon_image: PhotonImage) -> PhotonImage {
 /// Applies a solarizing effect to an image.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage that contains a view into the image.
 /// # Example
 ///
 /// ```
@@ -544,7 +533,7 @@ pub fn colorize(mut photon_image: PhotonImage) -> PhotonImage {
 /// photon::effects::solarize(img);
 /// ```
 #[wasm_bindgen]
-pub fn solarize(mut photon_image: PhotonImage) -> PhotonImage {
+pub fn solarize(mut photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -559,14 +548,13 @@ pub fn solarize(mut photon_image: PhotonImage) -> PhotonImage {
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 
 /// Increase the brightness of an image by a factor.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage that contains a view into the image.
 /// * `brightness` - A u8 to add to the brightness.
 /// # Example
 ///
@@ -574,7 +562,7 @@ pub fn solarize(mut photon_image: PhotonImage) -> PhotonImage {
 /// photon::effects::inc_brightness(img, 10);
 /// ```
 #[wasm_bindgen]
-pub fn inc_brightness(mut photon_image: PhotonImage, brightness: u8) -> PhotonImage {
+pub fn inc_brightness(mut photon_image: &mut PhotonImage, brightness: u8) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -607,13 +595,12 @@ pub fn inc_brightness(mut photon_image: PhotonImage, brightness: u8) -> PhotonIm
         }
     }
     photon_image.raw_pixels = img.raw_pixels();
-    return photon_image;
 }
 
 /// Tint an image by adding an offset to averaged RGB channel values.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage that contains a view into the image.
 /// * `r_offset` - The amount the  R channel should be incremented by.
 /// * `g_offset` - The amount the G channel should be incremented by.
 /// * `b_offset` - The amount the B channel should be incremented by.
@@ -625,7 +612,7 @@ pub fn inc_brightness(mut photon_image: PhotonImage, brightness: u8) -> PhotonIm
 /// ```
 /// 
 #[wasm_bindgen]
-pub fn tint(mut photon_image: PhotonImage, r_offset: u32, g_offset: u32, b_offset: u32) -> PhotonImage {
+pub fn tint(mut photon_image: &mut PhotonImage, r_offset: u32, g_offset: u32, b_offset: u32) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -643,5 +630,4 @@ pub fn tint(mut photon_image: PhotonImage, r_offset: u32, g_offset: u32, b_offse
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }

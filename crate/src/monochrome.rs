@@ -1,9 +1,8 @@
 extern crate image;
-use image::{GenericImage, DynamicImage, GenericImageView};
-use crate::{PhotonImage, Rgb};
+use image::{GenericImage, GenericImageView};
+use crate::{PhotonImage};
 use crate::helpers;
 use wasm_bindgen::prelude::*;
-use wasm_bindgen::Clamped;
 
 /// Apply a monochrome effect of a certain colour.
 /// 
@@ -24,7 +23,7 @@ use wasm_bindgen::Clamped;
 /// ```
 /// 
 #[wasm_bindgen]
-pub fn monochrome(mut photon_image: PhotonImage, r_offset: u32, g_offset: u32, b_offset: u32) -> PhotonImage {
+pub fn monochrome(mut photon_image: &mut PhotonImage, r_offset: u32, g_offset: u32, b_offset: u32) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -44,9 +43,8 @@ pub fn monochrome(mut photon_image: PhotonImage, r_offset: u32, g_offset: u32, b
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Convert an image to sepia.
@@ -62,7 +60,7 @@ pub fn monochrome(mut photon_image: PhotonImage, r_offset: u32, g_offset: u32, b
 /// ```
 /// 
 #[wasm_bindgen]
-pub fn sepia(mut photon_image: PhotonImage) -> PhotonImage {
+pub fn sepia(mut photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -78,9 +76,8 @@ pub fn sepia(mut photon_image: PhotonImage) -> PhotonImage {
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Convert an image to grayscale using the conventional averaging algorithm.
@@ -96,7 +93,7 @@ pub fn sepia(mut photon_image: PhotonImage) -> PhotonImage {
 /// photon::channels::grayscale(img);
 /// ```
 #[wasm_bindgen]
-pub fn grayscale(mut photon_image: PhotonImage) -> PhotonImage {
+pub fn grayscale(mut photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);    
     let (width, height) = img.dimensions();
 
@@ -114,9 +111,8 @@ pub fn grayscale(mut photon_image: PhotonImage) -> PhotonImage {
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Convert an image to grayscale with a human corrected factor, to account for human vision.
@@ -132,7 +128,7 @@ pub fn grayscale(mut photon_image: PhotonImage) -> PhotonImage {
 /// photon::channels::grayscale_human_corrected(img);
 /// ```
 #[wasm_bindgen]
-pub fn grayscale_human_corrected(mut photon_image: PhotonImage) -> PhotonImage {
+pub fn grayscale_human_corrected(mut photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -153,9 +149,8 @@ pub fn grayscale_human_corrected(mut photon_image: PhotonImage) -> PhotonImage {
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Desaturate an image by getting the min/max of each pixel's RGB values.
@@ -171,7 +166,7 @@ pub fn grayscale_human_corrected(mut photon_image: PhotonImage) -> PhotonImage {
 /// photon::channels::desaturate(img);
 /// ```
 #[wasm_bindgen]
-pub fn desaturate(mut photon_image: PhotonImage) -> PhotonImage {
+pub fn desaturate(mut photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -196,9 +191,8 @@ pub fn desaturate(mut photon_image: PhotonImage) -> PhotonImage {
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Uses a min. decomposition algorithm to convert an image to greyscale.
@@ -213,7 +207,7 @@ pub fn desaturate(mut photon_image: PhotonImage) -> PhotonImage {
 /// photon::channels::decompose_min(img);
 /// ```
 #[wasm_bindgen]
-pub fn decompose_min(mut photon_image: PhotonImage) -> PhotonImage {
+pub fn decompose_min(mut photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -238,9 +232,8 @@ pub fn decompose_min(mut photon_image: PhotonImage) -> PhotonImage {
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Uses a max. decomposition algorithm to convert an image to greyscale.
@@ -255,7 +248,7 @@ pub fn decompose_min(mut photon_image: PhotonImage) -> PhotonImage {
 /// photon::channels::decompose_max(img);
 /// ```
 #[wasm_bindgen]
-pub fn decompose_max(mut photon_image: PhotonImage) -> PhotonImage {
+pub fn decompose_max(mut photon_image: PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -276,9 +269,8 @@ pub fn decompose_max(mut photon_image: PhotonImage) -> PhotonImage {
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Employ only a limited number of gray shades in an image.
@@ -293,7 +285,7 @@ pub fn decompose_max(mut photon_image: PhotonImage) -> PhotonImage {
 /// photon::channels::grayscale_shades(img, 4);
 /// ```
 #[wasm_bindgen]
-pub fn grayscale_shades(mut photon_image: PhotonImage, num_shades: u8) -> PhotonImage {
+pub fn grayscale_shades(mut photon_image: &mut PhotonImage, num_shades: u8) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -317,9 +309,8 @@ pub fn grayscale_shades(mut photon_image: PhotonImage, num_shades: u8) -> Photon
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Convert an image to grayscale by setting all 3 RGB values to the Red channel's value.
@@ -333,25 +324,8 @@ pub fn grayscale_shades(mut photon_image: PhotonImage, num_shades: u8) -> Photon
 /// photon::channels::r_grayscale(img);
 /// ```
 #[wasm_bindgen]
-pub fn r_grayscale(mut photon_image: PhotonImage) -> PhotonImage {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
-
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-
-            let red = px.data[0];
-            
-            px.data[0] = red as u8;
-            px.data[1] = red as u8;
-            px.data[2] = red as u8;
-            img.put_pixel(x, y, px);
-        }
-    }
-    let mut raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
-    return photon_image;
+pub fn r_grayscale(photon_image: &mut PhotonImage) {
+    return single_channel_grayscale(photon_image, 0)
 }
 
 /// Convert an image to grayscale by setting all 3 RGB values to the Green channel's value.
@@ -365,25 +339,8 @@ pub fn r_grayscale(mut photon_image: PhotonImage) -> PhotonImage {
 /// photon::channels::g_grayscale(img);
 /// ```
 #[wasm_bindgen]
-pub fn g_grayscale(mut photon_image: PhotonImage) -> PhotonImage {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
-
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-
-            let green = px.data[1];
-            
-            px.data[0] = green as u8;
-            px.data[1] = green as u8;
-            px.data[2] = green as u8;
-            img.put_pixel(x, y, px);
-        }
-    }
-    let mut raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
-    return photon_image;
+pub fn g_grayscale(photon_image: &mut PhotonImage) {
+    return single_channel_grayscale(photon_image, 1)
 }
 
 /// Convert an image to grayscale by setting all 3 RGB values to the Blue channel's value.
@@ -397,7 +354,23 @@ pub fn g_grayscale(mut photon_image: PhotonImage) -> PhotonImage {
 /// photon::channels::b_grayscale(img);
 /// ```
 #[wasm_bindgen]
-pub fn b_grayscale(mut photon_image: PhotonImage) -> PhotonImage {
+pub fn b_grayscale(photon_image: &mut PhotonImage) {
+    return single_channel_grayscale(photon_image, 2)
+}
+
+/// Convert an image to grayscale by setting all 3 RGB values to a chosen channel's value.
+/// 
+/// # Arguments
+/// * `img` - A DynamicImage that contains a view into the image.
+/// * `channel` - A usize representing the channel from 0 to 2. O represents the Red channel, 1 the Green, and 2 the Blue. 
+
+/// # Example
+///
+/// ```
+/// photon::channels::b_grayscale(img);
+/// ```
+#[wasm_bindgen]
+pub fn single_channel_grayscale(mut photon_image: &mut PhotonImage, channel: usize) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -405,17 +378,16 @@ pub fn b_grayscale(mut photon_image: PhotonImage) -> PhotonImage {
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
 
-            let blue = px.data[2];
+            let channel_data = px.data[channel];
             
-            px.data[0] = blue as u8;
-            px.data[1] = blue as u8;
-            px.data[2] = blue as u8;
+            px.data[0] = channel_data as u8;
+            px.data[1] = channel_data as u8;
+            px.data[2] = channel_data as u8;
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
 
 /// Threshold an image using a standard thresholding algorithm.
@@ -431,7 +403,7 @@ pub fn b_grayscale(mut photon_image: PhotonImage) -> PhotonImage {
 /// photon::monochrome::threshold(img, 30);
 /// ```
 #[wasm_bindgen]
-pub fn threshold(mut photon_image: PhotonImage, threshold: u32) -> PhotonImage {
+pub fn threshold(mut photon_image: &mut PhotonImage, threshold: u32) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -458,7 +430,6 @@ pub fn threshold(mut photon_image: PhotonImage, threshold: u32) -> PhotonImage {
             img.put_pixel(x, y, px);
         }
     }
-    let mut raw_pixels = img.raw_pixels();
+    let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-    return photon_image;
 }
