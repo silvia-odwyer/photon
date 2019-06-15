@@ -2,7 +2,7 @@ use wasm_bindgen::prelude::*;
 use web_sys::{CanvasRenderingContext2d, ImageData, HtmlCanvasElement, HtmlImageElement};
 use wasm_bindgen::Clamped;
 use web_sys::console;
-use image::{DynamicImage, GenericImageView, GenericImage};
+use image::{DynamicImage, GenericImageView, GenericImage, ImageBuffer};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -10,8 +10,8 @@ use image::{DynamicImage, GenericImageView, GenericImage};
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-/// Describes the image's height, width, and contains the image's raw pixels.
-/// For use when communicating between JS and Rust, and also natively. 
+/// Provides the image's height, width, and contains the image's raw pixels.
+/// For use when communicating between JS and WASM, and also natively. 
 #[wasm_bindgen]
 #[derive(Debug)]
 pub struct PhotonImage {
@@ -29,12 +29,20 @@ impl PhotonImage {
     }
 }
 
+/// RGB struct, containing values for Red, Green, and Blue channels.
 #[wasm_bindgen]
 #[derive(Debug)]
 pub struct Rgb {
     pub r: u8,
     pub g: u8,
     pub b: u8
+}
+
+#[wasm_bindgen]
+impl Rgb {
+    pub fn new(&mut self, r: u8, g: u8, b: u8) -> Rgb {
+        return Rgb {r: r, g: g, b: b}
+    }
 }
 
 // Called by the JS entry point to ensure that everything is working as expected
@@ -54,71 +62,47 @@ pub fn run() -> Result<(), JsValue> {
     Ok(())
 }
 
-// #[wasm_bindgen]
-// pub fn editContext(ctx: CanvasRenderingContext2d, img: HtmlImageElement, mode: &str) -> Result<(), JsValue> {
-//     set_panic_hook();
-//     let width = 3104;
-//     let height = 4656;
-
-//     // draw image to canvas
-//     //ctx.draw_image_with_html_image_element(&img, 0.0, 0.0);
-
-//     // let data: ImageData = ctx.get_image_data(0.0, 0.0, 100.0, 100.0).unwrap();
-//     let mut data = ctx.get_image_data(0.0, 0.0, width as f64, height as f64).unwrap().data();
-//     let vec_data = data.to_vec();
-
-//     // // Convert ImageData to the Rust type, ie: DynamicImage
-//     // let dyn_image = helpers::dyn_image_from_raw(data, width, height);
-
-//     // Call a Photon function to manipulate the image data/apply the effect
-//     let mut raw_pixels = match mode {
-//         "hue_rotate" => inc_channel_raw(vec_data, 1, 20, width, height),
-//         "saturate" => inc_channel_raw(vec_data, 2, 40, width, height),
-//         _ => inc_channel_raw(vec_data, 0, 45, width, height),
-//     };
-
-
-//     // Convert the raw pixels back to an ImageData object.
-//     let newData = ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut raw_pixels), width, height)?;
-
-//     // Place the new imagedata onto the canvas
-//     ctx.put_image_data(&newData, 0.0, 0.0);
-//     Ok(())
-// }
-
+/// Get the ImageData from a 2D canvas context
 #[wasm_bindgen]
-#[no_mangle]
-pub fn open_image(imgdata: ImageData, width: u32, height: u32) -> PhotonImage {
-    let raw_pixels = to_raw_pixels(imgdata);
-    return PhotonImage {raw_pixels: raw_pixels, width: width, height: height }
+pub fn getImageData(canvas: &HtmlCanvasElement, ctx: &CanvasRenderingContext2d) -> ImageData {
+    set_panic_hook();
+    let width = canvas.width();
+    let height = canvas.height();
+
+    // let data: ImageData = ctx.get_image_data(0.0, 0.0, 100.0, 100.0).unwrap();
+    let mut data = ctx.get_image_data(0.0, 0.0, width as f64, height as f64).unwrap();
+    let vec_data = data.data().to_vec();
+    return data;
 }
 
-// #[wasm_bindgen]
-// pub fn inc_channel_raw(imgData: ImageData, channel: usize, offset: u32, width: u32, height: u32) -> Result<(ImageData), JsValue> {
-    
-//     let img_vec = to_raw_pixels(imgData);
-//     let mut img = helpers::dyn_image_from_raw(img_vec, width, height);
-//     let (width, height) = img.dimensions();
+/// Place the ImageData onto the 2D context.
+#[wasm_bindgen]
+pub fn putImageData(canvas: HtmlCanvasElement, ctx: CanvasRenderingContext2d, mut new_image: PhotonImage) {
+    // Convert the raw pixels back to an ImageData object.
+    let newData = ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut new_image.raw_pixels), canvas.width(), canvas.height());
 
-//     for x in 0..width {
-//         for y in 0..height {
-//             let mut px = img.get_pixel(x, y);
-            
-//             if px.data[channel] <= 255 - offset as u8 {
-//                 let px_data = px.data[channel];
-//                 let final_px_data = px_data + offset as u8;
-//                 px.data[channel] = final_px_data as u8;
-//             }
-//             else {
-//                 px.data[channel] = 255;
-//             }
-//             img.put_pixel(x, y, px);
-//         }
-//     }
-//     let mut raw_pixels = img.raw_pixels();
-//     let newData = ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut raw_pixels), width, height)?;
-//     return Ok(newData);
-// }
+    // Place the new imagedata onto the canvas
+    ctx.put_image_data(&newData.unwrap(), 0.0, 0.0);
+}
+
+/// Convert a HTML5 Canvas Element to a PhotonImage.
+/// 
+/// This converts the ImageData found in the canvas context to a PhotonImage,
+/// which can then have effects or filters applied to it.
+#[wasm_bindgen]
+#[no_mangle]
+pub fn open_image(canvas: HtmlCanvasElement, ctx: CanvasRenderingContext2d) -> PhotonImage {
+    let imgdata = getImageData(&canvas, &ctx);
+    let raw_pixels = to_raw_pixels(imgdata);
+    return PhotonImage {raw_pixels: raw_pixels, width: canvas.width(), height: canvas.height() }
+}
+
+/// Create a new RGB colour. TODO Will be using struct impl soon. 
+#[wasm_bindgen]
+pub fn new_rgb(imgdata: ImageData, r:u8, g:u8, b:u8) -> Rgb {
+    let rgb = Rgb{r, g, b};
+    return rgb;
+}
 
 #[wasm_bindgen]
 pub fn to_raw_pixels(imgdata: ImageData) -> Vec<u8> {
@@ -126,6 +110,7 @@ pub fn to_raw_pixels(imgdata: ImageData) -> Vec<u8> {
     return img_vec;
 }
 
+/// Convert a PhotonImage to JS-compatible ImageData
 #[wasm_bindgen]
 pub fn to_image_data(photon_image: PhotonImage) -> ImageData {
     let mut raw_pixels = photon_image.raw_pixels;
@@ -136,44 +121,8 @@ pub fn to_image_data(photon_image: PhotonImage) -> ImageData {
     return newData;
 }
 
-
-// #[wasm_bindgen]
-// pub fn apply_filter(ctx: CanvasRenderingContext2d, img: HtmlImageElement, filter_name: &str) -> Result<(), JsValue> {
-//     set_panic_hook();
-//     let width = 3104;
-//     let height = 4656;
-
-//     // draw image to canvas
-//     ctx.draw_image_with_html_image_element(&img, 0.0, 0.0);
-
-//     // let data: ImageData = ctx.get_image_data(0.0, 0.0, 100.0, 100.0).unwrap();
-//     let mut data = ctx.get_image_data(0.0, 0.0, 3104.0, 4656.0).unwrap().data().to_vec();
-
-//     // Convert ImageData to the Rust type, ie: DynamicImage
-//     let dyn_image = photon::helpers::dyn_image_from_raw(data, width, height);
-
-//     // Call a Photon function to manipulate the image data/apply the effect
-//     let new_dyn_image = match filter_name {
-//         "vintage" => photon::filters::vintage(dyn_image),
-//         "twenties" => photon::filters::twenties(dyn_image),
-//         "perfume" => photon::filters::perfume(dyn_image),
-//         "oceanic" => photon::filters::oceanic(dyn_image),
-//         "marine" => photon::filters::marine(dyn_image),
-//         "islands" => photon::filters::islands(dyn_image),
-//         _ => photon::filters::perfume(dyn_image),
-//     };
-
-//     // Convert the DynamicImage back to a vec 
-//     let mut raw_pixels = new_dyn_image.raw_pixels();
-
-//     // Convert the raw pixels back to an ImageData object.
-//     let newData = ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut raw_pixels), width, height)?;
-
-//     // Place the new imagedata onto the canvas
-//     ctx.put_image_data(&newData, 0.0, 0.0);
-//     Ok(())
-// }
-
+// draw image to canvas
+//ctx.draw_image_with_html_image_element(&img, 0.0, 0.0);
 
 fn set_panic_hook() {
     // When the `console_error_panic_hook` feature is enabled, we can call the
@@ -187,5 +136,9 @@ pub mod effects;
 pub mod conv;
 pub mod filters;
 pub mod monochrome;
+pub mod native;
+pub mod text;
+pub mod colour_spaces;
+pub mod multiple;
 pub mod noise;
 pub mod helpers;

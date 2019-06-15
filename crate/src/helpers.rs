@@ -1,6 +1,10 @@
 extern crate image;
+extern crate base64;
 use image::{DynamicImage, ImageBuffer, GenericImageView};
 use crate::{PhotonImage, Rgb};
+extern crate wasm_bindgen;
+use wasm_bindgen::prelude::*;
+use base64::{encode, decode};
 
 // Gets the square distance between two colours
 pub fn square_distance(color1 : Rgb, color2 : Rgb) -> i32{
@@ -9,27 +13,20 @@ pub fn square_distance(color1 : Rgb, color2 : Rgb) -> i32{
     return i32::pow(r1 - r2, 2) + i32::pow(g1 - g2, 2) + i32::pow(b1 - b2, 2);
 }
 
-pub fn open_image(img_path: &'static str) -> PhotonImage {
+pub fn open_dyn_image(img_path: &'static str) -> DynamicImage {
     let img = image::open(img_path).unwrap();
-
-    let (width, height) = img.dimensions();
-
-    // Convert the DynamicImage type to raw vec representing RGBA pixels (not RGB)
-    let raw_pixels = img.to_rgba().to_vec();
-
-    let photon_image: PhotonImage = PhotonImage {raw_pixels: raw_pixels, width: width, height: height};
-    return photon_image;
+    return img;
 }
 
-pub fn save_image(img: PhotonImage, filtered_img_path: &str) {
-    let raw_pixels = img.raw_pixels;
-    let width = img.width;
-    let height = img.height;
+pub fn save_dyn_image(img: DynamicImage, filtered_img_path: &str) {
+    // let raw_pixels = img.raw_pixels;
+    // let width = img.width;
+    // let height = img.height;
 
-    let img_buffer = ImageBuffer::from_vec(width, height, raw_pixels).unwrap();
-    let dynimage = image::ImageRgba8(img_buffer);
+    // let img_buffer = ImageBuffer::from_vec(width, height, raw_pixels).unwrap();
+    // let dynimage = image::ImageRgba8(img_buffer);
     
-    dynimage.save(filtered_img_path).unwrap();
+    img.save(filtered_img_path).unwrap();
 }
 
 pub fn get_pixels(img: DynamicImage) -> Vec<u8>{
@@ -45,4 +42,17 @@ pub fn dyn_image_from_raw(photon_image: &PhotonImage) -> DynamicImage {
     let img_buffer = ImageBuffer::from_vec(photon_image.width, photon_image.height, raw_pixels.to_vec()).unwrap();
     let dynimage = image::ImageRgba8(img_buffer);
     dynimage
+}
+
+
+#[wasm_bindgen]
+pub fn base64_to_image(base64: &str) -> Vec<u8> {
+    let a = "hello world";
+    let b = "aGVsbG8gd29ybGQ=";
+
+    assert_eq!(encode(a), b);
+    let res = decode(base64).unwrap();
+    
+    return res;
+
 }
