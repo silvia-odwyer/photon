@@ -15,14 +15,14 @@ fn main() {
     let effects = ["saturate", "desaturate", "lighten", "darken", "shift_hue"];
 
     for i in 0..effects.len() {
-        let img = photon::helpers::open_image(file_name);
+        let mut img = photon::native::open_image(file_name);
         let start = PreciseTime::now();
 
         // Apply the effect in the HSV colour space
-        let filtered_img = photon::colour_spaces::hsl(img, effects[i], 0.2);
+        photon::colour_spaces::hsl(&mut img, effects[i], 0.2);
 
         // Write the contents of this image in JPG format.
-        photon::helpers::save_image(filtered_img, &("examples/example_output/".to_owned() + &effects[i].to_owned() + ".JPG"));
+        photon::native::save_image(img, &("examples/example_output/".to_owned() + &effects[i].to_owned() + ".JPG"));
     
         let end = PreciseTime::now();
         println!("Took {} seconds to {} image.", start.to(end), effects[i]);

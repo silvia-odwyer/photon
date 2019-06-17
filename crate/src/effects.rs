@@ -1,3 +1,5 @@
+//! Special effects.
+
 extern crate image;
 use image::{GenericImage, GenericImageView};
 use std::f64;
@@ -137,52 +139,6 @@ pub fn multiple_offsets(mut photon_image: &mut PhotonImage, offset: u32, channel
     photon_image.raw_pixels = raw_pixels;
 }
 
-/// Add a sine wave animation to the pixels by distributing the pixels along a sine curve.
-/// 
-/// # Arguments
-/// * `img` - A PhotonImage that contains a view into the image.
-/// # Example
-///
-/// ```
-/// // For example, to threshold an image of type `DynamicImage`:
-/// use photon::effects;
-/// photon::effects::ripple(img);
-/// ```
-// pub fn ripple(mut img: DynamicImage) -> DynamicImage {
-//     let (width, height) = img.dimensions();
-    
-//     let xoff = width / 3; 
-//     let yoff = height / 3;
-
-//     for x in 0..width {
-//         for y in 0..height {
-
-//             let mut px = img.get_pixel(x, y);
-//             // // calculate sine based on distance
-//             // x2 = x - xoff;
-//             // y2 = y - yoff;
-//             // d = Math.sqrt(x2*x2 + y2*y2);
-//             // t = Math.sin(d/6.0);
-//             let x2: f64 = x as f64 - xoff as f64;
-//             let y2: f64 = y as f64 - yoff as f64;
-
-//             let res: f64 = x2*x2  + y2*y2;
-//             let d = (res).sqrt();
-// 		    let t = (d/6.0).sin();
-
-//             let r = t * 200.0;
-// 		    let g = 125.0 + t * 80.0;
-// 		    let b = 235.0 + t * 20.0;
-            
-//             px.data[0] = cmp::max(0, cmp::min(255, r as u8)) as u8;
-//             px.data[1] = cmp::max(0, cmp::min(255, g as u8)) as u8;
-//             px.data[2] = cmp::max(0, cmp::min(255, b as u8)) as u8;
-//             img.put_pixel(x, y, px);
-//         }
-//     }
-//     return img;
-// }
-
 /// Create a gradient map between two RGB colours.
 /// 
 /// # Arguments
@@ -192,14 +148,12 @@ pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
     let mut gradient_map = vec![];
 
     let max_val = 255;
-    let mut r_val = 0;
 
     for i in 0..max_val + 1{
         let intensity_b = max_val - i;
 
-        r_val = (i * color_a.r + intensity_b * color_b.r) / max_val as u8;
         gradient_map.push(Rgb {
-            r: r_val , 
+            r: (i * color_a.r + intensity_b * color_b.r) / max_val as u8,
             g: (i * color_a.g + intensity_b * color_b.g) / max_val as u8,
             b: (i * color_a.b + intensity_b * color_b.b) / max_val as u8
         });
@@ -247,6 +201,7 @@ pub fn duotone(mut photon_image: &mut PhotonImage, color_a : Rgb, color_b : Rgb)
     photon_image.raw_pixels = raw_pixels;
 }
 
+/// Halftoning effect.
 pub fn halftone(mut photon_image: PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
@@ -432,7 +387,7 @@ pub fn primary(mut photon_image: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// // For example, to colorize an image of type `DynamicImage`:
+/// // For example, to colorize an image of type `PhotonImage`:
 /// use photon::effects;
 /// photon::effects::colorize(img);
 /// ```
@@ -528,7 +483,7 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// // For example, to colorize an image of type `DynamicImage`:
+/// // For example, to colorize an image of type `PhotonImage`:
 /// use photon::effects;
 /// photon::effects::solarize(img);
 /// ```
@@ -607,7 +562,7 @@ pub fn inc_brightness(mut photon_image: &mut PhotonImage, brightness: u8) {
 /// # Example
 ///
 /// ```
-/// // For example, to tint an image of type `DynamicImage`:
+/// // For example, to tint an image of type `PhotonImage`:
 /// photon::tint(img, 10, 20, 15);
 /// ```
 /// 

@@ -1,3 +1,5 @@
+//! Channel manipulation.
+
 extern crate image;
 use image::{GenericImage, GenericImageView};
 extern crate wasm_bindgen;
@@ -13,31 +15,32 @@ use crate::channels::palette::Hue;
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `channel` - The channel you wish to alter, it should be either 0, 1 or 2, 
-/// representing R, G, or B respectively. (O = Red, 1=Green, 2=Blue)
-/// * `amount` - The amount you want to increment or decrement the channel's value by for that pixel.
-/// A positive value will increment the channel's value, a negative value will decrement the channel's value.
+/// representing R, G, or B respectively. (O=Red, 1=Green, 2=Blue)
+/// * `amount` - The amount to increment/decrement the channel's value by for that pixel.
+/// A positive value will increment/decrement the channel's value, a negative value will decrement the channel's value.
 /// 
-/// # Example
+/// ## Example
 ///
 /// ```
 /// // For example, to increase the Red channel for all pixels by 10:
 /// use photon::channels;
 /// let img = photon::open_image("img.jpg");
-/// let new_img = photon::channels::alter_channel(img, 0, 10);
+/// photon::channels::alter_channel(&mut img, 0, 10);
 /// // Write the contents of this image in JPG format.
-/// photon::helpers::save_image(new_img, "new_image.png");
-/// 
+/// photon::helpers::save_image(img, "new_image.png");
 /// ```
+/// 
 /// Adds a constant to a select R, G, or B channel's value.
 /// 
 /// ### Decrease a channel's value
 /// // For example, to decrease the Green channel for all pixels by 20:
-/// use photon::channels;
-/// photon::channels::alter_channel(img, 1, -20);
 /// ```
-/// **NOTE**: Note the use of a minus symbol when decreasing the channel. 
+/// use photon::channels;
+/// photon::channels::alter_channel(&mut img, 1, -20);
+/// ```
+/// **Note**: Note the use of a minus symbol when decreasing the channel. 
 #[wasm_bindgen]
-pub fn alter_channel(mut photon_image: &mut PhotonImage, channel: usize, offset: i32) {
+pub fn alter_channel(mut photon_image: &mut PhotonImage, channel: usize, amt: i16) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
@@ -45,7 +48,7 @@ pub fn alter_channel(mut photon_image: &mut PhotonImage, channel: usize, offset:
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
             
-            let final_px_data_1: i32 = px.data[channel] as i32 + offset as i32;
+            let final_px_data_1: i32 = px.data[channel] as i32 + amt as i32;
             px.data[channel] = num::clamp(final_px_data_1, 0, 255) as u8;
             
             img.put_pixel(x, y, px);
@@ -59,74 +62,74 @@ pub fn alter_channel(mut photon_image: &mut PhotonImage, channel: usize, offset:
 /// Increment or decrement every pixel's Red channel by a constant.
 /// 
 /// # Arguments
-/// * `img` - A PhotonImage. See the PhotonImage struct for details on how to create one.
-/// * `offset` - The amount you want to increment the channel's value by for that pixel.
+/// * `img` - A PhotonImage. See the PhotonImage struct for details.
+/// * `amt` - The amount to increment or decrement the channel's value by for that pixel.
 /// 
 /// # Example
 ///
 /// ```
 /// // For example, to increase the Red channel for all pixels by 10:
 /// use photon::channels;
-/// photon::channels::alter_red_channel(img, 10);
+/// photon::channels::alter_red_channel(&mut img, 10);
 /// ```
 #[wasm_bindgen]
-pub fn alter_red_channel(img: &mut PhotonImage, offset: i32) {
-    return alter_channel(img, 0, offset);
+pub fn alter_red_channel(img: &mut PhotonImage, amt: i16) {
+    return alter_channel(img, 0, amt);
 }
 
 /// Increment or decrement every pixel's Green channel by a constant.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
-/// * `offset` - The amount you want to increment the channel's value by for that pixel.
+/// * `img` - A PhotonImage.
+/// * `amt` - The amount to increment/decrement the channel's value by for that pixel.
 /// 
 /// # Example
 ///
 /// ```
 /// // For example, to increase the Green channel for all pixels by 20:
 /// use photon::channels;
-/// photon::channels::alter_green_channel(img, 10);
+/// photon::channels::alter_green_channel(&mut img, 10);
 /// ```
 #[wasm_bindgen]
-pub fn alter_green_channel(img: &mut PhotonImage, offset: i32) {
-    return alter_channel(img, 1, offset);
+pub fn alter_green_channel(img: &mut PhotonImage, amt: i16) {
+    return alter_channel(img, 1, amt);
 }
 
 /// Increment or decrement every pixel's Blue channel by a constant.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
-/// * `offset` - The amount you want to increment the channel's value by for that pixel.
+/// * `img` - A PhotonImage.
+/// * `amt` - The amount to increment or decrement the channel's value by for that pixel.
 /// 
 /// # Example
 ///
 /// ```
 /// // For example, to increase the Blue channel for all pixels by 10:
 /// use photon::channels;
-/// photon::channels::alter_blue_channel(img, 10);
+/// photon::channels::alter_blue_channel(&mut img, 10);
 /// ```
 #[wasm_bindgen]
-pub fn alter_blue_channel(img: &mut PhotonImage, offset: i32) {
-    return alter_channel(img, 2, offset);
+pub fn alter_blue_channel(img: &mut PhotonImage, amt: i16) {
+    return alter_channel(img, 2, amt);
 }
 
-/// Increment/decrement two channels' values simultaneously by adding an offset to each channel per pixel.
+/// Increment/decrement two channels' values simultaneously by adding an amt to each channel per pixel.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
-/// * `channel1` - A usize that represents an index into the RGB vec. 
-/// * `offset1` - The amount you want to increment the channel's value by for that pixel.
-/// * `channel2` - A usize that represents an index into the RGB vec. 0 would return the Red channel. 
-/// * `offset2` - The amount you want to increment the channel's value by for that pixel.
+/// * `img` - A PhotonImage.
+/// * `channel1` - A usize from 0 to 2 that represents either the R, G or B channels.
+/// * `amt1` - The amount to increment/decrement the channel's value by for that pixel.
+/// * `channel2` -A usize from 0 to 2 that represents either the R, G or B channels.
+/// * `amt2` - The amount to increment/decrement the channel's value by for that pixel.
 /// 
 /// # Example
 ///
 /// ```
 /// // For example, to increase the values of the Red and Blue channels per pixel:
-/// photon::channels::inc_two_channels(img, 0, 10, 2, 20);
+/// photon::channels::inc_two_channels(&mut img, 0, 10, 2, 20);
 /// ```
 #[wasm_bindgen]
-pub fn alter_two_channels(mut photon_image: &mut PhotonImage, channel1: usize, offset1: i32, channel2: usize, offset2: i32) {
+pub fn alter_two_channels(mut photon_image: &mut PhotonImage, channel1: usize, amt1: i16, channel2: usize, amt2: i16) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
     for x in 0..width {
@@ -134,13 +137,13 @@ pub fn alter_two_channels(mut photon_image: &mut PhotonImage, channel1: usize, o
             let mut px = img.get_pixel(x, y);
 
             let px_data_1 = px.data[channel1];
-            let mut final_px_data_1: u32 = px_data_1 as u32 + offset1 as u32;
+            let mut final_px_data_1: u32 = px_data_1 as u32 + amt1 as u32;
                 
             final_px_data_1 = num::clamp(final_px_data_1, 0, 255);
             px.data[channel1] = final_px_data_1 as u8;
 
             let px_data_2 = px.data[channel2];
-            let mut final_px_data_2: u32 = px_data_2 as u32 + offset2 as u32;
+            let mut final_px_data_2: u32 = px_data_2 as u32 + amt2 as u32;
                 
             final_px_data_2 = num::clamp(final_px_data_2, 0, 255);
             px.data[channel2] = final_px_data_2 as u8;
@@ -152,38 +155,38 @@ pub fn alter_two_channels(mut photon_image: &mut PhotonImage, channel1: usize, o
     photon_image.raw_pixels = raw_pixels;
 }
 
-/// Increment all 3 channels' values by adding an offset to each channel per pixel.
+/// Increment all 3 channels' values by adding an amt to each channel per pixel.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
-/// * `r_offset` - The amount you want to increment the Red channel by.
-/// * `g_offset` - The amount you want to increment the Green channel by.
-/// * `b_offset` - The amount you want to increment the Blue channel by. 
+/// * `img` - A PhotonImage.
+/// * `r_amt` - The amount to increment/decrement the Red channel by.
+/// * `g_amt` - The amount to increment/decrement the Green channel by.
+/// * `b_amt` - The amount to increment/decrement the Blue channel by. 
 /// 
 /// # Example
 ///
 /// ```
 /// // For example, to increase the values of the Red channel by 10, the Green channel by 20, 
 /// // and the Blue channel by 50:
-/// // photon::channels::alter_channels(img, 10, 20, 50);
+/// // photon::channels::alter_channels(&mut img, 10, 20, 50);
 /// ```
 #[wasm_bindgen]
-pub fn alter_channels(mut photon_image: &mut PhotonImage, r_offset: i8, g_offset: i8, b_offset: i8) {
+pub fn alter_channels(mut photon_image: &mut PhotonImage, r_amt: i16, g_amt: i16, b_amt: i16) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
     for x in 0..width {
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
 
-            let final_px_data_1: i32 = px.data[0] as i32 + r_offset as i32;
+            let final_px_data_1: i32 = px.data[0] as i32 + r_amt as i32;
                 
             px.data[0] = num::clamp(final_px_data_1, 0, 255) as u8;
 
-            let final_px_data_2: i32 = px.data[1] as i32 + g_offset as i32;
+            let final_px_data_2: i32 = px.data[1] as i32 + g_amt as i32;
                 
             px.data[1] = num::clamp(final_px_data_2, 0, 255) as u8;
 
-            let final_px_data_3: i32 = px.data[2] as i32 + b_offset as i32;
+            let final_px_data_3: i32 = px.data[2] as i32 + b_amt as i32;
             px.data[2] = num::clamp(final_px_data_3, 0, 255) as u8;
 
             img.put_pixel(x, y, px);
@@ -196,7 +199,7 @@ pub fn alter_channels(mut photon_image: &mut PhotonImage, r_offset: i8, g_offset
 /// Set a certain channel to zero, thus removing the channel's influence in the pixels' final rendered colour.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// * `channel` - The channel to be removed; must be a usize from 0 to 2, with 0 representing Red, 1 representing Green, and 2 representing Blue.
 /// * `min_filter` - Value between 0 and 255. Only remove the channel if the current pixel's channel value is less than this minimum filter. To completely 
 /// remove the channel, set this value to 255, to leave the channel as is, set to 0, and to set a channel to zero for a pixel whose red value is greater than 50, 
@@ -206,7 +209,7 @@ pub fn alter_channels(mut photon_image: &mut PhotonImage, r_offset: i8, g_offset
 ///
 /// ```
 /// // For example, to remove the Red channel with a min_filter of 100:
-/// photon::channels::remove_channel(img, 0, 100);
+/// photon::channels::remove_channel(&mut img, 0, 100);
 /// ```
 #[wasm_bindgen]
 pub fn remove_channel(mut photon_image: &mut PhotonImage, channel: usize, min_filter: u8) {
@@ -226,29 +229,27 @@ pub fn remove_channel(mut photon_image: &mut PhotonImage, channel: usize, min_fi
     photon_image.raw_pixels = raw_pixels;
 }
 
-/// Remove the Red channel's influence in an image, by setting its value to zero.
+/// Remove the Red channel's influence in an image.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// * `min_filter` - Only remove the channel if the current pixel's channel value is less than this minimum filter. 
 /// 
 /// # Example
 ///
 /// ```
 /// // For example, to remove the red channel for red channel pixel values less than 50:
-/// photon::channels::remove_red_channel(img, 50);
+/// photon::channels::remove_red_channel(&mut img, 50);
 /// ```
 #[wasm_bindgen]
 pub fn remove_red_channel(img: &mut PhotonImage, min_filter: u8) {
     return remove_channel(img, 0, min_filter);
 }
 
-
-
-/// Remove the Green channel's influence in an image, by setting its value to zero.
+/// Remove the Green channel's influence in an image.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// * `min_filter` - Only remove the channel if the current pixel's channel value is less than this minimum filter. 
 /// 
 /// # Example
@@ -262,17 +263,17 @@ pub fn remove_green_channel(img: &mut PhotonImage, min_filter: u8) {
     return remove_channel(img, 1, min_filter);
 }
 
-/// Remove the Blue channel's influence in an image, by setting its value to zero.
+/// Remove the Blue channel's influence in an image.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// * `min_filter` - Only remove the channel if the current pixel's channel value is less than this minimum filter. 
 /// 
 /// # Example
 ///
 /// ```
 /// // For example, to remove the blue channel for blue channel pixel values less than 50:
-/// photon::channels::remove_blue_channel(img, 50);
+/// photon::channels::remove_blue_channel(&mut img, 50);
 /// ```
 #[wasm_bindgen]
 pub fn remove_blue_channel(img: &mut PhotonImage, min_filter: u8) {
@@ -282,7 +283,7 @@ pub fn remove_blue_channel(img: &mut PhotonImage, min_filter: u8) {
 /// Swap two channels.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// * `channel1` - An index from 0 to 2, representing the Red, Green or Blue channels respectively. Red would be represented by 0, Green by 1, and Blue by 2.
 /// * `channel2` - An index from 0 to 2, representing the Red, Green or Blue channels respectively. Same as above.
 /// 
@@ -290,7 +291,7 @@ pub fn remove_blue_channel(img: &mut PhotonImage, min_filter: u8) {
 ///
 /// ```
 /// // For example, to swap the values of the Red channel with the values of the Blue channel:
-/// photon::channels::swap_channels(img, 0, 2);
+/// photon::channels::swap_channels(&mut img, 0, 2);
 /// ```
 #[wasm_bindgen]
 pub fn swap_channels(mut photon_image: &mut PhotonImage, channel1: usize, channel2: usize) {
@@ -313,9 +314,9 @@ pub fn swap_channels(mut photon_image: &mut PhotonImage, channel1: usize, channe
 /// 
 /// Only rotate the hue of a pixel if its RGB values are within a specified range.
 /// This function only rotates a pixel's hue to another  if it is visually similar to the colour specified.
-/// For example, if a user wishes all pixels that are yellow to be changed to red, they can selectively specify  only the yellow pixels to be changed.
+/// For example, if a user wishes all pixels that are blue to be changed to red, they can selectively specify  only the blue pixels to be changed.
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// * `ref_color` - The `RGB` value of the reference color (to be compared to)
 /// * `degrees` - The amount of degrees to hue rotate by.
 /// 
@@ -324,7 +325,7 @@ pub fn swap_channels(mut photon_image: &mut PhotonImage, channel1: usize, channe
 /// ```
 /// // For example, to only rotate the pixels that are of RGB value RGB{20, 40, 60}:
 /// let ref_color = Rgb{20, 40, 60};
-/// photon::channels::selective_hue_rotate(img, ref_color, 180);
+/// photon::channels::selective_hue_rotate(&mut img, ref_color, 180);
 /// ```
 #[wasm_bindgen]
 pub fn selective_hue_rotate(mut photon_image: &mut PhotonImage, ref_color: Rgb, degrees: f32) {
@@ -361,7 +362,7 @@ pub fn selective_hue_rotate(mut photon_image: &mut PhotonImage, ref_color: Rgb, 
     photon_image.raw_pixels = img.to_vec();
 }
 
-// Get the similarity of two colours in the l*a*b colour space using the CIE76 formula.
+/// Get the similarity of two colours in the l*a*b colour space using the CIE76 formula.
 pub fn color_sim(lab1: Lab, lab2: Lab) -> i64 {
     let l_comp = lab2.l - lab1.l;
     let a_comp = lab2.a - lab1.a;
@@ -381,9 +382,9 @@ pub fn color_sim(lab1: Lab, lab2: Lab) -> i64 {
 /// Selectively lighten an image.
 /// 
 /// Only lighten the hue of a pixel if its colour matches or is similar to the RGB colour specified.
-/// For example, if a user wishes all pixels that are yellow to be lightened, they can selectively specify  only the yellow pixels to be changed.
+/// For example, if a user wishes all pixels that are blue to be lightened, they can selectively specify  only the blue pixels to be changed.
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// * `ref_color` - The `RGB` value of the reference color (to be compared to)
 /// * `amt` - The level from 0 to 1 to lighten the hue by. Increasing by 10% would have an `amt` of 0.1
 /// 
@@ -392,7 +393,7 @@ pub fn color_sim(lab1: Lab, lab2: Lab) -> i64 {
 /// ```
 /// // For example, to only lighten the pixels that are of or similar to RGB value RGB{20, 40, 60}:
 /// let ref_color = Rgb{20, 40, 60};
-/// photon::channels::selective_lighten(img, ref_color, 0.2);
+/// photon::channels::selective_lighten(&mut img, ref_color, 0.2);
 /// ```
 #[wasm_bindgen]
 pub fn selective_lighten(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
@@ -403,9 +404,9 @@ pub fn selective_lighten(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
 /// 
 /// Similarity between two colours is calculated via the CIE76 formula.
 /// Only desaturates the hue of a pixel if its similarity to the reference colour is within the range in the algorithm.
-/// For example, if a user wishes all pixels that are yellow to be desaturated by 0.1, they can selectively specify  only the yellow pixels to be changed.
+/// For example, if a user wishes all pixels that are blue to be desaturated by 0.1, they can selectively specify  only the blue pixels to be changed.
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// * `ref_color` - The `RGB` value of the reference color (to be compared to)
 /// * `amt` - The amount of desaturate the colour by. 
 /// 
@@ -414,7 +415,7 @@ pub fn selective_lighten(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
 /// ```
 /// // For example, to only desaturate the pixels that are similar to the RGB value RGB{20, 40, 60}:
 /// let ref_color = Rgb{20, 40, 60};
-/// photon::channels::selective_desaturate(img, ref_color, 0.1);
+/// photon::channels::selective_desaturate(&mut img, ref_color, 0.1);
 /// ```
 #[wasm_bindgen]
 pub fn selective_desaturate(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
@@ -425,9 +426,9 @@ pub fn selective_desaturate(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
 /// 
 /// Similarity between two colours is calculated via the CIE76 formula.
 /// Only saturates the hue of a pixel if its similarity to the reference colour is within the range in the algorithm.
-/// For example, if a user wishes all pixels that are yellow to have an increase in saturation by 10%, they can selectively specify only the yellow pixels to be changed.
+/// For example, if a user wishes all pixels that are blue to have an increase in saturation by 10%, they can selectively specify only the blue pixels to be changed.
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// * `ref_color` - The `RGB` value of the reference color (to be compared to)
 /// * `amt` - The amount of saturate the colour by. 
 /// 
@@ -436,7 +437,7 @@ pub fn selective_desaturate(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
 /// ```
 /// // For example, to only increase the saturation of pixels that are similar to the RGB value RGB{20, 40, 60}:
 /// let ref_color = Rgb{20, 40, 60};
-/// photon::channels::selective_saturate(img, ref_color, 0.1);
+/// photon::channels::selective_saturate(&mut img, ref_color, 0.1);
 /// ```
 #[wasm_bindgen]
 pub fn selective_saturate(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
@@ -493,10 +494,10 @@ fn selective(mut photon_image: &mut PhotonImage, mode: &'static str, ref_color:R
 /// Only changes the colour of a pixel if its RGB values are within a specified range.
 /// 
 /// (Similarity between two colours is calculated via the CIE76 formula.)
-/// For example, if a user wishes all pixels that are *NOT* yellow to be displayed in greyscale, they can selectively specify only the yellow pixels to be
+/// For example, if a user wishes all pixels that are *NOT* blue to be displayed in greyscale, they can selectively specify only the blue pixels to be
 /// kept in the photo.
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// * `ref_color` - The `RGB` value of the reference color (to be compared to) 
 /// 
 /// # Example
@@ -504,7 +505,7 @@ fn selective(mut photon_image: &mut PhotonImage, mode: &'static str, ref_color:R
 /// ```
 /// // For example, to greyscale all pixels that are *not* visually similar to the RGB colour RGB{20, 40, 60}:
 /// let ref_color = Rgb{20, 40, 60};
-/// photon::channels::selective_greyscale(img, ref_color);
+/// photon::channels::selective_greyscale(&mut img, ref_color);
 /// ```
 #[wasm_bindgen]
 pub fn selective_greyscale(mut photon_image: PhotonImage, ref_color: Rgb) {

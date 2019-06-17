@@ -1,3 +1,5 @@
+//! Image manipulation with multiple images, including adding watermarks, changing backgrounds, etc.,
+
 extern crate image;
 extern crate rand;
 use image::{DynamicImage, GenericImageView};
@@ -21,35 +23,12 @@ use wasm_bindgen::prelude::*;
 /// photon::multiple::watermark(img, watermark, 30, 40);
 /// ```
 #[wasm_bindgen]
-pub fn watermark(mut img: PhotonImage, watermark: PhotonImage, x: u32, y: u32) -> PhotonImage {
+pub fn watermark(mut img: &mut PhotonImage, watermark: PhotonImage, x: u32, y: u32) {
     let dyn_watermark: DynamicImage = crate::helpers::dyn_image_from_raw(&watermark);
     let mut dyn_img: DynamicImage = crate::helpers::dyn_image_from_raw(&img);
     image::imageops::overlay(&mut dyn_img, &dyn_watermark, x, y);
     img.raw_pixels = dyn_img.raw_pixels();
-    return img;
 }
-
-/// Add a rotated watermark to an image.
-/// 
-/// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
-/// * `watermark` - The watermark to be placed onto the `img` image.
-/// * `x` - The x coordinate where the watermark's top corner should be positioned.
-/// * `y` - The y coordinate where the watermark's top corner should be positioned.
-/// * `degrees` - The number of degrees the watermark should be rotated by.
-/// # Example
-///
-/// ```
-/// // For example, to rotate the watermark by 30 degrees and place it at x: 30, y: 40:
-/// use photon::multiple;
-/// photon::multiple::watermark(img, watermark, 30, 40, 120);
-/// ```
-// pub fn watermark_rotate(mut img: DynamicImage, watermark: DynamicImage, x: u32, y: u32, degrees: u8) -> DynamicImage {
-//     image::imageops::overlay(&mut img, &watermark, x, y);
-    
-//     return img;
-// }
-
 
 /// Blend two images together.
 /// The `blend_mode` (3rd param) determines which blending mode to use; change this for varying effects.
@@ -137,7 +116,7 @@ pub fn blend(mut photon_image: &mut PhotonImage, photon_image2: &PhotonImage, bl
 /// let rgb = Rgb{20, 40, 60};
 /// photon::multiple::replace_background(img_b, img_a, rgb);
 /// ```
-pub fn replace_background(mut photon_image: PhotonImage, img2: &PhotonImage, background_color: Rgb) {
+pub fn replace_background(mut photon_image: &mut PhotonImage, img2: &PhotonImage, background_color: Rgb) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let img2 = helpers::dyn_image_from_raw(&img2);
     let (width, height) = img.dimensions();
