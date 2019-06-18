@@ -1,20 +1,20 @@
-/// Preset filters you can apply to images.
+//! Preset color filters.
+
 extern crate image;
 use image::{GenericImage, GenericImageView};
 use wasm_bindgen::prelude::*;
 use crate::{PhotonImage};
-use crate::{helpers, channels , monochrome};
-use crate::channels::{remove_channel, alter_two_channels, alter_blue_channel};
-
+use crate::{helpers, monochrome, effects};
+use crate::channels::{alter_two_channels, alter_blue_channel};
 
 /// Solarization on the Blue channel.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// # Example
 ///
 /// ```
-/// photon::filters::neue(img);
+/// photon::filters::neue(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn neue(mut photon_image: &mut PhotonImage) {
@@ -36,11 +36,11 @@ pub fn neue(mut photon_image: &mut PhotonImage) {
 /// Solarization on the Red and Green channels.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// # Example
 ///
 /// ```
-/// photon::filters::lix(img);
+/// photon::filters::lix(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn lix(mut photon_image: &mut PhotonImage) {
@@ -64,11 +64,11 @@ pub fn lix(mut photon_image: &mut PhotonImage) {
 /// Solarization on the Red and Blue channels.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// # Example
 ///
 /// ```
-/// photon::filters::ryo(img);
+/// photon::filters::ryo(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn ryo(mut photon_image: &mut PhotonImage) {
@@ -108,15 +108,14 @@ pub fn ryo(mut photon_image: &mut PhotonImage) {
 /// * **perfume**: Increase the blue channel, with moderate increases in the Red and Green channels.
 /// * **serenity**: Custom filter with an increase in the Blue channel's values.
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
-/// * `img2` - The 2nd DynamicImage to be blended with the first.
+/// * `img` - A PhotonImage.
 /// * `blend_mode` - The blending mode to use. See above for complete list of blend modes available.
 /// # Example
 ///
 /// ```
 /// // For example, to add a filter called "vintage" to an image:
 /// use photon::filters;
-/// photon::filters::filter(img, "vintage");
+/// photon::filters::filter(&mut img, "vintage");
 /// ```
 #[wasm_bindgen]
 pub fn filter(img: &mut PhotonImage, filter_name: &str) {
@@ -130,14 +129,14 @@ pub fn filter(img: &mut PhotonImage, filter_name: &str) {
         "flagblue" => alter_blue_channel(img, 131),
         "diamante" => alter_two_channels(img, 1, 82, 2, 87),
         "liquid" => alter_two_channels(img, 1, 10, 2, 75),
-        "radio" => crate::monochrome::monochrome(img, 5, 40, 20),
-        "twenties" => crate::monochrome::monochrome(img, 18, 12, 20),
-        "rosetint" =>  crate::monochrome::monochrome(img, 80, 20, 31),
-        "mauve" => crate::monochrome::monochrome(img, 90, 40, 80),
-        "bluechrome" => crate::monochrome::monochrome(img, 20, 30, 60),
-        "vintage" => crate::effects::tint(img, 120, 70, 13),
-        "perfume" => crate::effects::tint(img, 80, 40, 120),
-        "serenity" => crate::effects::tint(img, 10, 40, 90),
-        _ => crate::monochrome::monochrome(img, 90, 40, 80),
+        "radio" => monochrome::monochrome(img, 5, 40, 20),
+        "twenties" => monochrome::monochrome(img, 18, 12, 20),
+        "rosetint" =>  monochrome::monochrome(img, 80, 20, 31),
+        "mauve" => monochrome::monochrome(img, 90, 40, 80),
+        "bluechrome" => monochrome::monochrome(img, 20, 30, 60),
+        "vintage" => effects::tint(img, 120, 70, 13),
+        "perfume" => effects::tint(img, 80, 40, 120),
+        "serenity" => effects::tint(img, 10, 40, 90),
+        _ => monochrome::monochrome(img, 90, 40, 80),
     };
 }

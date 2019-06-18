@@ -1,16 +1,27 @@
-/// Native-only functions. 
-/// Includes functions that open images from the file-system, etc.,
+//! Native-only functions. 
+//! Includes functions that open images from the file-system, etc.,
 
 extern crate image;
 extern crate rand;
-use image::{GenericImage, GenericImageView, ImageBuffer};
-use rand::Rng;
-use image::{Pixel};
-use wasm_bindgen::prelude::*;
+use image::{GenericImageView, ImageBuffer};
+// use wasm_bindgen::prelude::*;
 use crate::{PhotonImage};
-use crate::{helpers};
 
 /// Open an image at a given path from the filesystem.
+/// A PhotonImage is returned.
+/// # Arguments
+/// * `img_path` - Path to the image you wish to edit.
+/// 
+/// # Example
+/// ```
+/// // For example:
+/// use photon::native::open_image;
+/// 
+/// // Open the image. A PhotonImage is returned.
+/// let img: PhotonImage = open_image("images/flowers.PNG");
+/// 
+/// // ... image editing functionality here ...
+/// ```
 pub fn open_image(img_path: &'static str) -> PhotonImage {
     let img = image::open(img_path).unwrap();
 
@@ -23,8 +34,21 @@ pub fn open_image(img_path: &'static str) -> PhotonImage {
     return photon_image;
 }
 
-/// Save the image to the file-system at a given pathname.
-pub fn save_image(img: PhotonImage, filtered_img_path: &str) {
+/// Save the image to the filesystem at a given path.
+/// # Arguments
+/// * img: The PhotonImage you wish to save.
+/// * `img_path` - Path for the outputted image.
+/// 
+/// # Example
+/// ```
+/// // For example:
+/// use photon::native::save_image;
+/// 
+/// // Save the image at the given path.
+/// save_image(img, "images/flowers.PNG");
+/// 
+/// ```
+pub fn save_image(img: PhotonImage, img_path: &str) {
     let raw_pixels = img.raw_pixels;
     let width = img.width;
     let height = img.height;
@@ -32,5 +56,5 @@ pub fn save_image(img: PhotonImage, filtered_img_path: &str) {
     let img_buffer = ImageBuffer::from_vec(width, height, raw_pixels).unwrap();
     let dynimage = image::ImageRgba8(img_buffer);
     
-    dynimage.save(filtered_img_path).unwrap();
+    dynimage.save(img_path).unwrap();
 }
