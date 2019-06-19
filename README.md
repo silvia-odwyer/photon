@@ -20,7 +20,7 @@ The library provides low-level access to pixel and channel manipulation, as well
 96 customisable functions are available, for varying image effects.
 
 Functions include:
-- **Image correction*: Hue rotation, sharpening, brightness adjustment, adjusting saturation, lightening/darkening all within various colour spaces. 
+- **Image correction**: Hue rotation, sharpening, brightness adjustment, adjusting saturation, lightening/darkening all within various colour spaces. 
 - **Convolutions**: Sobel filters, blurs, Laplace effects, edge detection, etc., 
 - **Channel manipulation**: Increasing/decreasing RGB channel values, swapping channels, removing channels, etc.
 - **Monochrome effects**: Duotoning, greyscaling of various forms, thresholding, sepia, averaging RGB values
@@ -98,20 +98,34 @@ See the documentation for a full list of effects which you can apply. All functi
 
 ### 🚴 Get Started With WebAssembly 
 
-##### 🔋 Batteries Included
+#### 🔋 Batteries Included
 
 This repo comes pre-configured with a quick-start demo, which hooks into a Webpack build pipeline, and provides all WASM-friendly functions.
 
+<!-- 
 ***WARNING***: Running WASM code in development mode is ***significantly*** slower than in production mode (often up to 10 times),
 so don't be disheartened if the JS alternatives outperform WASM. For the blazing speeds promised, make sure to build the 
-project under production mode with `npm run build` and visit `dist/index.html`. 
+project under production mode with `npm run build` and visit `dist/index.html`.  -->
 
-* `npm run start` -- Serve the project locally for development at
-  `http://localhost:8080`.
+To get started:
 
+Clone this repo:
+```sh
+git clone https://github.com/silvia-odwyer/photon
+```
+
+Serve the project locally for development:
+```sh
+npm run start 
+# This serves the project locally for development at http://localhost:8080`.
+```
+
+Then navigate to http://localhost:8080 and you'll see a demo in action. 
+
+To build the demo:
 * `npm run build` -- Bundle the project (in production mode).
 
-##### WebAssembly Use
+#### WebAssembly Use
 To allow for universal communication between the core Rust library and WebAssembly, the functions have been generalised to allow for both native and in-browser use. 
 
 Due to this, image data from the browser must first be converted to a PhotonImage before being passed to the image processing functions. 
