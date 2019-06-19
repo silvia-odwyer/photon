@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `photon` crate."><meta name="keywords" content="rust, rustlang, rust-lang, photon"><title>photon - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="shortcut icon" href="../favicon.ico"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../photon/index.html'><img src='../rust-logo.png' alt='logo' width='100'></a><p class='location'>Crate photon</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all photon's items</p></a><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'photon', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/photon/lib.rs.html#1-231' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>photon</a></span></h1><div class='docblock'><p>An image processing crate that provides a set of functions for image filtering, convolution, colour manipulation, and more.</p>
+<h4 id="functions" class="section-header"><a href="#functions">Functions</a></h4>
+<p>96 functions are available, including:</p>
+<ul>
+<li><strong>Image correction</strong>: Hue rotation, sharpening, brightness adjustment, adjusting saturation, lightening/darkening all within various colour spaces. </li>
+<li><strong>Convolutions</strong>: Sobel filters, blurs, Laplace effects, edge detection, etc., </li>
+<li><strong>Channel manipulation</strong>: Increasing/decreasing RGB channel values, swapping channels, removing channels, etc.</li>
+<li><strong>Monochrome effects</strong>: Duotoning, greyscaling of various forms, thresholding, sepia, averaging RGB values</li>
+<li><strong>Colour manipulation</strong>: Work with the image in various colour spaces such as HSL, LCh, and sRGB, and adjust the colours accordingly. </li>
+<li><strong>Filters</strong>: Over 30 pre-set filters available, incorporating various effects and transformations. </li>
+<li><strong>Text</strong>: Apply text to imagery in artistic ways, or to watermark, etc.,</li>
+<li><strong>Watermarking</strong>: Watermark images in multiple formats. </li>
+<li><strong>Blending</strong>: Blend images together using 10 different techniques, change image backgrounds. </li>
+</ul>
+<h2 id="example" class="section-header"><a href="#example">Example</a></h2>
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">photon</span>;
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="kw">let</span> <span class="ident">img</span> <span class="op">=</span> <span class="ident">photon</span>::<span class="ident">helpers</span>::<span class="ident">open_image</span>(<span class="string">&quot;valley.PNG&quot;</span>);
+    <span class="ident">photon</span>::<span class="ident">effects</span>::<span class="ident">solarize</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">img</span>);
+    <span class="comment">// Write the contents of this image in PNG format.</span>
+    <span class="ident">photon</span>::<span class="ident">helpers</span>::<span class="ident">save_image</span>(<span class="ident">img</span>, <span class="string">&quot;new_image.PNG&quot;</span>);
+}</pre></div>
+<p>This crate contains built-in preset functions, which provide default image processing functionality, as well as functions
+that allow for direct, low-level access to channel manipulation.
+To view a full demo of filtered imagery, visit the <a href="https://silvia-odwyer.github.io/photon">official website</a>.</p>
+<h3 id="webassembly-use" class="section-header"><a href="#webassembly-use">WebAssembly Use</a></h3>
+<p>To allow for universal communication between the core Rust library and WebAssembly, the functions have been generalised to allow for both native and in-browser use. 
+Due to this, image data from the browser must first be converted to a PhotonImage before being passed to the image processing functions. 
+The PhotonImage can then be converted back to JS-compatible ImageData so that it can be displayed in-browser.
+See the code snippet below:</p>
+<pre><code class="language-js">function filterImage() {
+    // Create a canvas and get a 2D context from the canvas
+    var canvas = document.getElementById(&quot;canvas&quot;);
+    var ctx = canvas.getContext(&quot;2d&quot;); 
+    
+    // Draw the image element onto the canvas
+    ctx.drawImage(newimg, 0, 0);
+    
+    // Convert the ImageData found in the canvas to a PhotonImage (so that it can communicate with the core Rust library)
+    let rust_image = module.open_image(canvas, ctx);
+    
+    // Filter the image, the PhotonImage's raw pixels are modified
+    module.filter(rust_image, &quot;radio&quot;);
+    
+    // Place the PhotonImage back on the canvas
+    ctx.putImageData(rust_image, 0, 0)
+}
+</code></pre>
+<h3 id="live-demo" class="section-header"><a href="#live-demo">Live Demo</a></h3>
+<p>View the <a href="https://silvia-odwyer.github.io/photon">official demo of WASM in action</a>.
+Not all functions available in the core Rust library are available in WebAssembly (currently investigating this). Only WASM-friendly functions have been annotated with #<a href="https://docs.rs/wasm-bindgen/0.2/wasm_bindgen/index.html" title="wasm_bindgen">wasm_bindgen</a>. All supported WASM functions are displayed in the starter demo. </p>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table><tr class='module-item'><td><a class="mod" href="channels/index.html" title='photon::channels mod'>channels</a></td><td class='docblock-short'><p>Channel manipulation.</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="colour_spaces/index.html" title='photon::colour_spaces mod'>colour_spaces</a></td><td class='docblock-short'><p>Image manipulation effects in HSL, LCh and HSV.</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="conv/index.html" title='photon::conv mod'>conv</a></td><td class='docblock-short'><p>Convolution effects such as sharpening, blurs, sobel filters, etc.,</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="effects/index.html" title='photon::effects mod'>effects</a></td><td class='docblock-short'><p>Special effects.</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="filters/index.html" title='photon::filters mod'>filters</a></td><td class='docblock-short'><p>Preset color filters.</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="helpers/index.html" title='photon::helpers mod'>helpers</a></td><td class='docblock-short'><p>Helper functions for converting between various formats</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="monochrome/index.html" title='photon::monochrome mod'>monochrome</a></td><td class='docblock-short'><p>Monochrome-related effects and greyscaling/duotoning.</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="multiple/index.html" title='photon::multiple mod'>multiple</a></td><td class='docblock-short'><p>Image manipulation with multiple images, including adding watermarks, changing backgrounds, etc.,</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="native/index.html" title='photon::native mod'>native</a></td><td class='docblock-short'><p>Native-only functions. 
+Includes functions that open images from the file-system, etc.,</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="noise/index.html" title='photon::noise mod'>noise</a></td><td class='docblock-short'><p>Add noise to images.</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="text/index.html" title='photon::text mod'>text</a></td><td class='docblock-short'><p>Draw text to an image.
+For extended graphic design/text-drawing functionality, a new library is being developed currently.</p>
+</td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table><tr class='module-item'><td><a class="struct" href="struct.PhotonImage.html" title='photon::PhotonImage struct'>PhotonImage</a></td><td class='docblock-short'><p>Provides the image's height, width, and contains the image's raw pixels.
+For use when communicating between JS and WASM, and also natively. </p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.Rgb.html" title='photon::Rgb struct'>Rgb</a></td><td class='docblock-short'><p>RGB color type.</p>
+</td></tr></table><h2 id='functions-1' class='section-header'><a href="#functions-1">Functions</a></h2>
+<table><tr class='module-item'><td><a class="fn" href="fn.get_image_data.html" title='photon::get_image_data fn'>get_image_data</a></td><td class='docblock-short'><p>Get the ImageData from a 2D canvas context</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.open_image.html" title='photon::open_image fn'>open_image</a></td><td class='docblock-short'><p>Convert a HTML5 Canvas Element to a PhotonImage.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.putImageData.html" title='photon::putImageData fn'>putImageData</a></td><td class='docblock-short'><p>Place a PhotonImage onto a 2D canvas.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.run.html" title='photon::run fn'>run</a></td><td class='docblock-short'><p>[temp] Called by the JS entry point to ensure WASM is supported.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.test.html" title='photon::test fn'>test</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="fn" href="fn.to_image_data.html" title='photon::to_image_data fn'>to_image_data</a></td><td class='docblock-short'><p>Convert a PhotonImage to JS-compatible ImageData.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.to_raw_pixels.html" title='photon::to_raw_pixels fn'>to_raw_pixels</a></td><td class='docblock-short'><p>Convert ImageData to a raw pixel vec of u8s.</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "photon";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>
