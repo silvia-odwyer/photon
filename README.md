@@ -117,7 +117,7 @@ git clone https://github.com/silvia-odwyer/photon
 Serve the project locally for development:
 ```sh
 npm run start 
-# This serves the project locally for development at http://localhost:8080`.
+# This serves the project locally for development at http://localhost:8080
 ```
 
 Then navigate to http://localhost:8080 and you'll see a demo in action. 

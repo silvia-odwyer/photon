@@ -13,10 +13,15 @@ edition = "2018"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-wasm-bindgen = "0.2.25"
 image="*"
 palette="*"
 rand="*"
+num="*"
+imageproc="*"
+rusttype="*"
+base64="*"
+time="*"
+wasm-bindgen = "0.2.25"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
@@ -41,7 +46,9 @@ features = [
   "ImageData", 
   "HtmlCanvasElement", 
   "HtmlImageElement",
-  "console"
+  "console",
+  'CssStyleDeclaration',
+  'EventTarget',
 ]
 
 [features]
