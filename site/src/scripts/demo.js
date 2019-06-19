@@ -1,5 +1,5 @@
-import Fruit from "../images/fruit_sampler.jpg";
-import Daisies from "../images/daisies.jpg";
+import Fruit from "../images/daisies_fuji.jpg";
+import Daisies from "../images/nine_yards.jpg";
 import Lemons from "../images/lemons.jpg";
 import Underground from "../images/underground.jpg";
 import NineYards from "../images/nine_yards.jpg";

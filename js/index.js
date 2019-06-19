@@ -1,5 +1,5 @@
-import Fruit from "./fruit_sampler.jpg";
-import Daisies from "./daisies.jpg";
+import MainImage from "./daisies_med.jpg";
+import Daisies from "./daisies_med.jpg";
 import Lemons from "./lemons.jpg";
 import Underground from "./underground.jpg";
 import NineYards from "./nine_yards.jpg";
@@ -12,15 +12,12 @@ var canvas, canvas2, watermark_canvas;
 var ctx, ctx2, watermark_ctx;
 
 import("../crate/pkg").then(module => {
-
-
   var startTime;
   var endTime;
-  module.run();
  
   // Setup images
   const newimg = new Image();
-  newimg.src = Fruit;
+  newimg.src = MainImage;
   newimg.style.display = "none";
   newimg.onload = () => {
     setUpCanvas();
@@ -62,6 +59,9 @@ import("../crate/pkg").then(module => {
     button.addEventListener("click", function(){blendImages(event)}, false);
   }
 
+  let change_image_btn = document.getElementById("change_img");
+  change_image_btn.addEventListener("click", changeImageFromNav, false);
+
   function applyEffect(event) {
     console.time("wasm_time"); 
 
@@ -85,12 +85,12 @@ import("../crate/pkg").then(module => {
                       "offset_green": function(){return module.offset(rust_image, 2, 15)},
                       "primary" : function() {return module.primary(rust_image)},
                       "solarize" : function() {return module.solarize(rust_image)},
-                      "threshold" : function() {return module.threshold(rust_image, 100)},
+                      "threshold" : function() {return module.threshold(rust_image, 200)},
                       "sepia" : function() {return module.sepia(rust_image)},
                       "decompose_min" : function(){return module.decompose_min(rust_image)},
                       "decompose_max" : function(){return module.decompose_max(rust_image)},
                       "grayscale_shades": function(){return module.grayscale_shades(rust_image)},
-                      "red_channel_grayscale": function() {single_channel_grayscale(rust_image, 0)},
+                      "red_channel_grayscale": function() {module.single_channel_grayscale(rust_image, 0)},
                       "green_channel_grayscale": function() {module.single_channel_grayscale(rust_image, 1)},
                       "blue_channel_grayscale": function() {module.single_channel_grayscale(rust_image, 2)},
                       "hue_rotate_hsl": function() {module.hue_rotate_hsl(rust_image, 0.3)}, 
@@ -160,6 +160,14 @@ import("../crate/pkg").then(module => {
     console.timeEnd("wasm_time");
     endTime = performance.now();
     updateBenchmarks();
+    updateEffectName(event.originalTarget);
+  }
+
+  function updateEffectName(elem) {
+    let effect_name = elem.innerHTML;
+    console.log(effect_name);
+    let effect_name_elem = document.getElementById("effect_name");
+    effect_name_elem.innerHTML = effect_name;
   }
 
   function blendImages(event) {
@@ -205,7 +213,8 @@ import("../crate/pkg").then(module => {
     module.putImageData(canvas, ctx, rust_image);
     console.timeEnd("wasm_blend_time");
     endTime = performance.now()
-    updateBenchmarks()
+    updateBenchmarks();
+    updateEffectName(event.originalTarget);
   }
   
   function updateCanvas(new_image) {
@@ -214,7 +223,6 @@ import("../crate/pkg").then(module => {
     // Place the pixels back on the canvas
     ctx.putImageData(new_pixels, 0, 0);
   }
-
 
   function filterImage(event) {
     startTime = performance.now();
@@ -235,6 +243,7 @@ import("../crate/pkg").then(module => {
 
     endTime = performance.now();
     updateBenchmarks();
+    updateEffectName(event.originalTarget);
     console.timeEnd("wasm_time");
   }
 
@@ -287,17 +296,31 @@ import("../crate/pkg").then(module => {
   for (let i = 0; i < change_image_elems.length; i++) {
     let change_image_elem = change_image_elems[i];
 
-    change_image_elem.addEventListener("click", function(event) {
-      console.log("image changed")
-      let img_name = event.originalTarget.id;
-      let imgNamesToImages = {"largefruit": LargeFruit, "lemons": Lemons, "underground": Underground, "blue_metro": BlueMetro, "nine_yards": NineYards, "daisies": Daisies, "fruit": Fruit};
-      newimg.src = imgNamesToImages[img_name];
-      newimg.onload = () => {
-        canvas.width = newimg.width;
-        canvas.height = newimg.height;
-        ctx.drawImage(newimg, 0, 0);
-      }
-    }, false);
+    change_image_elem.addEventListener("click", changeImage, false);
+  }
+
+  function changeImage(event) {
+    console.log("image changed")
+    let img_name = event.originalTarget.id;
+    let imgNamesToImages = {"largefruit": LargeFruit, "lemons": Lemons, "underground": Underground, "blue_metro": BlueMetro, "nine_yards": NineYards, "daisies": Daisies, "fruit": MainImage};
+    newimg.src = imgNamesToImages[img_name];
+    newimg.onload = () => {
+      canvas.width = newimg.width;
+      canvas.height = newimg.height;
+      ctx.drawImage(newimg, 0, 0);
+
+  }}
+
+
+  function changeImageFromNav() {
+    console.log("image_changed");
+    newimg.src = Underground;
+    newimg.onload = () => {
+      canvas.width = newimg.width;
+      canvas.height = newimg.height;
+      ctx.drawImage(newimg, 0, 0);
+
+    }
   }
 
     

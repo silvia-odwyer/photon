@@ -52,8 +52,6 @@
     .sidebar li {
       display: block;
       color: rgb(105, 105, 105);
-      cursor: pointer;
-
     }
 
     @media screen and (max-height: 450px) {
@@ -148,6 +146,13 @@
       font-family: 'Courier New', Courier, monospace;
 
     }
+    a {
+      text-decoration: none;
+      color: #f2f2f2;
+    }
+    li:hover{
+      cursor: pointer;
+    }
 
     .topnav {
       display: flex;
@@ -160,9 +165,9 @@
       <div class="default">
           <nav class="topnav">
               <ul>
-                <li>Change Image </li>
-                <li>Docs</li>
-                <li>GitHub</li>
+                <li id="change_img">Change Image</li>
+                <li><a href="https://silvia-odwyer.github.io/photon/doc/">Docs</a></li>
+                <li><a href="https://github.com/silvia-odwyer/photon">GitHub</a></li>
               </ul>
             
             </nav>
@@ -281,7 +286,7 @@
               <li class="change_image" id="blue_metro">Blue Metro</li>
               <li class="change_image" id="underground">Underground</li>
               <li class="change_image" id="nine_yards">Nine Yards</li>
-              <li class="change_image" id="fruit">Fruit</li>
+              <li class="change_image" id="fruit">Daisies</li>
               <li class="change_image" id="largefruit">Large Fruit</li>
               <li class="change_image" id="daisies">Daisies</li>
 
@@ -303,7 +308,7 @@
             
               <section class="content">
                   <h4>Photon WebAssembly Demo</h4>
-                  <h2>Original</h2>
+                  <h2 id="effect_name">Original</h2>
                 <div id="image_container"></div>
 
                 <canvas id="canvas"></canvas>
