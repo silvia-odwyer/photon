@@ -39,7 +39,7 @@ module.exports = {
     new WasmPackPlugin({
       crateDirectory: path.resolve(__dirname, "crate"),
       // WasmPackPlugin defaults to compiling in "dev" profile. To change that, use forceMode: 'release':
-      // forceMode: 'release'
+      forceMode: 'release'
     }),
   ]
 };
