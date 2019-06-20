@@ -40,7 +40,7 @@ pub fn draw_text_with_border(mut photon_img: &mut PhotonImage, text: &str, x: u3
     let mut image2 : DynamicImage = DynamicImage::new_luma8(
         image.width(), image.height());
 
-    let font = Vec::from(include_bytes!("../Roboto-Regular.ttf") as &[u8]);
+    let font = Vec::from(include_bytes!("../fonts/Roboto-Regular.ttf") as &[u8]);
     let font = FontCollection::from_bytes(font).unwrap().into_font().unwrap();
     let height = 90f32;
     let scale = Scale { x: height * 1.0, y: height };
@@ -93,7 +93,7 @@ pub fn draw_text(mut photon_img: &mut PhotonImage, text: &str, x: u32, y: u32) {
     let mut image2 : DynamicImage = DynamicImage::new_luma8(
         image.width(), image.height());
 
-    let font = Vec::from(include_bytes!("../Roboto-Regular.ttf") as &[u8]);
+    let font = Vec::from(include_bytes!("../fonts/Roboto-Regular.ttf") as &[u8]);
     let font = FontCollection::from_bytes(font).unwrap().into_font().unwrap();
     let height = 90f32;
     let scale = Scale { x: height * 1.0, y: height };
