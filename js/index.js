@@ -1,11 +1,8 @@
 import MainImage from "./daisies_med.jpg";
-import Daisies from "./daisies_med.jpg";
-import Lemons from "./lemons.jpg";
 import Underground from "./underground.jpg";
 import NineYards from "./nine_yards.jpg";
 import BlueMetro from "./blue_metro.jpg";
 import Watermark from "./wasm_logo.png"
-import LargeFruit from "./fruit.jpg";
 
 // Setup global variables
 var canvas, canvas2, watermark_canvas;
@@ -24,7 +21,7 @@ import("../crate/pkg").then(module => {
   }
 
   const img2 = new Image();
-  img2.src = Daisies;
+  img2.src = NineYards;
   img2.style.display = "none";
   img2.onload=() => {
     setUpCanvas2();
@@ -302,7 +299,7 @@ import("../crate/pkg").then(module => {
   function changeImage(event) {
     console.log("image changed")
     let img_name = event.originalTarget.id;
-    let imgNamesToImages = {"largefruit": LargeFruit, "lemons": Lemons, "underground": Underground, "blue_metro": BlueMetro, "nine_yards": NineYards, "daisies": Daisies, "fruit": MainImage};
+    let imgNamesToImages = {"underground": Underground, "blue_metro": BlueMetro, "nine_yards": NineYards, "fruit": MainImage};
     newimg.src = imgNamesToImages[img_name];
     newimg.onload = () => {
       canvas.width = newimg.width;

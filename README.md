@@ -114,7 +114,17 @@ Clone this repo:
 git clone https://github.com/silvia-odwyer/photon
 ```
 
-Serve the project locally for development:
+Install the dependencies:
+```sh
+npm install
+```
+
+To compile the lib's Rust code to wasm, run:
+```sh
+npm run build
+```
+
+Serve the project locally for development at http://localhost:8080
 ```sh
 npm run start 
 # This serves the project locally for development at http://localhost:8080
