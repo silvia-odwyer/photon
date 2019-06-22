@@ -2,8 +2,8 @@
 
 extern crate image;
 extern crate rand;
-use image::{DynamicImage, GenericImageView};
-use palette::{Srgba, LinSrgba, Lab, Blend, Pixel, Srgb};
+use image::{DynamicImage, GenericImageView, RgbaImage};
+use palette::{Srgba, LinSrgba, Lab, Blend, Lch, Pixel, Gradient, Srgb};
 use crate::channels::color_sim;
 use crate::{PhotonImage, Rgb, helpers, GenericImage};
 use wasm_bindgen::prelude::*;
@@ -146,4 +146,52 @@ pub fn replace_background(mut photon_image: &mut PhotonImage, img2: &PhotonImage
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
+}
+
+pub fn create_gradient(width: u32, height: u32) -> PhotonImage {
+    let mut image = RgbaImage::new(width, height);
+
+    // Create a gradient.
+    let grad1 = Gradient::new(vec![
+        LinSrgba::new(1.0, 0.1, 0.1, 1.0),
+        LinSrgba::new(0.1, 0.1, 1.0, 1.0),
+        LinSrgba::new(0.1, 1.0, 0.1, 1.0),
+    ]);
+
+    let grad3 = Gradient::new(vec![
+        Lch::from(LinSrgba::new(1.0, 0.1, 0.1, 1.0)),
+        Lch::from(LinSrgba::new(0.1, 0.1, 1.0, 1.0)),
+        Lch::from(LinSrgba::new(0.1, 1.0, 0.1, 1.0)),
+    ]);
+
+    for (i, c1) in grad1
+        .take(width as usize)
+        .enumerate()
+    {
+        let c1 = Srgba::from_linear(c1).into_format().into_raw();
+        {
+            let mut sub_image = image.sub_image(i as u32, 0, 1, height);
+            let (width, height) = sub_image.dimensions();
+            for x in 0..width {
+                for y in 0..height {
+                    sub_image.put_pixel(x, y, image::Rgba {
+                        data: c1
+                    });
+                }
+            }
+        }
+    }
+    let rgba_img = image::ImageRgba8(image);
+    let raw_pixels = rgba_img.raw_pixels();
+    return PhotonImage { raw_pixels: raw_pixels, width: width, height: height};
+}
+
+/// Apply a gradient to an image.
+#[wasm_bindgen]
+pub fn apply_gradient(mut image: &mut PhotonImage) {
+    
+    let mut gradient = create_gradient(image.width, image.height);
+
+    blend(&mut image, &gradient, "overlay");
+
 }
