@@ -29,12 +29,6 @@ p {
   flex-wrap: wrap;
 }
 
-a {
-  text-decoration: none;
-}
-
-
-
 .comparison article {
   width: 50%;
 }
@@ -46,6 +40,8 @@ a {
 
 img {
   width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
@@ -71,8 +67,13 @@ nav ul {
   margin-left: 20vh;
 }
 
-nav a {
+a {
   color: rgb(204, 204, 204);
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgb(177, 177, 177);
 }
 
 
@@ -93,9 +94,14 @@ nav a {
   margin-top: 20vh;
 }
 
-#img, #js_img, #wasm_img {
+#img, #js_img, #wasm_img, #img3, #img2 {
   display: none;
 }
+
+#js_time, #wasm_time {
+  font-size: 1.5em;
+}
+
 
 .landing_text h1 {
   color: white;
@@ -314,12 +320,35 @@ button:hover {
 
 }
 
+.lhs_container {
+  width: 80%;
+}
+
 .feature_pane {
   min-height: 60vh;
 }
 
+.rhs_container {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10vh;
+  margin-left: 15vh;
+}
+
 .guide_pane .container {
   grid-area: "guide_rhs";
+}
+
+.tiles {
+  display: flex;
+  flex-direction: row;
+}
+
+.tiles .tile {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 33%; /* explanation below */
 }
 
 .guide_pane section {
@@ -381,7 +410,9 @@ footer ul li {
   margin-top: 5vh;
 }
 
-
+#cargo_logo, #js_logo {
+  width: 50%;
+}
 
 .w {
   width:calc(50vmin * 2/3);

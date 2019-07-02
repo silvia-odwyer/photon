@@ -8,7 +8,7 @@
   <!-- Open Graph data / Facebook Card data -->
   <meta property="og:title" content="Photon: A high-performance WebAssembly image processing library.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://github.com/tr1s/tris-webpack-boilerplate">
+  <meta property="og:url" content="https://github.com/silvia-odwyer/photon">
   <meta property="og:image" content="https://i.imgur.com/lxRBpeb.jpg">
   <meta property="og:image:alt" content="A blue package, symbolizing what webpack does.">
   <meta property="og:description" content="A WebAssembly image processing library that delivers blazing performance and can be called via JS.">
@@ -158,7 +158,7 @@
           </section>
             
           <section class="feature_pane">
-              <section>
+              <section class="lhs_container">
                 <h2>Channel/Colour Manipulation</h2>
                 <p>     
                 Photon provides low-level access to pixel and channel manipulation, as well as high-level functions for image correction, filtering, watermarking, and convolutions.     
@@ -192,7 +192,7 @@
             </section>
 
             <section class="feature_pane">
-                <section>
+                <section class="lhs_container">
                   <h2>Image Correction</h2>
                   <p>  
                     Adjust images by correcting brightness, saturation, hues, and more, all within various colour spaces. 
@@ -265,8 +265,12 @@
                 <a href="demo.html">demo</a>
                 , where you can test out the effects, view performance, and see if Photon is the right
                     library for your website.</p>
-                <button class="btn btn_fill">View The Demo</button>
+                <button class="btn btn_fill"><a href="demo.html">View The Demo</a></button>
               </section>
+
+              <div class="container">
+                <img href="images/demo.PNG"></img>
+              </div>
 
             </section>
 
@@ -283,7 +287,6 @@
                 </div>
   
             </section>
-
 
             <section class="guide_pane"> 
               <section id="get_started">
@@ -329,7 +332,7 @@
         <div class="footer_lhs">
           <h1>Photon</h1>
           <p>Image processing with WebAssembly.</p>
-          <p>&copy; Copyright 2019. All Rights Reserved. Software open-sourced under MIT. </p>
+          <p>&copy; Copyright 2019. All Rights Reserved. Software open-sourced under Apache License 2.0. </p>
   
         </div>
   
@@ -379,40 +382,6 @@
         .end();
       
       </script>
-      
-    <script>
-      AOS.init({
-        // Global settings:
-        disable: false, // accepts following values: 'phone', 'tablet', 'mobile', boolean, expression or function
-        startEvent: 'DOMContentLoaded', // name of the event dispatched on the document, that AOS should initialize on
-        initClassName: 'aos-init', // class applied after initialization
-        animatedClassName: 'aos-animate', // class applied on animation
-        useClassNames: false, // if true, will add content of `data-aos` as classes on scroll
-        disableMutationObserver: false, // disables automatic mutations' detections (advanced)
-        debounceDelay: 50, // the delay on debounce used while resizing window (advanced)
-        throttleDelay: 99, // the delay on throttle used while scrolling the page (advanced)
-        
-
-        // Settings that can be overridden on per-element basis, by `data-aos-*` attributes:
-        offset: 380, // offset (in px) from the original trigger point
-        delay: 0, // values from 0 to 3000, with step 50ms
-        duration: 400, // values from 0 to 3000, with step 50ms
-        easing: 'ease', // default easing for AOS animations
-        once: false, // whether animation should happen only once - while scrolling down
-        mirror: false, // whether elements should animate out while scrolling past them
-        anchorPlacement: 'top-bottom', // defines which position of the element regarding to window should trigger the animation
-
-      });
-    </script>   
-    <script>
-      anime({
-    targets: '#anime',
-    translateX: 250,
-    rotate: '1turn',
-    backgroundColor: '#FFF',
-    duration: 800
-  });
-</script>
   </main>
 
 </body>
