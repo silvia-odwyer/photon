@@ -1,11 +1,13 @@
 # photon
 
+#### A Universal Image Processing Library
+
 Photon is a high-performance Rust image processing library, which compiles to WebAssembly, allowing for 
 safe, blazing-fast image processing both natively and on the web. 
 
 The library provides low-level access to pixel and channel manipulation, as well as high-level functions for image correction, filtering, watermarking, and convolutions. 
 
-### Features:
+<!-- ### Features:
 - **Pure Rust** - Unlike other libraries, this library is built with 100% pure Rust, so security and safety is guaranteed. 
 - **WebAssembly friendly** - For web-based image processing, Photon is 4-10x faster than JS, leading to faster results, and less lag. 
 - **Call WASM with JS** - This library's WASM functions can be called via JS, allowing for zero-cost abstraction and faster development.
@@ -14,7 +16,7 @@ The library provides low-level access to pixel and channel manipulation, as well
 #### Photon vs Other Libraries:
 - **ImageMagick** - Benchmarks show that Photon is approximately 3x faster than ImageMagick.  
 - **ImageFlow** - ImageFlow is 60% Rust, and still relies on C++ for its image encoding and decoding, however Photon is 100% Rust, guaranteeing full safety and security. ImageFlow also does not contain JS functions for front-end development. 
-- **CamanJS** - Photon is approximately 8x faster than CamanJS, and contains over 50 more functions. 
+- **CamanJS** - Photon is approximately 8x faster than CamanJS, and contains over 50 more functions.  -->
 
 ### Functions
 96 customisable functions are available, for varying image effects.
@@ -30,7 +32,13 @@ Functions include:
 - **Watermarking**: Watermark images in multiple formats. 
 - **Blending**: Blend images together using 10 different techniques, change image backgrounds. 
 
-View all [functions here](https://silvia-odwyer.github.io/photon/docs/photon/all.html).
+### Get Started
+- [Get Started with WebAssembly](https://github.com/silvia-odwyer/photon#-get-started-with-webassembly)
+- [Get Started Natively](https://github.com/silvia-odwyer/photon#getting-started)
+- [Check Out The Documentation](https://silvia-odwyer.github.io/photon/docs/photon/all.html)
+- [View the Official Website.](https://silvia-odwyer.github.io/photon/)
+- [See All Available Functions.](https://silvia-odwyer.github.io/photon/docs/photon/all.html)
+- 
 
 `photon` can be thought of as a high-level wrapper to the Rust `image` crate, but conversely also includes functions which provide low-level access to pixel and channel manipulation, perfect for developers who wish to work with this data directly.
 
@@ -40,10 +48,10 @@ This repo can be thought of as a hybrid library, divided into 2 major components
 2. **WebAssembly helpers and starter demo**: This section of the library contains helpers for exporting pixel data to and from the browser, and communicates directly with the core Rust library. The starter demo demonstrates calling the compiled WebAssembly code using JS functions and hooks into a webpack build pipeline. 
 
 ### Live Demo
-View the [official demo of WASM in action](https://silvia-odwyer.github.io/photon).
+View the [official demo of WASM in action](https://silvia-odwyer.github.io/photon/demo.html).
 
-### Documentation
-Documentation can be found [here](https://silvia-odwyer.github.io/photon/docs/photon/index.html).
+### 📚 Documentation
+View the [official documentation](https://silvia-odwyer.github.io/photon/docs/photon/index.html).
 
 ## 🚴Getting Started
 
@@ -66,6 +74,7 @@ Clone this repo:
 git clone https://github.com/silvia-odwyer/photon
 ```
 
+### Run Natively
 Run the binary, which will perform an image processing function on an image:
 ```sh
 cd crate
@@ -177,9 +186,6 @@ Photon contains a series of modules, which include:
 - `correction`: Hue rotation, adjusting saturation, lightening/darkening: all techniques available in multiple colour spaces, which lead to varying effects.
 
 All effects and filters can be viewed below and on the official website.
-
-## 📚 Documentation
-View the official [documentation here](https://silvia-odwyer.github.io/photon/docs/photon/index.html). 
 
 ## Building For Production
 
