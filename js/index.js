@@ -67,7 +67,7 @@ import("../crate/pkg").then(module => {
 
     // Get the name of the effect the user wishes to apply to the image
     // This is the id of the element they clicked on
-    let filter_name = event.originalTarget.id;
+    let filter_name = event.target.id;
 
     // Convert the ImageData to a PhotonImage (so that it can communicate with the core Rust library)
     let rust_image = module.open_image(canvas, ctx);
@@ -157,7 +157,7 @@ import("../crate/pkg").then(module => {
     console.timeEnd("wasm_time");
     endTime = performance.now();
     updateBenchmarks();
-    updateEffectName(event.originalTarget);
+    updateEffectName(event.target);
   }
 
   function updateEffectName(elem) {
@@ -175,7 +175,7 @@ import("../crate/pkg").then(module => {
 
     // Get the name of the effect the user wishes to apply to the image
     // This is the id of the element they clicked on
-    let filter_name = event.originalTarget.id;
+    let filter_name = event.target.id;
 
     // Convert the ImageData to a PhotonImage (so that it can communicate with the core Rust library)
     let rust_image = module.open_image(canvas, ctx);
@@ -211,7 +211,7 @@ import("../crate/pkg").then(module => {
     console.timeEnd("wasm_blend_time");
     endTime = performance.now()
     updateBenchmarks();
-    updateEffectName(event.originalTarget);
+    updateEffectName(event.target);
   }
   
   function updateCanvas(new_image) {
@@ -224,7 +224,7 @@ import("../crate/pkg").then(module => {
   function filterImage(event) {
     startTime = performance.now();
     ctx.drawImage(newimg, 0, 0);
-    let filter_name = event.originalTarget.id;
+    let filter_name = event.target.id;
   
     console.time("wasm_time"); 
 
@@ -240,7 +240,7 @@ import("../crate/pkg").then(module => {
 
     endTime = performance.now();
     updateBenchmarks();
-    updateEffectName(event.originalTarget);
+    updateEffectName(event.target);
     console.timeEnd("wasm_time");
   }
 
@@ -298,7 +298,7 @@ import("../crate/pkg").then(module => {
 
   function changeImage(event) {
     console.log("image changed")
-    let img_name = event.originalTarget.id;
+    let img_name = event.target.id;
     let imgNamesToImages = {"underground": Underground, "blue_metro": BlueMetro, "nine_yards": NineYards, "fruit": MainImage};
     newimg.src = imgNamesToImages[img_name];
     newimg.onload = () => {
