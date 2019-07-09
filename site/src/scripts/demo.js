@@ -51,7 +51,7 @@ import("../../pkg").then(module => {
 
     // Get the name of the effect the user wishes to apply to the image
     // This is the id of the element they clicked on
-    let filter_name = event.originalTarget.id;
+    let filter_name = event.target.id;
 
     // Create a PhotonImage from the canvas + context (so that it can communicate with the core Rust library)
     let rust_image = module.open_image(canvas, ctx);
@@ -114,7 +114,7 @@ import("../../pkg").then(module => {
   function filterImage(event) {
     startTime = performance.now();
     ctx.drawImage(newimg, 0, 0);
-    let filter_name = event.originalTarget.id;
+    let filter_name = event.target.id;
   
     console.time("wasm_time"); 
 
@@ -141,7 +141,7 @@ import("../../pkg").then(module => {
 
     // Get the name of the effect the user wishes to apply to the image
     // This is the id of the element they clicked on
-    let filter_name = event.originalTarget.id;
+    let filter_name = event.target.id;
     
     // Convert the ImageData to a PhotonImage (so that it can communicate with the core Rust library)
     let rust_image = module.open_image(canvas, ctx);
@@ -297,7 +297,7 @@ import("../../pkg").then(module => {
 
       change_image_elem.addEventListener("click", function(event) {
         console.log("image changed")
-        let img_name = event.originalTarget.id;
+        let img_name = event.target.id;
         let imgNamesToImages = {"largefruit": LargeFruit, "lemons": Lemons, "underground": Underground, "blue_metro": BlueMetro, "nine_yards": NineYards, "daisies": Daisies, "fruit": Fruit};
         newimg.src = imgNamesToImages[img_name];
         newimg.onload = () => {
