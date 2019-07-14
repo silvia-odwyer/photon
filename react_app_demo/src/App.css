@@ -1,0 +1,146 @@
+.App-header {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+    
+body {
+  background-color: rgb(34, 34, 34);
+  font-size: 22px;
+}
+
+.default {
+  background-color: #282c34;
+  height: 100%;
+}
+
+
+.main-sidebar, .main-navbar, .dark {
+  background-color: rgb(34, 34, 34);
+  color: rgb(105, 105, 105);
+}
+
+.main {
+  margin-left: 40vh;
+  padding: 0px 10px;
+  background-color: rgb(34, 34, 34);
+}
+
+.main_content {
+  padding-top: 14vh;
+}
+
+.sidebar {
+  height: 100%;
+  width: 40vh;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: rgb(31, 31, 31);
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.sidebar li {
+  display: block;
+  color: rgb(105, 105, 105);
+}
+
+@media screen and (max-height: 450px) {
+  .sidebar {padding-top: 15px;}
+  .sidebar a {font-size: 18px;}
+}
+
+nav {
+  overflow: hidden;
+  background-color: rgb(29, 29, 29);
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%; /* Full width */
+}
+
+nav li {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+}
+
+ul li {
+  text-decoration: none;
+  list-style: none;
+  padding-right: 4em;
+}
+
+ul li:hover {
+  color: silver;
+}
+
+.tab_nav {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-left: 0;
+}
+
+.logo {
+  color: white;
+  font-size: 1em;
+  margin-left: 1em;
+}
+
+h2, h3, h4, h5 {
+  color: white;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+}
+
+h4 {
+  text-transform: uppercase;
+  font-size: 0.7em;
+  letter-spacing: 4px;
+}
+
+.content {
+  grid-area: "main_left";
+  width: 80%;
+  
+}
+
+.benchmarks {
+  color: white;
+  font-size: 2em;
+  grid-area: "main_right";
+}
+
+.main_content {
+  display: grid;
+  grid-template-columns: 75% 25%;
+  grid-template-rows: auto;
+  grid-template-areas: "main_left main_right";
+}
+
+
+a {
+  text-decoration: none;
+  color: #f2f2f2;
+}
+
+li:hover{
+  cursor: pointer;
+}
+
+.topnav {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
