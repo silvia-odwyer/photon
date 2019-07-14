@@ -4,10 +4,13 @@ extern crate image;
 use image::{GenericImage, GenericImageView};
 use std::f64;
 extern crate imageproc;
+use imageproc::drawing::draw_filled_rect_mut;
+use imageproc::rect::Rect;
 extern crate rusttype;
 use crate::{PhotonImage, Rgb};
 use crate::helpers;
 use wasm_bindgen::prelude::*;
+use image::{Rgba};
  
 /// Adds an offset to the image by a certain number of pixels. 
 /// 
@@ -583,6 +586,54 @@ pub fn tint(mut photon_image: &mut PhotonImage, r_offset: u32, g_offset: u32, b_
             img.put_pixel(x, y, px);
         }
     }
+    let raw_pixels = img.raw_pixels();
+    photon_image.raw_pixels = raw_pixels;
+}
+
+
+/// Horizontal strips. Divide an image into a series of equal-height strips, for an artistic effect.
+#[wasm_bindgen]
+pub fn horizontal_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
+    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
+
+    let total_strips = (num_strips * 2) - 1;
+    let height_strip = height / total_strips as u32;
+    let background_color = Rgb { r: 255, g: 255, b: 255};
+    let mut y_pos: u32 = 0;
+    for i in 1..num_strips {
+
+        draw_filled_rect_mut(&mut img, 
+                        Rect::at(0, (y_pos + height_strip) as i32).of_size(width, height_strip), 
+                        Rgba([background_color.r, background_color.g, 
+                        background_color.b, 255u8]));
+        y_pos = i as u32 * (height_strip * 2);
+
+    }
+
+    let raw_pixels = img.raw_pixels();
+    photon_image.raw_pixels = raw_pixels;
+}
+
+/// Vertical strips. Divide an image into a series of equal-width strips, for an artistic effect.
+#[wasm_bindgen]
+pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
+    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
+
+    let total_strips = (num_strips * 2) - 1;
+    let width_strip = width / total_strips as u32;
+    let background_color = Rgb { r: 255, g: 255, b: 255};
+    let mut x_pos: u32 = 0;
+    for i in 1..num_strips {
+
+        draw_filled_rect_mut(&mut img, 
+                        Rect::at((x_pos + width_strip) as i32, 0).of_size(width_strip, height), 
+                        Rgba([background_color.r, background_color.g, 
+                        background_color.b, 255u8]));
+        x_pos = i as u32 * (width_strip * 2);
+    }
+
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
 }

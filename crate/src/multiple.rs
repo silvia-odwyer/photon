@@ -158,7 +158,7 @@ pub fn create_gradient(width: u32, height: u32) -> PhotonImage {
         LinSrgba::new(0.1, 1.0, 0.1, 1.0),
     ]);
 
-    let grad3 = Gradient::new(vec![
+    let _grad3 = Gradient::new(vec![
         Lch::from(LinSrgba::new(1.0, 0.1, 0.1, 1.0)),
         Lch::from(LinSrgba::new(0.1, 0.1, 1.0, 1.0)),
         Lch::from(LinSrgba::new(0.1, 1.0, 0.1, 1.0)),
@@ -190,7 +190,7 @@ pub fn create_gradient(width: u32, height: u32) -> PhotonImage {
 #[wasm_bindgen]
 pub fn apply_gradient(mut image: &mut PhotonImage) {
     
-    let mut gradient = create_gradient(image.width, image.height);
+    let gradient = create_gradient(image.width, image.height);
 
     blend(&mut image, &gradient, "overlay");
 

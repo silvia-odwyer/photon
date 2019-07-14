@@ -8,7 +8,7 @@
   <!-- Open Graph data / Facebook Card data -->
   <meta property="og:title" content="Photon: A high-performance WebAssembly image processing library.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://github.com/silvia-odwyer/photon">
+  <meta property="og:url" content="https://github.com/tr1s/tris-webpack-boilerplate">
   <meta property="og:image" content="https://i.imgur.com/lxRBpeb.jpg">
   <meta property="og:image:alt" content="A blue package, symbolizing what webpack does.">
   <meta property="og:description" content="A WebAssembly image processing library that delivers blazing performance and can be called via JS.">
@@ -57,7 +57,7 @@
           
           <div class="buttons">
             <button class="btn btn-default btn_fill pulse">Get Started</button>
-            <button class=" slide" id="docs">Docs</button>
+            <button class=" slide" id="docs"><a href="https://silvia-odwyer.github.io/photon/docs/photon/index.html">Docs</a></button>
           </div>
         </article>
   
@@ -175,7 +175,7 @@
               </div>
             </section>
 
-            <section class="feature_pane">
+            <section class="guide_pane">
               <div>
                   <img src="images/futuristic.jpg">
   
@@ -191,8 +191,8 @@
                 </article>
             </section>
 
-            <section class="feature_pane">
-                <section class="lhs_container">
+            <section class="guide_pane">
+                <section>
                   <h2>Image Correction</h2>
                   <p>  
                     Adjust images by correcting brightness, saturation, hues, and more, all within various colour spaces. 
@@ -259,7 +259,7 @@
           <section>
             
             <section class="guide_pane" > 
-              <section>
+              <section class="lhs_container">
                 <h2>View The Demo</h2>
                 <p>To see WebAssembly in action and all effects available, make sure to check out our
                 <a href="demo.html">demo</a>
@@ -268,9 +268,7 @@
                 <button class="btn btn_fill"><a href="demo.html">View The Demo</a></button>
               </section>
 
-              <div class="container">
-                <img href="images/demo.PNG"></img>
-              </div>
+              <img src="images/demo.jpg" />
 
             </section>
 
@@ -287,6 +285,7 @@
                 </div>
   
             </section>
+
 
             <section class="guide_pane"> 
               <section id="get_started">
@@ -319,8 +318,8 @@
         <h2>Ready To Get Started?</h2>
         <p></p>
   
-        <button class="btn btn_fill">View The Docs</button>
-        <button class="btn btn_outline">Run The Examples</button>
+        <button class="btn btn_fill"><a href="https://silvia-odwyer.github.io/photon/docs">View The Docs</a></button>
+        <button class="btn btn_outline"><a href="https://github.com/silvia-odwyer/photon#getting-started">Run The Examples</a></button>
   
       </article>    
 
@@ -332,7 +331,7 @@
         <div class="footer_lhs">
           <h1>Photon</h1>
           <p>Image processing with WebAssembly.</p>
-          <p>&copy; Copyright 2019. All Rights Reserved. Software open-sourced under Apache License 2.0. </p>
+          <p>&copy; Copyright 2019. All Rights Reserved. Software open-sourced under Apache License 2.0.</p>
   
         </div>
   
@@ -347,24 +346,24 @@
       </div>
      </div>
 
-     <script>
-        // Constructor receives a selector that indicates
-      // where to inject the demonstration in your page.
-      const demo = new GDemo('#code');
-      
-      const code = `
-      extern crate photon;
-      fn main() {
-         // Open the image as a PhotonImage type
-         let img = photon::helpers::open_image("daisies.JPG");
+<script>
+// Constructor receives a selector that indicates
+// where to inject the demonstration in your page.
+const demo = new GDemo('#code');
+    
+const code = `
+extern crate photon;
+fn main() {
+// Open the image as a PhotonImage type
+let img = photon::helpers::open_image("daisies.JPG");
          
-         // Apply a Sobel effect to the image 
-         let filtered_img = photon::conv::sobel_vertical(img);
+// Apply a Sobel effect to the image 
+photon::conv::sobel_vertical(&mut img);
          
-         // Write the contents of this image in PNG format.
-         photon::helpers::save_image(filtered_img, "new_image.PNG");
-     }
-      `
+// Write the contents of this image in PNG format.
+photon::helpers::save_image(img, "new_image.PNG");
+}
+`
       
       demo
 
@@ -382,6 +381,32 @@
         .end();
       
       </script>
+      
+    <script>
+      AOS.init({
+        // Global settings:
+        disable: false, // accepts following values: 'phone', 'tablet', 'mobile', boolean, expression or function
+        startEvent: 'DOMContentLoaded', // name of the event dispatched on the document, that AOS should initialize on
+        initClassName: 'aos-init', // class applied after initialization
+        animatedClassName: 'aos-animate', // class applied on animation
+        useClassNames: false, // if true, will add content of `data-aos` as classes on scroll
+        disableMutationObserver: false, // disables automatic mutations' detections (advanced)
+        debounceDelay: 50, // the delay on debounce used while resizing window (advanced)
+        throttleDelay: 99, // the delay on throttle used while scrolling the page (advanced)
+        
+
+        // Settings that can be overridden on per-element basis, by `data-aos-*` attributes:
+        offset: 380, // offset (in px) from the original trigger point
+        delay: 0, // values from 0 to 3000, with step 50ms
+        duration: 400, // values from 0 to 3000, with step 50ms
+        easing: 'ease', // default easing for AOS animations
+        once: false, // whether animation should happen only once - while scrolling down
+        mirror: false, // whether elements should animate out while scrolling past them
+        anchorPlacement: 'top-bottom', // defines which position of the element regarding to window should trigger the animation
+
+      });
+    </script>   
+
   </main>
 
 </body>

@@ -1,7 +1,5 @@
 # photon
 
-#### A Universal Image Processing Library
-
 Photon is a high-performance Rust image processing library, which compiles to WebAssembly, allowing for 
 safe, blazing-fast image processing both natively and on the web. 
 
@@ -38,7 +36,6 @@ Functions include:
 - [Check Out The Documentation](https://silvia-odwyer.github.io/photon/docs/photon/all.html)
 - [View the Official Website.](https://silvia-odwyer.github.io/photon/)
 - [See All Available Functions.](https://silvia-odwyer.github.io/photon/docs/photon/all.html)
-- 
 
 `photon` can be thought of as a high-level wrapper to the Rust `image` crate, but conversely also includes functions which provide low-level access to pixel and channel manipulation, perfect for developers who wish to work with this data directly.
 

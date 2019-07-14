@@ -79,6 +79,15 @@
             text-decoration: none;
             font-family: "Roboto", sans-serif;
           }
+
+          nav li a {
+            color: #f2f2f2;
+            text-decoration: none;
+          }
+
+          a:hover {
+            color: #acacac;
+          }
     
           ul li {
             text-decoration: none;
@@ -178,7 +187,7 @@
 
               
               <h5>Watermark</h5>
-              <li class="effect" id="watermark">Watermark</li>
+              <li class="overlay" id="watermark">Watermark</li>
 
               <h4>Text</h4>
               <li class="effect" id="text">Text</li>
@@ -216,6 +225,8 @@
               <li class="effect" id="blue_channel_grayscale">Blue Grayscale</li>
 
               <h4>Effects</h4>
+              <li class="effect" id="horizontal_strips">Horizontal Strips</li>
+              <li class="effect" id="vertical_strips">Vertical Strips</li>
               <li class="effect" id="primary">Primary</li>
               <li class="effect" id="solarize">Solarize</li>
               <li class="effect" id="offset_red">Offset Red</li>
@@ -267,26 +278,22 @@
               <li class="blend" id="lighten">Lighten</li>
               <li class="blend" id="darken">Darken</li>
 
-            <h3>Change Image</h3>
+            <h3 id="change_img">Change Image</h3>
             <ul>
-              <li class="change_image" id="lemons">Lemons</li>
               <li class="change_image" id="blue_metro">Blue Metro</li>
               <li class="change_image" id="underground">Underground</li>
               <li class="change_image" id="nine_yards">Nine Yards</li>
-              <li class="change_image" id="fruit">Fruit</li>
-              <li class="change_image" id="largefruit">Large Fruit</li>
-              <li class="change_image" id="daisies">Daisies</li>
+              <li class="change_image" id="fruit">Daisies</li>
 
-              <li class="change_watermark" id="watermark1">Watermark 1</li>
             </ul>
           </ul>
           </div>
           
           <nav class="topnav">
             <ul>
-              <li>Change Image </li>
-              <li>Docs</li>
-              <li>GitHub</li>
+              <li><a href="#change_img">Change Image</a></li>
+              <li><a href="https://silvia-odwyer.github.io/photon/docs/photon/index.html">Docs</a></li>
+              <li><a href="https://github.com/silvia-odwyer/photon">GitHub</a></li>
             </ul>
           
           </nav>
