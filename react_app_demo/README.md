@@ -30,6 +30,15 @@ cd ../../react_app_demo
 npm install
 ```
 
+This app also requires changing the project's webpack.config.js to load WASM files; however this can't be done 
+without ejecting, so to combat this, I used react-app-rewired to allow for overriding the config. 
+
+Install react-app-rewired and wasm-loader:
+
+```sh
+npm install react-app-rewired wasm-loader -D
+```
+
 4. Run `npm link photon`.
 ```sh 
 npm link photon
