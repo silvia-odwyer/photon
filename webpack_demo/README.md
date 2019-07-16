@@ -3,12 +3,6 @@ Here you'll find instructions for running Photon with a webpack build pipeline.
 
 For a React demo, see the `react_app_demo` dir in the root of this repo.
 
-### 🚴 Get Started With WebAssembly 
-
-#### 🔋 Batteries Included
-
-This repo comes pre-configured with a quick-start demo, which hooks into a Webpack build pipeline, and provides all WASM-friendly functions.
-
 To get started:
 
 Clone this repo:
@@ -25,11 +19,11 @@ Install the dependencies:
 ```sh
 npm install
 ```
-
+<!-- 
 To compile the lib's Rust code to wasm, run:
 ```sh
 npm run build
-```
+``` -->
 
 Serve the project locally for development at http://localhost:8080
 ```sh

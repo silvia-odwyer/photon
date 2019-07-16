@@ -11,7 +11,7 @@ var canvas, canvas2, watermark_canvas;
 var ctx, ctx2, watermark_ctx;
 var newimg, watermark_img, img2;
 
-import("../../pkg").then(module => {
+import("../../../crate/pkg").then(module => {
   var startTime;
   var endTime;
   module.run();
@@ -40,6 +40,14 @@ import("../../pkg").then(module => {
       let button = blend_buttons[i];
       button.addEventListener("click", function(){blendImages(event)}, false);
     }
+
+    let overlay_buttons = document.getElementsByClassName("overlay");		
+    for (let i = 0; i < overlay_buttons.length; i++) {		
+      let button = overlay_buttons[i];		
+      button.addEventListener("click", function(){overlayImage(event)}, false);		
+    }
+
+
     setUpImages();
   }
 
@@ -59,6 +67,7 @@ import("../../pkg").then(module => {
     // Create a PhotonImage from 2nd image to be blended with the 1st.
     let rust_image2 = module.open_image(canvas2, ctx2);
 
+    let watermark_img = module.open_image(watermark_canvas, watermark_ctx);
     // Maps the name of an effect to its relevant function in the Rust library
     let filter_dict = {
                       "blend": function() {return module.blend(rust_image, rust_image2, "over")},
@@ -75,33 +84,32 @@ import("../../pkg").then(module => {
                       "lighten": function() {return module.blend(rust_image, rust_image2, "lighten")},
                       "darken": function() {return module.blend(rust_image, rust_image2, "darken")},
                       "watermark": function() {return module.watermark(rust_image, watermark_img, 10, 30)},
-                      "text": function() {return module.draw_text(rust_image, "welcome to WebAssembly", 10, 20)},
-                      "text_border": function() {return module.draw_text_with_border(rust_image, "welcome to the edge", 10, 20)},
+                      "text": function() {return module.draw_text(rust_image, "welcome to wasm", 10, 20)},
+                      "text_border": function() {return module.draw_text_with_border(rust_image, "welcome to wasm", 10, 20)},
                     };
 
     // Filter the image, the PhotonImage's raw pixels are modified and 
     // the PhotonImage is returned
-    let new_image = filter_dict[filter_name]();
+    filter_dict[filter_name]();
 
     // Update the canvas with the new imagedata
-    module.putImageData(canvas, ctx, new_image);
+    module.putImageData(canvas, ctx, rust_image);
     console.timeEnd("wasm_blend_time");
     endTime = performance.now()
     updateBenchmarks()
   }
 
   function colour_space(rust_image, colour_space, effect) {
-    let new_image;
     if (colour_space == "hsl") {
-      new_image = module.lch(rust_image, effect, 0.3);
+      module.lch(rust_image, effect, 0.3);
     }
     else if (colour_space == "hsv") {
-      new_image = module.hsv(rust_image, effect, 0.3)
+      module.hsv(rust_image, effect, 0.3)
     }
     else {
-      new_image = module.lch(rust_image, effect, 0.3);
+      module.lch(rust_image, effect, 0.3);
     }
-    updateCanvas(new_image);
+    updateCanvas(rust_image);
   }
   
   function updateCanvas(new_image) {
@@ -123,12 +131,12 @@ import("../../pkg").then(module => {
 
     // Filter the image, the PhotonImage's raw pixels are modified and 
     // the PhotonImage is returned
-    let new_image = module.filter(rust_image, filter_name);
+    module.filter(rust_image, filter_name);
     
     endTime = performance.now();
     updateBenchmarks();
     // Place the pixels back on the canvas
-    module.putImageData(canvas, ctx, new_image);
+    module.putImageData(canvas, ctx, rust_image);
     console.timeEnd("wasm_time");
   }
   
@@ -145,12 +153,6 @@ import("../../pkg").then(module => {
     
     // Convert the ImageData to a PhotonImage (so that it can communicate with the core Rust library)
     let rust_image = module.open_image(canvas, ctx);
-
-    // Setup watermark
-    //let watermarkImgData = watermark_ctx.getImageData(0, 0, watermark_canvas.width, watermark_canvas.height);
-
-    //let watermark_img = module.open_image(watermarkImgData, watermark_canvas.width, watermark_canvas.height);
-
 
     // Maps the name of an effect to its relevant function in the Rust library
     let filter_dict = {"grayscale" : function(){return module.grayscale(rust_image)}, 
@@ -197,28 +199,61 @@ import("../../pkg").then(module => {
                       "remove_blue_channel": function() {return module.remove_blue_channel(rust_image, 250)},
                       "emboss": function() {return module.emboss(rust_image)},
                       "box_blur": function() {return module.box_blur(rust_image)},
+                      "gradient": function() { return module.apply_gradient(rust_image)},
                       "sharpen": function() {return module.sharpen(rust_image)},
                       "lix": function() {return module.lix(rust_image)},
                       "neue": function() {return module.neue(rust_image)},
                       "ryo": function() {return module.ryo(rust_image)},
                       "gaussian_blur": function() {return module.gaussian_blur(rust_image)},
+                      "horizontal_strips": function() { return module.horizontal_strips(rust_image, 6)},
+                      "vertical_strips": function() { return module.vertical_strips(rust_image, 6)},
                       "inc_brightness": function() {return module.inc_brightness(rust_image, 20)},
                       "inc_lum": function() {return module.inc_luminosity(rust_image)},
                       "grayscale_human_corrected": function() {return module.grayscale_human_corrected(rust_image)},
                       "watermark": function() {return module.watermark(rust_image, watermark_img, 10, 30)},
-                      "text": function() {return module.draw_text(rust_image, "welcome to WebAssembly", 10, 20)},
-                      "text_border": function() {return module.draw_text_with_border(rust_image, "welcome to the edge", 10, 20)},
+                      "text": function() {return module.draw_text(rust_image, "welcome to wasm", 10, 20)},
+                      "text_border": function() {return module.draw_text_with_border(rust_image, "welcome to wasm", 10, 20)},
                     };
-
+                    
     // Filter the image, the PhotonImage's raw pixels are modified and 
     // the PhotonImage is returned
-    let new_image = filter_dict[filter_name]();
+    filter_dict[filter_name]();
 
     // Update the canvas with the new imagedata
-    module.putImageData(canvas, ctx, new_image);
+    module.putImageData(canvas, ctx, rust_image);
     console.timeEnd("wasm_time");
     endTime = performance.now()
     updateBenchmarks()
+  }
+
+  function overlayImage(event) {		  
+    console.time("wasm_time"); 		
+    
+    // Reset canvas by re-drawing the image onto the canvas		
+    ctx.drawImage(newimg, 0, 0);		
+    startTime = performance.now();		
+    
+    // Get the name of the effect the user wishes to apply to the image		
+    // This is the id of the element they clicked on		
+    let filter_name = event.target.id;		
+        
+    // Convert the ImageData to a PhotonImage (so that it can communicate with the core Rust library)		
+    let rust_image = module.open_image(canvas, ctx);		
+    
+    let watermark_img = module.open_image(watermark_canvas, watermark_ctx);		
+    
+    // Maps the name of an effect to its relevant function in the Rust library		
+    let filter_dict = {"watermark": function() {return module.watermark(rust_image, watermark_img, 10, 30)}};		
+    
+    // Filter the image, the PhotonImage's raw pixels are modified and 		
+    // the PhotonImage is returned		
+    filter_dict[filter_name]();		
+    
+    // Update the canvas with the new imagedata		
+    module.putImageData(canvas, ctx, rust_image);		
+    console.timeEnd("wasm_time");		
+    endTime = performance.now()		
+    updateBenchmarks()		
   }
 
   
@@ -298,7 +333,7 @@ import("../../pkg").then(module => {
       change_image_elem.addEventListener("click", function(event) {
         console.log("image changed")
         let img_name = event.target.id;
-        let imgNamesToImages = {"largefruit": LargeFruit, "lemons": Lemons, "underground": Underground, "blue_metro": BlueMetro, "nine_yards": NineYards, "daisies": Daisies, "fruit": Fruit};
+        let imgNamesToImages = {"underground": Underground, "blue_metro": BlueMetro, "nine_yards": NineYards, "daisies": Daisies, "fruit": Fruit};
         newimg.src = imgNamesToImages[img_name];
         newimg.onload = () => {
           canvas.width = newimg.width;

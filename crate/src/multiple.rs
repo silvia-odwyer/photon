@@ -148,6 +148,7 @@ pub fn replace_background(mut photon_image: &mut PhotonImage, img2: &PhotonImage
     photon_image.raw_pixels = raw_pixels;
 }
 
+#[wasm_bindgen]
 pub fn create_gradient(width: u32, height: u32) -> PhotonImage {
     let mut image = RgbaImage::new(width, height);
 

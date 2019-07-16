@@ -31,7 +31,7 @@ npm install
 ```
 
 This app also requires changing the project's webpack.config.js to load WASM files; however this can't be done 
-without ejecting, so to combat this, I used react-app-rewired to allow for overriding the config. 
+without ejecting, so to combat this, I used react-app-rewired to allow for overriding the webpack config. 
 
 Install react-app-rewired and wasm-loader:
 
