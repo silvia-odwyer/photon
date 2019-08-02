@@ -13,7 +13,7 @@ edition = "2018"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-image="*"
+image="0.21.1"
 palette="*"
 rand="*"
 num="*"
