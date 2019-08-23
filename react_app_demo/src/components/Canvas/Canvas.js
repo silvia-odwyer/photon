@@ -1,5 +1,6 @@
 import  React , {useState} from 'react';
 import img_src from './daisies.jpg';
+import wasmWorker from 'wasm-worker';
 
 class Canvas extends React.Component {
   constructor(props) {
@@ -35,7 +36,7 @@ class Canvas extends React.Component {
     try {
 
       // if photon cannot be found, make sure to go to lib/pkg and run `npm link`
-      // then navigate to the root of the app dir, and run `npm link photon`
+      // then navigate to the root of the react_app_demo dir, and run `npm link photon`
       const photon = await import('photon');
 
       this.wasm = photon;
