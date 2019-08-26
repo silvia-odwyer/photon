@@ -47,6 +47,11 @@ import("../../../crate/pkg").then(module => {
       button.addEventListener("click", function(){overlayImage(event)}, false);		
     }
 
+    let base64_btn = document.querySelector("#base64");
+    base64_btn.addEventListener("click", base64_example, false);
+
+    let vec_btn = document.getElementById("vec_to_photonimage");
+    vec_btn.addEventListener("click", vec_to_photonimage_example, false);
 
     setUpImages();
   }
@@ -118,6 +123,52 @@ import("../../../crate/pkg").then(module => {
     // Place the pixels back on the canvas
     ctx.putImageData(new_pixels, 0, 0);
   }
+
+  function vec_to_photonimage_example() {
+    console.time("vec_wasm_time"); 
+
+    ctx.drawImage(newimg, 0, 0);
+    startTime = performance.now();
+
+    let base64 = canvas.toDataURL();
+    base64 = base64.substr(22, base64.length);
+    
+    // Convert the raw base64 data to a Vec of u8s.
+    let vec = module.base64_to_vec(base64);
+    
+    // Convert the Vec of u8s to a PhotonImage
+    let photon_img = module.photonimage_from_vec(vec); 
+    module.grayscale(photon_img);
+
+    // Update the canvas with the new imagedata
+    module.putImageData(canvas, ctx, photon_img);
+    console.timeEnd("vec_wasm_time");
+    endTime = performance.now();
+    updateBenchmarks();
+  }
+
+  function base64_example() {
+    console.time("wasm_time"); 
+
+    ctx.drawImage(newimg, 0, 0);
+    startTime = performance.now();
+
+    let base64 = canvas.toDataURL();
+    base64 = base64.substr(22, base64.length);
+    
+    // Convert the raw base64 data to a PhotonImage.
+    let photon_img = module.base64_to_image(base64);
+
+    module.grayscale(photon_img);
+
+    // Update the canvas with the new imagedata
+    module.putImageData(canvas, ctx, photon_img);
+    console.timeEnd("wasm_time");
+    endTime = performance.now();
+    updateBenchmarks();
+    updateEffectName(event.target);
+  }
+
 
   function filterImage(event) {
     startTime = performance.now();
