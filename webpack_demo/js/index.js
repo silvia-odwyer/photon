@@ -4,6 +4,7 @@ import NineYards from "./nine_yards.jpg";
 import BlueMetro from "./blue_metro.jpg";
 import Watermark from "./wasm_logo.png"
 
+
 // Setup global variables
 var canvas, canvas2, watermark_canvas;
 var ctx, ctx2, watermark_ctx;
@@ -59,6 +60,31 @@ import("../../crate/pkg").then(module => {
   let change_image_btn = document.getElementById("change_img");
   change_image_btn.addEventListener("click", changeImageFromNav, false);
 
+  let vec_btn = document.getElementById("vec_to_photonimage");
+  vec_btn.addEventListener("click", vec_to_photonimage_example, false);
+
+  function base64_example() {
+    console.time("wasm_time"); 
+
+    ctx.drawImage(newimg, 0, 0);
+    startTime = performance.now();
+
+    let base64 = canvas.toDataURL();
+    base64 = base64.substr(22, base64.length);
+    
+    // Convert the raw base64 data to a PhotonImage.
+    let photon_img = module.base64_to_image(base64);
+
+    module.grayscale(photon_img);
+
+    // Update the canvas with the new imagedata
+    module.putImageData(canvas, ctx, photon_img);
+    console.timeEnd("wasm_time");
+    endTime = performance.now();
+    updateBenchmarks();
+    updateEffectName(event.target);
+  }
+
   function applyEffect(event) {
     console.time("wasm_time"); 
 
@@ -72,11 +98,20 @@ import("../../crate/pkg").then(module => {
     // Convert the ImageData to a PhotonImage (so that it can communicate with the core Rust library)
     let rust_image = module.open_image(canvas, ctx);
 
+
     // Setup watermark
     let watermark_img = module.open_image(watermark_canvas, watermark_ctx);
 
+    let base64 = canvas.toDataURL();
+    
+    base64 = base64.substr(22, base64.length);
+    console.log(base64)
+    
+    let base64_to_img = module.base64_to_image(base64);
+    console.log("base64", base64_to_img);
+
     // Maps the name of an effect to its relevant function in the Rust library
-    let filter_dict = {"grayscale" : function(){return module.grayscale(rust_image)}, 
+    let filter_dict = {"grayscale" : function(){return module.grayscale(base64_to_img)}, 
                       "offset_red": function(){return module.offset(rust_image, 0, 15)},                    
                       "offset_blue": function(){return module.offset(rust_image, 1, 15)},
                       "offset_green": function(){return module.offset(rust_image, 2, 15)},
@@ -105,7 +140,7 @@ import("../../crate/pkg").then(module => {
                       "saturate_hsl": function() {module.saturate_hsl(rust_image, 0.3)}, 
                       "saturate_hsv": function() {module.saturate_hsv(rust_image, 0.3)}, 
                       "saturate_lch": function() {module.saturate_lch(rust_image, 0.3)}, 
-                      "inc_red_channel": function() {return module.alter_channel(rust_image, 0, 120)}, 
+                      "inc_red_channel": function() {return module.alter_channel(base64_to_img, 0, 120)}, 
                       "inc_blue_channel": function() {return module.alter_channel(rust_image, 2, 100)}, 
                       "inc_green_channel": function() {return module.alter_channel(rust_image, 1, 100)}, 
                       "inc_two_channels": function() {return module.alter_channel(rust_image, 1, 30);}, 
@@ -153,7 +188,7 @@ import("../../crate/pkg").then(module => {
     filter_dict[filter_name]();
 
     // Update the canvas with the new imagedata
-    module.putImageData(canvas, ctx, rust_image);
+    module.putImageData(canvas, ctx, base64_to_img);
     console.timeEnd("wasm_time");
     endTime = performance.now();
     updateBenchmarks();
@@ -165,6 +200,29 @@ import("../../crate/pkg").then(module => {
     console.log(effect_name);
     let effect_name_elem = document.getElementById("effect_name");
     effect_name_elem.innerHTML = effect_name;
+  }
+
+  function vec_to_photonimage_example() {
+    console.time("vec_wasm_time"); 
+
+    ctx.drawImage(newimg, 0, 0);
+    startTime = performance.now();
+
+    let base64 = canvas.toDataURL();
+    base64 = base64.substr(22, base64.length);
+    
+    // Convert the raw base64 data to a Vec of u8s.
+    let vec = module.base64_to_vec(base64);
+    
+    // Convert the Vec of u8s to a PhotonImage
+    let photon_img = module.photonimage_from_vec(vec); 
+    module.grayscale(photon_img);
+
+    // Update the canvas with the new imagedata
+    module.putImageData(canvas, ctx, photon_img);
+    console.timeEnd("vec_wasm_time");
+    endTime = performance.now();
+    updateBenchmarks();
   }
 
   function blendImages(event) {
@@ -295,6 +353,9 @@ import("../../crate/pkg").then(module => {
 
     change_image_elem.addEventListener("click", changeImage, false);
   }
+
+  let base64_btn = document.querySelector("#base64");
+  base64_btn.addEventListener("click", base64_example, false);
 
   function changeImage(event) {
     console.log("image changed")
