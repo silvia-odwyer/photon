@@ -50,10 +50,3 @@ pub fn dyn_image_from_raw(photon_image: &PhotonImage) -> DynamicImage {
     let dynimage = image::ImageRgba8(img_buffer);
     dynimage
 }
-
-/// Convert a base64 str to a Vec of u8s representing an image's raw pixels.
-#[wasm_bindgen]
-pub fn base64_to_image(base64: &str) -> Vec<u8> {
-    let res = decode(base64).unwrap();
-    return res;
-}

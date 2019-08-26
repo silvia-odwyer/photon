@@ -61,7 +61,8 @@
 use wasm_bindgen::prelude::*;
 use web_sys::{CanvasRenderingContext2d, ImageData, HtmlCanvasElement};
 use wasm_bindgen::Clamped;
-use image::{GenericImage};
+use image::{GenericImage, DynamicImage, GenericImageView, ImageBuffer};
+use base64::decode;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -166,6 +167,40 @@ pub fn open_image(canvas: HtmlCanvasElement, ctx: CanvasRenderingContext2d) -> P
 pub fn to_raw_pixels(imgdata: ImageData) -> Vec<u8> {
     let img_vec = imgdata.data().to_vec();
     return img_vec;
+}
+
+#[wasm_bindgen]
+pub fn base64_to_image(base64: &str) -> PhotonImage {
+
+    let base64_to_vec: Vec<u8> = base64_to_vec(base64);
+
+    let slice = base64_to_vec.as_slice();
+
+    let img = image::load_from_memory(slice).unwrap();
+    
+    let raw_pixels = img.raw_pixels();
+    
+    return PhotonImage { raw_pixels: raw_pixels, width: img.width(), height: img.height()};
+
+}
+
+#[wasm_bindgen]
+pub fn base64_to_vec(base64: &str) -> Vec<u8> {
+    let vec = decode(base64).unwrap();
+    return vec;
+}
+
+#[wasm_bindgen]
+pub fn photonimage_from_vec(vec: Vec<u8>, width: u32, height: u32) -> PhotonImage {
+
+    let slice = vec.as_slice();
+
+    let img = image::load_from_memory(slice).unwrap();
+    
+    let raw_pixels = img.raw_pixels();
+    
+    return PhotonImage { raw_pixels: raw_pixels, width: img.width(), height: img.height()};
+
 }
 
 /// Convert a PhotonImage to JS-compatible ImageData.
