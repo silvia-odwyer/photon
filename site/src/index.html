@@ -20,7 +20,7 @@
   <!-- Mobile header color for iOS Safari (supports black, black-translucent or default) -->
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <title>📦Photon: A Rust Image Processing Library</title>
+  <title>📦Photon: A WebAssembly Image Processing Library</title>
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.6/ScrollMagic.min.js"></script> -->
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>-->
   <!-- <script src="//instant.page/1.2.2" type="module" integrity="sha384-2xV8M5griQmzyiY3CDqh1dn4z3llDVqZDqzjzcY+jCBCk/a5fXJmuZ/40JJAPeoU"></script> -->
@@ -29,10 +29,8 @@
   <!-- <script src="https://cdn.jsdelivr.net/npm/animejs@3.0.1/lib/anime.min.js"></script> -->
   <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glorious/demo/dist/gdemo.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@glorious/demo/dist/gdemo.min.js"></script> -->
-  <link rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/atom-one-dark.min.css">
-  <script src="../src/scripts/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.0.0/caman.full.min.js"></script>
+
 </head>
 
 <body>
@@ -60,7 +58,7 @@
           </p>
           
           <div class="buttons">
-            <button class="btn btn-default btn_fill pulse">Get Started</button>
+            <button class="btn btn-default btn_fill pulse"><a href="https://github.com/silvia-odwyer/photon">Get Started</a></button>
             <button class=" slide" id="docs"><a href="https://silvia-odwyer.github.io/photon/docs/photon/index.html">Docs</a></button>
           </div>
         </article>
@@ -79,19 +77,19 @@
           <li data-aos="fade-up" data-aos-anchor="#docs">
             <h3>Web-Assembly Friendly</h3>
             <p>For web-based image processing, Photon is 4-10x faster than JS, leading to faster results, and less lag.  </p>
-            <h5>Read More </h5>
+            <h5><a href="https://silvia-odwyer.github.io/photon/docs/photon/index.html">Read More </a></h5>
           </li>
   
           <li data-aos="fade-up">
             <h3>Over 90 functions </h3>
             <p>Photon provides functions for every domain of image processing. </p>
-            <h5>Read More </h5>
+            <h5><a href="https://silvia-odwyer.github.io/photon/docs/photon/all.html">Read More</a></h5>
           </li>
   
           <li data-aos="fade-up"> 
             <h3>Call WASM with JS</h3>
             <p>This library's WASM functions can be called via JS, allowing for zero-cost abstraction and faster development.</p>
-            <h5>Read More </h5>
+            <h5><a href="https://github.com/silvia-odwyer/photon#webassembly-use">Read More</a></h5>
           </li>
         </ul>
       </article>
@@ -189,7 +187,7 @@
                   <p>     
                     Resize images at lightning-speeds.
                   </p>
-                  <p>Photon also includes all popular image sizes built-in such as Facebook posts, Insta posts, etc.,
+                  <p>Photon also includes all popular image sizes built-in such as Facebook posts, Instagram posts, etc.,
                     so that you can focus on the code and just resize to whatever popular format you'd like.
                   </p>
                 </article>
@@ -285,7 +283,8 @@
                 </section>
 
                 <div id="code">
-                  <pre>
+                  <img src="images/photon_code_example.jpg" />
+                  <!-- <pre>
                     <code>extern crate photon;
 use photon::{helpers, conv};
 
@@ -297,7 +296,7 @@ fn main() {
   helpers::save_image(img, "new_image.PNG");
 }
                     </code>
-                  </pre>
+                  </pre> -->
                 </div>
   
             </section>
@@ -306,7 +305,7 @@ fn main() {
             <section class="guide_pane"> 
               <section id="get_started">
                 <h2>Compare WebAssembly versus JavaScript</h2>
-                <p>To the right is an image of size 40MB, click on one of the buttons below to see it edited by either JavaScript
+                <p>To compare JavaScript vs WebAssembly, click on one of the buttons below to see the right-hand side image edited by either JavaScript
                   or WebAssembly. </p>
                   <p>The time taken to edit the image will be displayed below.</p>
                 <button id="compare_js" class="pulse">Start JS</button>
@@ -317,7 +316,7 @@ fn main() {
               </section>
 
               <div id="code">
-                <img id="js_img" src="../fruit.jpg" />
+                <img id="js_img" src="images/fuji.jpg" />
                 <canvas id="js_canvas"></canvas>
               </div>
           </section>
@@ -357,42 +356,6 @@ fn main() {
       </footer>
       </div>
      </div>
-
-<script>
-// Constructor receives a selector that indicates
-// where to inject the demonstration in your page.
-// const demo = new GDemo('#code');
-    
-// const code = `
-// extern crate photon;
-// fn main() {
-// // Open the image as a PhotonImage type
-// let img = photon::helpers::open_image("daisies.JPG");
-         
-// // Apply a Sobel effect to the image 
-// photon::conv::sobel_vertical(&mut img);
-         
-// // Write the contents of this image in PNG format.
-// photon::helpers::save_image(img, "new_image.PNG");
-// }
-// `
-      
-//       demo
-
-//         .openApp('terminal', {minHeight: '350px', promptString: '$'})
-//         .command('git clone https://github.com/silvia-odwyer/photon', {onCompleteDelay: 500})
-//         // .respond('')
-//         .command('cd photon')
-//         .command('npm start')
-//         .respond('This will start a webpack build pipeline, and contains a quick demo to help you get started.')
-//         .command('cd crate')
-//         .command('cargo run --release')
-//         .respond('This will natively run the Rust binary code.')
-//         .openApp('editor', {minHeight: '350px', windowTitle: 'demo.js'})
-//         .write(code, {onCompleteDelay: 1500})
-//         .end();
-      
-//       </script>
       
     <script>
       AOS.init({
@@ -417,6 +380,32 @@ fn main() {
         anchorPlacement: 'top-bottom', // defines which position of the element regarding to window should trigger the animation
 
       });
+      
+      let compare_js_elem = document.getElementById("compare_js");
+      compare_js_elem.addEventListener("click", compareJS, false);
+      var js_canvas = document.getElementById("js_canvas");
+      var js_ctx = js_canvas.getContext("2d");
+      var js_img = document.getElementById("js_img");
+
+      function compareJS() {
+        let startTime = performance.now();
+        js_ctx.drawImage(js_img, 0, 0);
+        console.time("js_compare");
+        
+        Caman("#js_canvas", "images/fuji.jpg", function () {
+          this.sepia(50).render();
+          this.render(function () {
+
+          console.timeEnd("js_compare");
+          let endTime = performance.now();
+          let time_taken = endTime - startTime;
+
+          let time_elem = document.getElementById("js_time");
+          time_elem.innerHTML = `JS Time: ${time_taken}ms`;
+          });
+        });
+
+      }
     </script>   
 
   </main>

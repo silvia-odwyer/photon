@@ -148,7 +148,6 @@ import("../../../crate/pkg").then(module => {
   }
 
   function base64_example() {
-    console.time("wasm_time"); 
 
     ctx.drawImage(newimg, 0, 0);
     startTime = performance.now();
@@ -157,18 +156,18 @@ import("../../../crate/pkg").then(module => {
     base64 = base64.substr(22, base64.length);
     
     // Convert the raw base64 data to a PhotonImage.
+    console.time("base64_wasm_time"); 
     let photon_img = module.base64_to_image(base64);
 
     module.grayscale(photon_img);
 
     // Update the canvas with the new imagedata
     module.putImageData(canvas, ctx, photon_img);
-    console.timeEnd("wasm_time");
+    console.timeEnd("base64_wasm_time");
     endTime = performance.now();
     updateBenchmarks();
     updateEffectName(event.target);
   }
-
 
   function filterImage(event) {
     startTime = performance.now();

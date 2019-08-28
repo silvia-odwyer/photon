@@ -67,12 +67,17 @@ nav ul {
   margin-left: 20vh;
 }
 
+h5 a {
+  color: rgb(255, 51, 102);
+  text-decoration: none;
+}
+
 a {
   color: rgb(204, 204, 204);
   text-decoration: none;
 }
 
-a:hover {
+a:hover > .landing_text a:hover {
   color: rgb(177, 177, 177);
 }
 

@@ -1,8 +1,8 @@
 console.log('%c Hello from Photon!', 'background: lemonchiffon; border: 1px solid #fff');
-console.log('%c Hire the dev behind Photon 💠', 'background: lavenderblush; border: 1px solid #000; padding: 4px; padding-top: 10px; padding-bottom: 8px;');
+console.log('%c Hire the dev behind Photon -> silvi.dev', 'background: lavenderblush; border: 1px solid #000; padding: 4px; padding-top: 10px; padding-bottom: 8px;');
 
 // add custom js below
-var js_ctx, js_canvas, wasm_ctx, wasm_canvas, wasm_image;
+var js_ctx, js_canvas, wasm_ctx, wasm_canvas, js_img, wasm_image;
 var startTime, endTime;
 
 import("../../pkg").then(module => {
@@ -13,14 +13,9 @@ import("../../pkg").then(module => {
     let compare_wasm_elem = document.getElementById("compare_wasm");
     compare_wasm_elem.addEventListener('click', compareWASM, false);
 
-    let compare_js_elem = document.getElementById("compare_js");
-    compare_js_elem.addEventListener("click", compareJS, false);
-
     setUpTimeouts();
     function applyEffect(filter_name, in_canvas, in_ctx, in_img) {
       in_ctx.drawImage(in_img, 0, 0);
-
-      console.time("edit_time"); 
 
       // Convert the ImageData to a PhotonImage (so that it can communicate with the core Rust library)
       let rust_image = module.open_image(in_canvas, in_ctx);
@@ -104,7 +99,6 @@ import("../../pkg").then(module => {
     // Place the pixels back on the canvas
     module.putImageData(in_canvas, in_ctx, new_image);
 
-    console.timeEnd("edit_time");
     }
 
     function setUpComparisonImages() {
@@ -119,22 +113,7 @@ import("../../pkg").then(module => {
   
     }
     setUpComparisonImages();
-  
-    function compareJS() {
-      startTime = performance.now();
-      console.time("js_compare");
-      let imgData = js_ctx.getImageData(0, 0, js_canvas.width, js_canvas.height);
-      console.log(js_canvas, js_ctx);
-      console.log(imgData);
-      for (i = 0; i < imgData.data.length; i += 4) {
-        imgData[i] += 30;
-      }
-      js_ctx.putImageData(imgData, 0, 0);
 
-      console.timeEnd("js_compare");
-      endTime = performance.now();
-      updateBenchmarks("js");
-    }
   
     function updateBenchmarks(type) {
       console.log("update benchmarks");
@@ -155,31 +134,29 @@ import("../../pkg").then(module => {
     function compareWASM() {
       startTime = performance.now();
       console.time("wasm_compare"); 
-  
+      js_ctx.drawImage(js_img, 0, 0);
+
       // Convert the ImageData to a PhotonImage (so that it can communicate with the core Rust library)
       let wasm_rust_image = module.open_image(js_canvas, js_ctx);
 
       // Filter the image, the PhotonImage's raw pixels are modified and 
       // the PhotonImage is returned
-      let new_wasm_image = module.swap_channels(wasm_rust_image, 0, 1); 
-
+      let new_img = module.grayscale(wasm_rust_image); 
     
       // Place the pixels back on the canvas
-      module.putImageData(js_canvas, js_ctx, new_wasm_image);
+      module.putImageData(js_canvas, js_ctx, new_img);
       console.timeEnd("wasm_compare");
       endTime = performance.now();
       updateBenchmarks("wasm");
     }
 
     function setUpCanvases() {
-      
       canvas = document.getElementById("canvas");  
       img = document.getElementById("img");
       canvas.width = img.width;
       canvas.height = img.height;
       ctx = canvas.getContext("2d");
       ctx.drawImage(img, 0, 0);
-
 
       correction_canvas = document.getElementById("correction_canvas");
       img2 = document.getElementById("img2");
@@ -228,7 +205,7 @@ import("../../pkg").then(module => {
   
     }, 10000);
 
-    let effects = ["primary", "emboss", "sharpen", "r_grayscale", "g_grayscale", "threshold"];
+    let effects = ["primary", "emboss", "sharpen"];
     setInterval(function() {
       timer = 1000;
       time_dec = 0;
