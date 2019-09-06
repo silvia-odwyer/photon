@@ -61,7 +61,7 @@
 use wasm_bindgen::prelude::*;
 use web_sys::{CanvasRenderingContext2d, ImageData, HtmlCanvasElement};
 use wasm_bindgen::Clamped;
-use image::{GenericImage, DynamicImage, GenericImageView, ImageBuffer};
+use image::{GenericImage, GenericImageView};
 use base64::decode;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
@@ -81,16 +81,18 @@ pub struct PhotonImage {
 }
 
 #[wasm_bindgen]
-impl PhotonImage {
-    pub fn new_from_imgdata(&mut self, img_data: ImageData, width: u32, height: u32) -> PhotonImage {
-        let raw_pixels = to_raw_pixels(img_data);
-        return PhotonImage {raw_pixels: raw_pixels, width: width, height: height}
-    }
-
+impl PhotonImage {   
+    #[wasm_bindgen(constructor)]
     pub fn new(&mut self, width: u32, height: u32) -> PhotonImage {
         let new_vec = Vec::new();
         return PhotonImage {raw_pixels: new_vec, width: width, height: height}
     }
+
+    pub fn new_from_imgdata(&mut self, img_data: ImageData) {
+        let raw_pixels = to_raw_pixels(img_data);
+        self.raw_pixels = raw_pixels;
+    }
+
 }
 
 /// RGB color type.
@@ -191,7 +193,7 @@ pub fn base64_to_vec(base64: &str) -> Vec<u8> {
 }
 
 #[wasm_bindgen]
-pub fn photonimage_from_vec(vec: Vec<u8>, width: u32, height: u32) -> PhotonImage {
+pub fn photonimage_from_vec(vec: Vec<u8>) -> PhotonImage {
 
     let slice = vec.as_slice();
 
@@ -200,6 +202,14 @@ pub fn photonimage_from_vec(vec: Vec<u8>, width: u32, height: u32) -> PhotonImag
     let raw_pixels = img.raw_pixels();
     
     return PhotonImage { raw_pixels: raw_pixels, width: img.width(), height: img.height()};
+
+}
+
+#[wasm_bindgen]
+pub fn photonimage_from_imgdata(imgdata: ImageData, width: u32, height: u32) -> PhotonImage {
+    let raw_pixels = to_raw_pixels(imgdata);
+    
+    return PhotonImage { raw_pixels: raw_pixels, width: width, height: height};
 
 }
 
