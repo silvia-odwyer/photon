@@ -83,15 +83,44 @@ pub struct PhotonImage {
 #[wasm_bindgen]
 impl PhotonImage {   
     #[wasm_bindgen(constructor)]
-    pub fn new(&mut self, width: u32, height: u32) -> PhotonImage {
-        let new_vec = Vec::new();
-        return PhotonImage {raw_pixels: new_vec, width: width, height: height}
+    pub fn new(width: u32, height: u32) -> PhotonImage {
+        let raw_pixels = Vec::new();
+        return PhotonImage {raw_pixels: raw_pixels, width: width, height: height}
     }
 
-    pub fn new_from_imgdata(&mut self, img_data: ImageData) {
+    pub fn set_imgdata(&mut self, img_data: ImageData) {
         let raw_pixels = to_raw_pixels(img_data);
         self.raw_pixels = raw_pixels;
     }
+
+    pub fn new_from_imgdata(width: u32, height: u32, imgdata: ImageData) -> PhotonImage {
+        let raw_pixels = to_raw_pixels(imgdata);
+        return PhotonImage {raw_pixels: raw_pixels, width: width, height: height}
+    }
+
+    pub fn new_from_base64(base64: &str) -> PhotonImage {
+        let image = base64_to_image(base64);
+        return image;
+    }
+
+    pub fn new_from_vec(vec: Vec<u8>) -> PhotonImage {
+        let image = photonimage_from_vec(vec);
+        return image;
+    }
+
+    pub fn get_width(&self) -> u32 {
+        self.width
+    }
+
+    pub fn get_height(&self) -> u32 {
+        self.height
+    }
+
+    pub fn get_image_data(&mut self) -> ImageData {
+        let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut self.raw_pixels), self.width, self.height).unwrap();
+        new_img_data
+    }
+
 
 }
 
