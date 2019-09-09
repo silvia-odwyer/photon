@@ -88,39 +88,47 @@ impl PhotonImage {
         return PhotonImage {raw_pixels: raw_pixels, width: width, height: height}
     }
 
+    /// Convert ImageData to raw pixels, and update the PhotonImage's raw pixels to this.
     pub fn set_imgdata(&mut self, img_data: ImageData) {
         let raw_pixels = to_raw_pixels(img_data);
         self.raw_pixels = raw_pixels;
     }
 
+    /// Create a new PhotonImage from ImageData.
     pub fn new_from_imgdata(width: u32, height: u32, imgdata: ImageData) -> PhotonImage {
         let raw_pixels = to_raw_pixels(imgdata);
         return PhotonImage {raw_pixels: raw_pixels, width: width, height: height}
     }
 
+    /// Create a new PhotonImage from a base64 string.
     pub fn new_from_base64(base64: &str) -> PhotonImage {
         let image = base64_to_image(base64);
         return image;
     }
 
+    /// Create a new PhotonImage from a raw Vec of u8s representing raw image pixels.
     pub fn new_from_vec(vec: Vec<u8>) -> PhotonImage {
         let image = photonimage_from_vec(vec);
         return image;
     }
 
+    /// Get the width of the PhotonImage.
+    #[wasm_bindgen(getter)]
     pub fn get_width(&self) -> u32 {
         self.width
     }
 
+    /// Get the height of the PhotonImage.
+    #[wasm_bindgen(getter)]
     pub fn get_height(&self) -> u32 {
         self.height
     }
 
+    /// Convert the PhotonImage's raw pixels to JS-compatible ImageData.
     pub fn get_image_data(&mut self) -> ImageData {
         let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut self.raw_pixels), self.width, self.height).unwrap();
         new_img_data
     }
-
 
 }
 
@@ -140,7 +148,7 @@ impl Rgb {
     }
 }
 
-///! [temp] Called by the JS entry point to ensure WASM is supported.
+///! [temp] Check if WASM is supported.
 #[wasm_bindgen]
 pub fn run() -> Result<(), JsValue> {
     set_panic_hook();
@@ -192,14 +200,36 @@ pub fn open_image(canvas: HtmlCanvasElement, ctx: CanvasRenderingContext2d) -> P
     return PhotonImage {raw_pixels: raw_pixels, width: canvas.width(), height: canvas.height() }
 }
 
+/// Experimental WASM-only canvas manipulation; without converting to PhotonImages etc.,
+#[wasm_bindgen]
+pub fn canvas_wasm_only(canvas: HtmlCanvasElement, ctx: CanvasRenderingContext2d) {
+    let width = canvas.width();
+    let height = canvas.height();
+    let imgdata = get_image_data(&canvas, &ctx);
+    
+    let mut vec_data = imgdata.data().to_vec();
+
+    let mut image = PhotonImage {raw_pixels: vec_data, width: canvas.width(), height: canvas.height() };
+
+    let end = image.raw_pixels.len() - 4;
+    for i in (10..end).step_by(4) {
+        image.raw_pixels[i + 2] += 70;
+    };
+
+    let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut image.raw_pixels), canvas.width(), canvas.height()).unwrap();
+    // Place the new imagedata onto the canvas
+    ctx.put_image_data(&new_img_data, 0.0, 0.0);
+}
+
+
 /// Convert ImageData to a raw pixel vec of u8s.
 #[wasm_bindgen]
-
 pub fn to_raw_pixels(imgdata: ImageData) -> Vec<u8> {
     let img_vec = imgdata.data().to_vec();
     return img_vec;
 }
 
+/// Convert a base64 string to a PhotonImage.
 #[wasm_bindgen]
 pub fn base64_to_image(base64: &str) -> PhotonImage {
 
@@ -221,6 +251,7 @@ pub fn base64_to_vec(base64: &str) -> Vec<u8> {
     return vec;
 }
 
+/// Create a PhotonImage from a raw vec of u8s, representing raw image pixels.
 #[wasm_bindgen]
 pub fn photonimage_from_vec(vec: Vec<u8>) -> PhotonImage {
 
@@ -234,6 +265,7 @@ pub fn photonimage_from_vec(vec: Vec<u8>) -> PhotonImage {
 
 }
 
+/// Create a PhotonImage from ImageData.
 #[wasm_bindgen]
 pub fn photonimage_from_imgdata(imgdata: ImageData, width: u32, height: u32) -> PhotonImage {
     let raw_pixels = to_raw_pixels(imgdata);
@@ -252,14 +284,6 @@ pub fn to_image_data(photon_image: PhotonImage) -> ImageData {
 
     return new_img_data;
 }
-
-// Tester function to check if WASM is supported in target.
-// if it runs correctly, WASM is supported, if an error is thrown, investigate.
-#[wasm_bindgen]
-pub fn test(a: u32, b: u32) -> u32 {
-    a + b
-}
-
 
 /// Convert an Image element into a Canvas and replace the image element with the canvas
 /// in the DOM. 

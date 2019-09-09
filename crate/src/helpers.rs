@@ -6,8 +6,6 @@ extern crate base64;
 use image::{DynamicImage, ImageBuffer};
 use crate::{PhotonImage, Rgb};
 extern crate wasm_bindgen;
-use wasm_bindgen::prelude::*;
-use base64::{decode};
 
 /// Gets the square distance between two colours
 pub fn square_distance(color1 : Rgb, color2 : Rgb) -> i32{

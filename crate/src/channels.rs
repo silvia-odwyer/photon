@@ -40,23 +40,13 @@ use crate::channels::palette::Hue;
 /// ```
 /// **Note**: Note the use of a minus symbol when decreasing the channel. 
 #[wasm_bindgen]
-pub fn alter_channel(mut photon_image: &mut PhotonImage, channel: usize, amt: i16) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
-
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            
-            let final_px_data_1: i32 = px.data[channel] as i32 + amt as i32;
-            px.data[channel] = num::clamp(final_px_data_1, 0, 255) as u8;
-            
-            img.put_pixel(x, y, px);
-
-        }
-    }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
+pub fn alter_channel(mut img: &mut PhotonImage, channel: usize, amt: i16) {
+    let end = img.raw_pixels.len() - 4;
+    
+    for i in (0..end).step_by(4) {
+        let inc_val: i16 = img.raw_pixels[i] as i16 + amt as i16;
+        img.raw_pixels[i + channel] = num::clamp(inc_val, 0, 255) as u8;
+    };
 }
 
 /// Increment or decrement every pixel's Red channel by a constant.
@@ -73,8 +63,43 @@ pub fn alter_channel(mut photon_image: &mut PhotonImage, channel: usize, amt: i1
 /// photon::channels::alter_red_channel(&mut img, 10);
 /// ```
 #[wasm_bindgen]
-pub fn alter_red_channel(img: &mut PhotonImage, amt: i16) {
-    return alter_channel(img, 0, amt);
+pub fn alter_red_channel(photon_image: &mut PhotonImage, amt: i16) {
+    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            
+            let final_px_data_1: i32 = px.data[0] as i32 + amt as i32;
+            px.data[0] = num::clamp(final_px_data_1, 0, 255) as u8;
+            
+            img.put_pixel(x, y, px);
+
+        }
+    }
+    let raw_pixels = img.raw_pixels();
+    photon_image.raw_pixels = raw_pixels;
+}
+
+#[wasm_bindgen]
+pub fn alter_red_channel_dyn(photon_image: &mut PhotonImage, amt: i16) {
+    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            
+            let final_px_data_1: i32 = px.data[0] as i32 + amt as i32;
+            px.data[0] = num::clamp(final_px_data_1, 0, 255) as u8;
+            
+            img.put_pixel(x, y, px);
+
+        }
+    }
+    let raw_pixels = img.raw_pixels();
+    photon_image.raw_pixels = raw_pixels;
 }
 
 /// Increment or decrement every pixel's Green channel by a constant.
@@ -129,30 +154,16 @@ pub fn alter_blue_channel(img: &mut PhotonImage, amt: i16) {
 /// photon::channels::inc_two_channels(&mut img, 0, 10, 2, 20);
 /// ```
 #[wasm_bindgen]
-pub fn alter_two_channels(mut photon_image: &mut PhotonImage, channel1: usize, amt1: i16, channel2: usize, amt2: i16) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+pub fn alter_two_channels(mut img: &mut PhotonImage, channel1: usize, amt1: i16, channel2: usize, amt2: i16) {
+    let end = img.raw_pixels.len() - 4;
+    
+    for i in (0..end).step_by(4) {
+        let inc_val1: i16 = img.raw_pixels[i + channel1] as i16 + amt1 as i16;
+        let inc_val2: i16 = img.raw_pixels[i + channel2] as i16 + amt2 as i16;
 
-            let px_data_1 = px.data[channel1];
-            let mut final_px_data_1: u32 = px_data_1 as u32 + amt1 as u32;
-                
-            final_px_data_1 = num::clamp(final_px_data_1, 0, 255);
-            px.data[channel1] = final_px_data_1 as u8;
-
-            let px_data_2 = px.data[channel2];
-            let mut final_px_data_2: u32 = px_data_2 as u32 + amt2 as u32;
-                
-            final_px_data_2 = num::clamp(final_px_data_2, 0, 255);
-            px.data[channel2] = final_px_data_2 as u8;
-
-            img.put_pixel(x, y, px);
-        }
-    }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
+        img.raw_pixels[i + channel1] = num::clamp(inc_val1, 0, 255) as u8;
+        img.raw_pixels[i + channel2] = num::clamp(inc_val2, 0, 255) as u8;
+    };
 }
 
 /// Increment all 3 channels' values by adding an amt to each channel per pixel.
@@ -171,29 +182,19 @@ pub fn alter_two_channels(mut photon_image: &mut PhotonImage, channel1: usize, a
 /// // photon::channels::alter_channels(&mut img, 10, 20, 50);
 /// ```
 #[wasm_bindgen]
-pub fn alter_channels(mut photon_image: &mut PhotonImage, r_amt: i16, g_amt: i16, b_amt: i16) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+pub fn alter_channels(mut img: &mut PhotonImage, r_amt: i16, g_amt: i16, b_amt: i16) {
+    let end = img.raw_pixels.len() - 4;
+    
+    for i in (0..end).step_by(4) {
+        let r_val: i16 = img.raw_pixels[i] as i16 + r_amt as i16;
+        let g_val: i16 = img.raw_pixels[i + 1] as i16 + g_amt as i16;
+        let b_val: i16 = img.raw_pixels[i + 2] as i16 + b_amt as i16;
 
-            let final_px_data_1: i32 = px.data[0] as i32 + r_amt as i32;
-                
-            px.data[0] = num::clamp(final_px_data_1, 0, 255) as u8;
+        img.raw_pixels[i] = num::clamp(r_val, 0, 255) as u8;
+        img.raw_pixels[i + 1] = num::clamp(g_val, 0, 255) as u8;
+        img.raw_pixels[i + 2] = num::clamp(b_val, 0, 255) as u8;
 
-            let final_px_data_2: i32 = px.data[1] as i32 + g_amt as i32;
-                
-            px.data[1] = num::clamp(final_px_data_2, 0, 255) as u8;
-
-            let final_px_data_3: i32 = px.data[2] as i32 + b_amt as i32;
-            px.data[2] = num::clamp(final_px_data_3, 0, 255) as u8;
-
-            img.put_pixel(x, y, px);
-        }
-    }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
+    };
 }
 
 /// Set a certain channel to zero, thus removing the channel's influence in the pixels' final rendered colour.
@@ -212,21 +213,13 @@ pub fn alter_channels(mut photon_image: &mut PhotonImage, r_amt: i16, g_amt: i16
 /// photon::channels::remove_channel(&mut img, 0, 100);
 /// ```
 #[wasm_bindgen]
-pub fn remove_channel(mut photon_image: &mut PhotonImage, channel: usize, min_filter: u8) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-
-    let (width, height) = img.dimensions();
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            if px.data[channel] < min_filter {
-                px.data[channel] = 0;
-            }
-            img.put_pixel(x, y, px);
-        }
-    }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
+pub fn remove_channel(mut img: &mut PhotonImage, channel: usize, min_filter: u8) {
+    let end = img.raw_pixels.len() - 4;
+    for i in (channel..end).step_by(4) {        
+        if img.raw_pixels[i] < min_filter {
+            img.raw_pixels[i] = 0;
+        };
+    };
 }
 
 /// Remove the Red channel's influence in an image.
@@ -294,20 +287,15 @@ pub fn remove_blue_channel(img: &mut PhotonImage, min_filter: u8) {
 /// photon::channels::swap_channels(&mut img, 0, 2);
 /// ```
 #[wasm_bindgen]
-pub fn swap_channels(mut photon_image: &mut PhotonImage, channel1: usize, channel2: usize) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            let temp_channel1 = px.data[channel1];
-            px.data[channel1] = px.data[channel2];
-            px.data[channel2] = temp_channel1;
-            img.put_pixel(x, y, px);
-        }
-    }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
+pub fn swap_channels(mut img: &mut PhotonImage, channel1: usize, channel2: usize) {
+    let end = img.raw_pixels.len() - 4;
+    for i in (0..end).step_by(4) {        
+        img.raw_pixels[i] = 0;
+            
+        let temp_channel1 = img.raw_pixels[i];
+        img.raw_pixels[i] = img.raw_pixels[i + 1];
+        img.raw_pixels[i + 1] = temp_channel1;
+    };
 }
 
 /// Selective hue rotation.
