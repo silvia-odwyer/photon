@@ -1,9 +1,51 @@
 # photon
 
+<p align="center">
+  <a href="" rel="noopener">
+ <img src="https://i.imgur.com/GxrKNOb.png" alt="Photon banner, showing the Photon logo on a dark background"></a>
+</p>
+
+<h3 align="center">Photon</h3>
+
+<div align="center">
+
+  [![Status](https://img.shields.io/badge/status-active-success.svg)]() 
+  [![GitHub Issues](https://img.shields.io/github/issues/silvia-odwyer/photon.svg)](https://github.com/silvia-odwyer/photon/issues)
+  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/silvia-odwyer/photon.svg)](https://github.com/silvia-odwyer/p/pulls)
+  [![License](https://img.shields.io/badge/license-APACHE%202-blue)](/LICENSE)
+
+</div>
+
+---
+
+<p align="center"> High-performance, cross-platform Rust/WebAssembly image processing library
+    <br> 
+</p>
+
+## 📝 Table of Contents
+- [Get Started with WebAssembly](https://github.com/silvia-odwyer/photon#-get-started-with-webassembly)
+- [Get Started Natively](https://github.com/silvia-odwyer/photon#getting-started)
+- [Documentation](https://silvia-odwyer.github.io/photon/docs/photon/all.html)
+- [Official Website.](https://silvia-odwyer.github.io/photon/)
+- [All Available Functions.](https://silvia-odwyer.github.io/photon/docs/photon/all.html)
+<!-- - [Authors](#authors) -->
+
 Photon is a high-performance Rust image processing library, which compiles to WebAssembly, allowing for 
 safe, blazing-fast image processing both natively and on the web. 
 
 The library provides low-level access to pixel and channel manipulation, as well as high-level functions for image correction, filtering, watermarking, and convolutions. 
+
+### Features 
+- **Fast:** Photon's high-performance allows it to run 4-10x faster than JS for the web. Benchmarks coming soon.
+- **Call with JS:** Want to use Photon on the web? With a simple npm package, you're good to go. Get all the benefits of WebAssembly
+with zero-cost abstraction. 
+- **Use Natively:** For command-line apps, native photo editing apps, and so forth, Photon's core codebase is in Rust, allowing for cross-platform
+development.
+
+### Photon In Action
+
+![Imgur](https://i.imgur.com/PShSZ6k.png)
+
 
 <!-- ### Features:
 - **Pure Rust** - Unlike other libraries, this library is built with 100% pure Rust, so security and safety is guaranteed. 
@@ -29,20 +71,6 @@ Functions include:
 - **Text**: Apply text to imagery in artistic ways, or to watermark, etc.,
 - **Watermarking**: Watermark images in multiple formats. 
 - **Blending**: Blend images together using 10 different techniques, change image backgrounds. 
-
-### Get Started
-- [Get Started with WebAssembly](https://github.com/silvia-odwyer/photon#-get-started-with-webassembly)
-- [Get Started Natively](https://github.com/silvia-odwyer/photon#getting-started)
-- [Check Out The Documentation](https://silvia-odwyer.github.io/photon/docs/photon/all.html)
-- [View the Official Website.](https://silvia-odwyer.github.io/photon/)
-- [See All Available Functions.](https://silvia-odwyer.github.io/photon/docs/photon/all.html)
-
-`photon` can be thought of as a high-level wrapper to the Rust `image` crate, but conversely also includes functions which provide low-level access to pixel and channel manipulation, perfect for developers who wish to work with this data directly.
-
-### 🧐 Repo Organisation
-This repo can be thought of as a hybrid library, divided into 2 major components:
-1. **Core Rust library**: This provides universal image processing functions, which can be used either natively or in the browser. The WASM component of this repo relies on this for all image processing functionality. 
-2. **WebAssembly helpers and starter demo**: This section of the library contains helpers for exporting pixel data to and from the browser, and communicates directly with the core Rust library. The starter demo demonstrates calling the compiled WebAssembly code using JS functions and hooks into a webpack build pipeline. 
 
 ### Live Demo
 View the [official demo of WASM in action](https://silvia-odwyer.github.io/photon/demo.html).
@@ -214,6 +242,9 @@ Functions have been designed with flexibility in mind, so that full customizatio
 For developers who would like to work with high-level constructs can do so, such as applying effects to imagery (eg: Laplace or Sobel)
 or filters; this library provides a complete suite of functions to do so, as well as in-built filters and presets. 
 
+`photon` can be thought of as a high-level wrapper to the Rust `image` crate, but conversely also includes functions which provide low-level access to pixel and channel manipulation, perfect for developers who wish to work with this data directly.
+
+
 ## Contributing
 
 Photon is always ready for new filters and functions, so if you'd like to contribute, we're always ready to accept new Pull Requests or investigate new issues. 
@@ -224,5 +255,10 @@ Photon is always ready for new filters and functions, so if you'd like to contri
 * **Future You(?)** - (See Contributing above ;) 
 
 ## License
-
 This project is licensed under the Apache 2.0 License - see the [LICENSE.md](LICENSE.md) file for details.
+
+<!-- 
+### 🧐 Repo Organisation
+This repo can be thought of as a hybrid library, divided into 2 major components:
+1. **Core Rust library**: This provides universal image processing functions, which can be used either natively or in the browser. The WASM component of this repo relies on this for all image processing functionality. 
+2. **WebAssembly helpers and starter demo**: This section of the library contains helpers for exporting pixel data to and from the browser, and communicates directly with the core Rust library. The starter demo demonstrates calling the compiled WebAssembly code using JS functions and hooks into a webpack build pipeline.  -->
