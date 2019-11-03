@@ -318,6 +318,7 @@ fn set_panic_hook() {
 
 pub mod channels;
 pub mod effects;
+pub mod transform;
 pub mod conv;
 pub mod filters;
 pub mod monochrome;

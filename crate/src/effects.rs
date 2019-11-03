@@ -26,26 +26,38 @@ use image::{Rgba};
 /// ```
 #[wasm_bindgen]
 pub fn offset(mut photon_image: &mut PhotonImage, channel_index: usize, offset: u32) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
+    let end = photon_image.raw_pixels.len() - 4;
+    let width = photon_image.width;
+    let height = photon_image.height;
 
-    for x in 0..width {
-        for y in 0..height {
+    for i in (0..end).step_by(channel_index) {        
+        if i as u32 + (offset * 3) < end as u32 - 40 {
+            // let offset_px_idx: usize = (i as u32 + offset * 3) as usize;
+            // photon_image.raw_pixels[i] = photon_image.raw_pixels[offset_px_idx];
 
-            let mut px = img.get_pixel(x, y);
-
-            if x + offset < width - 1 && y + offset < height - 1  {
-
-                let offset_px = img.get_pixel(x + offset, y + offset);
-
-                px.data[channel_index] = offset_px.data[channel_index];
-                
-            }
-            img.put_pixel(x, y, px);
         }
     }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
+
+    // let mut img = helpers::dyn_image_from_raw(&photon_image);
+    // let (width, height) = img.dimensions();
+
+    // for x in 0..width {
+    //     for y in 0..height {
+
+    //         let mut px = img.get_pixel(x, y);
+
+    //         if x + offset < width - 1 && y + offset < height - 1  {
+
+    //             let offset_px = img.get_pixel(x + offset, y + offset);
+
+    //             px.data[channel_index] = offset_px.data[channel_index];
+                
+    //         }
+    //         img.put_pixel(x, y, px);
+    //     }
+    // }
+    // let raw_pixels = img.raw_pixels();
+    // photon_image.raw_pixels = raw_pixels;
 }
 
 /// Adds an offset to the red channel by a certain number of pixels. 
