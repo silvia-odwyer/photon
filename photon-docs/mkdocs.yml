@@ -1,3 +1,22 @@
-site_name: Photon
+site_name: 'Photon'
+site_description: 'Documentation site for Photon, a high-performance web/native image processing library'
+site_author: "Silvia O'Dwyer"
+site_url: 'https://github.com/silvia-odwyer/photon'
+repo_name: 'silvia-odwyer/photon'
+repo_url: 'https://github.com/silvia-odwyer/photon'
+
 theme:
   name: 'material'
+  feature:
+    tabs: true
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
