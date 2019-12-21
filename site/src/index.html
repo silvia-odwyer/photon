@@ -37,18 +37,21 @@
   <main>
     <div class="landing">
       <div class="content">
-      <header class="container">
-        <h4 class="logo">photon</h4>
-        
-        <nav class="contright">
-          <ul>
-            <li>Home</li>
-            <li><a href="https://silvia-odwyer.github.io/photon/docs/photon">Docs</a></li>
-            <li><a href="demo.html">Demo</a></li>
-            <li><a href="https://github.com/silvia-odwyer">GitHub</a></li>
-          </ul>
-        </nav>
-  
+      <header>
+        <div id="navbar">
+          <div class="container">
+          <h4 class="logo">photon</h4>
+          <nav class="contright">
+                <ul>
+                  <li><a href="https://silvia-odwyer.github.io/photon/docs/photon">Docs</a></li>
+                  <li><a href="demo.html">Demo</a></li>
+                  <li><a href="https://github.com/silvia-odwyer">GitHub</a></li>
+                </ul>
+              </nav>
+            </div>
+            
+        </div>
+
       </header>
   
       <article class="landing_hero">
@@ -71,7 +74,7 @@
   
       <article class="features">
         <h2>Features</h2>
-        <p>Unlike other libraries, this library is built with 100% pure Rust, so security and safety is guaranteed. </p>
+        <p>Photon outperforms even the fastest of libraries, and is powered with Rust, allowing for safe and secure image processing. </p>
   
         <ul class="features_list">
           <li data-aos="fade-up" data-aos-anchor="#docs">
@@ -406,6 +409,24 @@ fn main() {
         });
 
       }
+
+      // When the user scrolls the page, execute myFunction
+            window.onscroll = function() {myFunction()};
+
+        // Get the navbar
+        var navbar = document.getElementById("navbar");
+
+        // Get the offset position of the navbar
+        var sticky = navbar.offsetTop;
+
+        // Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
+        function myFunction() {
+          if (window.pageYOffset >= sticky) {
+            navbar.classList.add("sticky")
+          } else {
+            navbar.classList.remove("sticky");
+          }
+        } 
     </script>   
 
   </main>

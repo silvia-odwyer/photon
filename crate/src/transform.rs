@@ -12,10 +12,6 @@ use image::RgbaImage;
 /// 
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// * `x1` - x-coordinate of origin/starting point 
-/// * `y1` - y-coordinate of origin/starting point
-/// * `x2` - x-coordinate of end point
-///  * `y2` - y-coordinate of end point
 /// 
 /// ## Example
 ///
@@ -28,8 +24,8 @@ use image::RgbaImage;
 /// photon::helpers::save_image(cropped_img, "cropped_image.png");
 /// ```
 #[wasm_bindgen]
-pub fn crop(mut photon_image: &mut PhotonImage, x1: u32, y1: u32, x2: u32, y2: u32) -> PhotonImage {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+pub fn crop(photon_image: &mut PhotonImage, x1: u32, y1: u32, x2: u32, y2: u32) -> PhotonImage {
+    let img = helpers::dyn_image_from_raw(&photon_image);
 
     let mut cropped_img: RgbaImage = ImageBuffer::new(x2 - x1, y2 - y1);
 
@@ -50,10 +46,6 @@ pub fn crop(mut photon_image: &mut PhotonImage, x1: u32, y1: u32, x2: u32, y2: u
 /// 
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// * `x1` - x-coordinate of origin/starting point 
-/// * `y1` - y-coordinate of origin/starting point
-/// * `x2` - x-coordinate of end point
-///  * `y2` - y-coordinate of end point
 /// 
 /// ## Example
 ///
@@ -66,33 +58,28 @@ pub fn crop(mut photon_image: &mut PhotonImage, x1: u32, y1: u32, x2: u32, y2: u
 /// photon::helpers::save_image(new_img, "new_image.png");
 /// ```
 #[wasm_bindgen]
-pub fn fliph(mut photon_image: &mut PhotonImage) -> PhotonImage {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+pub fn fliph(photon_image: &mut PhotonImage) {
+    let img = helpers::dyn_image_from_raw(&photon_image);
 
     let width = img.width();
     let mut flipped_img: RgbaImage = ImageBuffer::new(width, img.height());
 
     for x in 0..width {
         for y in 0..img.height() {
-            let mut px = img.get_pixel(x, y);
+            let px = img.get_pixel(x, y);
             flipped_img.put_pixel(width - x - 1, y, px);
         }
     }
 
     let dynimage = image::ImageRgba8(flipped_img);
     let raw_pixels = dynimage.raw_pixels();
-    let flipped_photon_img = PhotonImage { raw_pixels: raw_pixels, width: dynimage.width(), height: dynimage.height()};
-    return flipped_photon_img
+    photon_image.raw_pixels = raw_pixels;
 }
 
 /// Flip an image vertically.
 /// 
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// * `x1` - x-coordinate of origin/starting point 
-/// * `y1` - y-coordinate of origin/starting point
-/// * `x2` - x-coordinate of end point
-///  * `y2` - y-coordinate of end point
 /// 
 /// ## Example
 ///
@@ -105,8 +92,8 @@ pub fn fliph(mut photon_image: &mut PhotonImage) -> PhotonImage {
 /// photon::helpers::save_image(new_img, "new_image.png");
 /// ```
 #[wasm_bindgen]
-pub fn flipv(mut photon_image: &mut PhotonImage) -> PhotonImage {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+pub fn flipv(photon_image: &mut PhotonImage) {
+    let img = helpers::dyn_image_from_raw(&photon_image);
 
     let width = img.width();
     let height = img.height();
@@ -115,42 +102,29 @@ pub fn flipv(mut photon_image: &mut PhotonImage) -> PhotonImage {
 
     for x in 0..width {
         for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+            let px = img.get_pixel(x, y);
             flipped_img.put_pixel(x, height - y - 1, px);
         }
     }
 
     let dynimage = image::ImageRgba8(flipped_img);
     let raw_pixels = dynimage.raw_pixels();
-    let flipped_photon_img = PhotonImage { raw_pixels: raw_pixels, width: dynimage.width(), height: dynimage.height()};
-    return flipped_photon_img
+    photon_image.raw_pixels = raw_pixels;
 }
 
-// Rotate an image
+/// Resize an image on the web.
+/// 
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// * `width` - New width.
+/// * `height` - New height.
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen]
+pub fn resize(photon_img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
+    let sampling_filter = image::FilterType::Nearest;
 
-// from PIL import Image, ImageDraw
-// from math import sin, cos, pi
+    let dyn_img = helpers::dyn_image_from_raw(&photon_img);
+    let resized_img = image::ImageRgba8(image::imageops::resize(&dyn_img, width, height, sampling_filter));
 
-
-// # Load image:
-// input_image = Image.open("input.png")
-// input_pixels = input_image.load()
-
-// # Create output image
-// output_image = Image.new("RGB", input_image.size)
-// draw = ImageDraw.Draw(output_image)
-
-// angle = pi / 3  # angle in radian
-// center_x = input_image.width / 2
-// center_y = input_image.height / 2
-
-// # Copy pixels
-// for x in range(input_image.width):
-//     for y in range(input_image.height):
-//         # Compute coordinate in input image
-//         xp = int((x - center_x) * cos(angle) - (y - center_y) * sin(angle) + center_x)
-//         yp = int((x - center_x) * sin(angle) + (y - center_y) * cos(angle) + center_y)
-//         if 0 <= xp < input_image.width and 0 <= yp < input_image.height:
-//             draw.point((x, y), input_pixels[xp, yp])
-
-// output_image.save("output.png")
+    return PhotonImage{ raw_pixels: resized_img.raw_pixels(), width: resized_img.width(), height: resized_img.height()}
+}

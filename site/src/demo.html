@@ -170,12 +170,6 @@
           <div class="sidebar">
             <h3 class="logo">Photon</h3>
             <ul>
-              <h4>Base64 Example</h4>
-              <li id="base64">Base64 Example Demo</li>
-
-              <h4>Vec<u8> -> PhotonImage Example</h4>
-              <li id="vec_to_photonimage">Vec to PhotonImage Example</li>
-
               <h4>Channels</h4>
               <li class="effect" id="inc_red_channel">Inc Red Channel</li>
               <li class="effect" id="inc_blue_channel">Inc Blue Channel</li>
@@ -191,7 +185,6 @@
               <li class="effect" id="dec_blue_channel">Dec Blue Channel</li>
               <li class="effect" id="dec_green_channel">Dec Green Channel</li>
 
-              
               <h5>Watermark</h5>
               <li class="overlay" id="watermark">Watermark</li>
 
@@ -199,7 +192,6 @@
               <li class="effect" id="text">Text</li>
               <li class="effect" id="text_border">Text With Border</li>
 
-            
               <h4>Filters</h4>
               <li class="filter" id="oceanic">Oceanic</li>
               <li class="filter" id="islands">Islands</li>
@@ -216,7 +208,6 @@
               <li class="filter" id="vintage">Vintage</li>
               <li class="filter" id="perfume">Perfume</li>
               <li class="filter" id="serenity">Serenity</li>
-
 
               <h4>Monochrome</h4>
               <li class="effect" id="grayscale">Grayscale</li>
@@ -244,7 +235,12 @@
               <li class="effect" id="inc_brightness">Increase Brightness</li>
               <li class="effect" id="inc_lum">Increase Luminosity</li>
               <li class="effect" id="gradient">Gradient Overlay</li>
-              
+
+              <h4>Transform</h4>
+              <li class="effect" id="resize">Resize Image</li>
+              <li class="effect" id="flipv">Flip Vertical</li>              
+              <li class="effect" id="fliph">Flip Horizontal</li>
+
               <h4>Colour Spaces</h4>
               <li class="effect" id="hue_rotate_hsl">Hue Rotate HSL</li>
               <li class="effect" id="hue_rotate_hsv">Hue Rotate HSV</li>
@@ -307,13 +303,6 @@
           
           <div class="main">
             <div class="main_content">
-              <!-- <ul class="tab_nav">
-                <li>Design</li>
-                <li>Plan</li>
-                <li>Collaborate</li>
-                <li>Share</li>
-              </ul> -->
-            
               <section class="content">
                   <h4>Photon WebAssembly Demo</h4>
                   <h2>Original</h2>
@@ -321,7 +310,7 @@
 
                 <canvas id="canvas"></canvas>
               </section>
-
+              <input class="file-input" type="file" id='img_uploader' name="upload-image">
               <section class="benchmarks">
                 <div id="time"></div>
                 <div id="code"></div>

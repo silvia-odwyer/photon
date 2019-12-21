@@ -1,4 +1,4 @@
-import Fruit from "../images/daisies_fuji.jpg";
+import Fruit from "../images/nine_yards.jpg";
 import Daisies from "../images/nine_yards.jpg";
 import Lemons from "../images/lemons.jpg";
 import Underground from "../images/underground.jpg";
@@ -19,6 +19,7 @@ import("../../../crate/pkg").then(module => {
   setUpEventListeners();
 
   function setUpEventListeners() {
+    document.getElementById('img_uploader').addEventListener('change', readURL, true);
     // Setup event listeners
     let hue_rotate_elem = document.getElementById("hue_rotate");
     hue_rotate_elem.addEventListener('click', function(){console.time("js_edit_time"); editImage(canvas, ctx); console.timeEnd("js_edit_time")}, false);
@@ -47,11 +48,11 @@ import("../../../crate/pkg").then(module => {
       button.addEventListener("click", function(){overlayImage(event)}, false);		
     }
 
-    let base64_btn = document.querySelector("#base64");
-    base64_btn.addEventListener("click", base64_example, false);
+    // let base64_btn = document.querySelector("#base64");
+    // base64_btn.addEventListener("click", base64_example, false);
 
-    let vec_btn = document.getElementById("vec_to_photonimage");
-    vec_btn.addEventListener("click", vec_to_photonimage_example, false);
+    // let vec_btn = document.getElementById("vec_to_photonimage");
+    // vec_btn.addEventListener("click", vec_to_photonimage_example, false);
 
     setUpImages();
   }
@@ -147,6 +148,21 @@ import("../../../crate/pkg").then(module => {
     updateBenchmarks();
   }
 
+  function readURL() {
+    let file = document.getElementById("img_uploader").files[0];
+
+    let reader = new FileReader();
+    reader.onloadend = function () {
+        newimg.src = reader.result; // Set the global image to the path of the file on the client's PC.
+    }
+    if (file) {
+        reader.readAsDataURL(file);
+    } else {
+        /// Error message TODO
+        console.log("Could not read file. :(")
+    }
+  }
+
   function base64_example() {
 
     ctx.drawImage(newimg, 0, 0);
@@ -234,7 +250,7 @@ import("../../../crate/pkg").then(module => {
                       "saturate_hsl": function() {colour_space(rust_image, "hsl", "saturate")}, 
                       "saturate_hsv": function() {colour_space(rust_image, "hsv", "saturate")}, 
                       "saturate_lch": function() {colour_space(rust_image, "lch", "saturate")}, 
-                      "inc_red_channel": function() {return module.alter_channel(rust_image, 0, 120)}, 
+                      "inc_red_channel": function() {return module.alter_red_channel(rust_image, 0, 120)}, 
                       "inc_blue_channel": function() {return module.alter_channel(rust_image, 2, 100)}, 
                       "inc_green_channel": function() {return module.alter_channel(rust_image, 1, 100)}, 
                       "inc_two_channels": function() {return module.alter_channel(rust_image, 1, 30);}, 
@@ -263,14 +279,38 @@ import("../../../crate/pkg").then(module => {
                       "watermark": function() {return module.watermark(rust_image, watermark_img, 10, 30)},
                       "text": function() {return module.draw_text(rust_image, "welcome to wasm", 10, 20)},
                       "text_border": function() {return module.draw_text_with_border(rust_image, "welcome to wasm", 10, 20)},
+                      "flipv": function() {return module.flipv(rust_image)}, 
+                      "fliph": function() {return module.fliph(rust_image)} 
+
                     };
-                    
-    // Filter the image, the PhotonImage's raw pixels are modified and 
-    // the PhotonImage is returned
-    filter_dict[filter_name]();
+                  
 
     // Update the canvas with the new imagedata
-    module.putImageData(canvas, ctx, rust_image);
+
+    if (filter_name == "resize"){
+
+        let width = 800;
+        let height = 500;
+
+        let newimg = module.resize(rust_image, width, height);
+        
+        let canvas2 = document.createElement("canvas");
+        let ctx2 = canvas2.getContext("2d");
+
+        canvas2.width = width;
+        canvas2.height = height;
+
+        module.putImageData(canvas2, ctx2, newimg);
+        document.body.append(canvas2);
+      
+    }
+    else {
+      // Filter the image, the PhotonImage's raw pixels are modified and 
+      // the PhotonImage is returned
+      filter_dict[filter_name]();
+      module.putImageData(canvas, ctx, rust_image);
+
+    }
     console.timeEnd("wasm_time");
     endTime = performance.now()
     updateBenchmarks()
