@@ -41,6 +41,12 @@ use crate::channels::palette::Hue;
 /// **Note**: Note the use of a minus symbol when decreasing the channel. 
 #[wasm_bindgen]
 pub fn alter_channel(mut img: &mut PhotonImage, channel: usize, amt: i16) {
+    if (channel > 2) {
+        panic!("Invalid channel index passed. Channel must be 0, 1, or 2 (Red=0, Green=1, Blue=2)");
+    }
+    if (amt > 255) {
+        panic!("Amount to increment/decrement should be between -255 and 255");
+    }
     let end = img.raw_pixels.len() - 4;
     
     for i in (0..end).step_by(4) {
@@ -155,6 +161,18 @@ pub fn alter_blue_channel(img: &mut PhotonImage, amt: i16) {
 /// ```
 #[wasm_bindgen]
 pub fn alter_two_channels(mut img: &mut PhotonImage, channel1: usize, amt1: i16, channel2: usize, amt2: i16) {
+    if (channel1 > 2) {
+        panic!("Invalid channel index passed. Channel1 must be equal to 0, 1, or 2.");
+    }
+    if (channel2 > 2) {
+        panic!("Invalid channel index passed. Channel2 must be equal to 0, 1, or 2");
+    }
+    if (amt1 > 255) {
+        panic!("Amount to inc/dec channel by should be between -255 and 255");
+    }
+    if (amt2 > 255) {
+        panic!("Amount to inc/dec channel by should be between -255 and 255");
+    }
     let end = img.raw_pixels.len() - 4;
     
     for i in (0..end).step_by(4) {
@@ -183,6 +201,15 @@ pub fn alter_two_channels(mut img: &mut PhotonImage, channel1: usize, amt1: i16,
 /// ```
 #[wasm_bindgen]
 pub fn alter_channels(mut img: &mut PhotonImage, r_amt: i16, g_amt: i16, b_amt: i16) {
+    if (r_amt > 255) {
+        panic!("Invalid r_amt passed. Amount to inc/dec channel by should be between -255 and 255");
+    }
+    if (g_amt > 255) {
+        panic!("Invalid g_amt passed. Amount to inc/dec channel by should be between -255 and 255");
+    }
+    if (b_amt > 255) {
+        panic!("Invalid b_amt passed. Amount to inc/dec channel by should be between -255 and 255");
+    }
     let end = img.raw_pixels.len() - 4;
     
     for i in (0..end).step_by(4) {
@@ -214,6 +241,9 @@ pub fn alter_channels(mut img: &mut PhotonImage, r_amt: i16, g_amt: i16, b_amt: 
 /// ```
 #[wasm_bindgen]
 pub fn remove_channel(mut img: &mut PhotonImage, channel: usize, min_filter: u8) {
+    if (channel > 2) {
+        panic!("Invalid channel index passed. Channel must be equal to 0, 1, or 2.");
+    }
     let end = img.raw_pixels.len() - 4;
     for i in (channel..end).step_by(4) {        
         if img.raw_pixels[i] < min_filter {
@@ -288,6 +318,12 @@ pub fn remove_blue_channel(img: &mut PhotonImage, min_filter: u8) {
 /// ```
 #[wasm_bindgen]
 pub fn swap_channels(mut img: &mut PhotonImage, channel1: usize, channel2: usize) {
+    if (channel1 > 2) {
+        panic!("Invalid channel index passed. Channel1 must be equal to 0, 1, or 2.");
+    }    
+    if (channel2 > 2) {
+        panic!("Invalid channel index passed. Channel2 must be equal to 0, 1, or 2.");
+    }
     let end = img.raw_pixels.len() - 4;
     for i in (0..end).step_by(4) {        
         img.raw_pixels[i] = 0;

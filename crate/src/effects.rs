@@ -26,6 +26,9 @@ use image::{Rgba};
 /// ```
 #[wasm_bindgen]
 pub fn offset(mut photon_image: &mut PhotonImage, channel_index: usize, offset: u32) {
+    if (channel_index > 2) {
+        panic!("Invalid channel index passed. Channel1 must be equal to 0, 1, or 2.");
+    }
     let end = photon_image.raw_pixels.len() - 4;
     let width = photon_image.width;
     let height = photon_image.height;
@@ -123,6 +126,12 @@ pub fn offset_blue(img: &mut PhotonImage, offset_amt: u32) {
 /// ```
 #[wasm_bindgen]
 pub fn multiple_offsets(mut photon_image: &mut PhotonImage, offset: u32, channel_index: usize, channel_index2: usize) {
+    if (channel_index > 2) {
+        panic!("Invalid channel index passed. Channel1 must be equal to 0, 1, or 2.");
+    }
+    if (channel_index2 > 2) {
+        panic!("Invalid channel index passed. Channel2 must be equal to 0, 1, or 2.");
+    }
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
