@@ -25,42 +25,31 @@ use image::{Rgba};
 /// photon::effects::offset(img, 0, 30);
 /// ```
 #[wasm_bindgen]
-pub fn offset(mut photon_image: &mut PhotonImage, channel_index: usize, offset: u32) {
-    if (channel_index > 2) {
+pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32) {
+    if channel_index > 2 {
         panic!("Invalid channel index passed. Channel1 must be equal to 0, 1, or 2.");
     }
     let end = photon_image.raw_pixels.len() - 4;
-    let width = photon_image.width;
-    let height = photon_image.height;
 
-    for i in (0..end).step_by(channel_index) {        
-        if i as u32 + (offset * 3) < end as u32 - 40 {
-            // let offset_px_idx: usize = (i as u32 + offset * 3) as usize;
-            // photon_image.raw_pixels[i] = photon_image.raw_pixels[offset_px_idx];
+    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
 
+    for x in 0..width - 10 {
+        for y in 0..height - 10 {
+
+            let mut px = img.get_pixel(x, y);
+
+            if x + offset < width - 1 && y + offset < height - 1  {
+
+                let offset_px = img.get_pixel(x + offset, y + offset);
+            px.data[channel_index] = offset_px.data[channel_index];
+                
+            }
+            img.put_pixel(x, y, px);
         }
     }
-
-    // let mut img = helpers::dyn_image_from_raw(&photon_image);
-    // let (width, height) = img.dimensions();
-
-    // for x in 0..width {
-    //     for y in 0..height {
-
-    //         let mut px = img.get_pixel(x, y);
-
-    //         if x + offset < width - 1 && y + offset < height - 1  {
-
-    //             let offset_px = img.get_pixel(x + offset, y + offset);
-
-    //             px.data[channel_index] = offset_px.data[channel_index];
-                
-    //         }
-    //         img.put_pixel(x, y, px);
-    //     }
-    // }
-    // let raw_pixels = img.raw_pixels();
-    // photon_image.raw_pixels = raw_pixels;
+    let raw_pixels = img.raw_pixels();
+    photon_image.raw_pixels = raw_pixels;
 }
 
 /// Adds an offset to the red channel by a certain number of pixels. 
@@ -126,10 +115,10 @@ pub fn offset_blue(img: &mut PhotonImage, offset_amt: u32) {
 /// ```
 #[wasm_bindgen]
 pub fn multiple_offsets(mut photon_image: &mut PhotonImage, offset: u32, channel_index: usize, channel_index2: usize) {
-    if (channel_index > 2) {
+    if channel_index > 2 {
         panic!("Invalid channel index passed. Channel1 must be equal to 0, 1, or 2.");
     }
-    if (channel_index2 > 2) {
+    if channel_index2 > 2 {
         panic!("Invalid channel index passed. Channel2 must be equal to 0, 1, or 2.");
     }
     let mut img = helpers::dyn_image_from_raw(&photon_image);
@@ -169,19 +158,31 @@ pub fn multiple_offsets(mut photon_image: &mut PhotonImage, offset: u32, channel
 /// * `color_a`: An RGB color
 /// * `color_b`: An RGB color
 pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
+    println!("hi");
+    println!("{}", color_a.r);
     let mut gradient_map = vec![];
 
-    let max_val = 255;
+    let maxVal = 255;
+    let mut r_val = 0;
 
-    for i in 0..max_val + 1{
-        let intensity_b = max_val - i;
-
+    for i in 0..=255 {
+        let intensityB = maxVal - i;
+        println!("intensity b {}", intensityB);
+        // println!("i {}", i);
+        // println!("intensity B {}", intensityB);
+        // println!("colorA.r {}", colorA.r);
+        // println!("colorB.r {}", colorB.r);
+        
+        // println!("######");
+        r_val = (i * color_a.r + intensityB * color_b.r) / maxVal as u8;
+        println!("r_val {}", r_val);
         gradient_map.push(Rgb {
-            r: (i * color_a.r + intensity_b * color_b.r) / max_val as u8,
-            g: (i * color_a.g + intensity_b * color_b.g) / max_val as u8,
-            b: (i * color_a.b + intensity_b * color_b.b) / max_val as u8
+            r: r_val , 
+            g: (i * color_a.g + intensityB * color_b.g) / maxVal as u8 ,
+            b: (i * color_a.b + intensityB * color_b.b) / maxVal as u8
         });
     }
+    println!("{:?}", gradient_map);
     return gradient_map;
 }
 
@@ -204,6 +205,7 @@ pub fn duotone(mut photon_image: &mut PhotonImage, color_a : Rgb, color_b : Rgb)
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
     let gradient_map = create_gradient_map(color_a, color_b);
+    println!("Grad map {:?}", gradient_map);
 
     for x in 0..width {
         for y in 0..height {
@@ -221,6 +223,7 @@ pub fn duotone(mut photon_image: &mut PhotonImage, color_a : Rgb, color_b : Rgb)
             img.put_pixel(x, y, px);
         }
     }
+
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
 }

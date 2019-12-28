@@ -59,16 +59,16 @@
 //! Not all functions available in the core Rust library are available in WebAssembly (currently investigating this). Only WASM-friendly functions have been annotated with #[wasm_bindgen]. All supported WASM functions are displayed in the starter demo. 
 
 use wasm_bindgen::prelude::*;
-use web_sys::{CanvasRenderingContext2d, ImageData, HtmlCanvasElement};
+use web_sys::{CanvasRenderingContext2d, ImageData, HtmlCanvasElement, MouseEvent};
 use wasm_bindgen::Clamped;
 use image::{GenericImage, GenericImageView};
 use base64::decode;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
-#[cfg(feature = "wee_alloc")]
-#[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+// #[cfg(feature = "wee_alloc")]
+// #[global_allocator]
+// static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 /// Provides the image's height, width, and contains the image's raw pixels.
 /// For use when communicating between JS and WASM, and also natively. 
@@ -113,13 +113,17 @@ impl PhotonImage {
     }
 
     /// Get the width of the PhotonImage.
-    #[wasm_bindgen(getter)]
+
     pub fn get_width(&self) -> u32 {
         self.width
     }
 
+
+    pub fn get_raw_pixels(&self) -> Vec<u8> {
+        self.raw_pixels.clone()
+    }
+
     /// Get the height of the PhotonImage.
-    #[wasm_bindgen(getter)]
     pub fn get_height(&self) -> u32 {
         self.height
     }
@@ -165,6 +169,11 @@ pub fn run() -> Result<(), JsValue> {
     Ok(())
 }
 
+#[wasm_bindgen]
+pub fn add(n1: u32, n2: u32) -> u32 {
+    n1 + n2
+}
+
 /// Get the ImageData from a 2D canvas context
 #[wasm_bindgen]
 pub fn get_image_data(canvas: &HtmlCanvasElement, ctx: &CanvasRenderingContext2d) -> ImageData {
@@ -203,11 +212,10 @@ pub fn open_image(canvas: HtmlCanvasElement, ctx: CanvasRenderingContext2d) -> P
 /// Experimental WASM-only canvas manipulation; without converting to PhotonImages etc.,
 #[wasm_bindgen]
 pub fn canvas_wasm_only(canvas: HtmlCanvasElement, ctx: CanvasRenderingContext2d) {
-    let width = canvas.width();
-    let height = canvas.height();
+
     let imgdata = get_image_data(&canvas, &ctx);
     
-    let mut vec_data = imgdata.data().to_vec();
+    let vec_data = imgdata.data().to_vec();
 
     let mut image = PhotonImage {raw_pixels: vec_data, width: canvas.width(), height: canvas.height() };
 
@@ -285,8 +293,37 @@ pub fn to_image_data(photon_image: PhotonImage) -> ImageData {
     return new_img_data;
 }
 
-/// Convert an Image element into a Canvas and replace the image element with the canvas
-/// in the DOM. 
+fn set_panic_hook() {
+    // When the `console_error_panic_hook` feature is enabled, we can call the
+    // `set_panic_hook` function to get better error messages if we ever panic.
+    #[cfg(feature = "console_error_panic_hook")]
+    console_error_panic_hook::set_once();
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        assert_eq!(2 + 2, 4);
+    }
+}
+
+pub mod channels;
+pub mod effects;
+pub mod transform;
+pub mod conv;
+pub mod filters;
+pub mod monochrome;
+pub mod native;
+pub mod text;
+pub mod colour_spaces;
+pub mod multiple;
+pub mod noise;
+pub mod helpers;
+
+
+// Convert an Image element into a Canvas and replace the image element with the canvas
+// in the DOM. 
 // #[cfg(target_arch = "wasm32")]
 // #[wasm_bindgen]
 // pub fn image_to_canvas(image_element: HtmlImageElement) {    
@@ -308,23 +345,3 @@ pub fn to_image_data(photon_image: PhotonImage) -> ImageData {
 //     // return canvas;
 
 // }
-
-fn set_panic_hook() {
-    // When the `console_error_panic_hook` feature is enabled, we can call the
-    // `set_panic_hook` function to get better error messages if we ever panic.
-    #[cfg(feature = "console_error_panic_hook")]
-    console_error_panic_hook::set_once();
-}
-
-pub mod channels;
-pub mod effects;
-pub mod transform;
-pub mod conv;
-pub mod filters;
-pub mod monochrome;
-pub mod native;
-pub mod text;
-pub mod colour_spaces;
-pub mod multiple;
-pub mod noise;
-pub mod helpers;

@@ -40,11 +40,11 @@ use crate::channels::palette::Hue;
 /// ```
 /// **Note**: Note the use of a minus symbol when decreasing the channel. 
 #[wasm_bindgen]
-pub fn alter_channel(mut img: &mut PhotonImage, channel: usize, amt: i16) {
-    if (channel > 2) {
+pub fn alter_channel(img: &mut PhotonImage, channel: usize, amt: i16) {
+    if channel > 2 {
         panic!("Invalid channel index passed. Channel must be 0, 1, or 2 (Red=0, Green=1, Blue=2)");
     }
-    if (amt > 255) {
+    if amt > 255 {
         panic!("Amount to increment/decrement should be between -255 and 255");
     }
     let end = img.raw_pixels.len() - 4;
@@ -53,6 +53,7 @@ pub fn alter_channel(mut img: &mut PhotonImage, channel: usize, amt: i16) {
         let inc_val: i16 = img.raw_pixels[i] as i16 + amt as i16;
         img.raw_pixels[i + channel] = num::clamp(inc_val, 0, 255) as u8;
     };
+
 }
 
 /// Increment or decrement every pixel's Red channel by a constant.
@@ -70,22 +71,7 @@ pub fn alter_channel(mut img: &mut PhotonImage, channel: usize, amt: i16) {
 /// ```
 #[wasm_bindgen]
 pub fn alter_red_channel(photon_image: &mut PhotonImage, amt: i16) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
-
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            
-            let final_px_data_1: i32 = px.data[0] as i32 + amt as i32;
-            px.data[0] = num::clamp(final_px_data_1, 0, 255) as u8;
-            
-            img.put_pixel(x, y, px);
-
-        }
-    }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
+    return alter_channel(photon_image, 0, amt);
 }
 
 #[wasm_bindgen]
@@ -160,17 +146,17 @@ pub fn alter_blue_channel(img: &mut PhotonImage, amt: i16) {
 /// photon::channels::inc_two_channels(&mut img, 0, 10, 2, 20);
 /// ```
 #[wasm_bindgen]
-pub fn alter_two_channels(mut img: &mut PhotonImage, channel1: usize, amt1: i16, channel2: usize, amt2: i16) {
-    if (channel1 > 2) {
+pub fn alter_two_channels(img: &mut PhotonImage, channel1: usize, amt1: i16, channel2: usize, amt2: i16) {
+    if channel1 > 2 {
         panic!("Invalid channel index passed. Channel1 must be equal to 0, 1, or 2.");
     }
-    if (channel2 > 2) {
+    if channel2 > 2 {
         panic!("Invalid channel index passed. Channel2 must be equal to 0, 1, or 2");
     }
-    if (amt1 > 255) {
+    if amt1 > 255 {
         panic!("Amount to inc/dec channel by should be between -255 and 255");
     }
-    if (amt2 > 255) {
+    if amt2 > 255 {
         panic!("Amount to inc/dec channel by should be between -255 and 255");
     }
     let end = img.raw_pixels.len() - 4;
@@ -200,14 +186,14 @@ pub fn alter_two_channels(mut img: &mut PhotonImage, channel1: usize, amt1: i16,
 /// // photon::channels::alter_channels(&mut img, 10, 20, 50);
 /// ```
 #[wasm_bindgen]
-pub fn alter_channels(mut img: &mut PhotonImage, r_amt: i16, g_amt: i16, b_amt: i16) {
-    if (r_amt > 255) {
+pub fn alter_channels(img: &mut PhotonImage, r_amt: i16, g_amt: i16, b_amt: i16) {
+    if r_amt > 255 {
         panic!("Invalid r_amt passed. Amount to inc/dec channel by should be between -255 and 255");
     }
-    if (g_amt > 255) {
+    if g_amt > 255 {
         panic!("Invalid g_amt passed. Amount to inc/dec channel by should be between -255 and 255");
     }
-    if (b_amt > 255) {
+    if b_amt > 255 {
         panic!("Invalid b_amt passed. Amount to inc/dec channel by should be between -255 and 255");
     }
     let end = img.raw_pixels.len() - 4;
@@ -240,8 +226,8 @@ pub fn alter_channels(mut img: &mut PhotonImage, r_amt: i16, g_amt: i16, b_amt: 
 /// photon::channels::remove_channel(&mut img, 0, 100);
 /// ```
 #[wasm_bindgen]
-pub fn remove_channel(mut img: &mut PhotonImage, channel: usize, min_filter: u8) {
-    if (channel > 2) {
+pub fn remove_channel(img: &mut PhotonImage, channel: usize, min_filter: u8) {
+    if channel > 2 {
         panic!("Invalid channel index passed. Channel must be equal to 0, 1, or 2.");
     }
     let end = img.raw_pixels.len() - 4;
@@ -317,20 +303,30 @@ pub fn remove_blue_channel(img: &mut PhotonImage, min_filter: u8) {
 /// photon::channels::swap_channels(&mut img, 0, 2);
 /// ```
 #[wasm_bindgen]
-pub fn swap_channels(mut img: &mut PhotonImage, channel1: usize, channel2: usize) {
-    if (channel1 > 2) {
+pub fn swap_channels(img: &mut PhotonImage, mut channel1: usize, mut channel2: usize) {
+    if channel1 > 2 {
         panic!("Invalid channel index passed. Channel1 must be equal to 0, 1, or 2.");
     }    
-    if (channel2 > 2) {
+    if channel2 > 2 {
         panic!("Invalid channel index passed. Channel2 must be equal to 0, 1, or 2.");
     }
     let end = img.raw_pixels.len() - 4;
-    for i in (0..end).step_by(4) {        
+
+    if channel1 > channel2 {
+        let temp = channel1;
+        channel1 = channel2;
+        channel2 = temp;
+    }
+
+    for i in (channel1..end).step_by(4) {        
         img.raw_pixels[i] = 0;
-            
+
+        let difference = channel2 - channel1;
+        
         let temp_channel1 = img.raw_pixels[i];
-        img.raw_pixels[i] = img.raw_pixels[i + 1];
-        img.raw_pixels[i + 1] = temp_channel1;
+        img.raw_pixels[i] = img.raw_pixels[i + difference];
+        img.raw_pixels[i + difference] = temp_channel1;
+
     };
 }
 
@@ -468,7 +464,6 @@ pub fn selective_saturate(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
     selective(img, "saturate", ref_color, amt);
 }
 
-
 fn selective(mut photon_image: &mut PhotonImage, mode: &'static str, ref_color:Rgb, amt: f32) {
     let img = helpers::dyn_image_from_raw(&photon_image);
     let (_width, _height) = img.dimensions();
@@ -560,4 +555,29 @@ pub fn selective_greyscale(mut photon_image: PhotonImage, ref_color: Rgb) {
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn ret_10(a: i32) -> i32 {
+        10
+    }
+    #[test]
+    fn test1() {
+        // Create an image from a vec of pixels
+        let raw_pix = vec![255, 255, 255, 0, 10, 10, 10, 0, 255, 255, 255, 0, 10, 10, 10, 0];
+
+        // let img_buffer = ImageBuffer::from_vec(2, 2, raw_pix).unwrap();
+        // let dynimage = image::ImageRgba8(img_buffer);
+        // let photon_image = 
+
+
+        
+        let value = ret_10(4);
+        assert_eq!(10, value);
+    }
+
 }

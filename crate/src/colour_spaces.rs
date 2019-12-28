@@ -7,6 +7,49 @@ use palette::{Hsl, Lch, Shade, Pixel, Saturate, Srgba, Hue, Hsv};
 use crate::{PhotonImage, helpers};
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
+use std::cmp::min;
+
+/// Apply gamma correction. 
+// #[wasm_bindgen]
+// pub fn gamma_correction(mut photon_image: &mut PhotonImage, red: f32, green: f32,  blue: f32) {
+//     let img = helpers::dyn_image_from_raw(&photon_image);
+//     let (width, height) = img.dimensions();
+//     let mut img = img.to_rgba();
+
+//     // Initialize gamma arrays 
+//     let mut gammaR: Vec<u8> = vec![];
+//     let mut gammaG: Vec<u8> = vec![];
+//     let mut gammaB: Vec<u8> = vec![];
+
+//     let MAX_VALUE_INT = 255;
+//     let MAX_VALUE_FLT = 255.0;
+//     let REVERSE = 1.0;
+
+//     // Set values within gamma arrays
+//     for i in 0..256 {
+//         gammaR[i] = min(MAX_VALUE_INT, ((MAX_VALUE_FLT * ((i as f32 / MAX_VALUE_FLT) as u32).powf(REVERSE / red) + 0.5 ) as u8));
+//         gammaG[i] = min(MAX_VALUE_INT, ((MAX_VALUE_FLT * ((i as f32 / MAX_VALUE_FLT) as u32).powf(REVERSE / green) + 0.5 ) as u8);
+//         gammaB[i] = min(MAX_VALUE_INT, ((MAX_VALUE_FLT * ((i as f32 / MAX_VALUE_FLT) as u32).powf(REVERSE / blue) + 0.5 ) as u8);
+
+//     }
+
+//     for x in 0..width {
+//         for y in 0..height {
+//             let px_data = img.get_pixel(x, y).data;
+            
+//             let r_val = px_data[0];
+//             let g_val = px_data[1];
+//             let b_val = px_data[2];
+
+//             px_data[0] = gammaR[r_val as usize];
+//             px_data[1] = gammaG[g_val as usize];
+//             px_data[2] = gammaB[b_val as usize];
+            
+//             img.put_pixel(x, y, px);
+//             }
+//         }
+//     photon_image.raw_pixels = img.to_vec();
+// }
 
 /// Image manipulation effects in the LCh colour space
 /// 
