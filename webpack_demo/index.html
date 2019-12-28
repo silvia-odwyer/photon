@@ -8,7 +8,6 @@
     </head>
     <style>
     
-      
     @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap');
     
     body {
@@ -174,6 +173,7 @@
         <div class="sidebar">
             <h3 class="logo">Photon</h3>
             <ul>
+              <li id="resize">Resize</li>
               <h4>Base64 Example</h4>
               <li id="base64">Base64 Example Demo</li>
 
@@ -219,7 +219,6 @@
               <li class="filter" id="vintage">Vintage</li>
               <li class="filter" id="perfume">Perfume</li>
               <li class="filter" id="serenity">Serenity</li>
-
 
               <h4>Monochrome</h4>
               <li class="effect" id="grayscale">Grayscale</li>
@@ -312,7 +311,13 @@
                 <div id="image_container"></div>
 
                 <canvas id="canvas"></canvas>
+                
+                <section id="resized_imgs">
+                
+                </section>
               </section>
+
+
 
               <section class="benchmarks">
                 <div id="time"></div>

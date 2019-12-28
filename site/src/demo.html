@@ -164,11 +164,19 @@
             flex-direction: row;
             justify-content: flex-end;
           }
+          a {
+            color:rgb(105, 105, 105);
+            text-decoration: none;
+            margin-left: 1em;
+          }
+          li:hover {
+            color: rgb(143, 143, 143);
+          }
 
         </style>
       <div class="default">
           <div class="sidebar">
-            <h3 class="logo">Photon</h3>
+            <h3 class="logo"><a href="index.html">Photon</a></h3>
             <ul>
               <h4>Channels</h4>
               <li class="effect" id="inc_red_channel">Inc Red Channel</li>
@@ -222,6 +230,7 @@
               <li class="effect" id="blue_channel_grayscale">Blue Grayscale</li>
 
               <h4>Effects</h4>
+              <li class="effect" id="duotone">Duotone</li>
               <li class="effect" id="horizontal_strips">Horizontal Strips</li>
               <li class="effect" id="vertical_strips">Vertical Strips</li>
               <li class="effect" id="primary">Primary</li>
@@ -237,7 +246,7 @@
               <li class="effect" id="gradient">Gradient Overlay</li>
 
               <h4>Transform</h4>
-              <li class="effect" id="resize">Resize Image</li>
+              <li id="resize">Resize Image</li>
               <li class="effect" id="flipv">Flip Vertical</li>              
               <li class="effect" id="fliph">Flip Horizontal</li>
 
@@ -263,7 +272,7 @@
               <li class="effect" id="box_blur">Box Blur</li>
               <li class="effect" id="gaussian_blur">Gaussian Blur</li>
               <li class="effect" id="sharpen">Sharpen</li>
-              <li id="hue_rotate">JavaScript</li>
+
 
               <h4>Multiple</h4>
               <h5>Blend</h5>
@@ -294,7 +303,10 @@
           
           <nav class="topnav">
             <ul>
-              <li><a href="#change_img">Change Image</a></li>
+              <li><a href="#change_img">
+                <input class="file-input" type="file" id='img_uploader' name="upload-image">
+
+              </a></li>
               <li><a href="https://silvia-odwyer.github.io/photon/docs/photon/index.html">Docs</a></li>
               <li><a href="https://github.com/silvia-odwyer/photon">GitHub</a></li>
             </ul>
@@ -309,11 +321,15 @@
                 <div id="image_container"></div>
 
                 <canvas id="canvas"></canvas>
+
+
+
+                </article>
               </section>
-              <input class="file-input" type="file" id='img_uploader' name="upload-image">
               <section class="benchmarks">
                 <div id="time"></div>
                 <div id="code"></div>
+                <article id="resized_imgs">
               </section>
           
           </div>

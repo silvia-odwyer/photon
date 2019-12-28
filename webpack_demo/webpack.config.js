@@ -5,7 +5,7 @@ const dist = path.resolve(__dirname, "dist");
 const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-module.exports = {
+var mainConfig = {
   entry: "./js/index.js",
   output: {
     path: dist,
@@ -43,3 +43,23 @@ module.exports = {
     }),
   ]
 };
+
+const workerConfig = {
+  entry: "./js/worker.js",
+  target: "webworker",
+  plugins: [
+    new WasmPackPlugin({
+      crateDirectory: path.resolve(__dirname, "../crate")
+    })
+  ],
+  resolve: {
+    extensions: [".js", ".wasm"]
+  },
+  output: {
+    path: dist,
+    filename: "worker.js"
+  }
+};
+
+
+module.exports = [mainConfig, workerConfig]

@@ -9,6 +9,14 @@ import Watermark from "./wasm_logo.png"
 var canvas, canvas2, watermark_canvas;
 var ctx, ctx2, watermark_ctx;
 
+const worker = new Worker("worker.js");
+
+worker.postMessage({msg: "hello worker"});
+worker.addEventListener("message", evt => {
+  console.log("hi");
+})
+
+
 import("../../crate/pkg").then(module => {
   var startTime;
   var endTime;
@@ -57,6 +65,32 @@ import("../../crate/pkg").then(module => {
     button.addEventListener("click", function(){blendImages(event)}, false);
   }
 
+  let resize_btn = document.getElementById("resize");
+  resize_btn.addEventListener("click", resize, false);
+
+  function resize() {
+    console.time("resize")
+
+    let resized_img_container = document.getElementById("resized_imgs");
+
+    console.log("RESIZE IMAGE")
+    ctx.drawImage(newimg, 0, 0);
+    startTime = performance.now();
+
+    let photon_img = module.open_image(canvas, ctx);
+
+    let newcanvas = module.resize(photon_img, 200, 200);
+    resized_img_container.appendChild(newcanvas);
+    let newctx = newcanvas.getContext("2d");
+    let newimgdata = newctx.getImageData(0, 0, newcanvas.width, newcanvas.height);
+    console.log(newimgdata);
+    console.log(newcanvas);
+    endTime = performance.now();
+    updateBenchmarks();
+    updateEffectName(event.target);
+    console.timeEnd("resize");
+  }
+
   let change_image_btn = document.getElementById("change_img");
   change_image_btn.addEventListener("click", changeImageFromNav, false);
 
@@ -64,14 +98,16 @@ import("../../crate/pkg").then(module => {
   vec_btn.addEventListener("click", vec_to_photonimage_example, false);
 
   function base64_example() {
-    console.time("wasm_time"); 
-
     ctx.drawImage(newimg, 0, 0);
     startTime = performance.now();
-
-    let base64 = canvas.toDataURL();
-    base64 = base64.substr(22, base64.length);
     
+    console.time("canvas_data_url");   
+    let base64 = canvas.toDataURL();
+    console.timeEnd("canvas_data_url");
+
+
+    base64 = base64.substr(22, base64.length);
+    console.time("base64_wasm_time");     
     // Convert the raw base64 data to a PhotonImage.
     let photon_img = module.base64_to_image(base64);
 
@@ -79,7 +115,7 @@ import("../../crate/pkg").then(module => {
 
     // Update the canvas with the new imagedata
     module.putImageData(canvas, ctx, photon_img);
-    console.timeEnd("wasm_time");
+    console.timeEnd("base64_wasm_time");
     endTime = performance.now();
     updateBenchmarks();
     updateEffectName(event.target);
@@ -102,16 +138,8 @@ import("../../crate/pkg").then(module => {
     // Setup watermark
     let watermark_img = module.open_image(watermark_canvas, watermark_ctx);
 
-    let base64 = canvas.toDataURL();
-    
-    base64 = base64.substr(22, base64.length);
-    console.log(base64)
-    
-    let base64_to_img = module.base64_to_image(base64);
-    console.log("base64", base64_to_img);
-
     // Maps the name of an effect to its relevant function in the Rust library
-    let filter_dict = {"grayscale" : function(){return module.grayscale(base64_to_img)}, 
+    let filter_dict = {"grayscale" : function(){return module.grayscale(rust_image)}, 
                       "offset_red": function(){return module.offset(rust_image, 0, 15)},                    
                       "offset_blue": function(){return module.offset(rust_image, 1, 15)},
                       "offset_green": function(){return module.offset(rust_image, 2, 15)},
@@ -140,7 +168,7 @@ import("../../crate/pkg").then(module => {
                       "saturate_hsl": function() {module.saturate_hsl(rust_image, 0.3)}, 
                       "saturate_hsv": function() {module.saturate_hsv(rust_image, 0.3)}, 
                       "saturate_lch": function() {module.saturate_lch(rust_image, 0.3)}, 
-                      "inc_red_channel": function() {return module.alter_channel(base64_to_img, 0, 120)}, 
+                      "inc_red_channel": function() {return module.alter_red_channel(rust_image, 120)}, 
                       "inc_blue_channel": function() {return module.alter_channel(rust_image, 2, 100)}, 
                       "inc_green_channel": function() {return module.alter_channel(rust_image, 1, 100)}, 
                       "inc_two_channels": function() {return module.alter_channel(rust_image, 1, 30);}, 
@@ -188,7 +216,7 @@ import("../../crate/pkg").then(module => {
     filter_dict[filter_name]();
 
     // Update the canvas with the new imagedata
-    module.putImageData(canvas, ctx, base64_to_img);
+    module.putImageData(canvas, ctx, rust_image);
     console.timeEnd("wasm_time");
     endTime = performance.now();
     updateBenchmarks();
