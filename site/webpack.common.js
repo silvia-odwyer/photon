@@ -25,6 +25,10 @@ module.exports = {
         }]
       },
       {
+        test: /\.worker\.js$/,
+        use: { loader: 'worker-loader' }
+      },
+      {
         test: /\.(jpe?g|png|gif|svg)$/,
         use: [{
           loader: 'file-loader',
@@ -132,6 +136,7 @@ module.exports = {
     path: path.resolve(__dirname, '../docs'),
     filename: '[name].bundle.js',
     chunkFilename: '[id].bundle_[chunkhash].js',
-    sourceMapFilename: '[file].map'
+    sourceMapFilename: '[file].map',
+    globalObject: `(typeof self !== 'undefined' ? self : this)`, 
   }
 };

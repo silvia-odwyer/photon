@@ -59,10 +59,11 @@
 //! Not all functions available in the core Rust library are available in WebAssembly (currently investigating this). Only WASM-friendly functions have been annotated with #[wasm_bindgen]. All supported WASM functions are displayed in the starter demo. 
 
 use wasm_bindgen::prelude::*;
-use web_sys::{CanvasRenderingContext2d, ImageData, HtmlCanvasElement, MouseEvent};
+use web_sys::{CanvasRenderingContext2d, ImageData, HtmlCanvasElement};
 use wasm_bindgen::Clamped;
 use image::{GenericImage, GenericImageView};
 use base64::decode;
+
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -169,11 +170,6 @@ pub fn run() -> Result<(), JsValue> {
     Ok(())
 }
 
-#[wasm_bindgen]
-pub fn add(n1: u32, n2: u32) -> u32 {
-    n1 + n2
-}
-
 /// Get the ImageData from a 2D canvas context
 #[wasm_bindgen]
 pub fn get_image_data(canvas: &HtmlCanvasElement, ctx: &CanvasRenderingContext2d) -> ImageData {
@@ -253,6 +249,7 @@ pub fn base64_to_image(base64: &str) -> PhotonImage {
 
 }
 
+/// Convert a base64 string to a Vec of u8s.
 #[wasm_bindgen]
 pub fn base64_to_vec(base64: &str) -> Vec<u8> {
     let vec = decode(base64).unwrap();

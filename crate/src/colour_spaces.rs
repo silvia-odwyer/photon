@@ -7,7 +7,6 @@ use palette::{Hsl, Lch, Shade, Pixel, Saturate, Srgba, Hue, Hsv};
 use crate::{PhotonImage, helpers};
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
-use std::cmp::min;
 
 /// Apply gamma correction. 
 // #[wasm_bindgen]
@@ -551,6 +550,38 @@ pub fn desaturate_hsl(img: &mut PhotonImage, level: f32) {
 pub fn desaturate_lch(img: &mut PhotonImage, level: f32) {
     return lch(img, "desaturate", level);
 }
+
+// #[wasm_bindgen]
+// pub fn selective_color_convert(mut photon_image: &mut PhotonImage, ref_color:Rgb, new_color:Rgb, fraction: f32) {
+//     let img = helpers::dyn_image_from_raw(&photon_image);
+//     let (_width, _height) = img.dimensions();
+//     let mut img = img.to_rgba();
+//     for x in 0.._width {
+//         for y in 0.._height {
+//             let mut px = img.get_pixel(x, y);
+
+//             // Reference colour to compare the current pixel's colour to
+//             let lab: Lab = Srgb::new(ref_color.r as f32 / 255.0, ref_color.g as f32 / 255.0, ref_color.b as f32 / 255.0).into();
+      
+//             // Convert the current pixel's colour to the l*a*b colour space
+//             let r_val: f32 = px.data[0] as f32 / 255.0;
+//             let g_val: f32 = px.data[1] as f32 / 255.0;
+//             let b_val: f32 = px.data[2] as f32 / 255.0;
+
+//             let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
+
+//             let sim = color_sim(lab, px_lab);
+//             if sim > 0 && sim < 40 {
+//                 let newr = (((new_color.r - ref_color.r) as f32) * fraction + new_color.r as f32) as u8;
+//                 let newg = (((new_color.g - ref_color.g) as f32) * fraction + new_color.g as f32) as u8;
+//                 let newb = (((new_color.b - ref_color.b) as f32) * fraction + new_color.b as f32) as u8;
+            
+//                 img.put_pixel(x, y, image::Rgba([newr, newg, newb, 255]));
+//             }
+//         }
+//     }
+//     photon_image.raw_pixels = img.to_vec();
+// }
 
 // pub fn correct(img: &DynamicImage, mode: &'static str, colour_space: &'static str, amt: f32) -> DynamicImage {
 //     let mut img  = img.to_rgb();

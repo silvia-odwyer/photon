@@ -29,7 +29,6 @@ pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32)
     if channel_index > 2 {
         panic!("Invalid channel index passed. Channel1 must be equal to 0, 1, or 2.");
     }
-    let end = photon_image.raw_pixels.len() - 4;
 
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
@@ -41,7 +40,7 @@ pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32)
 
             if x + offset < width - 1 && y + offset < height - 1  {
 
-                let offset_px = img.get_pixel(x + offset, y + offset);
+            let offset_px = img.get_pixel(x + offset, y + offset);
             px.data[channel_index] = offset_px.data[channel_index];
                 
             }
@@ -140,90 +139,12 @@ pub fn multiple_offsets(mut photon_image: &mut PhotonImage, offset: u32, channel
             if x as i32 - offset as i32 > 0 && y as i32 - offset as i32 > 0  {
                 let offset_px2 = img.get_pixel(x - offset, y );
 
-                px.data[channel_index2] = offset_px2.data[channel_index2];
-                
+                px.data[channel_index2] = offset_px2.data[channel_index2];                
             }
 
-
             img.put_pixel(x, y, px);
         }
     }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
-}
-
-/// Create a gradient map between two RGB colours.
-/// 
-/// # Arguments
-/// * `color_a`: An RGB color
-/// * `color_b`: An RGB color
-pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
-    println!("hi");
-    println!("{}", color_a.r);
-    let mut gradient_map = vec![];
-
-    let maxVal = 255;
-    let mut r_val = 0;
-
-    for i in 0..=255 {
-        let intensityB = maxVal - i;
-        println!("intensity b {}", intensityB);
-        // println!("i {}", i);
-        // println!("intensity B {}", intensityB);
-        // println!("colorA.r {}", colorA.r);
-        // println!("colorB.r {}", colorB.r);
-        
-        // println!("######");
-        r_val = (i * color_a.r + intensityB * color_b.r) / maxVal as u8;
-        println!("r_val {}", r_val);
-        gradient_map.push(Rgb {
-            r: r_val , 
-            g: (i * color_a.g + intensityB * color_b.g) / maxVal as u8 ,
-            b: (i * color_a.b + intensityB * color_b.b) / maxVal as u8
-        });
-    }
-    println!("{:?}", gradient_map);
-    return gradient_map;
-}
-
-/// Pass the image through a duotone filter (comprising two colours, and their gradient from one colour to the other).
-/// This is similar to greyscaling an image, but rather than having the gradient transition from black to white, it should
-/// be between two other colours, red to green, for example. 
-/// # Arguments
-/// * `img` - A PhotonImage that contains a view into the image.
-/// * `color_a` - An RGB color. 
-/// * `color_b` - An RGB color.
-/// # Example
-///
-/// ```
-/// // For example, to pass an image through a duotone filter:
-/// use photon::effects;
-/// photon::effects::duotone(img, colour_a, colour_b);
-/// ```
-#[wasm_bindgen]
-pub fn duotone(mut photon_image: &mut PhotonImage, color_a : Rgb, color_b : Rgb) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
-    let gradient_map = create_gradient_map(color_a, color_b);
-    println!("Grad map {:?}", gradient_map);
-
-    for x in 0..width {
-        for y in 0..height {
-
-            let mut px = img.get_pixel(x, y);
-
-            let r = px.data[0];
-            let g = px.data[1];
-            let b = px.data[2];
-            
-            px.data[0] = gradient_map[r as usize].r as u8;
-            px.data[1] = gradient_map[g as usize].g as u8;
-            px.data[2] = gradient_map[b as usize].b as u8;
-
-            img.put_pixel(x, y, px);
-        }
-    }
-
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
 }

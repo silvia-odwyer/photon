@@ -31,18 +31,18 @@ pub fn monochrome(mut photon_image: &mut PhotonImage, r_offset: u32, g_offset: u
 
     for x in 0..width {
         for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+            let px = img.get_pixel(x, y);
             let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
             let mut avg = (r_val + g_val + b_val) / 3;
             if avg >= 255 {
                 avg = 255
             }
             
-            px.data[0] = if avg as u32 + r_offset < 255 { avg as u8 + r_offset as u8} else { 255 };
-            px.data[1] = if avg as u32 + g_offset < 255 { avg as u8 + g_offset as u8} else { 255 };
-            px.data[2] = if avg as u32 + b_offset < 255 { avg as u8 + b_offset as u8} else { 255 };
+            let new_r = if avg as u32 + r_offset < 255 { avg as u8 + r_offset as u8} else { 255 };
+            let new_g = if avg as u32 + g_offset < 255 { avg as u8 + g_offset as u8} else { 255 };
+            let new_b = if avg as u32 + b_offset < 255 { avg as u8 + b_offset as u8} else { 255 };
 
-            img.put_pixel(x, y, px);
+            img.put_pixel(x, y, image::Rgba([new_r, new_g, new_b, 255]));
         }
     }
     let raw_pixels = img.raw_pixels();
@@ -68,14 +68,14 @@ pub fn sepia(mut photon_image: &mut PhotonImage) {
 
     for x in 0..width {
         for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+            let px = img.get_pixel(x, y);
             let (r_val, g_val, b_val) = (px.data[0] as f32, px.data[1] as f32, px.data[2] as f32);
             let avg = 0.3 * r_val + 0.59 * g_val + 0.11 * b_val;
 
-            px.data[0] = if avg as u32 + 100 < 255 { avg as u8 + 100} else { 255 };
-            px.data[1] = if avg as u32 + 50 < 255 { avg as u8 + 50 } else { 255 };
+            let new_r = if avg as u32 + 100 < 255 { avg as u8 + 100} else { 255 };
+            let new_g = if avg as u32 + 50 < 255 { avg as u8 + 50 } else { 255 };
       
-            img.put_pixel(x, y, px);
+            img.put_pixel(x, y, image::Rgba([new_r, new_g, b_val as u8, 255]));
         }
     }
     let raw_pixels = img.raw_pixels();
@@ -101,16 +101,14 @@ pub fn grayscale(mut photon_image: &mut PhotonImage) {
 
     for x in 0..width {
         for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+            let px = img.get_pixel(x, y);
             let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
-            let mut avg = (r_val + g_val + b_val) / 3;
+            let mut avg = ((r_val + g_val + b_val) / 3) as u8;
             if avg >= 255 {
                 avg = 255
             }
-            px.data[0] = avg as u8;
-            px.data[1] = avg as u8;
-            px.data[2] = avg as u8;
-            img.put_pixel(x, y, px);
+
+            img.put_pixel(x, y, image::Rgba([avg, avg, avg, 255]));
         }
     }
     let raw_pixels = img.raw_pixels();
@@ -136,19 +134,17 @@ pub fn grayscale_human_corrected(mut photon_image: &mut PhotonImage) {
 
     for x in 0..width {
         for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+            let px = img.get_pixel(x, y);
             let (r_val, g_val, b_val) = (px.data[0] as f32, px.data[1] as f32, px.data[2] as f32);
 
-            let mut avg = r_val * 0.3 + g_val * 0.59 + b_val * 0.11;
+            let mut avg: u8 = (r_val * 0.3 + g_val * 0.59 + b_val * 0.11) as u8;
             
-            if avg >= 255.0 {
-                avg = 255.0
+            if avg >= 255 {
+                avg = 255
             }
             
-            px.data[0] = avg as u8;
-            px.data[1] = avg as u8;
-            px.data[2] = avg as u8;
-            img.put_pixel(x, y, px);
+
+            img.put_pixel(x, y, image::Rgba([avg, avg, avg, 255]));
         }
     }
     let raw_pixels = img.raw_pixels();
@@ -174,23 +170,20 @@ pub fn desaturate(mut photon_image: &mut PhotonImage) {
 
     for x in 0..width {
         for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+            let px = img.get_pixel(x, y);
             let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
             
             // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
             let mut rgb_vals = vec![r_val, g_val, b_val];
             rgb_vals.sort();
 
-            let mut gray = (rgb_vals[0] + rgb_vals[2]) / 2;
+            let mut gray = ((rgb_vals[0] + rgb_vals[2]) / 2) as u8;
 
             if gray >= 255 {
                 gray = 255
             }
             
-            px.data[0] = gray as u8;
-            px.data[1] = gray as u8;
-            px.data[2] = gray as u8;
-            img.put_pixel(x, y, px);
+            img.put_pixel(x, y, image::Rgba([gray, gray, gray, 255]));
         }
     }
     let raw_pixels = img.raw_pixels();
@@ -215,23 +208,20 @@ pub fn decompose_min(mut photon_image: &mut PhotonImage) {
 
     for x in 0..width {
         for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+            let px = img.get_pixel(x, y);
             let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
             
             // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
             let mut rgb_vals = vec![r_val, g_val, b_val];
             rgb_vals.sort();
 
-            let mut gray = rgb_vals[0];
+            let mut gray = rgb_vals[0] as u8;
 
             if gray >= 255 {
                 gray = 255
             }
             
-            px.data[0] = gray as u8;
-            px.data[1] = gray as u8;
-            px.data[2] = gray as u8;
-            img.put_pixel(x, y, px);
+            img.put_pixel(x, y, image::Rgba([gray, gray, gray, 255]));
         }
     }
     let raw_pixels = img.raw_pixels();
@@ -256,19 +246,16 @@ pub fn decompose_max(mut photon_image: &mut PhotonImage) {
 
     for x in 0..width {
         for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+            let px = img.get_pixel(x, y);
             let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
             
             // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
             let mut rgb_vals = vec![r_val, g_val, b_val];
             rgb_vals.sort();
 
-            let gray = rgb_vals[2];
+            let gray = rgb_vals[2] as u8;
             
-            px.data[0] = gray as u8;
-            px.data[1] = gray as u8;
-            px.data[2] = gray as u8;
-            img.put_pixel(x, y, px);
+            img.put_pixel(x, y, image::Rgba([gray, gray, gray, 255]));
         }
     }
     let raw_pixels = img.raw_pixels();
@@ -303,13 +290,9 @@ pub fn grayscale_shades(mut photon_image: &mut PhotonImage, num_shades: u8) {
             
             let dividend = avg / conversion as f32;
 
-            let gray = (dividend + 0.5) * conversion;
-            let mut px = img.get_pixel(x, y);
+            let gray = ((dividend + 0.5) * conversion) as u8;
             
-            px.data[0] = gray as u8;
-            px.data[1] = gray as u8;
-            px.data[2] = gray as u8;
-            img.put_pixel(x, y, px);
+            img.put_pixel(x, y, image::Rgba([gray, gray, gray, 255]));
         }
     }
     let raw_pixels = img.raw_pixels();

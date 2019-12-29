@@ -1,5 +1,6 @@
-//! Draw text to an image.
-//! For extended graphic design/text-drawing functionality, a new library is being developed currently.
+//! Draw text onto an image.
+//! For extended graphic design/text-drawing functionality, see [GDL](https://github.com/silvia-odwyer/gdl), 
+//! which is a graphic design library, compatible with Photon.
 
 extern crate image;
 use image::{Rgba, DynamicImage};

@@ -8,12 +8,10 @@ use crate::{PhotonImage};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use image::RgbaImage;
-use std::f64::consts::PI;
-use std::f64;
-use web_sys::{CanvasRenderingContext2d, ImageData, HtmlCanvasElement};
+// use std::f64::consts::PI;
+// use std::f64;
+use web_sys::{ImageData, HtmlCanvasElement};
 use wasm_bindgen::Clamped;
-use std::cell::Cell;
-use std::rc::Rc;
 
 /// Crop an image.
 /// 
@@ -162,52 +160,4 @@ pub fn resize(photon_img: &PhotonImage, width: u32, height: u32) -> PhotonImage 
     let resized_img = image::ImageRgba8(image::imageops::resize(&dyn_img, width, height, sampling_filter));
 
     return PhotonImage{ raw_pixels: resized_img.raw_pixels(), width: resized_img.width(), height: resized_img.height()}
-}
-
-/// Rotate an image.
-/// 
-/// # Arguments
-/// * `img` - A PhotonImage.
-/// 
-/// ## Example
-///
-/// ```
-/// // For example, to rotate an image:
-/// use photon::transform;
-/// let img = photon::open_image("img.jpg");
-/// let new_img = photon::transform::rotate(&mut img);
-/// // Write the contents of this image in JPG format.
-/// photon::helpers::save_image(new_img, "new_image.png");
-/// ```
-#[wasm_bindgen]
-pub fn rotate(photon_image: &mut PhotonImage) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
-
-    let width = img.width();
-    let height = img.height();
-
-    let angle: f64 = PI / 3.0;
-    let center_x: u32 = width / 2;
-    let center_y: u32 = height / 2;
-
-    let mut rotated_img: RgbaImage = ImageBuffer::new(width, height);
-
-    for x in 0..width {
-        for y in 0..height {
-            // let px = img.get_pixel(x, y);
-            let xp: u32 = ((x - center_x) as f64 * angle.cos() - (y - center_y) as f64 * angle.sin() + center_x as f64) as u32;
-            let yp: u32 = ((x - center_x) as f64 * angle.sin() + (y - center_y) as f64 * angle.cos() + center_y as f64) as u32;
-
-            if (xp >= 0 && xp < rotated_img.width()) && (yp >= 0 && yp < rotated_img.height()) {
-                let new_px = img.get_pixel(xp, yp);
-                rotated_img.put_pixel(x, y, new_px);
-            }
-
-        }
-    }
-
-
-    let dynimage = image::ImageRgba8(rotated_img);
-    let raw_pixels = dynimage.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
 }

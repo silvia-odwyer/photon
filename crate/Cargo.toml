@@ -22,6 +22,10 @@ rusttype="*"
 base64="*"
 time="*"
 wasm-bindgen = "0.2.25"
+primal-sieve = "0.2.9"
+lazy_static = "1.2"
+cfg-if = "0.1.6"
+
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
