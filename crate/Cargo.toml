@@ -1,9 +1,9 @@
 [package]
 authors = ["Silvia O'Dwyer <silviaodwyerdev@gmail.com>"]
-categories = ["wasm"]
+categories = ["wasm", "multimedia"]
 description = "High-performance image processing library for native use and the web"
 license = "Apache-2.0"
-name = "photon"
+name = "photon-rs"
 readme = "./README.md"
 repository = "https://github.com/silvia-odwyer/photon"
 version = "0.1.0"
@@ -12,6 +12,7 @@ exclude = [
     "fonts/*",
     "pkg/*",
 ]
+homepage = "https://silvia-odwyer.github.io/photon/"
 
 [lib]
 crate-type = ["cdylib", "rlib"]

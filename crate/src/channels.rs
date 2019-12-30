@@ -74,26 +74,6 @@ pub fn alter_red_channel(photon_image: &mut PhotonImage, amt: i16) {
     return alter_channel(photon_image, 0, amt);
 }
 
-#[wasm_bindgen]
-pub fn alter_red_channel_dyn(photon_image: &mut PhotonImage, amt: i16) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
-
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            
-            let final_px_data_1: i32 = px.data[0] as i32 + amt as i32;
-            px.data[0] = num::clamp(final_px_data_1, 0, 255) as u8;
-            
-            img.put_pixel(x, y, px);
-
-        }
-    }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
-}
-
 /// Increment or decrement every pixel's Green channel by a constant.
 /// 
 /// # Arguments
