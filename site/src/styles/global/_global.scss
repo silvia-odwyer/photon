@@ -19,6 +19,12 @@ h1, h2, h3 {
 
 }
 
+section h2 {
+  font-size: 2em;
+  font-weight: 400;
+  color: rgb(214, 214, 214);
+}
+
 p {
   font-family: "Open Sans", sans-serif;
 
@@ -320,9 +326,15 @@ button:hover {
 }
 
 .guide_pane {
-  min-height: 60vh;
-  margin-bottom: 10vh;
+  margin-bottom: 3vh;
+}
 
+.large_pane {
+  min-height: 50vh;
+}
+
+.med_pane {
+  min-height: 30vh;
 }
 
 .lhs_container {
@@ -343,6 +355,11 @@ button:hover {
 
 .guide_pane .container {
   grid-area: "guide_rhs";
+}
+
+#img_uploader {
+  margin: 0;
+  border: 0.1em solid white;
 }
 
 .tiles {
@@ -541,3 +558,37 @@ footer ul li {
 .b {animation:b 3s infinite;}
 .c {animation:c 3s infinite;}
 .d {animation:d 3s infinite;}
+
+ /* Style the navbar */
+ #navbar {
+  background-color: black;
+  z-index: 4;
+}
+
+#navbar a:hover {
+  color: rgb(177, 177, 177);
+}
+
+/* Navbar links */
+#navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  padding: 14px;
+  text-decoration: none;
+}
+
+/* The sticky class is added to the navbar with JS when it reaches its scroll position */
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.content {
+  padding-top: 15vh;
+}
+
+.chart {
+  max-height: 50%;
+}

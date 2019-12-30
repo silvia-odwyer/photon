@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../photon/index.html'><img src='../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../photon/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -229,6 +229,90 @@
 <span id="229">229</span>
 <span id="230">230</span>
 <span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! An image processing crate that provides a set of functions for image filtering, convolution, colour manipulation, and more.</span>
 <span class="doccomment">//! </span>
@@ -293,18 +377,20 @@
 <span class="kw">use</span> <span class="ident">wasm_bindgen</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">web_sys</span>::{<span class="ident">CanvasRenderingContext2d</span>, <span class="ident">ImageData</span>, <span class="ident">HtmlCanvasElement</span>};
 <span class="kw">use</span> <span class="ident">wasm_bindgen</span>::<span class="ident">Clamped</span>;
-<span class="kw">use</span> <span class="ident">image</span>::{<span class="ident">GenericImage</span>};
+<span class="kw">use</span> <span class="ident">image</span>::{<span class="ident">GenericImage</span>, <span class="ident">GenericImageView</span>};
+<span class="kw">use</span> <span class="ident">base64</span>::<span class="ident">decode</span>;
+<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>};
 
 <span class="comment">// When the `wee_alloc` feature is enabled, use `wee_alloc` as the global</span>
 <span class="comment">// allocator.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;wee_alloc&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">global_allocator</span>]</span>
-<span class="kw">static</span> <span class="ident">ALLOC</span>: <span class="ident">wee_alloc</span>::<span class="ident">WeeAlloc</span> <span class="op">=</span> <span class="ident">wee_alloc</span>::<span class="ident">WeeAlloc</span>::<span class="ident">INIT</span>;
+<span class="comment">// #[cfg(feature = &quot;wee_alloc&quot;)]</span>
+<span class="comment">// #[global_allocator]</span>
+<span class="comment">// static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;</span>
 
 <span class="doccomment">/// Provides the image&#39;s height, width, and contains the image&#39;s raw pixels.</span>
 <span class="doccomment">/// For use when communicating between JS and WASM, and also natively. </span>
 <span class="attribute">#[<span class="ident">wasm_bindgen</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PhotonImage</span> {
     <span class="ident">raw_pixels</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     <span class="ident">width</span>: <span class="ident">u32</span>, 
@@ -312,25 +398,77 @@
 }
 
 <span class="attribute">#[<span class="ident">wasm_bindgen</span>]</span>
-<span class="kw">impl</span> <span class="ident">PhotonImage</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_imgdata</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">img_data</span>: <span class="ident">ImageData</span>, <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="ident">PhotonImage</span> {
-        <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">to_raw_pixels</span>(<span class="ident">img_data</span>);
-        <span class="kw">return</span> <span class="ident">PhotonImage</span> {<span class="ident">raw_pixels</span>: <span class="ident">raw_pixels</span>, <span class="ident">width</span>: <span class="ident">width</span>, <span class="ident">height</span>: <span class="ident">height</span>}
+<span class="kw">impl</span> <span class="ident">PhotonImage</span> {   
+    <span class="attribute">#[<span class="ident">wasm_bindgen</span>(<span class="ident">constructor</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">raw_pixels</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="ident">PhotonImage</span> {
+        <span class="kw">return</span> <span class="ident">PhotonImage</span> { <span class="ident">raw_pixels</span>: <span class="ident">raw_pixels</span>, <span class="ident">width</span>: <span class="ident">width</span>, <span class="ident">height</span>: <span class="ident">height</span>};
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="ident">PhotonImage</span> {
-        <span class="kw">let</span> <span class="ident">new_vec</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-        <span class="kw">return</span> <span class="ident">PhotonImage</span> {<span class="ident">raw_pixels</span>: <span class="ident">new_vec</span>, <span class="ident">width</span>: <span class="ident">width</span>, <span class="ident">height</span>: <span class="ident">height</span>}
+    <span class="doccomment">/// Create a new PhotonImage from a base64 string.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_base64</span>(<span class="ident">base64</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">PhotonImage</span> {
+        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> <span class="ident">base64_to_image</span>(<span class="ident">base64</span>);
+        <span class="kw">return</span> <span class="ident">image</span>;
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_byteslice</span>(<span class="ident">vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">PhotonImage</span> {    
+        <span class="kw">let</span> <span class="ident">slice</span> <span class="op">=</span> <span class="ident">vec</span>.<span class="ident">as_slice</span>();
+
+        <span class="kw">let</span> <span class="ident">img</span> <span class="op">=</span> <span class="ident">image</span>::<span class="ident">load_from_memory</span>(<span class="ident">slice</span>).<span class="ident">unwrap</span>();
+        
+        <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">raw_pixels</span>();
+        
+        <span class="kw">return</span> <span class="ident">PhotonImage</span> { <span class="ident">raw_pixels</span>: <span class="ident">raw_pixels</span>, <span class="ident">width</span>: <span class="ident">img</span>.<span class="ident">width</span>(), <span class="ident">height</span>: <span class="ident">img</span>.<span class="ident">height</span>()};
+    
+    }
+
+    <span class="doccomment">/// Get the width of the PhotonImage.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_width</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
+        <span class="self">self</span>.<span class="ident">width</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_raw_pixels</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">raw_pixels</span>.<span class="ident">clone</span>()
+    }
+
+    <span class="doccomment">/// Get the height of the PhotonImage.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_height</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
+        <span class="self">self</span>.<span class="ident">height</span>
+    }
+
+    <span class="doccomment">/// Convert the PhotonImage&#39;s raw pixels to JS-compatible ImageData.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_image_data</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ImageData</span> {
+        <span class="kw">let</span> <span class="ident">new_img_data</span> <span class="op">=</span> <span class="ident">ImageData</span>::<span class="ident">new_with_u8_clamped_array_and_sh</span>(<span class="ident">Clamped</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">raw_pixels</span>), <span class="self">self</span>.<span class="ident">width</span>, <span class="self">self</span>.<span class="ident">height</span>).<span class="ident">unwrap</span>();
+        <span class="ident">new_img_data</span>
+    }
+
+    <span class="doccomment">/// Convert ImageData to raw pixels, and update the PhotonImage&#39;s raw pixels to this.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_imgdata</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">img_data</span>: <span class="ident">ImageData</span>) {
+        <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">img_data</span>.<span class="ident">width</span>();
+        <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">img_data</span>.<span class="ident">height</span>();
+        <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">to_raw_pixels</span>(<span class="ident">img_data</span>);
+        <span class="self">self</span>.<span class="ident">width</span> <span class="op">=</span> <span class="ident">width</span>;
+        <span class="self">self</span>.<span class="ident">height</span> <span class="op">=</span> <span class="ident">height</span>;
+        <span class="self">self</span>.<span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">raw_pixels</span>;
+    }
+}
+
+<span class="doccomment">/// Create a new PhotonImage from a raw Vec of u8s representing raw image pixels.</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">ImageData</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PhotonImage</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">imgdata</span>: <span class="ident">ImageData</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">imgdata</span>.<span class="ident">width</span>();
+        <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">imgdata</span>.<span class="ident">height</span>();
+        <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">to_raw_pixels</span>(<span class="ident">imgdata</span>);
+        <span class="kw">return</span> <span class="ident">PhotonImage</span> {<span class="ident">raw_pixels</span>: <span class="ident">raw_pixels</span>, <span class="ident">width</span>: <span class="ident">width</span>, <span class="ident">height</span>: <span class="ident">height</span>}
     }
 }
 
 <span class="doccomment">/// RGB color type.</span>
 <span class="attribute">#[<span class="ident">wasm_bindgen</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Rgb</span> {
-    <span class="kw">pub</span> <span class="ident">r</span>: <span class="ident">u8</span>,
-    <span class="kw">pub</span> <span class="ident">g</span>: <span class="ident">u8</span>,
-    <span class="kw">pub</span> <span class="ident">b</span>: <span class="ident">u8</span>
+    <span class="ident">r</span>: <span class="ident">u8</span>,
+    <span class="ident">g</span>: <span class="ident">u8</span>,
+    <span class="ident">b</span>: <span class="ident">u8</span>
 }
 
 <span class="attribute">#[<span class="ident">wasm_bindgen</span>]</span>
@@ -338,9 +476,46 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">r</span>: <span class="ident">u8</span>, <span class="ident">g</span>: <span class="ident">u8</span>, <span class="ident">b</span>: <span class="ident">u8</span>) <span class="op">-&gt;</span> <span class="ident">Rgb</span> {
         <span class="kw">return</span> <span class="ident">Rgb</span> {<span class="ident">r</span>: <span class="ident">r</span>, <span class="ident">g</span>: <span class="ident">g</span>, <span class="ident">b</span>: <span class="ident">b</span>}
     }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_red</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">r</span>: <span class="ident">u8</span>) {
+        <span class="self">self</span>.<span class="ident">r</span> <span class="op">=</span> <span class="ident">r</span>;
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_green</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">g</span>: <span class="ident">u8</span>) {
+        <span class="self">self</span>.<span class="ident">g</span> <span class="op">=</span> <span class="ident">g</span>;
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_blue</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">b</span>: <span class="ident">u8</span>) {
+        <span class="self">self</span>.<span class="ident">b</span> <span class="op">=</span> <span class="ident">b</span>;
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_red</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span> {
+        <span class="self">self</span>.<span class="ident">r</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_green</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span> {
+        <span class="self">self</span>.<span class="ident">g</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_blue</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span> {
+        <span class="self">self</span>.<span class="ident">b</span>
+    }
 }
 
-<span class="doccomment">///! [temp] Called by the JS entry point to ensure WASM is supported.</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> <span class="kw">for</span> <span class="ident">Rgb</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">if</span> <span class="ident">vec</span>.<span class="ident">len</span>() <span class="op">!=</span> <span class="number">3</span> {
+            <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Vec length must be equal to 3.&quot;</span>)
+        }
+        <span class="kw">let</span> <span class="ident">rgb</span> <span class="op">=</span> <span class="ident">Rgb</span>::<span class="ident">new</span>(<span class="ident">vec</span>[<span class="number">0</span>], <span class="ident">vec</span>[<span class="number">1</span>], <span class="ident">vec</span>[<span class="number">2</span>]);
+        <span class="ident">rgb</span>
+    }
+}
+
+<span class="doccomment">/// Create a PhotonImage from a byte slice.</span>
+
+
+<span class="doccomment">///! [temp] Check if WASM is supported.</span>
 <span class="attribute">#[<span class="ident">wasm_bindgen</span>]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">run</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">JsValue</span><span class="op">&gt;</span> {
     <span class="ident">set_panic_hook</span>();
@@ -392,12 +567,35 @@
     <span class="kw">return</span> <span class="ident">PhotonImage</span> {<span class="ident">raw_pixels</span>: <span class="ident">raw_pixels</span>, <span class="ident">width</span>: <span class="ident">canvas</span>.<span class="ident">width</span>(), <span class="ident">height</span>: <span class="ident">canvas</span>.<span class="ident">height</span>() }
 }
 
+
 <span class="doccomment">/// Convert ImageData to a raw pixel vec of u8s.</span>
 <span class="attribute">#[<span class="ident">wasm_bindgen</span>]</span>
-
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_raw_pixels</span>(<span class="ident">imgdata</span>: <span class="ident">ImageData</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">img_vec</span> <span class="op">=</span> <span class="ident">imgdata</span>.<span class="ident">data</span>().<span class="ident">to_vec</span>();
     <span class="kw">return</span> <span class="ident">img_vec</span>;
+}
+
+<span class="doccomment">/// Convert a base64 string to a PhotonImage.</span>
+<span class="attribute">#[<span class="ident">wasm_bindgen</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">base64_to_image</span>(<span class="ident">base64</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">PhotonImage</span> {
+
+    <span class="kw">let</span> <span class="ident">base64_to_vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">base64_to_vec</span>(<span class="ident">base64</span>);
+
+    <span class="kw">let</span> <span class="ident">slice</span> <span class="op">=</span> <span class="ident">base64_to_vec</span>.<span class="ident">as_slice</span>();
+
+    <span class="kw">let</span> <span class="ident">img</span> <span class="op">=</span> <span class="ident">image</span>::<span class="ident">load_from_memory</span>(<span class="ident">slice</span>).<span class="ident">unwrap</span>();
+    
+    <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">raw_pixels</span>();
+    
+    <span class="kw">return</span> <span class="ident">PhotonImage</span> { <span class="ident">raw_pixels</span>: <span class="ident">raw_pixels</span>, <span class="ident">width</span>: <span class="ident">img</span>.<span class="ident">width</span>(), <span class="ident">height</span>: <span class="ident">img</span>.<span class="ident">height</span>()};
+
+}
+
+<span class="doccomment">/// Convert a base64 string to a Vec of u8s.</span>
+<span class="attribute">#[<span class="ident">wasm_bindgen</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">base64_to_vec</span>(<span class="ident">base64</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">vec</span> <span class="op">=</span> <span class="ident">decode</span>(<span class="ident">base64</span>).<span class="ident">unwrap</span>();
+    <span class="kw">return</span> <span class="ident">vec</span>;
 }
 
 <span class="doccomment">/// Convert a PhotonImage to JS-compatible ImageData.</span>
@@ -411,38 +609,6 @@
     <span class="kw">return</span> <span class="ident">new_img_data</span>;
 }
 
-<span class="comment">// Tester function to check if WASM is supported in target.</span>
-<span class="comment">// if it runs correctly, WASM is supported, if an error is thrown, investigate.</span>
-<span class="attribute">#[<span class="ident">wasm_bindgen</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test</span>(<span class="ident">a</span>: <span class="ident">u32</span>, <span class="ident">b</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
-    <span class="ident">a</span> <span class="op">+</span> <span class="ident">b</span>
-}
-
-
-<span class="doccomment">/// Convert an Image element into a Canvas and replace the image element with the canvas</span>
-<span class="doccomment">/// in the DOM. </span>
-<span class="comment">// #[cfg(target_arch = &quot;wasm32&quot;)]</span>
-<span class="comment">// #[wasm_bindgen]</span>
-<span class="comment">// pub fn image_to_canvas(image_element: HtmlImageElement) {    </span>
-<span class="comment">//     let window = web_sys::window().expect(&quot;No Window found, should have a Window&quot;);</span>
-<span class="comment">//     let document = web_sys::window().unwrap().document().unwrap();</span>
-<span class="comment">//     let canvas = document</span>
-<span class="comment">//         .create_element(&quot;canvas&quot;).unwrap()</span>
-<span class="comment">//         .dyn_into::&lt;web_sys::HtmlCanvasElement&gt;();</span>
-    
-<span class="comment">//     document.body().unwrap().append_child(&amp;canvas);</span>
-        
-<span class="comment">//     let context = canvas</span>
-<span class="comment">//             .get_context(&quot;2d&quot;)</span>
-<span class="comment">//             .unwrap()</span>
-<span class="comment">//             .dyn_into::&lt;web_sys::CanvasRenderingContext2d&gt;();</span>
-    
-<span class="comment">//     // context.draw_image_with_html_image_element(&amp;image_element, image_element.width().into(), image_element.height().into());</span>
-<span class="comment">//     // document.append_child(&amp;canvas);</span>
-<span class="comment">//     // return canvas;</span>
-
-<span class="comment">// }</span>
-
 <span class="kw">fn</span> <span class="ident">set_panic_hook</span>() {
     <span class="comment">// When the `console_error_panic_hook` feature is enabled, we can call the</span>
     <span class="comment">// `set_panic_hook` function to get better error messages if we ever panic.</span>
@@ -452,6 +618,7 @@
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">channels</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">effects</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">transform</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">conv</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">filters</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">monochrome</span>;
@@ -460,5 +627,6 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">colour_spaces</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">multiple</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">noise</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">helpers</span>;</pre></div>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">helpers</span>;
+<span class="kw">mod</span> <span class="ident">tests</span>;</pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "photon";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

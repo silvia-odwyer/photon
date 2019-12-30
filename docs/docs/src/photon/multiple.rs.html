@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\multiple.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>multiple.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../photon/index.html'><img src='../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\multiple.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>multiple.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../photon/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -147,13 +147,62 @@
 <span id="147">147</span>
 <span id="148">148</span>
 <span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Image manipulation with multiple images, including adding watermarks, changing backgrounds, etc.,</span>
 
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">image</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">rand</span>;
-<span class="kw">use</span> <span class="ident">image</span>::{<span class="ident">DynamicImage</span>, <span class="ident">GenericImageView</span>};
-<span class="kw">use</span> <span class="ident">palette</span>::{<span class="ident">Srgba</span>, <span class="ident">LinSrgba</span>, <span class="ident">Lab</span>, <span class="ident">Blend</span>, <span class="ident">Pixel</span>, <span class="ident">Srgb</span>};
+<span class="kw">use</span> <span class="ident">image</span>::{<span class="ident">DynamicImage</span>, <span class="ident">GenericImageView</span>, <span class="ident">RgbaImage</span>};
+<span class="kw">use</span> <span class="ident">palette</span>::{<span class="ident">Srgba</span>, <span class="ident">LinSrgba</span>, <span class="ident">Lab</span>, <span class="ident">Blend</span>, <span class="ident">Lch</span>, <span class="ident">Pixel</span>, <span class="ident">Gradient</span>, <span class="ident">Srgb</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">channels</span>::<span class="ident">color_sim</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">PhotonImage</span>, <span class="ident">Rgb</span>, <span class="ident">helpers</span>, <span class="ident">GenericImage</span>};
 <span class="kw">use</span> <span class="ident">wasm_bindgen</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
@@ -296,5 +345,54 @@
     }
     <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">raw_pixels</span>();
     <span class="ident">photon_image</span>.<span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">raw_pixels</span>;
+}
+
+<span class="attribute">#[<span class="ident">wasm_bindgen</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_gradient</span>(<span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="ident">PhotonImage</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">image</span> <span class="op">=</span> <span class="ident">RgbaImage</span>::<span class="ident">new</span>(<span class="ident">width</span>, <span class="ident">height</span>);
+
+    <span class="comment">// Create a gradient.</span>
+    <span class="kw">let</span> <span class="ident">grad1</span> <span class="op">=</span> <span class="ident">Gradient</span>::<span class="ident">new</span>(<span class="macro">vec</span><span class="macro">!</span>[
+        <span class="ident">LinSrgba</span>::<span class="ident">new</span>(<span class="number">1.0</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">1.0</span>),
+        <span class="ident">LinSrgba</span>::<span class="ident">new</span>(<span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">1.0</span>, <span class="number">1.0</span>),
+        <span class="ident">LinSrgba</span>::<span class="ident">new</span>(<span class="number">0.1</span>, <span class="number">1.0</span>, <span class="number">0.1</span>, <span class="number">1.0</span>),
+    ]);
+
+    <span class="kw">let</span> <span class="ident">_grad3</span> <span class="op">=</span> <span class="ident">Gradient</span>::<span class="ident">new</span>(<span class="macro">vec</span><span class="macro">!</span>[
+        <span class="ident">Lch</span>::<span class="ident">from</span>(<span class="ident">LinSrgba</span>::<span class="ident">new</span>(<span class="number">1.0</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">1.0</span>)),
+        <span class="ident">Lch</span>::<span class="ident">from</span>(<span class="ident">LinSrgba</span>::<span class="ident">new</span>(<span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">1.0</span>, <span class="number">1.0</span>)),
+        <span class="ident">Lch</span>::<span class="ident">from</span>(<span class="ident">LinSrgba</span>::<span class="ident">new</span>(<span class="number">0.1</span>, <span class="number">1.0</span>, <span class="number">0.1</span>, <span class="number">1.0</span>)),
+    ]);
+
+    <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">c1</span>) <span class="kw">in</span> <span class="ident">grad1</span>
+        .<span class="ident">take</span>(<span class="ident">width</span> <span class="kw">as</span> <span class="ident">usize</span>)
+        .<span class="ident">enumerate</span>()
+    {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Srgba</span>::<span class="ident">from_linear</span>(<span class="ident">c1</span>).<span class="ident">into_format</span>().<span class="ident">into_raw</span>();
+        {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sub_image</span> <span class="op">=</span> <span class="ident">image</span>.<span class="ident">sub_image</span>(<span class="ident">i</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="ident">height</span>);
+            <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> <span class="ident">sub_image</span>.<span class="ident">dimensions</span>();
+            <span class="kw">for</span> <span class="ident">x</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">width</span> {
+                <span class="kw">for</span> <span class="ident">y</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">height</span> {
+                    <span class="ident">sub_image</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">image</span>::<span class="ident">Rgba</span> {
+                        <span class="ident">data</span>: <span class="ident">c1</span>
+                    });
+                }
+            }
+        }
+    }
+    <span class="kw">let</span> <span class="ident">rgba_img</span> <span class="op">=</span> <span class="ident">image</span>::<span class="ident">ImageRgba8</span>(<span class="ident">image</span>);
+    <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">rgba_img</span>.<span class="ident">raw_pixels</span>();
+    <span class="kw">return</span> <span class="ident">PhotonImage</span> { <span class="ident">raw_pixels</span>: <span class="ident">raw_pixels</span>, <span class="ident">width</span>: <span class="ident">width</span>, <span class="ident">height</span>: <span class="ident">height</span>};
+}
+
+<span class="doccomment">/// Apply a gradient to an image.</span>
+<span class="attribute">#[<span class="ident">wasm_bindgen</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">apply_gradient</span>(<span class="kw-2">mut</span> <span class="ident">image</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PhotonImage</span>) {
+    
+    <span class="kw">let</span> <span class="ident">gradient</span> <span class="op">=</span> <span class="ident">create_gradient</span>(<span class="ident">image</span>.<span class="ident">width</span>, <span class="ident">image</span>.<span class="ident">height</span>);
+
+    <span class="ident">blend</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">image</span>, <span class="kw-2">&amp;</span><span class="ident">gradient</span>, <span class="string">&quot;overlay&quot;</span>);
+
 }</pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "photon";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

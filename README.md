@@ -13,6 +13,7 @@
   [![GitHub Issues](https://img.shields.io/github/issues/silvia-odwyer/photon.svg)](https://github.com/silvia-odwyer/photon/issues)
   [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/silvia-odwyer/photon.svg)](https://github.com/silvia-odwyer/p/pulls)
   [![License](https://img.shields.io/badge/license-APACHE%202-blue)](/LICENSE)
+  [![Gitter chat](https://badges.gitter.im/silvia-odwyer/photon.png)](https://gitter.im/silvia-odwyer/photon "Gitter chat")
 
 </div>
 
@@ -28,6 +29,7 @@
 - [Documentation](https://silvia-odwyer.github.io/photon/docs/photon/all.html)
 - [Official Website.](https://silvia-odwyer.github.io/photon/)
 - [All Available Functions.](https://silvia-odwyer.github.io/photon/docs/photon/all.html)
+- [Got Questions? Ask Here!]()
 <!-- - [Authors](#authors) -->
 
 Photon is a high-performance Rust image processing library, which compiles to WebAssembly, allowing for 
@@ -244,10 +246,21 @@ or filters; this library provides a complete suite of functions to do so, as wel
 
 `photon` can be thought of as a high-level wrapper to the Rust `image` crate, but conversely also includes functions which provide low-level access to pixel and channel manipulation, perfect for developers who wish to work with this data directly.
 
+## Got Questions? 
+If you'd like to chat to the developer about your potential use case, or have further questions about this library, 
+just submit them here, and I'll get back to you!
+
+- [Spectrum Chat](https://spectrum.chat/photonlibrary)
+- [Gitter](https://gitter.im/photonlibrary/community)
 
 ## Contributing
 
 Photon is always ready for new filters and functions, so if you'd like to contribute, we're always ready to accept new Pull Requests or investigate new issues. 
+
+## To Do 
+- Selective colorization 
+- Gamma correction 
+- Duotone filtering
 
 ## Authors
 

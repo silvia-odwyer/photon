@@ -288,8 +288,7 @@ var newimg, watermark_img, img2;
                        "text": function() {return module.draw_text(rust_image, "Welcome to WebAssembly!", 10, 20)},
                        "text_border": function() {return module.draw_text_with_border(rust_image, "Welcome to WebAssembly!", 10, 20)},
                        "flipv": function() {return module.flipv(rust_image)}, 
-                       "fliph": function() {return module.fliph(rust_image)} 
-
+                       "fliph": function() {return module.fliph(rust_image)},
                      };
                   
     // Update the canvas with the new imagedata

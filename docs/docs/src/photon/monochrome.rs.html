@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\monochrome.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>monochrome.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../photon/index.html'><img src='../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\monochrome.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>monochrome.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../photon/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -419,23 +419,6 @@
 <span id="419">419</span>
 <span id="420">420</span>
 <span id="421">421</span>
-<span id="422">422</span>
-<span id="423">423</span>
-<span id="424">424</span>
-<span id="425">425</span>
-<span id="426">426</span>
-<span id="427">427</span>
-<span id="428">428</span>
-<span id="429">429</span>
-<span id="430">430</span>
-<span id="431">431</span>
-<span id="432">432</span>
-<span id="433">433</span>
-<span id="434">434</span>
-<span id="435">435</span>
-<span id="436">436</span>
-<span id="437">437</span>
-<span id="438">438</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Monochrome-related effects and greyscaling/duotoning.</span>
 
@@ -470,18 +453,18 @@
 
     <span class="kw">for</span> <span class="ident">x</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">width</span> {
         <span class="kw">for</span> <span class="ident">y</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">height</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
+            <span class="kw">let</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
             <span class="kw">let</span> (<span class="ident">r_val</span>, <span class="ident">g_val</span>, <span class="ident">b_val</span>) <span class="op">=</span> (<span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">2</span>] <span class="kw">as</span> <span class="ident">u32</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">avg</span> <span class="op">=</span> (<span class="ident">r_val</span> <span class="op">+</span> <span class="ident">g_val</span> <span class="op">+</span> <span class="ident">b_val</span>) <span class="op">/</span> <span class="number">3</span>;
             <span class="kw">if</span> <span class="ident">avg</span> <span class="op">&gt;=</span> <span class="number">255</span> {
                 <span class="ident">avg</span> <span class="op">=</span> <span class="number">255</span>
             }
             
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="op">=</span> <span class="kw">if</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">+</span> <span class="ident">r_offset</span> <span class="op">&lt;</span> <span class="number">255</span> { <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span> <span class="op">+</span> <span class="ident">r_offset</span> <span class="kw">as</span> <span class="ident">u8</span>} <span class="kw">else</span> { <span class="number">255</span> };
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="op">=</span> <span class="kw">if</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">+</span> <span class="ident">g_offset</span> <span class="op">&lt;</span> <span class="number">255</span> { <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span> <span class="op">+</span> <span class="ident">g_offset</span> <span class="kw">as</span> <span class="ident">u8</span>} <span class="kw">else</span> { <span class="number">255</span> };
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">2</span>] <span class="op">=</span> <span class="kw">if</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">+</span> <span class="ident">b_offset</span> <span class="op">&lt;</span> <span class="number">255</span> { <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span> <span class="op">+</span> <span class="ident">b_offset</span> <span class="kw">as</span> <span class="ident">u8</span>} <span class="kw">else</span> { <span class="number">255</span> };
+            <span class="kw">let</span> <span class="ident">new_r</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">+</span> <span class="ident">r_offset</span> <span class="op">&lt;</span> <span class="number">255</span> { <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span> <span class="op">+</span> <span class="ident">r_offset</span> <span class="kw">as</span> <span class="ident">u8</span>} <span class="kw">else</span> { <span class="number">255</span> };
+            <span class="kw">let</span> <span class="ident">new_g</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">+</span> <span class="ident">g_offset</span> <span class="op">&lt;</span> <span class="number">255</span> { <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span> <span class="op">+</span> <span class="ident">g_offset</span> <span class="kw">as</span> <span class="ident">u8</span>} <span class="kw">else</span> { <span class="number">255</span> };
+            <span class="kw">let</span> <span class="ident">new_b</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">+</span> <span class="ident">b_offset</span> <span class="op">&lt;</span> <span class="number">255</span> { <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span> <span class="op">+</span> <span class="ident">b_offset</span> <span class="kw">as</span> <span class="ident">u8</span>} <span class="kw">else</span> { <span class="number">255</span> };
 
-            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">px</span>);
+            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">image</span>::<span class="ident">Rgba</span>([<span class="ident">new_r</span>, <span class="ident">new_g</span>, <span class="ident">new_b</span>, <span class="number">255</span>]));
         }
     }
     <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">raw_pixels</span>();
@@ -507,14 +490,14 @@
 
     <span class="kw">for</span> <span class="ident">x</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">width</span> {
         <span class="kw">for</span> <span class="ident">y</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">height</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
+            <span class="kw">let</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
             <span class="kw">let</span> (<span class="ident">r_val</span>, <span class="ident">g_val</span>, <span class="ident">b_val</span>) <span class="op">=</span> (<span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="ident">f32</span>, <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="kw">as</span> <span class="ident">f32</span>, <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">2</span>] <span class="kw">as</span> <span class="ident">f32</span>);
             <span class="kw">let</span> <span class="ident">avg</span> <span class="op">=</span> <span class="number">0.3</span> <span class="op">*</span> <span class="ident">r_val</span> <span class="op">+</span> <span class="number">0.59</span> <span class="op">*</span> <span class="ident">g_val</span> <span class="op">+</span> <span class="number">0.11</span> <span class="op">*</span> <span class="ident">b_val</span>;
 
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="op">=</span> <span class="kw">if</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">+</span> <span class="number">100</span> <span class="op">&lt;</span> <span class="number">255</span> { <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span> <span class="op">+</span> <span class="number">100</span>} <span class="kw">else</span> { <span class="number">255</span> };
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="op">=</span> <span class="kw">if</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">+</span> <span class="number">50</span> <span class="op">&lt;</span> <span class="number">255</span> { <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span> <span class="op">+</span> <span class="number">50</span> } <span class="kw">else</span> { <span class="number">255</span> };
+            <span class="kw">let</span> <span class="ident">new_r</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">+</span> <span class="number">100</span> <span class="op">&lt;</span> <span class="number">255</span> { <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span> <span class="op">+</span> <span class="number">100</span>} <span class="kw">else</span> { <span class="number">255</span> };
+            <span class="kw">let</span> <span class="ident">new_g</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">+</span> <span class="number">50</span> <span class="op">&lt;</span> <span class="number">255</span> { <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span> <span class="op">+</span> <span class="number">50</span> } <span class="kw">else</span> { <span class="number">255</span> };
       
-            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">px</span>);
+            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">image</span>::<span class="ident">Rgba</span>([<span class="ident">new_r</span>, <span class="ident">new_g</span>, <span class="ident">b_val</span> <span class="kw">as</span> <span class="ident">u8</span>, <span class="number">255</span>]));
         }
     }
     <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">raw_pixels</span>();
@@ -540,16 +523,14 @@
 
     <span class="kw">for</span> <span class="ident">x</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">width</span> {
         <span class="kw">for</span> <span class="ident">y</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">height</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
+            <span class="kw">let</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
             <span class="kw">let</span> (<span class="ident">r_val</span>, <span class="ident">g_val</span>, <span class="ident">b_val</span>) <span class="op">=</span> (<span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">2</span>] <span class="kw">as</span> <span class="ident">u32</span>);
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">avg</span> <span class="op">=</span> (<span class="ident">r_val</span> <span class="op">+</span> <span class="ident">g_val</span> <span class="op">+</span> <span class="ident">b_val</span>) <span class="op">/</span> <span class="number">3</span>;
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">avg</span> <span class="op">=</span> ((<span class="ident">r_val</span> <span class="op">+</span> <span class="ident">g_val</span> <span class="op">+</span> <span class="ident">b_val</span>) <span class="op">/</span> <span class="number">3</span>) <span class="kw">as</span> <span class="ident">u8</span>;
             <span class="kw">if</span> <span class="ident">avg</span> <span class="op">&gt;=</span> <span class="number">255</span> {
                 <span class="ident">avg</span> <span class="op">=</span> <span class="number">255</span>
             }
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="op">=</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="op">=</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">2</span>] <span class="op">=</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">px</span>);
+
+            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">image</span>::<span class="ident">Rgba</span>([<span class="ident">avg</span>, <span class="ident">avg</span>, <span class="ident">avg</span>, <span class="number">255</span>]));
         }
     }
     <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">raw_pixels</span>();
@@ -575,19 +556,17 @@
 
     <span class="kw">for</span> <span class="ident">x</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">width</span> {
         <span class="kw">for</span> <span class="ident">y</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">height</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
+            <span class="kw">let</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
             <span class="kw">let</span> (<span class="ident">r_val</span>, <span class="ident">g_val</span>, <span class="ident">b_val</span>) <span class="op">=</span> (<span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="ident">f32</span>, <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="kw">as</span> <span class="ident">f32</span>, <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">2</span>] <span class="kw">as</span> <span class="ident">f32</span>);
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">avg</span> <span class="op">=</span> <span class="ident">r_val</span> <span class="op">*</span> <span class="number">0.3</span> <span class="op">+</span> <span class="ident">g_val</span> <span class="op">*</span> <span class="number">0.59</span> <span class="op">+</span> <span class="ident">b_val</span> <span class="op">*</span> <span class="number">0.11</span>;
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">avg</span>: <span class="ident">u8</span> <span class="op">=</span> (<span class="ident">r_val</span> <span class="op">*</span> <span class="number">0.3</span> <span class="op">+</span> <span class="ident">g_val</span> <span class="op">*</span> <span class="number">0.59</span> <span class="op">+</span> <span class="ident">b_val</span> <span class="op">*</span> <span class="number">0.11</span>) <span class="kw">as</span> <span class="ident">u8</span>;
             
-            <span class="kw">if</span> <span class="ident">avg</span> <span class="op">&gt;=</span> <span class="number">255.0</span> {
-                <span class="ident">avg</span> <span class="op">=</span> <span class="number">255.0</span>
+            <span class="kw">if</span> <span class="ident">avg</span> <span class="op">&gt;=</span> <span class="number">255</span> {
+                <span class="ident">avg</span> <span class="op">=</span> <span class="number">255</span>
             }
             
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="op">=</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="op">=</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">2</span>] <span class="op">=</span> <span class="ident">avg</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">px</span>);
+
+            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">image</span>::<span class="ident">Rgba</span>([<span class="ident">avg</span>, <span class="ident">avg</span>, <span class="ident">avg</span>, <span class="number">255</span>]));
         }
     }
     <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">raw_pixels</span>();
@@ -613,23 +592,20 @@
 
     <span class="kw">for</span> <span class="ident">x</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">width</span> {
         <span class="kw">for</span> <span class="ident">y</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">height</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
+            <span class="kw">let</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
             <span class="kw">let</span> (<span class="ident">r_val</span>, <span class="ident">g_val</span>, <span class="ident">b_val</span>) <span class="op">=</span> (<span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">2</span>] <span class="kw">as</span> <span class="ident">u32</span>);
             
             <span class="comment">// get the max and min vals of a pixel&#39;s 3 rgb values by sorting a vec of these</span>
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rgb_vals</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">r_val</span>, <span class="ident">g_val</span>, <span class="ident">b_val</span>];
             <span class="ident">rgb_vals</span>.<span class="ident">sort</span>();
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">gray</span> <span class="op">=</span> (<span class="ident">rgb_vals</span>[<span class="number">0</span>] <span class="op">+</span> <span class="ident">rgb_vals</span>[<span class="number">2</span>]) <span class="op">/</span> <span class="number">2</span>;
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">gray</span> <span class="op">=</span> ((<span class="ident">rgb_vals</span>[<span class="number">0</span>] <span class="op">+</span> <span class="ident">rgb_vals</span>[<span class="number">2</span>]) <span class="op">/</span> <span class="number">2</span>) <span class="kw">as</span> <span class="ident">u8</span>;
 
             <span class="kw">if</span> <span class="ident">gray</span> <span class="op">&gt;=</span> <span class="number">255</span> {
                 <span class="ident">gray</span> <span class="op">=</span> <span class="number">255</span>
             }
             
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="op">=</span> <span class="ident">gray</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="op">=</span> <span class="ident">gray</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">2</span>] <span class="op">=</span> <span class="ident">gray</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">px</span>);
+            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">image</span>::<span class="ident">Rgba</span>([<span class="ident">gray</span>, <span class="ident">gray</span>, <span class="ident">gray</span>, <span class="number">255</span>]));
         }
     }
     <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">raw_pixels</span>();
@@ -654,23 +630,20 @@
 
     <span class="kw">for</span> <span class="ident">x</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">width</span> {
         <span class="kw">for</span> <span class="ident">y</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">height</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
+            <span class="kw">let</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
             <span class="kw">let</span> (<span class="ident">r_val</span>, <span class="ident">g_val</span>, <span class="ident">b_val</span>) <span class="op">=</span> (<span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">2</span>] <span class="kw">as</span> <span class="ident">u32</span>);
             
             <span class="comment">// get the max and min vals of a pixel&#39;s 3 rgb values by sorting a vec of these</span>
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rgb_vals</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">r_val</span>, <span class="ident">g_val</span>, <span class="ident">b_val</span>];
             <span class="ident">rgb_vals</span>.<span class="ident">sort</span>();
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">gray</span> <span class="op">=</span> <span class="ident">rgb_vals</span>[<span class="number">0</span>];
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">gray</span> <span class="op">=</span> <span class="ident">rgb_vals</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="ident">u8</span>;
 
             <span class="kw">if</span> <span class="ident">gray</span> <span class="op">&gt;=</span> <span class="number">255</span> {
                 <span class="ident">gray</span> <span class="op">=</span> <span class="number">255</span>
             }
             
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="op">=</span> <span class="ident">gray</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="op">=</span> <span class="ident">gray</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">2</span>] <span class="op">=</span> <span class="ident">gray</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">px</span>);
+            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">image</span>::<span class="ident">Rgba</span>([<span class="ident">gray</span>, <span class="ident">gray</span>, <span class="ident">gray</span>, <span class="number">255</span>]));
         }
     }
     <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">raw_pixels</span>();
@@ -695,19 +668,16 @@
 
     <span class="kw">for</span> <span class="ident">x</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">width</span> {
         <span class="kw">for</span> <span class="ident">y</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">height</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
+            <span class="kw">let</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
             <span class="kw">let</span> (<span class="ident">r_val</span>, <span class="ident">g_val</span>, <span class="ident">b_val</span>) <span class="op">=</span> (<span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">2</span>] <span class="kw">as</span> <span class="ident">u32</span>);
             
             <span class="comment">// get the max and min vals of a pixel&#39;s 3 rgb values by sorting a vec of these</span>
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rgb_vals</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">r_val</span>, <span class="ident">g_val</span>, <span class="ident">b_val</span>];
             <span class="ident">rgb_vals</span>.<span class="ident">sort</span>();
 
-            <span class="kw">let</span> <span class="ident">gray</span> <span class="op">=</span> <span class="ident">rgb_vals</span>[<span class="number">2</span>];
+            <span class="kw">let</span> <span class="ident">gray</span> <span class="op">=</span> <span class="ident">rgb_vals</span>[<span class="number">2</span>] <span class="kw">as</span> <span class="ident">u8</span>;
             
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="op">=</span> <span class="ident">gray</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="op">=</span> <span class="ident">gray</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">2</span>] <span class="op">=</span> <span class="ident">gray</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">px</span>);
+            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">image</span>::<span class="ident">Rgba</span>([<span class="ident">gray</span>, <span class="ident">gray</span>, <span class="ident">gray</span>, <span class="number">255</span>]));
         }
     }
     <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">raw_pixels</span>();
@@ -742,13 +712,9 @@
             
             <span class="kw">let</span> <span class="ident">dividend</span> <span class="op">=</span> <span class="ident">avg</span> <span class="op">/</span> <span class="ident">conversion</span> <span class="kw">as</span> <span class="ident">f32</span>;
 
-            <span class="kw">let</span> <span class="ident">gray</span> <span class="op">=</span> (<span class="ident">dividend</span> <span class="op">+</span> <span class="number">0.5</span>) <span class="op">*</span> <span class="ident">conversion</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">get_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>);
+            <span class="kw">let</span> <span class="ident">gray</span> <span class="op">=</span> ((<span class="ident">dividend</span> <span class="op">+</span> <span class="number">0.5</span>) <span class="op">*</span> <span class="ident">conversion</span>) <span class="kw">as</span> <span class="ident">u8</span>;
             
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">0</span>] <span class="op">=</span> <span class="ident">gray</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">1</span>] <span class="op">=</span> <span class="ident">gray</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">px</span>.<span class="ident">data</span>[<span class="number">2</span>] <span class="op">=</span> <span class="ident">gray</span> <span class="kw">as</span> <span class="ident">u8</span>;
-            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">px</span>);
+            <span class="ident">img</span>.<span class="ident">put_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">image</span>::<span class="ident">Rgba</span>([<span class="ident">gray</span>, <span class="ident">gray</span>, <span class="ident">gray</span>, <span class="number">255</span>]));
         }
     }
     <span class="kw">let</span> <span class="ident">raw_pixels</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">raw_pixels</span>();

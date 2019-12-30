@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\colour_spaces.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>colour_spaces.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../photon/index.html'><img src='../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\colour_spaces.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>colour_spaces.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../photon/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -547,6 +547,80 @@
 <span id="547">547</span>
 <span id="548">548</span>
 <span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Image manipulation effects in HSL, LCh and HSV.</span>
 
@@ -557,6 +631,48 @@
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">PhotonImage</span>, <span class="ident">helpers</span>};
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">wasm_bindgen</span>;
 <span class="kw">use</span> <span class="ident">wasm_bindgen</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
+
+<span class="doccomment">/// Apply gamma correction. </span>
+<span class="comment">// #[wasm_bindgen]</span>
+<span class="comment">// pub fn gamma_correction(mut photon_image: &amp;mut PhotonImage, red: f32, green: f32,  blue: f32) {</span>
+<span class="comment">//     let img = helpers::dyn_image_from_raw(&amp;photon_image);</span>
+<span class="comment">//     let (width, height) = img.dimensions();</span>
+<span class="comment">//     let mut img = img.to_rgba();</span>
+
+<span class="comment">//     // Initialize gamma arrays </span>
+<span class="comment">//     let mut gammaR: Vec&lt;u8&gt; = vec![];</span>
+<span class="comment">//     let mut gammaG: Vec&lt;u8&gt; = vec![];</span>
+<span class="comment">//     let mut gammaB: Vec&lt;u8&gt; = vec![];</span>
+
+<span class="comment">//     let MAX_VALUE_INT = 255;</span>
+<span class="comment">//     let MAX_VALUE_FLT = 255.0;</span>
+<span class="comment">//     let REVERSE = 1.0;</span>
+
+<span class="comment">//     // Set values within gamma arrays</span>
+<span class="comment">//     for i in 0..256 {</span>
+<span class="comment">//         gammaR[i] = min(MAX_VALUE_INT, ((MAX_VALUE_FLT * ((i as f32 / MAX_VALUE_FLT) as u32).powf(REVERSE / red) + 0.5 ) as u8));</span>
+<span class="comment">//         gammaG[i] = min(MAX_VALUE_INT, ((MAX_VALUE_FLT * ((i as f32 / MAX_VALUE_FLT) as u32).powf(REVERSE / green) + 0.5 ) as u8);</span>
+<span class="comment">//         gammaB[i] = min(MAX_VALUE_INT, ((MAX_VALUE_FLT * ((i as f32 / MAX_VALUE_FLT) as u32).powf(REVERSE / blue) + 0.5 ) as u8);</span>
+
+<span class="comment">//     }</span>
+
+<span class="comment">//     for x in 0..width {</span>
+<span class="comment">//         for y in 0..height {</span>
+<span class="comment">//             let px_data = img.get_pixel(x, y).data;</span>
+            
+<span class="comment">//             let r_val = px_data[0];</span>
+<span class="comment">//             let g_val = px_data[1];</span>
+<span class="comment">//             let b_val = px_data[2];</span>
+
+<span class="comment">//             px_data[0] = gammaR[r_val as usize];</span>
+<span class="comment">//             px_data[1] = gammaG[g_val as usize];</span>
+<span class="comment">//             px_data[2] = gammaB[b_val as usize];</span>
+            
+<span class="comment">//             img.put_pixel(x, y, px);</span>
+<span class="comment">//             }</span>
+<span class="comment">//         }</span>
+<span class="comment">//     photon_image.raw_pixels = img.to_vec();</span>
+<span class="comment">// }</span>
 
 <span class="doccomment">/// Image manipulation effects in the LCh colour space</span>
 <span class="doccomment">/// </span>
@@ -1058,6 +1174,38 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">desaturate_lch</span>(<span class="ident">img</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PhotonImage</span>, <span class="ident">level</span>: <span class="ident">f32</span>) {
     <span class="kw">return</span> <span class="ident">lch</span>(<span class="ident">img</span>, <span class="string">&quot;desaturate&quot;</span>, <span class="ident">level</span>);
 }
+
+<span class="comment">// #[wasm_bindgen]</span>
+<span class="comment">// pub fn selective_color_convert(mut photon_image: &amp;mut PhotonImage, ref_color:Rgb, new_color:Rgb, fraction: f32) {</span>
+<span class="comment">//     let img = helpers::dyn_image_from_raw(&amp;photon_image);</span>
+<span class="comment">//     let (_width, _height) = img.dimensions();</span>
+<span class="comment">//     let mut img = img.to_rgba();</span>
+<span class="comment">//     for x in 0.._width {</span>
+<span class="comment">//         for y in 0.._height {</span>
+<span class="comment">//             let mut px = img.get_pixel(x, y);</span>
+
+<span class="comment">//             // Reference colour to compare the current pixel&#39;s colour to</span>
+<span class="comment">//             let lab: Lab = Srgb::new(ref_color.r as f32 / 255.0, ref_color.g as f32 / 255.0, ref_color.b as f32 / 255.0).into();</span>
+      
+<span class="comment">//             // Convert the current pixel&#39;s colour to the l*a*b colour space</span>
+<span class="comment">//             let r_val: f32 = px.data[0] as f32 / 255.0;</span>
+<span class="comment">//             let g_val: f32 = px.data[1] as f32 / 255.0;</span>
+<span class="comment">//             let b_val: f32 = px.data[2] as f32 / 255.0;</span>
+
+<span class="comment">//             let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();</span>
+
+<span class="comment">//             let sim = color_sim(lab, px_lab);</span>
+<span class="comment">//             if sim &gt; 0 &amp;&amp; sim &lt; 40 {</span>
+<span class="comment">//                 let newr = (((new_color.r - ref_color.r) as f32) * fraction + new_color.r as f32) as u8;</span>
+<span class="comment">//                 let newg = (((new_color.g - ref_color.g) as f32) * fraction + new_color.g as f32) as u8;</span>
+<span class="comment">//                 let newb = (((new_color.b - ref_color.b) as f32) * fraction + new_color.b as f32) as u8;</span>
+            
+<span class="comment">//                 img.put_pixel(x, y, image::Rgba([newr, newg, newb, 255]));</span>
+<span class="comment">//             }</span>
+<span class="comment">//         }</span>
+<span class="comment">//     }</span>
+<span class="comment">//     photon_image.raw_pixels = img.to_vec();</span>
+<span class="comment">// }</span>
 
 <span class="comment">// pub fn correct(img: &amp;DynamicImage, mode: &amp;&#39;static str, colour_space: &amp;&#39;static str, amt: f32) -&gt; DynamicImage {</span>
 <span class="comment">//     let mut img  = img.to_rgb();</span>

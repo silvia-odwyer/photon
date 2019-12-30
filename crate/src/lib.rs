@@ -61,7 +61,7 @@
 use wasm_bindgen::prelude::*;
 use web_sys::{CanvasRenderingContext2d, ImageData, HtmlCanvasElement};
 use wasm_bindgen::Clamped;
-use image::{GenericImage, GenericImageView, ImageBuffer};
+use image::{GenericImage, GenericImageView};
 use base64::decode;
 use serde::{Serialize, Deserialize};
 
@@ -158,15 +158,6 @@ pub struct Rgb {
 #[wasm_bindgen]
 impl Rgb {
     pub fn new(r: u8, g: u8, b: u8) -> Rgb {
-        if r > 255 {
-            panic!("Invalid red value passed. Red value must be between 0 and 255.");
-        }
-        if g > 255 {
-            panic!("Invalid green value passed. Green value must be between 0 and 255.");
-        }
-        if b > 255 {
-            panic!("Invalid blue value passed. Blue value must be between 0 and 255.");
-        }
         return Rgb {r: r, g: g, b: b}
     }
 
