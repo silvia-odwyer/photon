@@ -48,10 +48,10 @@ pub fn alter_channel(img: &mut PhotonImage, channel: usize, amt: i16) {
         panic!("Amount to increment/decrement should be between -255 and 255");
     }
     let end = img.raw_pixels.len() - 4;
-    
-    for i in (0..end).step_by(4) {
+
+    for i in (channel..end).step_by(4) {
         let inc_val: i16 = img.raw_pixels[i] as i16 + amt as i16;
-        img.raw_pixels[i + channel] = num::clamp(inc_val, 0, 255) as u8;
+        img.raw_pixels[i] = num::clamp(inc_val, 0, 255) as u8;
     };
 
 }
@@ -215,7 +215,7 @@ pub fn alter_channels(img: &mut PhotonImage, r_amt: i16, g_amt: i16, b_amt: i16)
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `channel` - The channel to be removed; must be a usize from 0 to 2, with 0 representing Red, 1 representing Green, and 2 representing Blue.
-/// * `min_filter` - Value between 0 and 255. Only remove the channel if the current pixel's channel value is less than this minimum filter. To completely 
+/// * `min_filter` - Minimum filter. Value between 0 and 255. Only remove the channel if the current pixel's channel value is less than this minimum filter. To completely 
 /// remove the channel, set this value to 255, to leave the channel as is, set to 0, and to set a channel to zero for a pixel whose red value is greater than 50, 
 /// then channel would be 0 and min_filter would be 50.
 /// 
@@ -319,7 +319,6 @@ pub fn swap_channels(img: &mut PhotonImage, mut channel1: usize, mut channel2: u
     }
 
     for i in (channel1..end).step_by(4) {        
-        img.raw_pixels[i] = 0;
 
         let difference = channel2 - channel1;
         
@@ -555,29 +554,4 @@ pub fn selective_greyscale(mut photon_image: PhotonImage, ref_color: Rgb) {
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
-}
-
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    fn ret_10(a: i32) -> i32 {
-        10
-    }
-    #[test]
-    fn test1() {
-        // Create an image from a vec of pixels
-        let raw_pix = vec![255, 255, 255, 0, 10, 10, 10, 0, 255, 255, 255, 0, 10, 10, 10, 0];
-
-        // let img_buffer = ImageBuffer::from_vec(2, 2, raw_pix).unwrap();
-        // let dynimage = image::ImageRgba8(img_buffer);
-        // let photon_image = 
-
-
-        
-        let value = ret_10(4);
-        assert_eq!(10, value);
-    }
-
 }

@@ -61,9 +61,9 @@
 use wasm_bindgen::prelude::*;
 use web_sys::{CanvasRenderingContext2d, ImageData, HtmlCanvasElement};
 use wasm_bindgen::Clamped;
-use image::{GenericImage, GenericImageView};
+use image::{GenericImage, GenericImageView, ImageBuffer};
 use base64::decode;
-
+use serde::{Serialize, Deserialize};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -74,7 +74,7 @@ use base64::decode;
 /// Provides the image's height, width, and contains the image's raw pixels.
 /// For use when communicating between JS and WASM, and also natively. 
 #[wasm_bindgen]
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct PhotonImage {
     raw_pixels: Vec<u8>,
     width: u32, 
@@ -84,21 +84,8 @@ pub struct PhotonImage {
 #[wasm_bindgen]
 impl PhotonImage {   
     #[wasm_bindgen(constructor)]
-    pub fn new(width: u32, height: u32) -> PhotonImage {
-        let raw_pixels = Vec::new();
-        return PhotonImage {raw_pixels: raw_pixels, width: width, height: height}
-    }
-
-    /// Convert ImageData to raw pixels, and update the PhotonImage's raw pixels to this.
-    pub fn set_imgdata(&mut self, img_data: ImageData) {
-        let raw_pixels = to_raw_pixels(img_data);
-        self.raw_pixels = raw_pixels;
-    }
-
-    /// Create a new PhotonImage from ImageData.
-    pub fn new_from_imgdata(width: u32, height: u32, imgdata: ImageData) -> PhotonImage {
-        let raw_pixels = to_raw_pixels(imgdata);
-        return PhotonImage {raw_pixels: raw_pixels, width: width, height: height}
+    pub fn new(raw_pixels: Vec<u8>, width: u32, height: u32) -> PhotonImage {
+        return PhotonImage { raw_pixels: raw_pixels, width: width, height: height};
     }
 
     /// Create a new PhotonImage from a base64 string.
@@ -107,18 +94,21 @@ impl PhotonImage {
         return image;
     }
 
-    /// Create a new PhotonImage from a raw Vec of u8s representing raw image pixels.
-    pub fn new_from_vec(vec: Vec<u8>) -> PhotonImage {
-        let image = photonimage_from_vec(vec);
-        return image;
+    pub fn new_from_byteslice(vec: Vec<u8>) -> PhotonImage {    
+        let slice = vec.as_slice();
+
+        let img = image::load_from_memory(slice).unwrap();
+        
+        let raw_pixels = img.raw_pixels();
+        
+        return PhotonImage { raw_pixels: raw_pixels, width: img.width(), height: img.height()};
+    
     }
 
     /// Get the width of the PhotonImage.
-
     pub fn get_width(&self) -> u32 {
         self.width
     }
-
 
     pub fn get_raw_pixels(&self) -> Vec<u8> {
         self.raw_pixels.clone()
@@ -135,23 +125,88 @@ impl PhotonImage {
         new_img_data
     }
 
+    /// Convert ImageData to raw pixels, and update the PhotonImage's raw pixels to this.
+    pub fn set_imgdata(&mut self, img_data: ImageData) {
+        let width = img_data.width();
+        let height = img_data.height();
+        let raw_pixels = to_raw_pixels(img_data);
+        self.width = width;
+        self.height = height;
+        self.raw_pixels = raw_pixels;
+    }
+}
+
+/// Create a new PhotonImage from a raw Vec of u8s representing raw image pixels.
+impl From<ImageData> for PhotonImage {
+    fn from(imgdata: ImageData) -> Self {
+        let width = imgdata.width();
+        let height = imgdata.height();
+        let raw_pixels = to_raw_pixels(imgdata);
+        return PhotonImage {raw_pixels: raw_pixels, width: width, height: height}
+    }
 }
 
 /// RGB color type.
 #[wasm_bindgen]
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Rgb {
-    pub r: u8,
-    pub g: u8,
-    pub b: u8
+    r: u8,
+    g: u8,
+    b: u8
 }
 
 #[wasm_bindgen]
 impl Rgb {
     pub fn new(r: u8, g: u8, b: u8) -> Rgb {
+        if r > 255 {
+            panic!("Invalid red value passed. Red value must be between 0 and 255.");
+        }
+        if g > 255 {
+            panic!("Invalid green value passed. Green value must be between 0 and 255.");
+        }
+        if b > 255 {
+            panic!("Invalid blue value passed. Blue value must be between 0 and 255.");
+        }
         return Rgb {r: r, g: g, b: b}
     }
+
+    pub fn set_red(&mut self, r: u8) {
+        self.r = r;
+    }
+
+    pub fn set_green(&mut self, g: u8) {
+        self.g = g;
+    }
+
+    pub fn set_blue(&mut self, b: u8) {
+        self.b = b;
+    }
+
+    pub fn get_red(&self) -> u8 {
+        self.r
+    }
+
+    pub fn get_green(&self) -> u8 {
+        self.g
+    }
+
+    pub fn get_blue(&self) -> u8 {
+        self.b
+    }
 }
+
+impl From<Vec<u8>> for Rgb {
+    fn from(vec: Vec<u8>) -> Self {
+        if vec.len() != 3 {
+            panic!("Vec length must be equal to 3.")
+        }
+        let rgb = Rgb::new(vec[0], vec[1], vec[2]);
+        rgb
+    }
+}
+
+/// Create a PhotonImage from a byte slice.
+
 
 ///! [temp] Check if WASM is supported.
 #[wasm_bindgen]
@@ -205,26 +260,6 @@ pub fn open_image(canvas: HtmlCanvasElement, ctx: CanvasRenderingContext2d) -> P
     return PhotonImage {raw_pixels: raw_pixels, width: canvas.width(), height: canvas.height() }
 }
 
-/// Experimental WASM-only canvas manipulation; without converting to PhotonImages etc.,
-#[wasm_bindgen]
-pub fn canvas_wasm_only(canvas: HtmlCanvasElement, ctx: CanvasRenderingContext2d) {
-
-    let imgdata = get_image_data(&canvas, &ctx);
-    
-    let vec_data = imgdata.data().to_vec();
-
-    let mut image = PhotonImage {raw_pixels: vec_data, width: canvas.width(), height: canvas.height() };
-
-    let end = image.raw_pixels.len() - 4;
-    for i in (10..end).step_by(4) {
-        image.raw_pixels[i + 2] += 70;
-    };
-
-    let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut image.raw_pixels), canvas.width(), canvas.height()).unwrap();
-    // Place the new imagedata onto the canvas
-    ctx.put_image_data(&new_img_data, 0.0, 0.0);
-}
-
 
 /// Convert ImageData to a raw pixel vec of u8s.
 #[wasm_bindgen]
@@ -256,29 +291,6 @@ pub fn base64_to_vec(base64: &str) -> Vec<u8> {
     return vec;
 }
 
-/// Create a PhotonImage from a raw vec of u8s, representing raw image pixels.
-#[wasm_bindgen]
-pub fn photonimage_from_vec(vec: Vec<u8>) -> PhotonImage {
-
-    let slice = vec.as_slice();
-
-    let img = image::load_from_memory(slice).unwrap();
-    
-    let raw_pixels = img.raw_pixels();
-    
-    return PhotonImage { raw_pixels: raw_pixels, width: img.width(), height: img.height()};
-
-}
-
-/// Create a PhotonImage from ImageData.
-#[wasm_bindgen]
-pub fn photonimage_from_imgdata(imgdata: ImageData, width: u32, height: u32) -> PhotonImage {
-    let raw_pixels = to_raw_pixels(imgdata);
-    
-    return PhotonImage { raw_pixels: raw_pixels, width: width, height: height};
-
-}
-
 /// Convert a PhotonImage to JS-compatible ImageData.
 #[wasm_bindgen]
 pub fn to_image_data(photon_image: PhotonImage) -> ImageData {
@@ -297,14 +309,6 @@ fn set_panic_hook() {
     console_error_panic_hook::set_once();
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
-
 pub mod channels;
 pub mod effects;
 pub mod transform;
@@ -317,28 +321,4 @@ pub mod colour_spaces;
 pub mod multiple;
 pub mod noise;
 pub mod helpers;
-
-
-// Convert an Image element into a Canvas and replace the image element with the canvas
-// in the DOM. 
-// #[cfg(target_arch = "wasm32")]
-// #[wasm_bindgen]
-// pub fn image_to_canvas(image_element: HtmlImageElement) {    
-//     let window = web_sys::window().expect("No Window found, should have a Window");
-//     let document = web_sys::window().unwrap().document().unwrap();
-//     let canvas = document
-//         .create_element("canvas").unwrap()
-//         .dyn_into::<web_sys::HtmlCanvasElement>();
-    
-//     document.body().unwrap().append_child(&canvas);
-        
-//     let context = canvas
-//             .get_context("2d")
-//             .unwrap()
-//             .dyn_into::<web_sys::CanvasRenderingContext2d>();
-    
-//     // context.draw_image_with_html_image_element(&image_element, image_element.width().into(), image_element.height().into());
-//     // document.append_child(&canvas);
-//     // return canvas;
-
-// }
+mod tests;
