@@ -7,7 +7,7 @@ You'll get a feel for how to use Photon, and will be able to build upon this to 
 Ensuring you have Rust installed, create a new Rust project:
 
 ```bash
-cargo new photon-demo
+cargo new photon-demo --bin
 cd photon-demo
 ```
 
@@ -15,14 +15,28 @@ Once you've moved into the new directory, take a look at the source files genera
 
 ## Add Photon as A Dependency
 
-Add Photon as a dependency to your project. 
+Add Photon as a dependency to your project:
 
-Your Cargo.toml should look like this:
-
-#### Cargo.toml
     #!toml hl_lines="8"
     [dependencies]
     photon=1.2
+
+
+Your Cargo.toml should look like this:
+
+##### Cargo.toml
+    #!toml 
+    [package]
+    name = "photon-demo"
+    version = "0.1.0"
+    authors = ["your_name <your_email>"]
+    edition = "2018"
+
+    # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+    [dependencies]
+    photon=1.2
+
 
 ## Writing The Program
 Next up, open your `bin.rs` file. You'll find a sample function in there, remove that since we won't be using it. 
@@ -70,16 +84,16 @@ The final code looks like this:
 ##### bin.rs 
     #!rust
     extern crate photon;
-    use photon::Rgb;
+    use photon::{filters};
     use photon::native::{open_image, save_image};
 
     fn main() {
         // Open the image (a PhotonImage is returned)
-        let mut img = open_image("image.jpg");
+        let mut img = open_image("examples/input_images/daisies_fuji.jpg");
 
         // Apply a filter to the pixels
-        photon::filters::filter(&mut img, "twenties");
-        save_image(img, "new_image.jpg");    
+        filters::filter(&mut img, "twenties");
+        save_image(img, "new_image.jpg");
 
     }
 
@@ -91,9 +105,8 @@ cargo run --release
 ```
 
 !!! warning
-    Make sure you run in **release** mode for optimum performance. Otherwise, performance will be greatly affected.8 
-    Don't forget to add the release flag, as shown above.
-
+    Make sure you run in **release** mode for optimum performance, by adding the --release flag to your command. 
+    Otherwise, performance will be greatly affected.
 
 #### Bonus: Add Timing 
 If you'd like to find out how long it takes to process your image, you can add some code to capture this:
@@ -111,16 +124,15 @@ If you'd like to find out how long it takes to process your image, you can add s
         // Apply a filter to the pixels
         let start = PreciseTime::now();
         photon::channels::alter_channel(&mut img, 1, -20);
+        save_image(img, "raw_image.png");    
         let end = PreciseTime::now();
         println!("Took {} seconds to process image.", start.to(end));
-        save_image(img, "raw_image.png");    
-
     }
 
-#### Examples
+### Want More Examples?
 
 To view more examples for native-use, check out the [`/examples`](https://github.com/silvia-odwyer/photon/tree/master/crate/examples) folder in Photon's repository.
 You'll find full instructions on how to run these in the README.
 
-#### Working with the Web
-If you'd like to get started with Photon for the web, see the [accompanying tutorial](web-tutorial.md).
+### Working with the Web
+If you'd like to get started with Photon for the web, see the [accompanying web tutorial](web-tutorial.md).

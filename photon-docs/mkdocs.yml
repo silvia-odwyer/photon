@@ -9,6 +9,8 @@ theme:
   name: 'material'
   feature:
     tabs: true
+  logo:
+    icon: 'photo'
 
 markdown_extensions:
   - admonition
@@ -20,3 +22,15 @@ plugins:
   - search
   - minify:
       minify_html: true
+
+# Page tree
+nav:
+  - About: index.md
+  - Getting started: getting-started.md
+  - Using Photon Natively: using-photon-natively.md
+  - Using Photon on The Web: using-photon-web.md
+  - All Functions: all-effects.md
+  - Web Tutorial: web-tutorial.md
+  - Native Tutorial: native-tutorial.md
+  - Serialize to JSON: serialize-to-json.md
+  - Contact: contact-developer.md
