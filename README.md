@@ -13,7 +13,7 @@
   [![GitHub Issues](https://img.shields.io/github/issues/silvia-odwyer/photon.svg)](https://github.com/silvia-odwyer/photon/issues)
   [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/silvia-odwyer/photon.svg)](https://github.com/silvia-odwyer/p/pulls)
   [![License](https://img.shields.io/badge/license-APACHE%202-blue)](/LICENSE)
-  [![Gitter chat](https://badges.gitter.im/silvia-odwyer/photon.png)](https://gitter.im/silvia-odwyer/photon "Gitter chat")
+  [![Gitter chat](https://badges.gitter.im/silvia-odwyer/photon.png)](https://gitter.im/silvia-odwyer/photonlibrary "Gitter chat")
 
 </div>
 
@@ -43,6 +43,9 @@ The library provides low-level access to pixel and channel manipulation, as well
 with zero-cost abstraction. 
 - **Use Natively:** For command-line apps, native photo editing apps, and so forth, Photon's core codebase is in Rust, allowing for cross-platform
 development.
+
+### Get Started
+Check out Photon's [getting started guide, complete with tutorials, installation instructions, and more](https://silvia-odwyer.github.io/photon/guide)
 
 ### Photon In Action
 
