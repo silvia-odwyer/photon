@@ -117,17 +117,36 @@ pub fn flipv(photon_image: &mut PhotonImage) {
     photon_image.raw_pixels = raw_pixels;
 }
 
+#[wasm_bindgen]
+pub enum SamplingFilter {
+    Nearest = 1,
+    Triangle = 2,
+    CatmullRom = 3,
+    Gaussian = 4,
+    Lanczos3 = 5,
+}
+
+fn filter_type_from_sampling_filter(sampling_filter: SamplingFilter) -> image::FilterType {
+    match sampling_filter {
+        SamplingFilter::Nearest => image::FilterType::Nearest,
+        SamplingFilter::Triangle => image::FilterType::Triangle,
+        SamplingFilter::CatmullRom => image::FilterType::CatmullRom,
+        SamplingFilter::Gaussian => image::FilterType::Gaussian,
+        SamplingFilter::Lanczos3 => image::FilterType::Lanczos3
+    }
+}
+
 /// Resize an image on the web.
 /// 
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `width` - New width.
 /// * `height` - New height.
+/// * `sampling_filter` - Nearest = 1, Triangle = 2, CatmullRom = 3, Gaussian = 4, Lanczos3 = 5
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
-pub fn resize(photon_img: &PhotonImage, width: u32, height: u32) -> HtmlCanvasElement {
-    let sampling_filter = image::FilterType::Nearest;
-
+pub fn resize(photon_img: &PhotonImage, width: u32, height: u32, sampling_filter: SamplingFilter) -> HtmlCanvasElement {
+    let sampling_filter = filter_type_from_sampling_filter(sampling_filter);
     let dyn_img = helpers::dyn_image_from_raw(&photon_img);
     let resized_img = image::ImageRgba8(image::imageops::resize(&dyn_img, width, height, sampling_filter));
 
@@ -153,8 +172,8 @@ pub fn resize(photon_img: &PhotonImage, width: u32, height: u32) -> HtmlCanvasEl
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-pub fn resize(photon_img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
-    let sampling_filter = image::FilterType::Nearest;
+pub fn resize(photon_img: &PhotonImage, width: u32, height: u32, sampling_filter: SamplingFilter) -> PhotonImage {
+    let sampling_filter = filter_type_from_sampling_filter(sampling_filter);
 
     let dyn_img = helpers::dyn_image_from_raw(&photon_img);
     let resized_img = image::ImageRgba8(image::imageops::resize(&dyn_img, width, height, sampling_filter));
