@@ -9,14 +9,6 @@ import Watermark from "./wasm_logo.png"
 var canvas, canvas2, watermark_canvas;
 var ctx, ctx2, watermark_ctx;
 
-const worker = new Worker("worker.js");
-
-worker.postMessage({msg: "hello worker"});
-worker.addEventListener("message", evt => {
-  console.log("hi");
-})
-
-
 import("../../crate/pkg").then(module => {
   var startTime;
   var endTime;

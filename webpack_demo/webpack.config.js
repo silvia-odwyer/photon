@@ -44,22 +44,22 @@ var mainConfig = {
   ]
 };
 
-const workerConfig = {
-  entry: "./js/worker.js",
-  target: "webworker",
-  plugins: [
-    new WasmPackPlugin({
-      crateDirectory: path.resolve(__dirname, "../crate")
-    })
-  ],
-  resolve: {
-    extensions: [".js", ".wasm"]
-  },
-  output: {
-    path: dist,
-    filename: "worker.js"
-  }
-};
+// const workerConfig = {
+//   entry: "./js/worker.js",
+//   target: "webworker",
+//   plugins: [
+//     new WasmPackPlugin({
+//       crateDirectory: path.resolve(__dirname, "../crate")
+//     })
+//   ],
+//   resolve: {
+//     extensions: [".js", ".wasm"]
+//   },
+//   output: {
+//     path: dist,
+//     filename: "worker.js"
+//   }
+// };
 
 
-module.exports = [mainConfig, workerConfig]
+module.exports = [mainConfig]
