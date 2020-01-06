@@ -1,6 +1,5 @@
 import Fruit from "../images/nine_yards.jpg";
 import Daisies from "../images/nine_yards.jpg";
-import Lemons from "../images/lemons.jpg";
 import Underground from "../images/underground.jpg";
 import NineYards from "../images/nine_yards.jpg";
 import BlueMetro from "../images/blue_metro.jpg";

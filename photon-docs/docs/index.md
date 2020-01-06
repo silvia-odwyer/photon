@@ -28,6 +28,9 @@ To view a demo of Photon in action, [click here](https://silvia-odwyer.github.io
 To create your own applications using Photon, check out our two tutorials, one which is for the web, 
 and the other which runs Rust natively.
 
+## Documentation
+[See the documentation here.](https://docs.rs/photon-rs/0.1.0/)
+
 ## Browse Effects
 | Original             |  Retro | Twenties | Sharpen | Hi|
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:

@@ -23,9 +23,11 @@ class Canvas extends React.Component {
     img.onload = () => {
       this.img = img;
       const canvas = this.refs.canvas;
+      canvas.width = img.width;
+      canvas.height = img.height;
       const ctx = canvas.getContext("2d");
       
-      ctx.drawImage(img, 0, 0)
+      ctx.drawImage(img, 0, 0);
 
     }
     img.src = img_src;
@@ -78,16 +80,42 @@ class Canvas extends React.Component {
 
     let photon = this.wasm;
 
-    // Convert the canvas and context to a PhotonImage
-    let image = photon.open_image(canvas1, ctx);
+
+    let img_data = ctx.getImageData(0, 0, canvas1.width, canvas1.height);
+
+    // Convert the raw base64 data to a PhotonImage.
+    //let pImage = photon.photonimage_from_imgdata(img_data, canvas1.width, canvas1.height);
+    // let pImage = new photon.PhotonImage(canvas1.width, canvas1.height);
+    // pImage.set_imgdata(img_data);
+
+    let phtimg = photon.PhotonImage.new_from_imgdata(canvas1.width, canvas1.height, img_data);
+
+
+    // for (var i = 0; i < vec.length; i += 4) {
+    //   vec[i] += 10;
+    //   vec[i + 1] += 20;
+    // }
 
     // Filter the image
+    //photon.grayscale(phtimg);
+    // photon.solarize(phtimg);
+    // photon.alter_blue_channel(phtimg, 120);
 
-    photon.primary(image);
-    photon.solarize(image);
+    console.time("PHOTON_WITH_RAWPIX");
+    photon.alter_channel(phtimg, 2, 70);
 
-    // Replace the current canvas' ImageData with the new image's ImageData.
-    photon.putImageData(canvas1, ctx, image);
+    console.timeEnd("PHOTON_WITH_RAWPIX");
+
+    // photon.alter_red_channel_dyn(phtimg, 80);
+
+    // // Replace the current canvas' ImageData with the new image's ImageData.
+    photon.putImageData(canvas1, ctx, phtimg);
+
+
+
+    console.time("PHOTON_CONSTR");
+    // photon.canvas_wasm_only(canvas1, ctx);
+    console.timeEnd("PHOTON_CONSTR");
   }
   
   render() {
@@ -114,7 +142,7 @@ class Canvas extends React.Component {
    
               <section class="content">
                   <h2>Image</h2>
-                  <canvas ref="canvas" width={640} height={425} />
+                  <canvas ref="canvas" />
               </section>
 
               <section class="benchmarks">

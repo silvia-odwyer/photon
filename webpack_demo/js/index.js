@@ -79,7 +79,7 @@ import("../../crate/pkg").then(module => {
 
     let photon_img = module.open_image(canvas, ctx);
 
-    let newcanvas = module.resize(photon_img, 200, 200);
+    let newcanvas = module.resize(photon_img, 200, 200, 1);
     resized_img_container.appendChild(newcanvas);
     let newctx = newcanvas.getContext("2d");
     let newimgdata = newctx.getImageData(0, 0, newcanvas.width, newcanvas.height);
