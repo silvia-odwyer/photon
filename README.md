@@ -24,11 +24,11 @@
 </p>
 
 ## 📝 Table of Contents
-- [Get Started with WebAssembly](https://github.com/silvia-odwyer/photon#-get-started-with-webassembly)
+- [Get Started with WebAssembly](https://github.com/silvia-odwyer/photon#get-started-with-webassembly)
 - [Get Started Natively](https://github.com/silvia-odwyer/photon#getting-started)
-- [Documentation](https://silvia-odwyer.github.io/photon/docs/photon/all.html)
-- [Official Website.](https://silvia-odwyer.github.io/photon/)
-- [All Available Functions.](https://silvia-odwyer.github.io/photon/docs/photon/all.html)
+- [Documentation](https://docs.rs/photon-rs/)
+- [Official Website](https://silvia-odwyer.github.io/photon/)
+- [All Available Functions](https://silvia-odwyer.github.io/photon/docs/photon/all.html)
 - [Got Questions? Ask Here!](https://github.com/silvia-odwyer/photon#got-questions)
 
 Photon is a high-performance Rust image processing library, which compiles to WebAssembly, allowing for 
@@ -40,7 +40,7 @@ You can run Photon:
 - on NodeJS with WebAssembly
 
 ### Features 
-- **Fast:** Photon outperforms even the fastest of libraries, including ImageMagick. On the web, its high-performance allows it to run 4-10x faster than JS for the web. Benchmarks coming soon.
+- **Fast:** Photon outperforms even the fastest of libraries, including ImageMagick. On the web, its high-performance allows it to run at near-native speed. Benchmarks coming soon.
 - **Call with JS:** Want to use Photon on the web or with Node? Using a simple npm package, you're good to go. Get all the benefits of WebAssembly
 with zero-cost abstraction. 
 - **Use Natively:** For command-line apps, native photo editing apps, and so forth, Photon's core codebase is in Rust, allowing for cross-platform
@@ -50,18 +50,16 @@ development.
 ### Live Demo
 View the [official demo of WASM in action](https://silvia-odwyer.github.io/photon/demo.html).
 
-### Get Started
-#### Getting Started Guide
-Check out Photon's [getting started guide, complete with tutorials, installation instructions, and more](https://silvia-odwyer.github.io/photon/guide)
-
-#### Documentation
-### 📚 Documentation
-View the [official documentation](https://silvia-odwyer.github.io/photon/docs/photon/index.html).
-
 ### Photon In Action
 
 ![Imgur](https://i.imgur.com/PShSZ6k.png)
 
+### Get Started
+#### Getting Started Guide
+Check out Photon's [getting started guide, complete with tutorials, installation instructions, and more](https://silvia-odwyer.github.io/photon/guide)
+
+### 📚 Documentation
+View the [official documentation](https://docs.rs/photon-rs/).
 
 ### Functions
 96 customisable functions are available, for varying image effects.
@@ -77,10 +75,9 @@ Functions include:
 - **Watermarking**: Watermark images in multiple formats. 
 - **Blending**: Blend images together using 10 different techniques, change image backgrounds. 
 
+## Get Started Natively
 
-## Installing
-
-### With Rust
+### Install
 Add the following line to the dependencies section of your Rust project's Cargo.toml:
 
 ###### Cargo.toml
@@ -94,30 +91,30 @@ The following code opens an image from the filesystem, applies an effect, and ou
 
 Here is a code sample to get you started:
 
-```rs
-extern crate image;
+```rust
 extern crate photon_rs;
 use photon_rs::native::{open_image, save_image};
 
 fn main() {
     // Open the image (a PhotonImage is returned)
-    let mut img = open_image("test_image.png");
+    let mut img = open_image("test_image.PNG");
 
     // Increment the red channel by 40
     photon_rs::channels::alter_red_channel(&mut img, 40);
 
     // Write file to filesystem.
-    save_image(img, "raw_image.jpg");    
+    save_image(img, "raw_image.JPG");    
 
 }
 ```
 
-[For more examples, check out the guide on how to get started with Photon natively.]()
+##### See More Examples
+[For more examples, check out the guide on how to get started with Photon natively.](https://silvia-odwyer.github.io/photon/guide/using-photon-natively/)
 
-# Get Started With WebAssembly
-#### Using a Bundler? 
-##### Installing Photon
-If you're using Webpack or a bundler to build your project, install Photon via npm as so:
+## Get Started With WebAssembly
+### Using a Bundler? 
+#### Installing Photon
+If you're using Webpack or a bundler to build your project, install Photon via npm:
 
 ```bash
 npm install @silvia-odwyer/photon
@@ -126,7 +123,7 @@ npm install @silvia-odwyer/photon
 You can run Photon directly in any web browser that supports WebAssembly, which includes Chrome, Firefox, Safari, and Edge.
 
 ##### Get Started with Photon on The Web
-To get started, [check out the guide]().
+To get started, [check out the guide](https://silvia-odwyer.github.io/photon/guide/using-photon-web/).
 
 #### Using NodeJS?
 If you're intending to use Photon with NodeJS, you can install the NodeJS version of the library:
@@ -135,8 +132,8 @@ If you're intending to use Photon with NodeJS, you can install the NodeJS versio
 npm install @silvia-odwyer/photon-node
 ```
 
-##### NodeJS Tutorial
-See the [NodeJS tutorial, which shows how to use Photon with NodeJS]().
+<!-- ##### NodeJS Tutorial
+See the [NodeJS tutorial, which shows how to use Photon with NodeJS](). -->
 
 ## Modules 
 Photon contains a series of modules, which include:
@@ -149,9 +146,7 @@ Photon contains a series of modules, which include:
 - `multiple`: A module for dealing with multiple images, such as watermarking images, etc.,
 - `correction`: Hue rotation, adjusting saturation, lightening/darkening: all techniques available in multiple colour spaces, which lead to varying effects.
 
-All effects and filters can be viewed below and on the official website.
-
-### Run Natively
+### Quick Start Example
 Clone this repo:
 ```sh
 git clone https://github.com/silvia-odwyer/photon
@@ -166,10 +161,12 @@ cargo run --release
 Compare the original image with the outputted image, and you'll see the desired effect has been applied.
 
 ## Got Questions? 
-If you'd like to chat to the developer about your potential use case, or have further questions about this library, 
-just submit them here, and I'll get back to you!
+If you have further questions about this library, you can ask them on [Gitter](https://gitter.im/photonlibrary/community) or [Spectrum](https://spectrum.chat/photonlibrary), and I'll get back to you!
 
-- [Spectrum Chat](https://spectrum.chat/photonlibrary)
+If there are any issues involving running/using the library, make sure to open an issue, it would be greatly appreciated, 
+and will help improve the library. 
+
+- [Spectrum](https://spectrum.chat/photonlibrary)
 - [Gitter](https://gitter.im/photonlibrary/community)
 
 ## Additional Notes

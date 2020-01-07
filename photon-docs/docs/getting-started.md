@@ -4,24 +4,31 @@
 ### Photon for the Web
 Photon is available as an npm module, which calls the underlying WebAssembly code. 
 
-Ensuring you have Node.JS installed on your machine, run:
+Ensuring you have Node.JS installed on your machine, install [Photon's npm module](https://www.npmjs.com/package/@silvia-odwyer/photon):
 
 ```bash
-npm install photon-wasm
+npm install @silvia-odwyer/photon
 ```
 
-You can use Photon as you would a standard JavaScript library, since it’s available as an npm module, meaning you can use Photon for the browser, in electron apps, with Vue, React, other JS frameworks, etc., 
+You can use Photon as you would a standard JavaScript library, since it’s available as an npm module, meaning you can use Photon for the browser, in Electron apps, with Vue, React, other JS frameworks, etc., 
+
+### Photon with NodeJS
+If you'd like to install Photon for use with NodeJS, install the [relevant npm module](https://www.npmjs.com/package/@silvia-odwyer/photon-node):
+
+```bash
+npm install @silvia-odwyer/photon-node 
+```
 
 ### Using Photon On the Web
 Check out our accompanying article on [how to use Photon on the Web.](using-photon-web.md)
 
 ### Photon Natively
-If you’d like to use Photon with a Rust project, you can install the `photon` cargo package by adding the following line to your Cargo.toml dependencies:
+If you’d like to use Photon with a Rust project, you can install the `photon-rs` [Cargo crate](https://crates.io/crates/photon-rs) by adding the following line to your Cargo.toml dependencies:
 
 #### Cargo.toml
 ```
 [dependencies]
-photon 1.2
+photon_rs = "0.0.1"
 ```
 
 ### Using Photon Natively 

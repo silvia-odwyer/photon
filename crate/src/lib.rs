@@ -1,7 +1,8 @@
-//! An image processing crate that provides a set of functions for image filtering, convolution, colour manipulation, and more.
+//! A high-performance image processing library, available for use both natively and on the web. 
 //! 
 //! #### Functions
 //! 96 functions are available, including:
+//! - **Transformations**: Resize, crop, and flip images.
 //! - **Image correction**: Hue rotation, sharpening, brightness adjustment, adjusting saturation, lightening/darkening all within various colour spaces. 
 //! - **Convolutions**: Sobel filters, blurs, Laplace effects, edge detection, etc., 
 //! - **Channel manipulation**: Increasing/decreasing RGB channel values, swapping channels, removing channels, etc.
@@ -14,13 +15,15 @@
 //! 
 //! ## Example 
 //! ```rust
-//! extern crate photon;
-
+//! extern crate photon_rs;
+//! use photon_rs::{channels};
+//! use photon_rs::native::{open_image, save_image};
 //! fn main() {
-//!     let img = photon::helpers::open_image("valley.PNG");
-//!     photon::effects::solarize(&mut img);
-//!     // Write the contents of this image in PNG format.
-//!     photon::helpers::save_image(img, "new_image.PNG");
+//!     // Open the image (a PhotonImage is returned)
+//!     let mut img = open_image("image.jpg");
+//!     // Apply a filter to the pixels
+//!     channels::alter_red_channel(&mut img, 25);
+//!     save_image(img, "raw_image.png");    
 //! }
 //! ```
 //! 
@@ -30,33 +33,10 @@
 //! 
 //! ### WebAssembly Use
 //! To allow for universal communication between the core Rust library and WebAssembly, the functions have been generalised to allow for both native and in-browser use. 
-//! Due to this, image data from the browser must first be converted to a PhotonImage before being passed to the image processing functions. 
-//! The PhotonImage can then be converted back to JS-compatible ImageData so that it can be displayed in-browser.
-//! See the code snippet below:
-//! 
-//! ```js
-//!function filterImage() {
-//!     // Create a canvas and get a 2D context from the canvas
-//!     var canvas = document.getElementById("canvas");
-//!     var ctx = canvas.getContext("2d"); 
-//!     
-//!     // Draw the image element onto the canvas
-//!     ctx.drawImage(newimg, 0, 0);
-//!     
-//!     // Convert the ImageData found in the canvas to a PhotonImage (so that it can communicate with the core Rust library)
-//!     let rust_image = module.open_image(canvas, ctx);
-//!     
-//!     // Filter the image, the PhotonImage's raw pixels are modified
-//!     module.filter(rust_image, "radio");
-//!     
-//!     // Place the PhotonImage back on the canvas
-//!     ctx.putImageData(rust_image, 0, 0)
-//! }
-//! ```
+//! [Check out the official guide](https://silvia-odwyer.github.io/photon/guide/) on how to get started with Photon on the web.
 //! 
 //! ### Live Demo
 //! View the [official demo of WASM in action](https://silvia-odwyer.github.io/photon).
-//! Not all functions available in the core Rust library are available in WebAssembly (currently investigating this). Only WASM-friendly functions have been annotated with #[wasm_bindgen]. All supported WASM functions are displayed in the starter demo. 
 
 use wasm_bindgen::prelude::*;
 use web_sys::{CanvasRenderingContext2d, ImageData, HtmlCanvasElement};
@@ -84,6 +64,7 @@ pub struct PhotonImage {
 #[wasm_bindgen]
 impl PhotonImage {   
     #[wasm_bindgen(constructor)]
+    /// Create a new PhotonImage from a Vec of u8s, which represent raw pixels.
     pub fn new(raw_pixels: Vec<u8>, width: u32, height: u32) -> PhotonImage {
         return PhotonImage { raw_pixels: raw_pixels, width: width, height: height};
     }
@@ -94,6 +75,7 @@ impl PhotonImage {
         return image;
     }
 
+    /// Create a new PhotonImage from a byteslice.
     pub fn new_from_byteslice(vec: Vec<u8>) -> PhotonImage {    
         let slice = vec.as_slice();
 
@@ -110,6 +92,7 @@ impl PhotonImage {
         self.width
     }
 
+    /// Get the PhotonImage's pixels as a Vec of u8s.
     pub fn get_raw_pixels(&self) -> Vec<u8> {
         self.raw_pixels.clone()
     }
@@ -157,30 +140,37 @@ pub struct Rgb {
 
 #[wasm_bindgen]
 impl Rgb {
+    /// Create a new RGB struct.
     pub fn new(r: u8, g: u8, b: u8) -> Rgb {
         return Rgb {r: r, g: g, b: b}
     }
 
+    /// Set the Red value.
     pub fn set_red(&mut self, r: u8) {
         self.r = r;
     }
 
+    /// Get the Green value.
     pub fn set_green(&mut self, g: u8) {
         self.g = g;
     }
 
+    /// Set the Blue value.
     pub fn set_blue(&mut self, b: u8) {
         self.b = b;
     }
 
+    /// Get the Red value.
     pub fn get_red(&self) -> u8 {
         self.r
     }
 
+    /// Get the Green value.
     pub fn get_green(&self) -> u8 {
         self.g
     }
 
+    /// Get the Blue value.
     pub fn get_blue(&self) -> u8 {
         self.b
     }
@@ -195,9 +185,6 @@ impl From<Vec<u8>> for Rgb {
         rgb
     }
 }
-
-/// Create a PhotonImage from a byte slice.
-
 
 ///! [temp] Check if WASM is supported.
 #[wasm_bindgen]
@@ -250,7 +237,6 @@ pub fn open_image(canvas: HtmlCanvasElement, ctx: CanvasRenderingContext2d) -> P
     let raw_pixels = to_raw_pixels(imgdata);
     return PhotonImage {raw_pixels: raw_pixels, width: canvas.width(), height: canvas.height() }
 }
-
 
 /// Convert ImageData to a raw pixel vec of u8s.
 #[wasm_bindgen]

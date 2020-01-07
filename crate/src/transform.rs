@@ -171,6 +171,13 @@ pub fn resize(photon_img: &PhotonImage, width: u32, height: u32, sampling_filter
     return canvas;
 }
 
+/// Resize an image.
+/// 
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// * `width` - New width.
+/// * `height` - New height.
+/// * `sampling_filter` - Nearest = 1, Triangle = 2, CatmullRom = 3, Gaussian = 4, Lanczos3 = 5
 #[cfg(not(target_arch = "wasm32"))]
 pub fn resize(photon_img: &PhotonImage, width: u32, height: u32, sampling_filter: SamplingFilter) -> PhotonImage {
     let sampling_filter = filter_type_from_sampling_filter(sampling_filter);

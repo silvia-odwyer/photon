@@ -19,8 +19,7 @@ Add Photon as a dependency to your project:
 
     #!toml hl_lines="8"
     [dependencies]
-    photon=1.2
-
+    photon_rs = "0.1.0"
 
 Your Cargo.toml should look like this:
 
@@ -47,8 +46,9 @@ To open an image:
 
 ##### bin.rs
     #!rust hl_lines="4"
-    extern crate photon;
-    use photon::native::{open_image};
+    extern crate photon_rs;
+    use photon_rs::native::{open_image};
+
     fn main() {
         let mut img = open_image("image.jpg");
     }
@@ -58,7 +58,7 @@ To open an image:
 To apply a filter effect to the opened image, we need to pass in our image and a filter name. 
 
     #!rust
-    photon::filters::filter(&mut img, "twenties");
+    photon_rs::filters::filter(&mut img, "twenties");
 
 Notice that we're passing a mutable reference to the image. This allows the function to modify the image, rather than return a new image.
 There are a variety of filter effects we can pass. Once you get the program compiled, try passing in "radio" instead of the filter above.
@@ -83,16 +83,18 @@ The final code looks like this:
 
 ##### bin.rs 
     #!rust
-    extern crate photon;
-    use photon::{filters};
-    use photon::native::{open_image, save_image};
+    extern crate photon_rs;
+    use photon_rs::{filters};
+    use photon_rs::native::{open_image, save_image};
 
     fn main() {
         // Open the image (a PhotonImage is returned)
-        let mut img = open_image("examples/input_images/daisies_fuji.jpg");
+        let mut img = open_image("image.jpg");
 
         // Apply a filter to the pixels
         filters::filter(&mut img, "twenties");
+
+        // Write the new image to the filesystem.
         save_image(img, "new_image.jpg");
 
     }
@@ -109,22 +111,33 @@ cargo run --release
     Otherwise, performance will be greatly affected.
 
 #### Bonus: Add Timing 
-If you'd like to find out how long it takes to process your image, you can add some code to capture this:
+If you'd like to find out how long it takes to process your image, you can add some code to capture this.
+
+Add the `time` dependency to your Cargo.toml:
+
+###### Cargo.toml
+[dependencies]
+time="0.2.1"
+
+Then in your code:
 
     #!rust hl_lines="11"
-    extern crate photon;
-    use photon::Rgb;
-    use photon::native::{open_image, save_image};
+    extern crate photon_rs;
+    use photon_rs::native::{open_image, save_image};
     use time::{PreciseTime};
 
     fn main() {
         // Open the image (a PhotonImage is returned)
         let mut img = open_image("image.jpg");
 
-        // Apply a filter to the pixels
+        // Start time
         let start = PreciseTime::now();
-        photon::channels::alter_channel(&mut img, 1, -20);
+
+        // Process image 
+        photon_rs::channels::alter_channel(&mut img, 1, -20);
         save_image(img, "raw_image.png");    
+
+        // Output time taken.
         let end = PreciseTime::now();
         println!("Took {} seconds to process image.", start.to(end));
     }

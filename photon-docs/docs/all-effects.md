@@ -1,7 +1,10 @@
 # All Functions
 
-All effects and functions are shown below.
+All effects and functions are available in the documentation. 
 
+See [documentation](https://docs.rs/photon-rs/).
+
+<!-- 
 For quick access, try searching for your desired effect in the search box above. 
 
 The following categories are available, click on one to navigate to its functions:
@@ -315,4 +318,4 @@ sit amet laoreet nibh.
     mkdocs.yml    # The configuration file.
     docs/
         index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+        ...       # Other markdown pages, images and other files. -->

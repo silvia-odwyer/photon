@@ -1,4 +1,3 @@
-extern crate image;
 extern crate photon_rs;
 use photon_rs::native::{open_image, save_image};
 

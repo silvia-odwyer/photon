@@ -8,8 +8,8 @@ To open an image:
 
 ##### bin.rs
     #!rust hl_lines="4"
-    extern crate photon;
-    use photon::native::{open_image};
+    extern crate photon_rs;
+    use photon_rs::native::{open_image};
     fn main() {
         let mut img = open_image("image.jpg");
     }
@@ -18,7 +18,7 @@ To open an image:
 To apply a filter effect to the opened image, we need to pass in our image and a filter name. 
 
     #!rust
-    photon::filters::filter(&mut img, "twenties");
+    photon_rs::filters::filter(&mut img, "twenties");
 
 Notice that we're passing a mutable reference to the image. This allows the function to modify the image, rather than return a new image.
 There are a variety of filter effects we can pass. Once you get the program compiled, try passing in "radio" instead of the filter above.
@@ -36,9 +36,9 @@ Notice here we're saving it as a JPG image, but we could also save it as a PNG o
 This program increases the red channel of the image, and then applies a sepia effect to the image.
 
     #!rust hl_lines="11"
-    extern crate photon;
-    use photon::{filters, channels};
-    use photon::native::{open_image, save_image};
+    extern crate photon_rs;
+    use photon_rs::{filters, channels};
+    use photon_rs::native::{open_image, save_image};
 
     fn main() {
         // Open the image (a PhotonImage is returned)
@@ -49,4 +49,3 @@ This program increases the red channel of the image, and then applies a sepia ef
         filters::filter(&mut img, "sepia");
         save_image(img, "raw_image.png");    
     }
-

@@ -5,7 +5,7 @@ Photon is a high-performance image processing library, written in Rust and compi
 It allows developers to apply filters, effects and manipulate channels of their images, as well as apply standard image processing operations such as blurring, cropping, resizing, etc.,
 
 ## Features <small></small>
-- **High-performance**: Photon outperforms even the fastest of libraries.
+- **High-performance**: Photon outperforms even the fastest of libraries, including ImageMagick and the Python Imaging Library.
 - **Safety and Security**: Written in Rust, this library guarantees memory safety. 
 - Over **80 effects**: Boasting over 80 effects.
 - Use on the **web** or **natively**.
@@ -24,13 +24,14 @@ This guide will help you install Photon and start using it either natively or on
 
 To view a demo of Photon in action, [click here](https://silvia-odwyer.github.io/photon/demo.html).
 
-## Tutorials
-To create your own applications using Photon, check out our two tutorials, one which is for the web, 
-and the other which runs Rust natively.
-
 ## Documentation
 [See the documentation here.](https://docs.rs/photon-rs/0.1.0/)
 
+<!-- ## Tutorials
+To create your own applications using Photon, check out our two tutorials, one which is for the web, 
+and the other which runs Rust natively. -->
+
+<!-- 
 ## Browse Effects
 | Original             |  Retro | Twenties | Sharpen | Hi|
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
@@ -70,10 +71,15 @@ These benchmarks were carried out on an 8GB RAM w/ i5 Processor laptop.
 | Pulvinar nisl            | yes         | yes        | yes     | -    | -   |
 | Pharetra aliquet est     | yes         | yes        | yes     | yes  | yes |
 | Sed suscipit             | yes         | yes        | yes     | yes  | yes |
-| Orci non pretium         | yes         | partial    | -       | -    | -   |
+| Orci non pretium         | yes         | partial    | -       | -    | -   | -->
 
 
 ## Featured In 
 See what others have to say about Photon:
 
 - [Stephen Downes' Note on Photon](https://www.downes.ca/cgi-bin/page.cgi?post=70217)
+
+## Ready To Get Started?
+
+- [Get started with WebAssembly.](https://silvia-odwyer.github.io/photon/guide/using-photon-web/)
+- [Get started with Rust for native use.](https://silvia-odwyer.github.io/photon/guide/using-photon-natively/)
