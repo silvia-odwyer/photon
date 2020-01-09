@@ -36,10 +36,7 @@ class Canvas extends React.Component {
   loadWasm = async () => {
 
     try {
-
-      // if photon cannot be found, make sure to go to lib/pkg and run `npm link`
-      // then navigate to the root of the react_app_demo dir, and run `npm link photon`
-      const photon = await import('photon');
+      const photon = await import('@silvia-odwyer/photon');
 
       this.wasm = photon;
 
@@ -79,34 +76,12 @@ class Canvas extends React.Component {
     ctx.drawImage(this.img, 0, 0);
 
     let photon = this.wasm;
-
-
-    let img_data = ctx.getImageData(0, 0, canvas1.width, canvas1.height);
-
-    // Convert the raw base64 data to a PhotonImage.
-    //let pImage = photon.photonimage_from_imgdata(img_data, canvas1.width, canvas1.height);
-    // let pImage = new photon.PhotonImage(canvas1.width, canvas1.height);
-    // pImage.set_imgdata(img_data);
-
-    let phtimg = photon.PhotonImage.new_from_imgdata(canvas1.width, canvas1.height, img_data);
-
-
-    // for (var i = 0; i < vec.length; i += 4) {
-    //   vec[i] += 10;
-    //   vec[i + 1] += 20;
-    // }
-
-    // Filter the image
-    //photon.grayscale(phtimg);
-    // photon.solarize(phtimg);
-    // photon.alter_blue_channel(phtimg, 120);
+    let phtimg = photon.open_image(canvas1, ctx);
 
     console.time("PHOTON_WITH_RAWPIX");
     photon.alter_channel(phtimg, 2, 70);
-
+    photon.grayscale(phtimg);
     console.timeEnd("PHOTON_WITH_RAWPIX");
-
-    // photon.alter_red_channel_dyn(phtimg, 80);
 
     // // Replace the current canvas' ImageData with the new image's ImageData.
     photon.putImageData(canvas1, ctx, phtimg);
