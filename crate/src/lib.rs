@@ -140,6 +140,7 @@ pub struct Rgb {
 
 #[wasm_bindgen]
 impl Rgb {
+    #[wasm_bindgen(constructor)]
     /// Create a new RGB struct.
     pub fn new(r: u8, g: u8, b: u8) -> Rgb {
         return Rgb {r: r, g: g, b: b}
