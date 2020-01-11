@@ -102,52 +102,6 @@ pub fn blend(mut photon_image: &mut PhotonImage, photon_image2: &PhotonImage, bl
     photon_image.raw_pixels = dynimage.raw_pixels();
 }
 
-/// Mix image with a single color, supporting passing `opacity`.
-/// The algorithm comes from Jimp. See `function mix` and `function colorFn` at following link:
-/// https://github.com/oliver-moran/jimp/blob/29679faa597228ff2f20d34c5758e4d2257065a3/packages/plugin-color/src/index.js
-/// Specifically, result_value = (mix_color_value - origin_value) * opacity + origin_value =
-/// mix_color_value * opacity + (1 - opacity) * origin_value for each
-/// of RGB channel.
-///
-/// # Arguments
-/// * `photon_image` - A DynamicImage that contains a view into the image.
-/// * `mix_color` - the color to be mixed in, presetned in RGB.
-/// * `opacity` - the opacity of color when mixed to image.
-/// # Example
-///
-/// ```
-/// // For example, to mix an image with rgb (50, 255, 254) and opacity 0.4:
-/// use photon::multiple;
-/// let mix_color = Rgb{50, 255, 254};
-/// photon::multiple::mix_with_color(img, mix_color, 0.4);
-/// ```
-#[wasm_bindgen]
-pub fn mix_with_color(photon_image: &mut PhotonImage, mix_color: Rgb, opacity: f32) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
-    let (_width, _height) = img.dimensions();
-    let mut img = img.to_rgba();
-
-    // cache (mix_color_value * opacity) and (1 - opacity) so we dont need to calculate them each time during loop.
-    let mix_red_offset = mix_color.r as f32 * opacity;
-    let mix_green_offset = mix_color.g as f32 * opacity;
-    let mix_blue_offset = mix_color.b as f32 * opacity;
-    let factor = 1.0 - opacity;
-
-    for x in 0.._width {
-        for y in 0.._height {
-            let px = img.get_pixel(x, y);
-            let r_value = mix_red_offset + (px.data[0] as f32) * factor;
-            let g_value = mix_green_offset + (px.data[1] as f32) * factor;
-            let b_value = mix_blue_offset + (px.data[2] as f32) * factor;
-            let alpha = px.data[3];
-            img.put_pixel(x, y, image::Rgba (
-                    [r_value as u8, g_value as u8, b_value as u8, alpha]
-            ));
-        }
-    }
-    photon_image.raw_pixels = img.to_vec();
-}
-
 /// Change the background of an image (using a green screen/color screen).
 /// 
 /// # Arguments
