@@ -361,6 +361,38 @@ pub fn selective_hue_rotate(mut photon_image: &mut PhotonImage, ref_color: Rgb, 
     photon_image.raw_pixels = img.to_vec();
 }
 
+/// Invert RGB value of an image.
+///
+/// # Arguments
+/// * `photon_image` - A DynamicImage that contains a view into the image.
+/// # Example
+///
+/// ```
+/// photon::channels::invert(&mut img);
+/// ```
+#[wasm_bindgen]
+pub fn invert(mut photon_image: &mut PhotonImage) {
+    let img = helpers::dyn_image_from_raw(&photon_image);
+
+    let (_width, _height) = img.dimensions();
+    let mut img = img.to_rgba();
+    for x in 0.._width {
+        for y in 0.._height {
+            let px = img.get_pixel(x, y);
+
+            let r_val = px.data[0];
+            let g_val = px.data[1];
+            let b_val = px.data[2];
+            let alpha = px.data[3];
+
+            img.put_pixel(x, y, image::Rgba (
+                [255 - r_val, 255 - g_val, 255 - b_val, alpha]
+            ));
+        }
+    }
+    photon_image.raw_pixels = img.to_vec();
+}
+
 /// Get the similarity of two colours in the l*a*b colour space using the CIE76 formula.
 pub fn color_sim(lab1: Lab, lab2: Lab) -> i64 {
     let l_comp = lab2.l - lab1.l;
