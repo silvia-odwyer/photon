@@ -254,8 +254,8 @@ pub fn base64_to_image(base64: &str) -> PhotonImage {
 
     let slice = base64_to_vec.as_slice();
 
-    let img = image::load_from_memory(slice).unwrap();
-    
+    let mut img = image::load_from_memory(slice).unwrap();
+    img = image::ImageRgba8(img.to_rgba());
     let raw_pixels = img.raw_pixels();
     
     return PhotonImage { raw_pixels: raw_pixels, width: img.width(), height: img.height()};
