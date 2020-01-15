@@ -500,6 +500,45 @@ pub fn inc_brightness(mut photon_image: &mut PhotonImage, brightness: u8) {
     photon_image.raw_pixels = img.raw_pixels();
 }
 
+/// Adjust the contrast of an image by a factor.
+///
+/// # Arguments
+/// * `photon_image` - A PhotonImage that contains a view into the image.
+/// * `contrast` - An f32 factor used to adjust contrast. Between [-255.0, 255.0]. The algorithm will
+/// clamp results if passed factor is out of range.
+/// # Example
+///
+/// ```
+/// photon::effects::adjust_contrast(photon_image, 30.0);
+/// ```
+#[wasm_bindgen]
+pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
+    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
+
+    let clamped_contrast = if contrast > 255.0 { 255.0 } else { if contrast < -255.0 { -255.0 } else { contrast } };
+
+    // Some references:
+    // https://math.stackexchange.com/questions/906240/algorithms-to-increase-or-decrease-the-contrast-of-an-image
+    // https://www.dfstudios.co.uk/articles/programming/image-programming-algorithms/image-processing-algorithms-part-5-contrast-adjustment/
+    let factor = (259.0 * (clamped_contrast + 255.0)) / (255.0 * (259.0 - clamped_contrast));
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            let r_val = (px.data[0] as f32 - 128.0) * factor + 128.0;
+            let g_val = (px.data[1] as f32 - 128.0) * factor + 128.0;
+            let b_val = (px.data[2] as f32 - 128.0) * factor + 128.0;
+
+            px.data[0] = if r_val > 255.0 { 255 } else { if r_val < 0.0 { 0 } else { r_val as u8 } };
+            px.data[1] = if g_val > 255.0 { 255 } else { if g_val < 0.0 { 0 } else { g_val as u8 } };
+            px.data[2] = if b_val > 255.0 { 255 } else { if b_val < 0.0 { 0 } else { b_val as u8 } };
+
+            img.put_pixel(x, y, px);
+        }
+    }
+    photon_image.raw_pixels = img.raw_pixels();
+}
+
 /// Tint an image by adding an offset to averaged RGB channel values.
 /// 
 /// # Arguments
