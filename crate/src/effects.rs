@@ -522,16 +522,18 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
     // https://math.stackexchange.com/questions/906240/algorithms-to-increase-or-decrease-the-contrast-of-an-image
     // https://www.dfstudios.co.uk/articles/programming/image-programming-algorithms/image-processing-algorithms-part-5-contrast-adjustment/
     let factor = (259.0 * (clamped_contrast + 255.0)) / (255.0 * (259.0 - clamped_contrast));
+    let mut lookup_table: Vec<u8> = vec![0; 256];
+    let offset = -128.0 * factor + 128.0;
+    for i in 0..256 {
+        let new_val = i as f32 * factor + offset;
+        lookup_table[i] = if new_val > 255.0 { 255 } else { if new_val < 0.0 { 0 } else { new_val as u8 } };
+    }
     for x in 0..width {
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
-            let r_val = (px.data[0] as f32 - 128.0) * factor + 128.0;
-            let g_val = (px.data[1] as f32 - 128.0) * factor + 128.0;
-            let b_val = (px.data[2] as f32 - 128.0) * factor + 128.0;
-
-            px.data[0] = if r_val > 255.0 { 255 } else { if r_val < 0.0 { 0 } else { r_val as u8 } };
-            px.data[1] = if g_val > 255.0 { 255 } else { if g_val < 0.0 { 0 } else { g_val as u8 } };
-            px.data[2] = if b_val > 255.0 { 255 } else { if b_val < 0.0 { 0 } else { b_val as u8 } };
+            px.data[0] = lookup_table[px.data[0] as usize];
+            px.data[1] = lookup_table[px.data[1] as usize];
+            px.data[2] = lookup_table[px.data[2] as usize];
 
             img.put_pixel(x, y, px);
         }
