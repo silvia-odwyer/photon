@@ -516,7 +516,7 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
-    let clamped_contrast = if contrast > 255.0 { 255.0 } else { if contrast < -255.0 { -255.0 } else { contrast } };
+    let clamped_contrast = num::clamp(contrast, -255.0, 255.0);
 
     // Some references:
     // https://math.stackexchange.com/questions/906240/algorithms-to-increase-or-decrease-the-contrast-of-an-image
@@ -526,7 +526,7 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
     let offset = -128.0 * factor + 128.0;
     for i in 0..256 {
         let new_val = i as f32 * factor + offset;
-        lookup_table[i] = if new_val > 255.0 { 255 } else { if new_val < 0.0 { 0 } else { new_val as u8 } };
+        lookup_table[i] = num::clamp(new_val, 0.0, 255.0) as u8;
     }
     for x in 0..width {
         for y in 0..height {
