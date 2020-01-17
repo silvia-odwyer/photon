@@ -500,6 +500,47 @@ pub fn inc_brightness(mut photon_image: &mut PhotonImage, brightness: u8) {
     photon_image.raw_pixels = img.raw_pixels();
 }
 
+/// Adjust the contrast of an image by a factor.
+///
+/// # Arguments
+/// * `photon_image` - A PhotonImage that contains a view into the image.
+/// * `contrast` - An f32 factor used to adjust contrast. Between [-255.0, 255.0]. The algorithm will
+/// clamp results if passed factor is out of range.
+/// # Example
+///
+/// ```
+/// photon::effects::adjust_contrast(photon_image, 30.0);
+/// ```
+#[wasm_bindgen]
+pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
+    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
+
+    let clamped_contrast = num::clamp(contrast, -255.0, 255.0);
+
+    // Some references:
+    // https://math.stackexchange.com/questions/906240/algorithms-to-increase-or-decrease-the-contrast-of-an-image
+    // https://www.dfstudios.co.uk/articles/programming/image-programming-algorithms/image-processing-algorithms-part-5-contrast-adjustment/
+    let factor = (259.0 * (clamped_contrast + 255.0)) / (255.0 * (259.0 - clamped_contrast));
+    let mut lookup_table: Vec<u8> = vec![0; 256];
+    let offset = -128.0 * factor + 128.0;
+    for i in 0..256 {
+        let new_val = i as f32 * factor + offset;
+        lookup_table[i] = num::clamp(new_val, 0.0, 255.0) as u8;
+    }
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            px.data[0] = lookup_table[px.data[0] as usize];
+            px.data[1] = lookup_table[px.data[1] as usize];
+            px.data[2] = lookup_table[px.data[2] as usize];
+
+            img.put_pixel(x, y, px);
+        }
+    }
+    photon_image.raw_pixels = img.raw_pixels();
+}
+
 /// Tint an image by adding an offset to averaged RGB channel values.
 /// 
 /// # Arguments
