@@ -26,7 +26,9 @@ imageproc="0.18.0"
 rusttype="0.7.6"
 base64="0.11.0"
 wasm-bindgen = "0.2.25"
+rustc-serialize = "0.3.22"
 serde = { version = "1.0", features = ["derive"] }
+regex="*"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires

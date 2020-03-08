@@ -453,6 +453,35 @@ pub fn solarize(mut photon_image: &mut PhotonImage) {
     photon_image.raw_pixels = raw_pixels;
 }
 
+/// Applies a solarizing effect to an image and returns the resulting PhotonImage.
+/// 
+/// # Arguments
+/// * `img` - A PhotonImage that contains a view into the image.
+/// # Example
+///
+/// ```
+/// // For example, to solarize an image of type `PhotonImage`:
+/// use photon::effects;
+/// let img = photon::effects::solarize(img);
+/// ```
+#[wasm_bindgen]
+pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
+    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
+
+    for x in 0..width {
+        for y in 0..height {
+            let mut px = img.get_pixel(x, y);
+            if 200 as i32 - px.data[0] as i32 > 0 {
+                px.data[0] = 200 - px.data[0];
+            }
+            img.put_pixel(x, y, px);
+        }
+    }
+    let new_photon_image = PhotonImage { raw_pixels: img.raw_pixels(), width: img.width(), height: img.height()};
+    return new_photon_image
+}
+
 
 /// Increase the brightness of an image by a factor.
 /// 

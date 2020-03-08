@@ -42,7 +42,7 @@ use wasm_bindgen::prelude::*;
 use web_sys::{CanvasRenderingContext2d, ImageData, HtmlCanvasElement};
 use wasm_bindgen::Clamped;
 use image::{GenericImage, GenericImageView};
-use base64::decode;
+use base64::{decode, encode};
 use serde::{Serialize, Deserialize};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
@@ -84,7 +84,6 @@ impl PhotonImage {
         let raw_pixels = img.raw_pixels();
         
         return PhotonImage { raw_pixels: raw_pixels, width: img.width(), height: img.height()};
-    
     }
 
     /// Get the width of the PhotonImage.
@@ -100,6 +99,20 @@ impl PhotonImage {
     /// Get the height of the PhotonImage.
     pub fn get_height(&self) -> u32 {
         self.height
+    }
+
+    /// Convert the PhotonImage to base64.
+    pub fn get_base64(&self) -> String {
+        let mut img = helpers::dyn_image_from_raw(&self);
+        img = image::ImageRgba8(img.to_rgba());
+
+        let mut buf = vec![];
+        img.write_to(&mut buf, image::ImageOutputFormat::PNG);
+        let base64 = base64::encode(&buf);
+
+        let res_base64 = format!("data:image/png;base64,{}", base64.replace("\r\n", ""));
+
+        res_base64
     }
 
     /// Convert the PhotonImage's raw pixels to JS-compatible ImageData.
