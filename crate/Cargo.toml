@@ -43,6 +43,11 @@ wee_alloc = { version = "0.4.2", optional = true }
 
 [dev-dependencies]
 time="0.2.1"
+criterion = "0.3"
+
+[[bench]]
+name = "photon_benchmark"
+harness = false
 
 [dependencies.web-sys]
 version = "0.3"
