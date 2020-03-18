@@ -179,6 +179,7 @@ pub fn resize(photon_img: &PhotonImage, width: u32, height: u32, sampling_filter
     let dyn_img = helpers::dyn_image_from_raw(&photon_img);
     let resized_img = image::ImageRgba8(image::imageops::resize(&dyn_img, width, height, sampling_filter));
 
+    // TODO Check if in browser or Node.JS
     let document = web_sys::window().unwrap().document().unwrap();
     let canvas = document
         .create_element("canvas").unwrap()

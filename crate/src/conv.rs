@@ -6,16 +6,19 @@ use crate::{PhotonImage};
 use crate::helpers;
 
 fn conv(mut photon_image: &mut PhotonImage, kernel: Vec<f32>) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    img = image::ImageRgb8(img.to_rgb());
 
-    let filtered_img = img.filter3x3(&kernel);
+    let mut filtered_img = img.filter3x3(&kernel);
+    filtered_img = image::ImageRgba8(filtered_img.to_rgba());
+
     photon_image.raw_pixels = filtered_img.raw_pixels();
 }
 
 /// Noise reduction. 
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// 
 /// # Example
 ///
@@ -34,7 +37,7 @@ pub fn noise_reduction(photon_image: &mut PhotonImage) {
 /// Sharpen an image. 
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// 
 /// # Example
 ///
@@ -53,7 +56,7 @@ pub fn sharpen(photon_image: &mut PhotonImage) {
 /// Apply edge detection to an image, to create a dark version with its edges highlighted.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// 
 /// # Example
 ///
@@ -71,7 +74,7 @@ pub fn edge_detection(photon_image: &mut PhotonImage) {
 /// Apply an identity kernel convolution to an image.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` -A PhotonImage.
 /// 
 /// # Example
 ///
@@ -89,7 +92,7 @@ pub fn identity(photon_image: &mut PhotonImage) {
 /// Apply a box blur effect.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// 
 /// # Example
 ///
@@ -104,29 +107,12 @@ pub fn box_blur(photon_image: &mut PhotonImage) {
     return conv(photon_image, kernel);
 }
 
-/// Apply a gaussian blur effect.
+/// Gaussian blur in linear time.
 /// 
-/// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
-///
-/// # Example
-///
-/// ```
-/// // For example, to apply a gaussian blur effect to an image:
-/// use photon::channels;
-/// photon::conv::gaussian_blur(img);
-/// ```
-#[wasm_bindgen]
-pub fn gaussian_blur(photon_image: &mut PhotonImage) {
-    let kernel = vec![1.0f32, 2.0, 1.0, 2.0, 4.0, 2.0, 1.0, 2.0, 1.0];
-    return conv(photon_image, kernel);
-}
-
-/// Experimental gaussian blur in linear time
 /// Reference: http://blog.ivank.net/fastest-gaussian-blur.html
 ///
 /// # Arguments
-/// * `photon_image` - a PhotonImage instance to be Applied
+/// * `photon_image` - A PhotonImage
 /// * `radius` - blur radius
 /// # Example
 ///
@@ -134,7 +120,7 @@ pub fn gaussian_blur(photon_image: &mut PhotonImage) {
 /// photon::conv:fast_gaussian_blur(photon_image, 3);
 /// ```
 #[wasm_bindgen]
-pub fn fast_gaussian_blur(photon_image: &mut PhotonImage, radius: i32) {
+pub fn gaussian_blur(photon_image: &mut PhotonImage, radius: i32) {
     // construct pixel data
     let img = helpers::dyn_image_from_raw(&photon_image);
     let mut src = img.raw_pixels();
@@ -327,7 +313,7 @@ fn box_blur_vertical(src: &Vec<u8>, target: &mut Vec<u8>, width: u32, height: u3
 /// Detect horizontal lines in an image, and highlight these only.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// 
 /// # Example
 ///
@@ -345,7 +331,7 @@ pub fn detect_horizontal_lines(photon_image: &mut PhotonImage) {
 /// Detect vertical lines in an image, and highlight these only.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// 
 /// # Example
 ///
@@ -363,7 +349,7 @@ pub fn detect_vertical_lines(photon_image: &mut PhotonImage) {
 /// Detect lines at a forty five degree angle in an image, and highlight these only.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// 
 /// # Example
 ///
@@ -381,7 +367,7 @@ pub fn detect_45_deg_lines(photon_image: &mut PhotonImage) {
 /// Detect lines at a 135 degree angle in an image, and highlight these only.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// 
 /// # Example
 ///
@@ -399,7 +385,7 @@ pub fn detect_135_deg_lines(photon_image: &mut PhotonImage) {
 /// Apply a standard laplace convolution.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// 
 /// # Example
 ///
@@ -417,7 +403,7 @@ pub fn laplace(photon_image: &mut PhotonImage) {
 /// Preset edge effect.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// 
 /// # Example
 ///
@@ -435,7 +421,7 @@ pub fn edge_one(photon_image: &mut PhotonImage) {
 /// Apply an emboss effect to an image.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// 
 /// # Example
 ///
@@ -453,7 +439,7 @@ pub fn emboss(photon_image: &mut PhotonImage) {
 /// Apply a horizontal Sobel filter to an image.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// 
 /// # Example
 ///
@@ -471,7 +457,7 @@ pub fn sobel_horizontal(photon_image: &mut PhotonImage) {
 /// Apply a horizontal Prewitt convolution to an image.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// 
 /// # Example
 ///
@@ -489,7 +475,7 @@ pub fn prewitt_horizontal(photon_image: &mut PhotonImage) {
 /// Apply a vertical Sobel filter to an image.
 /// 
 /// # Arguments
-/// * `img` - A DynamicImage that contains a view into the image.
+/// * `img` - A PhotonImage.
 /// 
 /// # Example
 ///
@@ -503,38 +489,3 @@ pub fn sobel_vertical(photon_image: &mut PhotonImage) {
     let kernel = vec![-1.0f32, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0];
     return conv(photon_image, kernel);
 }
-
-
-// // pub fn sobel_color(img: DynamicImage) -> DynamicImage {
-
-// //     let kernel = [-1.0f32, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0];
-
-// //     let mut filtered_img = img.filter3x3(&kernel);
-
-// //     let (width, height) = filtered_img.dimensions();
-
-// //     for x in 0..width {
-// //         for y in 0..height {
-// //             let mut px = filtered_img.get_pixel(x, y);
-            
-// //             let r_val = px.data[0];
-// //             let g_val = px.data[1];
-// //             let b_val = px.data[2];
-// //             if r_val > 150 {
-// //                 let addition = 90;
-// //                 px.data[0] = if r_val as u32 + addition < 255 { r_val as u8 + addition as u8} else { 255 };
-// //             }
-// //             if g_val > 150 {
-// //                 let addition = 60;
-// //                 px.data[1] = if g_val as u32 + addition < 255 { g_val as u8 + addition as u8} else { 255 };
-// //             }
-// //             if b_val > 150 {
-// //                 let addition = 110;
-// //                 px.data[2] = if b_val as u32 + addition < 255 { b_val as u8 + addition as u8} else { 255 };
-// //             }
-
-// //             filtered_img.put_pixel(x, y, px);
-// //         }
-// //     }
-// //     return filtered_img;
-// // }

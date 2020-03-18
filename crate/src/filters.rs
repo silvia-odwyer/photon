@@ -4,8 +4,7 @@ extern crate image;
 use image::{GenericImage, GenericImageView};
 use wasm_bindgen::prelude::*;
 use crate::{PhotonImage, Rgb};
-use crate::{helpers, monochrome, effects};
-use crate::channels::{alter_two_channels, alter_blue_channel};
+use crate::{helpers, monochrome};
 use crate::colour_spaces::mix_with_colour;
 use crate::colour_spaces;
 use crate::effects::{inc_brightness, adjust_contrast};
@@ -154,6 +153,9 @@ pub fn filter(img: &mut PhotonImage, filter_name: &str) {
         "golden" => golden(img),
         "pastel_pink" => pastel_pink(img),
         "cali" => cali(img),
+        "dramatic" => dramatic(img),
+        "firenze" => firenze(img),
+        "obsidian" => obsidian(img),
         "lofi" => lofi(img),
         _ => monochrome::monochrome(img, 90, 40, 80),
     };
@@ -175,8 +177,8 @@ pub fn pastel_pink(img: &mut PhotonImage) {
 #[wasm_bindgen]
 pub fn golden(img: &mut PhotonImage) {
     let vignette_rgb = Rgb::new(235, 145, 50);
-    adjust_contrast(img, 30.0);
     mix_with_colour(img, vignette_rgb, 0.2);
+    adjust_contrast(img, 30.0);
 }
 
 #[wasm_bindgen]
@@ -184,4 +186,26 @@ pub fn cali(img: &mut PhotonImage) {
     let cali_rgb = Rgb::new(255, 45, 75);
     colour_spaces::mix_with_colour(img, cali_rgb, 0.1);
     adjust_contrast(img, 50.0);
+}
+
+#[wasm_bindgen]
+pub fn dramatic(img: &mut PhotonImage) {
+    monochrome::grayscale(img);
+    adjust_contrast(img, 60.0);
+}
+
+#[wasm_bindgen]
+pub fn firenze(img: &mut PhotonImage) {
+    let cali_rgb = Rgb::new(255, 47, 78);
+    colour_spaces::mix_with_colour(img, cali_rgb, 0.1);
+
+    inc_brightness(img, 30);
+    adjust_contrast(img, 50.0);
+
+}
+
+#[wasm_bindgen]
+pub fn obsidian(img: &mut PhotonImage) {
+    monochrome::grayscale(img);
+    adjust_contrast(img, 25.0);
 }
