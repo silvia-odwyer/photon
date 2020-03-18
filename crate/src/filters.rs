@@ -3,9 +3,12 @@
 extern crate image;
 use image::{GenericImage, GenericImageView};
 use wasm_bindgen::prelude::*;
-use crate::{PhotonImage};
+use crate::{PhotonImage, Rgb};
 use crate::{helpers, monochrome, effects};
 use crate::channels::{alter_two_channels, alter_blue_channel};
+use crate::colour_spaces::mix_with_colour;
+use crate::colour_spaces;
+use crate::effects::{inc_brightness, adjust_contrast};
 
 /// Solarization on the Blue channel.
 /// 
@@ -109,7 +112,7 @@ pub fn ryo(mut photon_image: &mut PhotonImage) {
 /// * **serenity**: Custom filter with an increase in the Blue channel's values.
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// * `blend_mode` - The blending mode to use. See above for complete list of blend modes available.
+/// * `filter_name` - The filter's name. Choose from the selection above, eg: "oceanic"
 /// # Example
 ///
 /// ```
@@ -120,23 +123,65 @@ pub fn ryo(mut photon_image: &mut PhotonImage) {
 #[wasm_bindgen]
 pub fn filter(img: &mut PhotonImage, filter_name: &str) {
 
+    let oceanic_rgb = Rgb::new(0, 89, 173);
+    let islands_rgb = Rgb::new(0, 24, 95);
+    let marine_rgb = Rgb::new(0, 14, 119);
+    let seagreen_rgb = Rgb::new(0, 68, 62);
+    let flagblue_rgb = Rgb::new(0, 0, 131);
+    let diamante_rgb = Rgb::new(30, 82, 87);
+    let liquid_rgb = Rgb::new(0, 10, 75);
+    let vintage_rgb = Rgb::new(120, 70, 13);
+    let perfume_rgb = Rgb::new(80, 40, 120);
+    let serenity_rgb = Rgb::new(10, 40, 90);
+
     match filter_name {
         // Match filter name to its corresponding function.
-        "oceanic" => alter_two_channels(img, 1, 9, 2, 173),
-        "islands" => alter_two_channels(img, 1, 24, 2, 95),
-        "marine" => alter_two_channels(img, 1, 14, 2, 119),
-        "seagreen" => alter_two_channels(img, 1, 68, 2, 62),
-        "flagblue" => alter_blue_channel(img, 131),
-        "diamante" => alter_two_channels(img, 1, 82, 2, 87),
-        "liquid" => alter_two_channels(img, 1, 10, 2, 75),
+        "oceanic" => mix_with_colour(img, oceanic_rgb, 0.2),
+        "islands" => mix_with_colour(img, islands_rgb, 0.2),
+        "marine" => mix_with_colour(img, marine_rgb, 0.2),
+        "seagreen" => mix_with_colour(img, seagreen_rgb, 0.2),
+        "flagblue" => mix_with_colour(img, flagblue_rgb, 0.2),
+        "diamante" => mix_with_colour(img, diamante_rgb, 0.1),
+        "liquid" => mix_with_colour(img, liquid_rgb, 0.2),
         "radio" => monochrome::monochrome(img, 5, 40, 20),
         "twenties" => monochrome::monochrome(img, 18, 12, 20),
         "rosetint" =>  monochrome::monochrome(img, 80, 20, 31),
         "mauve" => monochrome::monochrome(img, 90, 40, 80),
         "bluechrome" => monochrome::monochrome(img, 20, 30, 60),
-        "vintage" => effects::tint(img, 120, 70, 13),
-        "perfume" => effects::tint(img, 80, 40, 120),
-        "serenity" => effects::tint(img, 10, 40, 90),
+        "vintage" => mix_with_colour(img, vintage_rgb, 0.2),
+        "perfume" => mix_with_colour(img, perfume_rgb, 0.2),
+        "serenity" => mix_with_colour(img, serenity_rgb, 0.2),
+        "golden" => golden(img),
+        "pastel_pink" => pastel_pink(img),
+        "cali" => cali(img),
+        "lofi" => lofi(img),
         _ => monochrome::monochrome(img, 90, 40, 80),
     };
+}
+
+#[wasm_bindgen]
+pub fn lofi(img: &mut PhotonImage) {
+    adjust_contrast(img, 30.0);
+    colour_spaces::saturate_hsl(img, 0.2);
+}
+
+#[wasm_bindgen]
+pub fn pastel_pink(img: &mut PhotonImage) {
+    let pastel_pink_rgb = Rgb::new(220, 112, 170);
+    mix_with_colour(img, pastel_pink_rgb, 0.1);
+    adjust_contrast(img, 30.0);
+}
+
+#[wasm_bindgen]
+pub fn golden(img: &mut PhotonImage) {
+    let vignette_rgb = Rgb::new(235, 145, 50);
+    adjust_contrast(img, 30.0);
+    mix_with_colour(img, vignette_rgb, 0.2);
+}
+
+#[wasm_bindgen]
+pub fn cali(img: &mut PhotonImage) {
+    let cali_rgb = Rgb::new(255, 45, 75);
+    colour_spaces::mix_with_colour(img, cali_rgb, 0.1);
+    adjust_contrast(img, 50.0);
 }

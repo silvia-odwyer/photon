@@ -23,7 +23,7 @@ use wasm_bindgen::prelude::*;
 /// photon::multiple::watermark(img, watermark, 30, 40);
 /// ```
 #[wasm_bindgen]
-pub fn watermark(mut img: &mut PhotonImage, watermark: PhotonImage, x: u32, y: u32) {
+pub fn watermark(mut img: &mut PhotonImage, watermark: &PhotonImage, x: u32, y: u32) {
     let dyn_watermark: DynamicImage = crate::helpers::dyn_image_from_raw(&watermark);
     let mut dyn_img: DynamicImage = crate::helpers::dyn_image_from_raw(&img);
     image::imageops::overlay(&mut dyn_img, &dyn_watermark, x, y);

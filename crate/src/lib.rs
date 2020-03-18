@@ -106,9 +106,9 @@ impl PhotonImage {
         let mut img = helpers::dyn_image_from_raw(&self);
         img = image::ImageRgba8(img.to_rgba());
 
-        let mut buf = vec![];
-        img.write_to(&mut buf, image::ImageOutputFormat::PNG);
-        let base64 = base64::encode(&buf);
+        let mut buffer = vec![];
+        img.write_to(&mut buffer, image::ImageOutputFormat::PNG);
+        let base64 = encode(&buffer);
 
         let res_base64 = format!("data:image/png;base64,{}", base64.replace("\r\n", ""));
 

@@ -183,6 +183,9 @@ Photon is always ready for new filters and functions, so if you'd like to contri
 
 ## To Do 
 - Selective colorization 
+- Fade
+- Pixelisation
+- Normalisation
 - Gamma correction 
 - Duotone filtering
 - Tests in a headless web browser for WebAssembly version of library
