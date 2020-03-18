@@ -122,6 +122,208 @@ pub fn gaussian_blur(photon_image: &mut PhotonImage) {
     return conv(photon_image, kernel);
 }
 
+/// Experimental gaussian blur in linear time
+/// Reference: http://blog.ivank.net/fastest-gaussian-blur.html
+///
+/// # Arguments
+/// * `photon_image` - a PhotonImage instance to be Applied
+/// * `radius` - blur radius
+/// # Example
+///
+/// ```
+/// photon::conv:fast_gaussian_blur(photon_image, 3);
+/// ```
+#[wasm_bindgen]
+pub fn fast_gaussian_blur(photon_image: &mut PhotonImage, radius: i32) {
+    // construct pixel data
+    let img = helpers::dyn_image_from_raw(&photon_image);
+    let mut src = img.raw_pixels();
+
+    let width = photon_image.get_width();
+    let height = photon_image.get_height();
+    let mut target: Vec<u8> = src.clone();
+
+    let bxs = boxes_for_gauss(radius as f32, 3);
+    box_blur_inner(&mut src, &mut target, width, height, (bxs[0] - 1) / 2);
+    box_blur_inner(&mut target, &mut src, width, height, (bxs[1] - 1) / 2);
+    box_blur_inner(&mut src, &mut target, width, height, (bxs[2] - 1) / 2);
+
+    // manipulate back
+    photon_image.raw_pixels = target;
+}
+
+fn boxes_for_gauss(sigma: f32, n: usize) -> Vec<i32> {
+    let n_float = n as f32;
+
+    let w_ideal = (12.0 * sigma * sigma / n_float).sqrt() + 1.0;
+    let mut wl: i32 = w_ideal.floor() as i32;
+
+    if wl % 2 == 0 {
+        wl -= 1;
+    };
+
+    let wu = wl + 2;
+
+    let wl_float = wl as f32;
+
+    let m_ideal = (12.0 * sigma * sigma
+        - n_float * wl_float * wl_float
+        - 4.0 * n_float * wl_float
+        - 3.0 * n_float)
+        / (-4.0 * wl_float - 4.0);
+
+    let m: usize = m_ideal.round() as usize;
+
+    let mut sizes = Vec::<i32>::new();
+    for i in 0..n {
+        if i < m {
+            sizes.push(wl);
+        } else {
+            sizes.push(wu);
+        }
+    }
+
+    sizes
+}
+
+fn box_blur_inner(src: &mut Vec<u8>, target: &mut Vec<u8>, width: u32, height: u32, radius: i32) {
+    let length = (width * height * 4) as usize;
+    for i in 0..length {
+        target[i] = src[i];
+    }
+    box_blur_horizontal(target, src, width, height, radius);
+    box_blur_vertical(src, target, width, height, radius);
+}
+
+fn box_blur_horizontal(src: &Vec<u8>, target: &mut Vec<u8>, width: u32, height: u32, radius: i32) {
+    let iarr = 1.0 / (radius + radius + 1) as f32;
+    for i in 0..height {
+        let mut ti: usize = (i * width) as usize * 4;
+        let mut li: usize = ti; 
+        let mut ri: usize = ti + radius as usize * 4;
+
+        let fv_r = src[ti] as i32;
+        let fv_g = src[ti + 1] as i32;
+        let fv_b = src[ti + 2] as i32;
+
+        let lv_r = src[ti + (width - 1) as usize * 4];
+        let lv_g = src[ti + (width - 1) as usize * 4 + 1];
+        let lv_b = src[ti + (width - 1) as usize * 4 + 2];
+
+        let mut val_r = (radius + 1) * fv_r;
+        let mut val_g = (radius + 1) * fv_g;
+        let mut val_b = (radius + 1) * fv_b;
+
+        for j in 0..radius {
+            val_r += src[ti + j as usize * 4] as i32;
+            val_g += src[ti + j as usize * 4 + 1] as i32;
+            val_b += src[ti + j as usize * 4 + 2] as i32;
+        }
+
+        for _ in 0..radius + 1 {
+            val_r += src[ri] as i32 - fv_r;
+            val_g += src[ri + 1] as i32 - fv_g;
+            val_b += src[ri + 2] as i32 - fv_b;
+            ri += 4;
+
+            target[ti] = num::clamp(val_r as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti + 1] = num::clamp(val_g as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti + 2] = num::clamp(val_b as f32 * iarr, 0.0, 255.0) as u8;
+            ti += 4;
+        }
+
+        for _ in (radius + 1)..(width as i32 - radius) {
+            val_r += src[ri] as i32 - src[li] as i32;
+            val_g += src[ri + 1] as i32 - src[li + 1] as i32;
+            val_b += src[ri + 2] as i32 - src[li + 2] as i32;
+            ri += 4;
+            li += 4;
+
+            target[ti] = num::clamp(val_r as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti + 1] = num::clamp(val_g as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti + 2] = num::clamp(val_b as f32 * iarr, 0.0, 255.0) as u8;
+            ti += 4;
+        }
+
+        for _ in (width as i32 - radius)..width as i32 {
+            val_r += lv_r as i32 - src[li] as i32;
+            val_g += lv_g as i32 - src[li + 1] as i32;
+            val_b += lv_b as i32 - src[li + 2] as i32;
+            li += 4;
+
+            target[ti] = num::clamp(val_r as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti + 1] = num::clamp(val_g as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti + 2] = num::clamp(val_b as f32 * iarr, 0.0, 255.0) as u8;
+            ti += 4;
+        }
+    }
+}
+
+fn box_blur_vertical(src: &Vec<u8>, target: &mut Vec<u8>, width: u32, height: u32, radius: i32) {
+    let iarr = 1.0 / (radius + radius + 1) as f32;
+
+    for i in 0..width {
+        let mut ti: usize = i as usize * 4;
+        let mut li: usize = ti; 
+        let mut ri: usize = ti + (radius * width as i32) as usize * 4;
+
+        let fv_r = src[ti] as i32;
+        let fv_g = src[ti + 1] as i32;
+        let fv_b = src[ti + 2] as i32;
+
+        let lv_r = src[ti + ((height - 1) * width) as usize * 4];
+        let lv_g = src[ti + ((height - 1) * width) as usize * 4 + 1];
+        let lv_b = src[ti + ((height - 1) * width) as usize * 4 + 2];
+
+        let mut val_r = (radius + 1) * fv_r;
+        let mut val_g = (radius + 1) * fv_g;
+        let mut val_b = (radius + 1) * fv_b;
+
+        for j in 0..radius {
+            val_r += src[ti + (j * width as i32) as usize * 4] as i32;
+            val_g += src[ti + (j * width as i32) as usize * 4 + 1] as i32;
+            val_b += src[ti + (j * width as i32) as usize * 4 + 2] as i32;
+        }
+
+        for _ in 0..radius + 1 {
+            val_r += src[ri] as i32 - fv_r;
+            val_g += src[ri + 1] as i32 - fv_g;
+            val_b += src[ri + 2] as i32 - fv_b;
+            ri += width as usize * 4;
+
+            target[ti] = num::clamp(val_r as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti + 1] = num::clamp(val_g as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti + 2] = num::clamp(val_b as f32 * iarr, 0.0, 255.0) as u8;
+            ti += width as usize * 4;
+        }
+
+        for _ in (radius + 1)..(height as i32 - radius) {
+            val_r += src[ri] as i32 - src[li] as i32;
+            val_g += src[ri + 1] as i32 - src[li + 1] as i32;
+            val_b += src[ri + 2] as i32 - src[li + 2] as i32;
+            ri += width as usize * 4;
+            li += width as usize * 4;
+
+            target[ti] = num::clamp(val_r as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti + 1] = num::clamp(val_g as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti + 2] = num::clamp(val_b as f32 * iarr, 0.0, 255.0) as u8;
+            ti += width as usize * 4;
+        }
+
+        for _ in (height as i32 - radius)..height as i32 {
+            val_r += lv_r as i32 - src[li] as i32;
+            val_g += lv_g as i32 - src[li + 1] as i32;
+            val_b += lv_b as i32 - src[li + 2] as i32;
+            li += width as usize * 4;
+
+            target[ti] = num::clamp(val_r as f32 * iarr, 0.0,  255.0) as u8;
+            target[ti + 1] = num::clamp(val_g as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti + 2] = num::clamp(val_b as f32 * iarr, 0.0, 255.0) as u8;
+            ti += width as usize * 4;
+        }
+    }
+}
+
 /// Detect horizontal lines in an image, and highlight these only.
 /// 
 /// # Arguments
