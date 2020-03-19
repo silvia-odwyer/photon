@@ -220,7 +220,7 @@ pub fn hsv(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 /// Shift hue by a specified number of degrees in the HSL colour space.
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// * `mode` - The number of degrees to shift the hue by, or hue rotate by.
+/// * `mode` - A float value from 0 to 1 which is the amount to shift the hue by, or hue rotate by.
 /// 
 /// # Example
 /// ```
@@ -240,7 +240,7 @@ pub fn hue_rotate_hsl(img: &mut PhotonImage, degrees: f32) {
 /// Shift hue by a specified number of degrees in the HSV colour space.
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// * `mode` - The number of degrees to shift the hue by, or hue rotate by.
+/// * `mode` - A float value from 0 to 1 which is the amount to shift the hue by, or hue rotate by.
 /// 
 /// # Example
 /// ```
@@ -260,7 +260,7 @@ pub fn hue_rotate_hsv(img: &mut PhotonImage, degrees: f32) {
 /// Shift hue by a specified number of degrees in the LCh colour space.
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// * `mode` - The number of degrees to shift the hue by, or hue rotate by.
+/// * `mode` - A float value from 0 to 1 which is the amount to shift the hue by, or hue rotate by.
 /// 
 /// # Example
 /// ```
@@ -559,9 +559,9 @@ pub fn desaturate_lch(img: &mut PhotonImage, level: f32) {
 /// of RGB channel.
 ///
 /// # Arguments
-/// * `photon_image` - A DynamicImage that contains a view into the image.
-/// * `mix_color` - the color to be mixed in, presetned in RGB.
-/// * `opacity` - the opacity of color when mixed to image.
+/// * `photon_image` - A PhotonImage that contains a view into the image.
+/// * `mix_color` - the color to be mixed in, as an RGB value.
+/// * `opacity` - the opacity of color when mixed to image. Float value from 0 to 1.
 /// # Example
 ///
 /// ```

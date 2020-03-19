@@ -161,12 +161,30 @@ pub fn filter(img: &mut PhotonImage, filter_name: &str) {
     };
 }
 
+/// Apply a lofi effect to an image.
+/// 
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// # Example
+///
+/// ```
+/// photon::filters::lofi(&mut img);
+/// ```
 #[wasm_bindgen]
 pub fn lofi(img: &mut PhotonImage) {
     adjust_contrast(img, 30.0);
     colour_spaces::saturate_hsl(img, 0.2);
 }
 
+/// Add a rose tint to an image.
+/// 
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// # Example
+///
+/// ```
+/// photon::filters::pastel_pink(&mut img);
+/// ```
 #[wasm_bindgen]
 pub fn pastel_pink(img: &mut PhotonImage) {
     let pastel_pink_rgb = Rgb::new(220, 112, 170);
@@ -174,6 +192,15 @@ pub fn pastel_pink(img: &mut PhotonImage) {
     adjust_contrast(img, 30.0);
 }
 
+/// Apply a vintage, golden hue to an image.
+/// 
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// # Example
+///
+/// ```
+/// photon::filters::golden(&mut img);
+/// ```
 #[wasm_bindgen]
 pub fn golden(img: &mut PhotonImage) {
     let vignette_rgb = Rgb::new(235, 145, 50);
@@ -181,6 +208,15 @@ pub fn golden(img: &mut PhotonImage) {
     adjust_contrast(img, 30.0);
 }
 
+/// Increased contrast filter effect.
+/// 
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// # Example
+///
+/// ```
+/// photon::filters::cali(&mut img);
+/// ```
 #[wasm_bindgen]
 pub fn cali(img: &mut PhotonImage) {
     let cali_rgb = Rgb::new(255, 45, 75);
@@ -188,12 +224,30 @@ pub fn cali(img: &mut PhotonImage) {
     adjust_contrast(img, 50.0);
 }
 
+/// Increased contrast, greyscale effect.
+/// 
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// # Example
+///
+/// ```
+/// photon::filters::dramatic(&mut img);
+/// ```
 #[wasm_bindgen]
 pub fn dramatic(img: &mut PhotonImage) {
     monochrome::grayscale(img);
     adjust_contrast(img, 60.0);
 }
 
+/// Apply a red hue, with increased contrast and brightness.
+/// 
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// # Example
+///
+/// ```
+/// photon::filters::firenze(&mut img);
+/// ```
 #[wasm_bindgen]
 pub fn firenze(img: &mut PhotonImage) {
     let cali_rgb = Rgb::new(255, 47, 78);
@@ -204,6 +258,15 @@ pub fn firenze(img: &mut PhotonImage) {
 
 }
 
+/// Apply a greyscale effect with increased contrast.
+/// 
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// # Example
+///
+/// ```
+/// photon::filters::obsidian(&mut img);
+/// ```
 #[wasm_bindgen]
 pub fn obsidian(img: &mut PhotonImage) {
     monochrome::grayscale(img);

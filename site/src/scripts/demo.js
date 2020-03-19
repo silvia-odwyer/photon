@@ -21,8 +21,11 @@ var newimg, watermark_img, img2;
     document.getElementById('img_uploader').addEventListener('change', readURL, true);
      // Setup event listeners
 
-     let resize_btn = document.getElementById("resize");
-     resize_btn.addEventListener("click", resize, false);
+     let resize_btns = document.getElementsByClassName("resize");
+     for (let i = 0; i < resize_btns.length; i++) {
+      let button = resize_btns[i];
+      button.addEventListener("click", function(){resize(event)}, false);
+    }
    
      let filter_buttons = document.getElementsByClassName("filter");
      for (let i = 0; i < filter_buttons.length; i++) {
@@ -201,13 +204,16 @@ var newimg, watermark_img, img2;
      console.timeEnd("wasm_time");
    }
 
-   function resize() {
+   function resize(event) {
+     let resize_type = event.target.id;
+     resize_type = Number(resize_type);
+     
      ctx.drawImage(newimg, 0, 0);
      startTime = performance.now();
      let resized_img_container = document.getElementById("resized_imgs");
      let photon_img = module.open_image(canvas, ctx);
  
-     let newcanvas = module.resize(photon_img, 200, 200);
+     let newcanvas = module.resize(photon_img, 200, 200, resize_type);
      resized_img_container.appendChild(newcanvas);
 
      endTime = performance.now();
@@ -288,7 +294,25 @@ var newimg, watermark_img, img2;
                        "text_border": function() {return module.draw_text_with_border(rust_image, "Welcome to WebAssembly!", 10, 20)},
                        "flipv": function() {return module.flipv(rust_image)}, 
                        "fliph": function() {return module.fliph(rust_image)},
-                     };
+                       "sobel_horizontal": function() {return module.sobel_horizontal(rust_image)},
+                       "sobel_vertical": function() {return module.sobel_vertical(rust_image)},
+                       "laplace": function() {return module.laplace(rust_image)},
+                       "prewitt": function() {return module.prewitt_horizontal(rust_image)},
+                       "noise_reduction": function() {return module.noise_reduction(rust_image)},
+                       "identity": function() {return module.identity(rust_image)},
+                       "edge_one": function() {return module.edge_one(rust_image)},
+                       "edge_detection": function() {return module.edge_detection(rust_image)},
+                       "lofi": function() {return module.lofi(rust_image)},
+                       "cali": function() {return module.cali(rust_image)},
+                       "obsidian": function() {return module.obsidian(rust_image)},
+                       "firenze": function() {return module.firenze(rust_image)},
+                       "pastel_pink": function() {return module.pastel_pink(rust_image)},
+                       "dramatic": function() {return module.dramatic(rust_image)},
+                       "golden": function() {return module.golden(rust_image)},
+
+                     
+                     
+                      };
                   
     // Update the canvas with the new imagedata
 

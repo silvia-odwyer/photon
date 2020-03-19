@@ -11,7 +11,7 @@ use crate::{PhotonImage, Rgb};
 use crate::helpers;
 use wasm_bindgen::prelude::*;
 use image::{Rgba};
- 
+
 /// Adds an offset to the image by a certain number of pixels. 
 /// 
 /// # Arguments
@@ -652,3 +652,62 @@ pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
 }
+
+// pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
+//     println!("hi");
+//     println!("{}", color_a.get_red());
+//     let mut gradient_map = vec![];
+
+//     let max_val = 255;
+//     let mut r_val = 0;
+
+//     let end: i32 = 256 * 4;
+
+//     for i in (0..end).step_by(4){   
+//         let i: u8 = i as u8;
+//         let intensity_b = max_val - i;
+
+//         let res1 = (i * color_a.get_red() + intensity_b * color_b.get_red());
+//         let res2 = res1 / max_val;
+//         println!("res 1 {}", res1);
+//         println!("res 2 {}", res2);
+
+//         r_val = (i * color_a.get_red() + intensity_b * color_b.get_red()) / max_val;
+//         println!("r_val {}", r_val);
+//         gradient_map.push(Rgb {
+//             r: (256 - (i / 4) * color_a.get_red() + (i / 4) * color_b.r) / 256 , 
+//             g: (i * color_a.get_green() + intensity_b * color_b.get_green()) / max_val ,
+//             b: (i * color_a.get_blue() + intensity_b * color_b.get_blue()) / max_val 
+//         });
+
+//     }
+//     println!("{:?}", gradient_map);
+
+
+
+//     return gradient_map;
+// }
+
+// pub fn duotone(mut img: DynamicImage, color_a : Rgb, color_b : Rgb) -> DynamicImage {
+//     let (width, height) = img.dimensions();
+//     let gradient_map = create_gradient_map(color_a, color_b);
+//     println!("entering for loop");
+
+//     for x in 0..width {
+//         for y in 0..height {
+
+//             let mut px = img.get_pixel(x, y);
+
+//             let r = px.data[0];
+//             let g = px.data[1];
+//             let b = px.data[2];
+            
+//             px.data[0] = gradient_map[r as usize].r as u8;
+//             px.data[1] = gradient_map[g as usize].g as u8;
+//             px.data[2] = gradient_map[b as usize].b as u8;
+
+//             img.put_pixel(x, y, px);
+//         }
+//     }
+//     return img;
+// }
