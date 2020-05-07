@@ -22,7 +22,7 @@ use crate::{PhotonImage};
 /// 
 /// // ... image editing functionality here ...
 /// ```
-pub fn open_image(img_path: &'static str) -> PhotonImage {
+pub fn open_image(img_path: &str) -> PhotonImage {
     let img = image::open(img_path).unwrap();
 
     let (width, height) = img.dimensions();
