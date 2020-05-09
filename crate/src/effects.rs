@@ -92,6 +92,8 @@ pub fn offset_green(img: &mut PhotonImage, offset_amt: u32) {
 /// * `offset_amt` - The offset you want to move the blue channel by.
 /// # Example
 /// // For example, to add an offset to the green channel by 40 pixels.
+/// 
+/// ```
 /// use photon::effects;
 /// photon::effects::offset_blue(img, 40);
 /// ```
