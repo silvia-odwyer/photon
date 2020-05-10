@@ -54,7 +54,7 @@ use serde::{Serialize, Deserialize};
 /// Provides the image's height, width, and contains the image's raw pixels.
 /// For use when communicating between JS and WASM, and also natively. 
 #[wasm_bindgen]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct PhotonImage {
     raw_pixels: Vec<u8>,
     width: u32, 
