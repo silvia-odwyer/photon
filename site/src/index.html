@@ -264,7 +264,7 @@
 
           <section>
             
-            <section class="guide_pane large_pane" > 
+            <section class="guide_pane large_pane"> 
               <section class="lhs_container">
                 <h2>View The Demo</h2>
                 <p>To see WebAssembly in action and all effects available, make sure to check out our
@@ -306,7 +306,7 @@ fn main() {
             </section>
 
 
-            <section class="guide_pane"> 
+            <section class="guide_pane" id="demo_pane"> 
               <section id="get_started">
                 <h2>Compare WebAssembly versus JavaScript</h2>
                 <p>To compare JavaScript vs WebAssembly, click on one of the buttons below to see the right-hand side image edited by either JavaScript
@@ -317,11 +317,12 @@ fn main() {
                 <p id="js_time">JS time: </p>
                 <p id="wasm_time">WASM time: </p>
           
-                <div id="code">
-                  <img id="js_img" src="images/fruit_med.jpg" style="visibility: hidden" />
-                  <canvas id="js_canvas"></canvas>
-                </div>
               </section>
+          
+              <div id="code">
+                <img id="js_img" src="images/nine_yards.jpg" style="visibility: hidden" />
+                <canvas id="js_canvas"></canvas>
+              </div>
             </section>
 
   
