@@ -47,9 +47,9 @@ use serde::{Serialize, Deserialize};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
-// #[cfg(feature = "wee_alloc")]
-// #[global_allocator]
-// static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+#[cfg(feature = "wee_alloc")]
+#[global_allocator]
+static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 /// Provides the image's height, width, and contains the image's raw pixels.
 /// For use when communicating between JS and WASM, and also natively. 

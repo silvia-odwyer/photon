@@ -25,28 +25,25 @@ use wasm_bindgen::prelude::*;
 /// ```
 /// 
 #[wasm_bindgen]
-pub fn monochrome(mut photon_image: &mut PhotonImage, r_offset: u32, g_offset: u32, b_offset: u32) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
+pub fn monochrome(mut img: &mut PhotonImage, r_offset: u32, g_offset: u32, b_offset: u32) {
+    let end = img.get_raw_pixels().len() - 4;
 
-    for x in 0..width {
-        for y in 0..height {
-            let px = img.get_pixel(x, y);
-            let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
-            let mut avg = (r_val + g_val + b_val) / 3;
-            if avg >= 255 {
-                avg = 255
-            }
-            
-            let new_r = if avg as u32 + r_offset < 255 { avg as u8 + r_offset as u8} else { 255 };
-            let new_g = if avg as u32 + g_offset < 255 { avg as u8 + g_offset as u8} else { 255 };
-            let new_b = if avg as u32 + b_offset < 255 { avg as u8 + b_offset as u8} else { 255 };
-
-            img.put_pixel(x, y, image::Rgba([new_r, new_g, new_b, 255]));
+    for i in (0..end).step_by(4) {
+        let r_val = img.raw_pixels[i];
+        let g_val = img.raw_pixels[i + 1];
+        let b_val = img.raw_pixels[i + 2];
+        let mut avg = (r_val + g_val + b_val) / 3;
+        if avg >= 255 {
+            avg = 255
         }
-    }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
+        let new_r = if avg as u32 + r_offset < 255 { avg as u8 + r_offset as u8} else { 255 };
+        let new_g = if avg as u32 + g_offset < 255 { avg as u8 + g_offset as u8} else { 255 };
+        let new_b = if avg as u32 + b_offset < 255 { avg as u8 + b_offset as u8} else { 255 };
+
+        img.raw_pixels[i] = new_r;
+        img.raw_pixels[i + 1] = new_g;
+        img.raw_pixels[i + 2] = new_b;
+    };
 }
 
 /// Convert an image to sepia.
@@ -62,24 +59,24 @@ pub fn monochrome(mut photon_image: &mut PhotonImage, r_offset: u32, g_offset: u
 /// ```
 /// 
 #[wasm_bindgen]
-pub fn sepia(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
+pub fn sepia(mut img: &mut PhotonImage) {
 
-    for x in 0..width {
-        for y in 0..height {
-            let px = img.get_pixel(x, y);
-            let (r_val, g_val, b_val) = (px.data[0] as f32, px.data[1] as f32, px.data[2] as f32);
-            let avg = 0.3 * r_val + 0.59 * g_val + 0.11 * b_val;
+    let end = img.get_raw_pixels().len() - 4;
 
-            let new_r = if avg as u32 + 100 < 255 { avg as u8 + 100} else { 255 };
-            let new_g = if avg as u32 + 50 < 255 { avg as u8 + 50 } else { 255 };
-      
-            img.put_pixel(x, y, image::Rgba([new_r, new_g, b_val as u8, 255]));
+    for i in (0..end).step_by(4) {
+        let r_val = img.raw_pixels[i] as f32;
+        let g_val = img.raw_pixels[i + 1] as f32;
+        let b_val = img.raw_pixels[i + 2] as f32;
+        let mut avg = 0.3 * r_val + 0.59 * g_val + 0.11 * b_val;
+        if avg >= 255.0 {
+            avg = 255.0
         }
-    }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
+        let new_r = if avg as u32 + 100 < 255 { avg as u8 + 100} else { 255 };
+        let new_g = if avg as u32 + 50 < 255 { avg as u8 + 50 } else { 255 };
+
+        img.raw_pixels[i] = new_r;
+        img.raw_pixels[i + 1] = new_g;
+    };
 }
 
 /// Convert an image to grayscale using the conventional averaging algorithm.

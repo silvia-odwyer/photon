@@ -64,5 +64,8 @@ features = [
   'EventTarget',
 ]
 
+[profile.release]
+lto = true
+
 [features]
 default = ["console_error_panic_hook"]

@@ -94,7 +94,7 @@ pub fn blend(mut photon_image: &mut PhotonImage, photon_image2: &PhotonImage, bl
                 };
             
             img.put_pixel(x, y, image::Rgba {
-                    data: Srgba::from_linear(blended.into()).into_format().into_raw()
+                    data: blended.into_format().into_raw()
             });
 
         }
