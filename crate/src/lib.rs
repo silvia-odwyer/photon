@@ -81,7 +81,7 @@ impl PhotonImage {
 
         let img = image::load_from_memory(slice).unwrap();
         
-        let raw_pixels = img.raw_pixels();
+        let raw_pixels = img.to_rgba().to_vec();
         
         return PhotonImage { raw_pixels: raw_pixels, width: img.width(), height: img.height()};
     }
