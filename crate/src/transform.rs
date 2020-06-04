@@ -174,7 +174,7 @@ fn filter_type_from_sampling_filter(sampling_filter: SamplingFilter) -> image::F
 /// * `sampling_filter` - Nearest = 1, Triangle = 2, CatmullRom = 3, Gaussian = 4, Lanczos3 = 5
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
-pub fn resize(photon_img: &PhotonImage, width: u32, height: u32, sampling_filter: SamplingFilter) -> HtmlCanvasElement {
+pub fn resizeimg_browser(photon_img: &PhotonImage, width: u32, height: u32, sampling_filter: SamplingFilter) -> HtmlCanvasElement {
     let sampling_filter = filter_type_from_sampling_filter(sampling_filter);
     let dyn_img = helpers::dyn_image_from_raw(&photon_img);
     let resized_img = image::ImageRgba8(image::imageops::resize(&dyn_img, width, height, sampling_filter));

@@ -20,19 +20,15 @@ use crate::effects::{inc_brightness, adjust_contrast};
 /// ```
 #[wasm_bindgen]
 pub fn neue(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
+    let end = photon_image.get_raw_pixels().len() - 4;
 
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            if 255 as i32 - px.data[2] as i32 > 0 {
-                px.data[2] = 255 - px.data[2];
-            }
-            img.put_pixel(x, y, px);
+    for i in (0..end).step_by(4) {
+        let b_val = photon_image.raw_pixels[i + 2];
+        if 255 as i32 - b_val as i32 > 0 {
+            photon_image.raw_pixels[i + 2] = 255 - b_val;
         }
-    }
-    photon_image.raw_pixels = img.raw_pixels();
+    };
+
 }
 
 /// Solarization on the Red and Green channels.
@@ -46,21 +42,15 @@ pub fn neue(mut photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn lix(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let end = photon_image.get_raw_pixels().len() - 4;
 
-    let (width, height) = img.dimensions();
+    for i in (0..end).step_by(4) {
+        let r_val = photon_image.raw_pixels[i];
+        let g_val = photon_image.raw_pixels[i + 1];
 
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            
-            px.data[0] = 255 - px.data[0];
-            px.data[1] = 255 - px.data[1];
-            
-            img.put_pixel(x, y, px);
-        }
-    }
-    photon_image.raw_pixels = img.raw_pixels();
+        photon_image.raw_pixels[i] = 255 - r_val;
+        photon_image.raw_pixels[i + 1] = 255 - g_val;
+    };
 }
 
 /// Solarization on the Red and Blue channels.
@@ -74,21 +64,15 @@ pub fn lix(mut photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn ryo(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let end = photon_image.get_raw_pixels().len() - 4;
 
-    let (width, height) = img.dimensions();
+    for i in (0..end).step_by(4) {
+        let r_val = photon_image.raw_pixels[i];
+        let b_val = photon_image.raw_pixels[i + 2];
 
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            if 255 as i32 - px.data[2] as i32 > 0 {
-                px.data[0] = 255 - px.data[0];
-                px.data[2] = 255 - px.data[2];
-            }
-            img.put_pixel(x, y, px);
-        }
-    }
-    photon_image.raw_pixels = img.raw_pixels();
+        photon_image.raw_pixels[i] = 255 - r_val;
+        photon_image.raw_pixels[i + 2] = 255 - b_val;
+    };
 }
 
 

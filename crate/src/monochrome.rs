@@ -29,10 +29,10 @@ pub fn monochrome(mut img: &mut PhotonImage, r_offset: u32, g_offset: u32, b_off
     let end = img.get_raw_pixels().len() - 4;
 
     for i in (0..end).step_by(4) {
-        let r_val = img.raw_pixels[i];
-        let g_val = img.raw_pixels[i + 1];
-        let b_val = img.raw_pixels[i + 2];
-        let mut avg = (r_val + g_val + b_val) / 3;
+        let r_val = img.raw_pixels[i] as u32;
+        let g_val = img.raw_pixels[i + 1] as u32;
+        let b_val = img.raw_pixels[i + 2] as u32;
+        let mut avg: u32 = (r_val + g_val + b_val) / 3;
         if avg >= 255 {
             avg = 255
         }
@@ -42,7 +42,8 @@ pub fn monochrome(mut img: &mut PhotonImage, r_offset: u32, g_offset: u32, b_off
 
         img.raw_pixels[i] = new_r;
         img.raw_pixels[i + 1] = new_g;
-        img.raw_pixels[i + 2] = new_b;
+        img.raw_pixels[i + 1] = new_b;
+
     };
 }
 
@@ -92,24 +93,23 @@ pub fn sepia(mut img: &mut PhotonImage) {
 /// monochrome::grayscale(&mut img);
 /// ```
 #[wasm_bindgen]
-pub fn grayscale(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);    
-    let (width, height) = img.dimensions();
+pub fn grayscale(mut img: &mut PhotonImage) {
+    let end = img.get_raw_pixels().len() - 4;
 
-    for x in 0..width {
-        for y in 0..height {
-            let px = img.get_pixel(x, y);
-            let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
-            let mut avg = ((r_val + g_val + b_val) / 3) as u8;
-            if avg >= 255 {
-                avg = 255
-            }
-
-            img.put_pixel(x, y, image::Rgba([avg, avg, avg, 255]));
+    for i in (0..end).step_by(4) {
+        let r_val = img.raw_pixels[i] as u32;
+        let g_val = img.raw_pixels[i + 1] as u32;
+        let b_val = img.raw_pixels[i + 2] as u32;
+        let mut avg: u32 = (r_val + g_val + b_val) / 3;
+        if avg >= 255 {
+            avg = 255
         }
-    }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
+
+        img.raw_pixels[i] = avg as u8;
+        img.raw_pixels[i + 1] = avg as u8;
+        img.raw_pixels[i + 2] = avg as u8;
+
+    };
 }
 
 /// Convert an image to grayscale with a human corrected factor, to account for human vision.

@@ -439,20 +439,15 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn solarize(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
+    let end = photon_image.get_raw_pixels().len() - 4;
 
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            if 200 as i32 - px.data[0] as i32 > 0 {
-                px.data[0] = 200 - px.data[0];
-            }
-            img.put_pixel(x, y, px);
+    for i in (0..end).step_by(4) {
+        let r_val = photon_image.raw_pixels[i];
+
+        if 200 as i32 - r_val as i32 > 0 {
+            photon_image.raw_pixels[i] = 200 - r_val;
         }
-    }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
+    };
 }
 
 /// Applies a solarizing effect to an image and returns the resulting PhotonImage.
