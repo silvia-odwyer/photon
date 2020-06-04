@@ -12,15 +12,15 @@
   <meta property="og:image" content="https://i.imgur.com/lxRBpeb.jpg">
   <meta property="og:image:alt" content="A blue package, symbolizing what webpack does.">
   <meta property="og:description" content="A WebAssembly image processing library that delivers blazing performance and can be called via JS.">
-
+  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/nimbus-sans-l" type="text/css"/>
   <!-- Mobile header color for Chrome, Firefox OS and Opera -->
   <meta name="theme-color" content="#2c638f">
   <!-- Mobile header color Windows Phone -->
   <meta name="msapplication-navbutton-color" content="#2c638f">
   <!-- Mobile header color for iOS Safari (supports black, black-translucent or default) -->
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-  <title>📦Photon: A WebAssembly Image Processing Library</title>
+  <script src="https://cdn.jsdelivr.net/gh/silvia-odwyer/pixels.js/dist/Pixels.js"></script>
+  <title>Photon: A WebAssembly Image Processing Library</title>
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.6/ScrollMagic.min.js"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <!-- <script src="//instant.page/1.2.2" type="module" integrity="sha384-2xV8M5griQmzyiY3CDqh1dn4z3llDVqZDqzjzcY+jCBCk/a5fXJmuZ/40JJAPeoU"></script> -->
@@ -30,7 +30,7 @@
   <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glorious/demo/dist/gdemo.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@glorious/demo/dist/gdemo.min.js"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.0.0/caman.full.min.js"></script>
-  
+  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/aileron" type="text/css"/> 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155886834-1"></script>
   <script>
@@ -53,10 +53,10 @@
       <header>
         <div id="navbar" class="sticky">
           <div class="container">
-          <h4 class="logo">photon</h4>
+          <h4 class="logo">Photon</h4>
           <nav class="contright">
                 <ul>
-                  <li><a href="https://docs.rs/photon-rs/0.1.0/">Docs</a></li>
+                  <li><a href="https://docs.rs/photon-rs/">Docs</a></li>
                   <li><a href="demo.html">Demo</a></li>
                   <li><a href="https://github.com/silvia-odwyer">GitHub</a></li>
                 </ul>
@@ -75,7 +75,7 @@
           
           <div class="buttons">
             <button class="btn btn-default btn_fill pulse"><a href="https://silvia-odwyer.github.io/photon/guide">Get Started</a></button>
-            <button class=" slide" id="docs"><a href="https://docs.rs/photon-rs/0.1.0/">Docs</a></button>
+            <button class=" slide" id="docs"><a href="https://docs.rs/photon-rs/">Docs</a></button>
           </div>
         </article>
   
@@ -93,37 +93,37 @@
           <li data-aos="fade-up" data-aos-anchor="#docs">
             <h3>Web-Assembly Friendly</h3>
             <p>For web-based image processing, Photon is 4-10x faster than JS, leading to faster results, and less lag.  </p>
-            <h5><a href="https://docs.rs/photon-rs/0.1.0/">Read More </a></h5>
+            <h5><a href="https://docs.rs/photon-rs/">Read More </a></h5>
           </li>
   
           <li data-aos="fade-up">
             <h3>Over 90 functions </h3>
             <p>Photon provides functions for every domain of image processing. </p>
-            <h5><a href="https://docs.rs/photon-rs/0.1.0/">Read More</a></h5>
+            <h5><a href="https://docs.rs/photon-rs/">Read More</a></h5>
           </li>
   
           <li data-aos="fade-up"> 
             <h3>Call WASM with JS</h3>
             <p>This library's WASM functions can be called via JS, allowing for zero-cost abstraction and faster development.</p>
-            <h5><a href="https://docs.rs/photon-rs/0.1.0/">Read More</a></h5>
+            <h5><a href="https://docs.rs/photon-rs/">Read More</a></h5>
           </li>
         </ul>
       </article>
   
       <article class="guide">
-          <h2 class="center">How it works</h2>
+          <h2 class="center feature_heading">Features</h2>
   
           <section class="guide_pane large_pane">
             <section data-aos="fade-up">
-              <h2>Write once, run anywhere.</h2>
+              <h2>Run on the web or natively.</h2>
               <p>Photon can be executed:</p>
               <ul>
                 <li>In the browser via JS</li>
-                <li>On Node.JS</li>
-                <li>Natively on any machine</li>
+                <li>Node.JS</li>
+                <li>Natively with Rust</li>
               </ul>
               <p>Photon compiles to WebAssembly, which allows the execution of native-speed code in the browser and on Node.JS. 
-                This means incredible performance and since Photon's core library is written in Rust, it promises security and safety.
+                This leads to high-performance image processing on the web and since Photon's core library is written in Rust, it promises security and safety.
               </p>
             </section>
             <div class="tiles">
@@ -132,7 +132,7 @@
                     <p>Photon's core library is a Rust crate, available from Cargo.</p>
                 </div>
               
-  
+
                 <div class="tile">
                     <img src="images/js_logo.png" id="js_logo"/>
                     <p>Write code in JS without a single line of Rust.</p>
@@ -191,8 +191,8 @@
                   <p>     
                     Resize images at lightning-speeds.
                   </p>
-                  <p>Photon also includes all popular image sizes built-in such as Facebook posts, Instagram posts, etc.,
-                    so that you can focus on the code and just resize to whatever popular format you'd like.
+                  <p>High-performance image resizing with 5 different resizing algorithms to choose from, so
+                    that you can choose the algorithm most suited to your use case.
                   </p>
                 </article>
             </section>
@@ -316,14 +316,14 @@ fn main() {
                 <button id="compare_wasm" class="pulse">Start WASM</button>
                 <p id="js_time">JS time: </p>
                 <p id="wasm_time">WASM time: </p>
-
+          
+                <div id="code">
+                  <img id="js_img" src="images/fruit_med.jpg" style="visibility: hidden" />
+                  <canvas id="js_canvas"></canvas>
+                </div>
               </section>
+            </section>
 
-              <div id="code">
-                <img id="js_img" src="images/fruit_med.jpg" style="visibility: hidden" />
-                <canvas id="js_canvas"></canvas>
-              </div>
-          </section>
   
           </section>
       </article>
@@ -346,7 +346,7 @@ fn main() {
         <div class="footer_lhs">
           <h1>Photon</h1>
           <p>Image processing with WebAssembly.</p>
-          <p>&copy; Copyright 2019. Created by Silvia O'Dwyer.</p>
+          <p>&copy; Copyright 2020. Created by Silvia O'Dwyer.</p>
   
         </div>
   
@@ -390,22 +390,30 @@ fn main() {
       var js_img = document.getElementById("js_img");
 
       function compareJS() {
-        
-        Caman("#js_canvas", "images/fruit_med.jpg", function () {
-          let startTime = performance.now();
+        // Select the image you wish to filter
+      var img = document.getElementById("js_img")
 
-          js_ctx.drawImage(js_img, 0, 0);
-          this.sepia(50).render();
-          this.render(function () {
+      // First parameter is the image object, and the second is the filter you wish to apply.
+      img.onload = function() {
+        pixelsJS.filterImg(img, "twenties");      
+      }
 
 
-          let endTime = performance.now();
-          let time_taken = endTime - startTime;
+        Caman("#js_canvas", "images/nine_yards.jpg", function () {
+           let startTime = performance.now();
 
-          let time_elem = document.getElementById("js_time");
-          time_elem.innerHTML = `JS Time: ${time_taken}ms`;
-          });
-        });
+           js_ctx.drawImage(js_img, 0, 0);
+           this.sepia(50).render();
+           this.render(function () {
+
+
+           let endTime = performance.now();
+           let time_taken = endTime - startTime;
+
+           let time_elem = document.getElementById("js_time");
+           time_elem.innerHTML = `JS Time: ${time_taken}ms`;
+           });
+         });
 
       }
 

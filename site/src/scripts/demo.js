@@ -3,14 +3,14 @@ import Daisies from "../images/nine_yards.jpg";
 import Underground from "../images/underground.jpg";
 import NineYards from "../images/nine_yards.jpg";
 import BlueMetro from "../images/blue_metro.jpg";
-import Watermark from "../images/wasm_logo.png"
+import Watermark from "../images/wasm_logo.png";
 
 // Setup global variables
 var canvas, canvas2, watermark_canvas;
 var ctx, ctx2, watermark_ctx;
 var newimg, watermark_img, img2;
 
- import("../../../crate/pkg").then(module => {
+ import("@silvia-odwyer/photon").then(module => {
   var startTime;
   var endTime;
 

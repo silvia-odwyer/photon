@@ -1,4 +1,4 @@
-import MainImage from "./daisies_med.jpg";
+import MainImage from "./city.png";
 import Underground from "./underground.jpg";
 import NineYards from "./nine_yards.jpg";
 import BlueMetro from "./blue_metro.jpg";
