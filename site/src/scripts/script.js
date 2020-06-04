@@ -211,7 +211,7 @@ function drawChart() {
 
        // Filter the image, the PhotonImage's raw pixels are modified and 
        // the PhotonImage is returned
-       module.sepia(wasm_rust_image); 
+       module.grayscale(wasm_rust_image); 
     
        // Place the pixels back on the canvas
        module.putImageData(js_canvas, js_ctx, wasm_rust_image);
