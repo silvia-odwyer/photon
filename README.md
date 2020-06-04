@@ -34,18 +34,13 @@
 Photon is a high-performance Rust image processing library, which compiles to WebAssembly, allowing for 
 safe, blazing-fast image processing both natively and on the web. 
 
-You can run Photon:
-- natively (runs on any OS)
-- in the web browser with WebAssembly
-- on NodeJS with WebAssembly
-
 ### Features 
-- **Fast:** Photon outperforms even the fastest of libraries, including ImageMagick. On the web, its high-performance allows it to run at near-native speed. Benchmarks coming soon.
+- **Fast:** Photon outperforms even the fastest of libraries, including ImageMagick. On the web, its high-performance allows it to run at near-native speed. Benchmarks coming soon. [Benchmarks can be found here](https://github.com/silvia-odwyer/photon/wiki/Benchmarks).
 - **Call with JS:** Want to use Photon on the web or with Node? Using a simple npm package, you're good to go. Get all the benefits of WebAssembly
 with zero-cost abstraction. 
 - **Use Natively:** For command-line apps, native photo editing apps, and so forth, Photon's core codebase is in Rust, allowing for cross-platform
 development.
-- **Pure Rust** - Unlike other libraries, this 100% of the library's codebase is written in Rust, so security and safety is guaranteed. 
+- **Pure Rust** - Unlike other libraries, 100% of the library's codebase is written in Rust, so security and safety is guaranteed. 
 
 ### Live Demo
 View the [official demo of WASM in action](https://silvia-odwyer.github.io/photon/demo.html).
@@ -83,7 +78,7 @@ Add the following line to the dependencies section of your Rust project's Cargo.
 ###### Cargo.toml
 ```toml
 [dependencies]
-photon-rs = "0.1.0"
+photon-rs = "0.2.0"
 ``` 
 
 #### Using Photon Natively 
@@ -185,6 +180,8 @@ Photon is always ready for new filters and functions, so if you'd like to contri
 - Selective colorization 
 - Fade
 - Pixelisation
+- Blend images using browser-specific functions for WASM version of library.
+- Vintage images with light leaks, grains, etc.,
 - Normalisation
 - Gamma correction 
 - Duotone filtering

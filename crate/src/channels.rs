@@ -372,25 +372,17 @@ pub fn selective_hue_rotate(mut photon_image: &mut PhotonImage, ref_color: Rgb, 
 /// ```
 #[wasm_bindgen]
 pub fn invert(mut photon_image: &mut PhotonImage) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let end = photon_image.get_raw_pixels().len() - 4;
 
-    let (_width, _height) = img.dimensions();
-    let mut img = img.to_rgba();
-    for x in 0.._width {
-        for y in 0.._height {
-            let px = img.get_pixel(x, y);
+    for i in (0..end).step_by(4) {
+        let r_val = photon_image.raw_pixels[i];
+        let g_val = photon_image.raw_pixels[i + 1];
+        let b_val = photon_image.raw_pixels[i + 2];
 
-            let r_val = px.data[0];
-            let g_val = px.data[1];
-            let b_val = px.data[2];
-            let alpha = px.data[3];
-
-            img.put_pixel(x, y, image::Rgba (
-                [255 - r_val, 255 - g_val, 255 - b_val, alpha]
-            ));
-        }
-    }
-    photon_image.raw_pixels = img.to_vec();
+        photon_image.raw_pixels[i] = 255 - r_val;
+        photon_image.raw_pixels[i + 1] = 255 - g_val;
+        photon_image.raw_pixels[i + 2] = 255 - b_val;
+    };
 }
 
 /// Get the similarity of two colours in the l*a*b colour space using the CIE76 formula.
@@ -408,7 +400,6 @@ pub fn color_sim(lab1: Lab, lab2: Lab) -> i64 {
 
     return sq_rt;
 }
-
 
 /// Selectively lighten an image.
 /// 
