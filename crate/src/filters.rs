@@ -1,16 +1,16 @@
 //! Preset color filters.
 
 extern crate image;
+use crate::colour_spaces;
+use crate::colour_spaces::mix_with_colour;
+use crate::effects::{adjust_contrast, inc_brightness};
+use crate::{helpers, monochrome};
+use crate::{PhotonImage, Rgb};
 use image::{GenericImage, GenericImageView};
 use wasm_bindgen::prelude::*;
-use crate::{PhotonImage, Rgb};
-use crate::{helpers, monochrome};
-use crate::colour_spaces::mix_with_colour;
-use crate::colour_spaces;
-use crate::effects::{inc_brightness, adjust_contrast};
 
 /// Solarization on the Blue channel.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// # Example
@@ -27,12 +27,11 @@ pub fn neue(mut photon_image: &mut PhotonImage) {
         if 255 as i32 - b_val as i32 > 0 {
             photon_image.raw_pixels[i + 2] = 255 - b_val;
         }
-    };
-
+    }
 }
 
 /// Solarization on the Red and Green channels.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// # Example
@@ -50,11 +49,11 @@ pub fn lix(mut photon_image: &mut PhotonImage) {
 
         photon_image.raw_pixels[i] = 255 - r_val;
         photon_image.raw_pixels[i + 1] = 255 - g_val;
-    };
+    }
 }
 
 /// Solarization on the Red and Blue channels.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// # Example
@@ -72,9 +71,8 @@ pub fn ryo(mut photon_image: &mut PhotonImage) {
 
         photon_image.raw_pixels[i] = 255 - r_val;
         photon_image.raw_pixels[i + 2] = 255 - b_val;
-    };
+    }
 }
-
 
 /// Apply a filter to an image. Over 20 filters are available.
 /// The filters are as follows:
@@ -105,7 +103,6 @@ pub fn ryo(mut photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn filter(img: &mut PhotonImage, filter_name: &str) {
-
     let oceanic_rgb = Rgb::new(0, 89, 173);
     let islands_rgb = Rgb::new(0, 24, 95);
     let marine_rgb = Rgb::new(0, 14, 119);
@@ -128,7 +125,7 @@ pub fn filter(img: &mut PhotonImage, filter_name: &str) {
         "liquid" => mix_with_colour(img, liquid_rgb, 0.2),
         "radio" => monochrome::monochrome(img, 5, 40, 20),
         "twenties" => monochrome::monochrome(img, 18, 12, 20),
-        "rosetint" =>  monochrome::monochrome(img, 80, 20, 31),
+        "rosetint" => monochrome::monochrome(img, 80, 20, 31),
         "mauve" => monochrome::monochrome(img, 90, 40, 80),
         "bluechrome" => monochrome::monochrome(img, 20, 30, 60),
         "vintage" => mix_with_colour(img, vintage_rgb, 0.2),
@@ -146,7 +143,7 @@ pub fn filter(img: &mut PhotonImage, filter_name: &str) {
 }
 
 /// Apply a lofi effect to an image.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// # Example
@@ -161,7 +158,7 @@ pub fn lofi(img: &mut PhotonImage) {
 }
 
 /// Add a rose tint to an image.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// # Example
@@ -177,7 +174,7 @@ pub fn pastel_pink(img: &mut PhotonImage) {
 }
 
 /// Apply a vintage, golden hue to an image.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// # Example
@@ -193,7 +190,7 @@ pub fn golden(img: &mut PhotonImage) {
 }
 
 /// Increased contrast filter effect.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// # Example
@@ -209,7 +206,7 @@ pub fn cali(img: &mut PhotonImage) {
 }
 
 /// Increased contrast, greyscale effect.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// # Example
@@ -224,7 +221,7 @@ pub fn dramatic(img: &mut PhotonImage) {
 }
 
 /// Apply a red hue, with increased contrast and brightness.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// # Example
@@ -239,11 +236,10 @@ pub fn firenze(img: &mut PhotonImage) {
 
     inc_brightness(img, 30);
     adjust_contrast(img, 50.0);
-
 }
 
 /// Apply a greyscale effect with increased contrast.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// # Example

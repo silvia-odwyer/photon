@@ -6,3 +6,6 @@ rust:
 matrix:
   allow_failures:
     - rust: nightly
+
+script:
+    - cargo fmt -- --check

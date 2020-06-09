@@ -2,14 +2,14 @@
 
 extern crate image;
 extern crate rand;
-use image::{DynamicImage, GenericImageView, RgbaImage};
-use palette::{Srgba, LinSrgba, Lab, Blend, Lch, Pixel, Gradient, Srgb};
 use crate::channels::color_sim;
-use crate::{PhotonImage, Rgb, helpers, GenericImage};
+use crate::{helpers, GenericImage, PhotonImage, Rgb};
+use image::{DynamicImage, GenericImageView, RgbaImage};
+use palette::{Blend, Gradient, Lab, Lch, LinSrgba, Pixel, Srgb, Srgba};
 use wasm_bindgen::prelude::*;
 
 /// Add a watermark to an image.
-/// 
+///
 /// # Arguments
 /// * `img` - A DynamicImage that contains a view into the image.
 /// * `watermark` - The watermark to be placed onto the `img` image.
@@ -35,9 +35,9 @@ pub fn watermark(mut img: &mut PhotonImage, watermark: &PhotonImage, x: u32, y: 
 /// The `blend_mode` (3rd param) determines which blending mode to use; change this for varying effects.
 /// The blend modes available include: `overlay`, `over`, `atop`, `xor`, `multiply`, `burn`, `soft_light`, `hard_light`,
 /// `difference`, `lighten`, `darken`, `dodge`, `plus`, `exclusion` (more to come)
-/// NOTE: The first image must be smaller than the second image passed as params. 
-/// If the first image were larger than the second, then there would be overflowing pixels which would have no corresponding pixels 
-/// in the second image. 
+/// NOTE: The first image must be smaller than the second image passed as params.
+/// If the first image were larger than the second, then there would be overflowing pixels which would have no corresponding pixels
+/// in the second image.
 /// # Arguments
 /// * `img` - A DynamicImage that contains a view into the image.
 /// * `img2` - The 2nd DynamicImage to be blended with the first.
@@ -50,7 +50,11 @@ pub fn watermark(mut img: &mut PhotonImage, watermark: &PhotonImage, x: u32, y: 
 /// photon::multiple::blend(&mut img, &img2, "multiply");
 /// ```
 #[wasm_bindgen]
-pub fn blend(mut photon_image: &mut PhotonImage, photon_image2: &PhotonImage, blend_mode: &str) {
+pub fn blend(
+    mut photon_image: &mut PhotonImage,
+    photon_image2: &PhotonImage,
+    blend_mode: &str,
+) {
     let img = crate::helpers::dyn_image_from_raw(&photon_image);
     let img2 = crate::helpers::dyn_image_from_raw(&photon_image2);
 
@@ -61,11 +65,10 @@ pub fn blend(mut photon_image: &mut PhotonImage, photon_image2: &PhotonImage, bl
         panic!("First image parameter must be smaller than second image parameter. To fix, swap img and img2 params.");
     }
     let mut img = img.to_rgba();
-	let mut img2 = img2.to_rgba();
+    let mut img2 = img2.to_rgba();
 
     for x in 0..width {
         for y in 0..height {
-            
             let px_data = img.get_pixel(x, y).data;
 
             let color: LinSrgba = LinSrgba::from_raw(&px_data).into_format();
@@ -91,12 +94,15 @@ pub fn blend(mut photon_image: &mut PhotonImage, photon_image2: &PhotonImage, bl
                 "lighten" => color2.lighten(color),
                 "darken" => color2.darken(color),
                 _ => color2.overlay(color),
-                };
-            
-            img.put_pixel(x, y, image::Rgba {
-                    data: blended.into_format().into_raw()
-            });
+            };
 
+            img.put_pixel(
+                x,
+                y,
+                image::Rgba {
+                    data: blended.into_format().into_raw(),
+                },
+            );
         }
     }
     let dynimage = image::ImageRgba8(img);
@@ -104,7 +110,7 @@ pub fn blend(mut photon_image: &mut PhotonImage, photon_image2: &PhotonImage, bl
 }
 
 /// Change the background of an image (using a green screen/color screen).
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage which contains the desired background. Must be the same size as img2.
 /// * `img2` - The image you would like to swap the background of. Must be the same size as img.
@@ -117,7 +123,11 @@ pub fn blend(mut photon_image: &mut PhotonImage, photon_image2: &PhotonImage, bl
 /// let rgb = Rgb{20, 40, 60};
 /// photon::multiple::replace_background(img_b, img_a, rgb);
 /// ```
-pub fn replace_background(mut photon_image: &mut PhotonImage, img2: &PhotonImage, background_color: Rgb) {
+pub fn replace_background(
+    mut photon_image: &mut PhotonImage,
+    img2: &PhotonImage,
+    background_color: Rgb,
+) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let img2 = helpers::dyn_image_from_raw(&img2);
     let (width, height) = img.dimensions();
@@ -126,7 +136,12 @@ pub fn replace_background(mut photon_image: &mut PhotonImage, img2: &PhotonImage
             let px = img.get_pixel(x, y);
 
             // Convert the current pixel's colour to the l*a*b colour space
-            let lab: Lab = Srgb::new(background_color.r as f32 / 255.0, background_color.g as f32 / 255.0, background_color.b as f32 / 255.0).into();
+            let lab: Lab = Srgb::new(
+                background_color.r as f32 / 255.0,
+                background_color.g as f32 / 255.0,
+                background_color.b as f32 / 255.0,
+            )
+            .into();
 
             let r_val: f32 = px.data[0] as f32 / 255.0;
             let g_val: f32 = px.data[1] as f32 / 255.0;
@@ -139,8 +154,7 @@ pub fn replace_background(mut photon_image: &mut PhotonImage, img2: &PhotonImage
             // Match
             if sim < 20 {
                 img.put_pixel(x, y, img2.get_pixel(x, y));
-            }
-            else {
+            } else {
                 img.put_pixel(x, y, px);
             }
         }
@@ -166,34 +180,31 @@ pub fn create_gradient(width: u32, height: u32) -> PhotonImage {
         Lch::from(LinSrgba::new(0.1, 1.0, 0.1, 1.0)),
     ]);
 
-    for (i, c1) in grad1
-        .take(width as usize)
-        .enumerate()
-    {
+    for (i, c1) in grad1.take(width as usize).enumerate() {
         let c1 = Srgba::from_linear(c1).into_format().into_raw();
         {
             let mut sub_image = image.sub_image(i as u32, 0, 1, height);
             let (width, height) = sub_image.dimensions();
             for x in 0..width {
                 for y in 0..height {
-                    sub_image.put_pixel(x, y, image::Rgba {
-                        data: c1
-                    });
+                    sub_image.put_pixel(x, y, image::Rgba { data: c1 });
                 }
             }
         }
     }
     let rgba_img = image::ImageRgba8(image);
     let raw_pixels = rgba_img.raw_pixels();
-    return PhotonImage { raw_pixels: raw_pixels, width: width, height: height};
+    return PhotonImage {
+        raw_pixels: raw_pixels,
+        width: width,
+        height: height,
+    };
 }
 
 /// Apply a gradient to an image.
 #[wasm_bindgen]
 pub fn apply_gradient(mut image: &mut PhotonImage) {
-    
     let gradient = create_gradient(image.width, image.height);
 
     blend(&mut image, &gradient, "overlay");
-
 }

@@ -1,9 +1,9 @@
+extern crate image;
 extern crate photon;
 extern crate time;
-extern crate image;
+use image::GenericImageView;
+use photon::Rgb;
 use time::PreciseTime;
-use image::{GenericImageView};
-use photon::{Rgb};
 
 fn main() {
     // Replace the variable file_name with whatever image you would like to apply filters to
@@ -22,8 +22,11 @@ fn main() {
         photon::colour_spaces::hsl(&mut img, effects[i], 0.2);
 
         // Write the contents of this image in JPG format.
-        photon::native::save_image(img, &("examples/example_output/".to_owned() + &effects[i].to_owned() + ".JPG"));
-    
+        photon::native::save_image(
+            img,
+            &("examples/example_output/".to_owned() + &effects[i].to_owned() + ".JPG"),
+        );
+
         let end = PreciseTime::now();
         println!("Took {} seconds to {} image.", start.to(end), effects[i]);
     }
