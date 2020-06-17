@@ -65,7 +65,7 @@ pub fn blend(
         panic!("First image parameter must be smaller than second image parameter. To fix, swap img and img2 params.");
     }
     let mut img = img.to_rgba();
-    let mut img2 = img2.to_rgba();
+    let img2 = img2.to_rgba();
 
     for x in 0..width {
         for y in 0..height {

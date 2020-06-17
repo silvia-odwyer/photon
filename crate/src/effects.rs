@@ -279,45 +279,36 @@ pub fn halftone(mut photon_image: PhotonImage) {
 /// photon::effects::primary(img);
 /// ```
 #[wasm_bindgen]
-pub fn primary(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
+pub fn primary(img: &mut PhotonImage) {
+    let end = img.raw_pixels.len() - 4;
 
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+    for i in (0..end).step_by(4) {
+        let mut r_val = img.raw_pixels[0];
+        let mut g_val = img.raw_pixels[1];
+        let mut b_val = img.raw_pixels[2];
 
-            let mut r_val = px.data[0];
-            let mut g_val = px.data[1];
-            let mut b_val = px.data[2];
-
-            if r_val > 128 {
-                r_val = 255;
-            } else {
-                r_val = 0;
-            }
-
-            if g_val > 128 {
-                g_val = 255;
-            } else {
-                g_val = 0;
-            }
-
-            if b_val > 128 {
-                g_val = 255;
-            } else {
-                b_val = 0;
-            }
-
-            px.data[0] = r_val;
-            px.data[1] = g_val;
-            px.data[2] = b_val;
-
-            img.put_pixel(x, y, px);
+        if r_val > 128 {
+            r_val = 255;
+        } else {
+            r_val = 0;
         }
+
+        if g_val > 128 {
+            g_val = 255;
+        } else {
+            g_val = 0;
+        }
+
+        if b_val > 128 {
+            g_val = 255;
+        } else {
+            b_val = 0;
+        }
+
+        img.raw_pixels[i] = r_val;
+        img.raw_pixels[i + 1] = g_val;
+        img.raw_pixels[i + 2] = b_val;
     }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
 }
 
 /// Colorizes the green channels of the image.
@@ -437,7 +428,7 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
 /// photon::effects::solarize(img);
 /// ```
 #[wasm_bindgen]
-pub fn solarize(mut photon_image: &mut PhotonImage) {
+pub fn solarize(photon_image: &mut PhotonImage) {
     let end = photon_image.get_raw_pixels().len() - 4;
 
     for i in (0..end).step_by(4) {
@@ -493,34 +484,31 @@ pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
 /// photon::effects::inc_brightness(img, 10);
 /// ```
 #[wasm_bindgen]
-pub fn inc_brightness(mut photon_image: &mut PhotonImage, brightness: u8) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
+pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
+    let end = photon_image.get_raw_pixels().len() - 4;
 
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            if px.data[0] <= 255 - brightness {
-                px.data[0] += brightness;
-            } else {
-                px.data[0] = 255;
-            }
-            if px.data[1] <= 255 - brightness {
-                px.data[1] += brightness;
-            } else {
-                px.data[1] = 255
-            }
+    for i in (0..end).step_by(4) {
+        let r_val = photon_image.raw_pixels[i];
+        let g_val = photon_image.raw_pixels[i + 1];
+        let b_val = photon_image.raw_pixels[i + 2];
 
-            if px.data[2] <= 255 - brightness {
-                px.data[2] += brightness;
-            } else {
-                px.data[2] = 255
-            }
+        if r_val <= 255 - brightness {
+            photon_image.raw_pixels[i] += brightness;
+        } else {
+            photon_image.raw_pixels[i] = 255;
+        }
+        if g_val <= 255 - brightness {
+            photon_image.raw_pixels[i + 1] += brightness;
+        } else {
+            photon_image.raw_pixels[1] = 255
+        }
 
-            img.put_pixel(x, y, px);
+        if b_val <= 255 - brightness {
+            photon_image.raw_pixels[i + 2] += brightness;
+        } else {
+            photon_image.raw_pixels[i + 2] = 255
         }
     }
-    photon_image.raw_pixels = img.raw_pixels();
 }
 
 /// Adjust the contrast of an image by a factor.

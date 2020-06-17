@@ -4,9 +4,8 @@ extern crate image;
 use crate::colour_spaces;
 use crate::colour_spaces::mix_with_colour;
 use crate::effects::{adjust_contrast, inc_brightness};
-use crate::{helpers, monochrome};
+use crate::monochrome;
 use crate::{PhotonImage, Rgb};
-use image::{GenericImage, GenericImageView};
 use wasm_bindgen::prelude::*;
 
 /// Solarization on the Blue channel.
@@ -19,7 +18,7 @@ use wasm_bindgen::prelude::*;
 /// photon::filters::neue(&mut img);
 /// ```
 #[wasm_bindgen]
-pub fn neue(mut photon_image: &mut PhotonImage) {
+pub fn neue(photon_image: &mut PhotonImage) {
     let end = photon_image.get_raw_pixels().len() - 4;
 
     for i in (0..end).step_by(4) {
@@ -40,7 +39,7 @@ pub fn neue(mut photon_image: &mut PhotonImage) {
 /// photon::filters::lix(&mut img);
 /// ```
 #[wasm_bindgen]
-pub fn lix(mut photon_image: &mut PhotonImage) {
+pub fn lix(photon_image: &mut PhotonImage) {
     let end = photon_image.get_raw_pixels().len() - 4;
 
     for i in (0..end).step_by(4) {
@@ -62,7 +61,7 @@ pub fn lix(mut photon_image: &mut PhotonImage) {
 /// photon::filters::ryo(&mut img);
 /// ```
 #[wasm_bindgen]
-pub fn ryo(mut photon_image: &mut PhotonImage) {
+pub fn ryo(photon_image: &mut PhotonImage) {
     let end = photon_image.get_raw_pixels().len() - 4;
 
     for i in (0..end).step_by(4) {

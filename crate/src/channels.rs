@@ -155,9 +155,6 @@ pub fn alter_two_channels(
     }
 }
 
-
-
-
 /// Increment all 3 channels' values by adding an amt to each channel per pixel.
 ///
 /// # Arguments
@@ -391,7 +388,7 @@ pub fn selective_hue_rotate(
 /// photon::channels::invert(&mut img);
 /// ```
 #[wasm_bindgen]
-pub fn invert(mut photon_image: &mut PhotonImage) {
+pub fn invert(photon_image: &mut PhotonImage) {
     let end = photon_image.get_raw_pixels().len() - 4;
 
     for i in (0..end).step_by(4) {

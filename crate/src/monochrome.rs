@@ -25,12 +25,7 @@ use wasm_bindgen::prelude::*;
 /// ```
 ///
 #[wasm_bindgen]
-pub fn monochrome(
-    mut img: &mut PhotonImage,
-    r_offset: u32,
-    g_offset: u32,
-    b_offset: u32,
-) {
+pub fn monochrome(img: &mut PhotonImage, r_offset: u32, g_offset: u32, b_offset: u32) {
     let end = img.get_raw_pixels().len() - 4;
 
     for i in (0..end).step_by(4) {
@@ -76,7 +71,7 @@ pub fn monochrome(
 /// ```
 ///
 #[wasm_bindgen]
-pub fn sepia(mut img: &mut PhotonImage) {
+pub fn sepia(img: &mut PhotonImage) {
     let end = img.get_raw_pixels().len() - 4;
 
     for i in (0..end).step_by(4) {
@@ -116,7 +111,7 @@ pub fn sepia(mut img: &mut PhotonImage) {
 /// monochrome::grayscale(&mut img);
 /// ```
 #[wasm_bindgen]
-pub fn grayscale(mut img: &mut PhotonImage) {
+pub fn grayscale(img: &mut PhotonImage) {
     let end = img.get_raw_pixels().len() - 4;
 
     for i in (0..end).step_by(4) {
@@ -147,27 +142,24 @@ pub fn grayscale(mut img: &mut PhotonImage) {
 /// monochrome::grayscale_human_corrected(&mut img);
 /// ```
 #[wasm_bindgen]
-pub fn grayscale_human_corrected(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
+pub fn grayscale_human_corrected(img: &mut PhotonImage) {
+    let end = img.get_raw_pixels().len() - 4;
 
-    for x in 0..width {
-        for y in 0..height {
-            let px = img.get_pixel(x, y);
-            let (r_val, g_val, b_val) =
-                (px.data[0] as f32, px.data[1] as f32, px.data[2] as f32);
+    for i in (0..end).step_by(4) {
+        let r_val = img.raw_pixels[i] as f32;
+        let g_val = img.raw_pixels[i + 1] as f32;
+        let b_val = img.raw_pixels[i + 2] as f32;
 
-            let mut avg: u8 = (r_val * 0.3 + g_val * 0.59 + b_val * 0.11) as u8;
+        let mut avg: u8 = (r_val * 0.3 + g_val * 0.59 + b_val * 0.11) as u8;
 
-            if avg >= 255 {
-                avg = 255
-            }
-
-            img.put_pixel(x, y, image::Rgba([avg, avg, avg, 255]));
+        if avg >= 255 {
+            avg = 255
         }
+
+        img.raw_pixels[i] = avg as u8;
+        img.raw_pixels[i + 1] = avg as u8;
+        img.raw_pixels[i + 2] = avg as u8;
     }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
 }
 
 /// Desaturate an image by getting the min/max of each pixel's RGB values.
@@ -183,31 +175,28 @@ pub fn grayscale_human_corrected(mut photon_image: &mut PhotonImage) {
 /// monochrome::desaturate(&mut img);
 /// ```
 #[wasm_bindgen]
-pub fn desaturate(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
+pub fn desaturate(img: &mut PhotonImage) {
+    let end = img.get_raw_pixels().len() - 4;
 
-    for x in 0..width {
-        for y in 0..height {
-            let px = img.get_pixel(x, y);
-            let (r_val, g_val, b_val) =
-                (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
+    for i in (0..end).step_by(4) {
+        let r_val = img.raw_pixels[i] as u32;
+        let g_val = img.raw_pixels[i + 1] as u32;
+        let b_val = img.raw_pixels[i + 2] as u32;
 
-            // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
-            let mut rgb_vals = vec![r_val, g_val, b_val];
-            rgb_vals.sort();
+        // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
+        let mut rgb_vals = vec![r_val, g_val, b_val];
+        rgb_vals.sort();
 
-            let mut gray = ((rgb_vals[0] + rgb_vals[2]) / 2) as u8;
+        let mut gray = ((rgb_vals[0] + rgb_vals[2]) / 2) as u8;
 
-            if gray >= 255 {
-                gray = 255
-            }
-
-            img.put_pixel(x, y, image::Rgba([gray, gray, gray, 255]));
+        if gray >= 255 {
+            gray = 255
         }
+
+        img.raw_pixels[i] = gray;
+        img.raw_pixels[i + 1] = gray;
+        img.raw_pixels[i + 2] = gray;
     }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
 }
 
 /// Uses a min. decomposition algorithm to convert an image to greyscale.
@@ -222,31 +211,28 @@ pub fn desaturate(mut photon_image: &mut PhotonImage) {
 /// monochrome::decompose_min(&mut img);
 /// ```
 #[wasm_bindgen]
-pub fn decompose_min(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
+pub fn decompose_min(img: &mut PhotonImage) {
+    let end = img.get_raw_pixels().len() - 4;
 
-    for x in 0..width {
-        for y in 0..height {
-            let px = img.get_pixel(x, y);
-            let (r_val, g_val, b_val) =
-                (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
+    for i in (0..end).step_by(4) {
+        let r_val = img.raw_pixels[i] as u32;
+        let g_val = img.raw_pixels[i + 1] as u32;
+        let b_val = img.raw_pixels[i + 2] as u32;
 
-            // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
-            let mut rgb_vals = vec![r_val, g_val, b_val];
-            rgb_vals.sort();
+        // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
+        let mut rgb_vals = vec![r_val, g_val, b_val];
+        rgb_vals.sort();
 
-            let mut gray = rgb_vals[0] as u8;
+        let mut gray = rgb_vals[0] as u8;
 
-            if gray >= 255 {
-                gray = 255
-            }
-
-            img.put_pixel(x, y, image::Rgba([gray, gray, gray, 255]));
+        if gray >= 255 {
+            gray = 255
         }
+
+        img.raw_pixels[i] = gray as u8;
+        img.raw_pixels[i + 1] = gray as u8;
+        img.raw_pixels[i + 2] = gray as u8;
     }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
 }
 
 /// Uses a max. decomposition algorithm to convert an image to greyscale.
@@ -261,27 +247,28 @@ pub fn decompose_min(mut photon_image: &mut PhotonImage) {
 /// monochrome::decompose_max(&mut img);
 /// ```
 #[wasm_bindgen]
-pub fn decompose_max(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
+pub fn decompose_max(img: &mut PhotonImage) {
+    let end = img.get_raw_pixels().len() - 4;
 
-    for x in 0..width {
-        for y in 0..height {
-            let px = img.get_pixel(x, y);
-            let (r_val, g_val, b_val) =
-                (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
+    for i in (0..end).step_by(4) {
+        let r_val = img.raw_pixels[i] as u32;
+        let g_val = img.raw_pixels[i + 1] as u32;
+        let b_val = img.raw_pixels[i + 2] as u32;
 
-            // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
-            let mut rgb_vals = vec![r_val, g_val, b_val];
-            rgb_vals.sort();
+        // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
+        let mut rgb_vals = vec![r_val, g_val, b_val];
+        rgb_vals.sort();
 
-            let gray = rgb_vals[2] as u8;
+        let mut gray = rgb_vals[2] as u8;
 
-            img.put_pixel(x, y, image::Rgba([gray, gray, gray, 255]));
+        if gray >= 255 {
+            gray = 255
         }
+
+        img.raw_pixels[i] = gray as u8;
+        img.raw_pixels[i + 1] = gray as u8;
+        img.raw_pixels[i + 2] = gray as u8;
     }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
 }
 
 /// Employ only a limited number of gray shades in an image.
@@ -412,32 +399,24 @@ pub fn single_channel_grayscale(mut photon_image: &mut PhotonImage, channel: usi
 /// monochrome::threshold(&mut img, 30);
 /// ```
 #[wasm_bindgen]
-pub fn threshold(mut photon_image: &mut PhotonImage, threshold: u32) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
+pub fn threshold(img: &mut PhotonImage, threshold: u32) {
+    let end = img.get_raw_pixels().len() - 4;
 
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+    for i in (0..end).step_by(4) {
+        let r = img.raw_pixels[i] as f32;
+        let g = img.raw_pixels[i + 1] as f32;
+        let b = img.raw_pixels[i + 2] as f32;
 
-            let r: f32 = px.data[0].into();
-            let g: f32 = px.data[1].into();
-            let b: f32 = px.data[2].into();
+        let mut v = 0.2126 * r + 0.7152 * g + 0.072 * b;
 
-            let mut v = 0.2126 * r + 0.7152 * g + 0.072 * b;
-
-            if v >= threshold as f32 {
-                v = 255.0;
-            } else {
-                v = 0.0;
-            }
-            px.data[0] = v as u8;
-            px.data[1] = v as u8;
-            px.data[2] = v as u8;
-
-            img.put_pixel(x, y, px);
+        if v >= threshold as f32 {
+            v = 255.0;
+        } else {
+            v = 0.0;
         }
+
+        img.raw_pixels[i] = v as u8;
+        img.raw_pixels[i + 1] = v as u8;
+        img.raw_pixels[i + 2] = v as u8;
     }
-    let raw_pixels = img.raw_pixels();
-    photon_image.raw_pixels = raw_pixels;
 }
