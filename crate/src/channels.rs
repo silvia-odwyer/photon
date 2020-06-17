@@ -150,6 +150,9 @@ pub fn alter_two_channels(img: &mut PhotonImage, channel1: usize, amt1: i16, cha
     };
 }
 
+
+
+
 /// Increment all 3 channels' values by adding an amt to each channel per pixel.
 /// 
 /// # Arguments

@@ -34,8 +34,13 @@
 Photon is a high-performance Rust image processing library, which compiles to WebAssembly, allowing for 
 safe, blazing-fast image processing both natively and on the web. 
 
+You can run Photon:
+- natively 
+- in the browser with WebAssembly
+- on Node with WebAssembly
+
 ### Features 
-- **Fast:** Photon outperforms even the fastest of libraries, including ImageMagick. On the web, its high-performance allows it to run at near-native speed. Benchmarks coming soon. [Benchmarks can be found here](https://github.com/silvia-odwyer/photon/wiki/Benchmarks).
+- **Fast:** Photon outperforms even the fastest of libraries, including ImageMagick. On the web, its high-performance allows it to run at near-native speed.[Benchmarks can be found here](https://github.com/silvia-odwyer/photon/wiki/Benchmarks).
 - **Call with JS:** Want to use Photon on the web or with Node? Using a simple npm package, you're good to go. Get all the benefits of WebAssembly
 with zero-cost abstraction. 
 - **Use Natively:** For command-line apps, native photo editing apps, and so forth, Photon's core codebase is in Rust, allowing for cross-platform
@@ -61,12 +66,12 @@ View the [official documentation](https://docs.rs/photon-rs/).
 
 Functions include:
 - **Image correction**: Hue rotation, sharpening, brightness adjustment, adjusting saturation, lightening/darkening all within various colour spaces. 
+- **Resizing**: Resize images both natively and on the web.
 - **Convolutions**: Sobel filters, blurs, Laplace effects, edge detection, etc., 
 - **Channel manipulation**: Increasing/decreasing RGB channel values, swapping channels, removing channels, etc.
-- **Monochrome effects**: Duotoning, greyscaling of various forms, thresholding, sepia, averaging RGB values
+- **Monochrome effects**: Monochrome tints, greyscaling of various forms, thresholding, sepia, averaging RGB values
 - **Colour manipulation**: Work with the image in various colour spaces such as HSL, LCh, and sRGB, and adjust the colours accordingly. 
 - **Filters**: Over 30 pre-set filters available, incorporating various effects and transformations. 
-- **Text**: Apply text to imagery in artistic ways, or to watermark, etc.,
 - **Watermarking**: Watermark images in multiple formats. 
 - **Blending**: Blend images together using 10 different techniques, change image backgrounds. 
 
