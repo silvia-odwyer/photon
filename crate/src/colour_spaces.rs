@@ -2,20 +2,20 @@
 
 extern crate image;
 extern crate rand;
-use image::{GenericImageView};
-use palette::{Hsl, Lch, Shade, Pixel, Saturate, Srgba, Hue, Hsv};
-use crate::{PhotonImage, Rgb, helpers};
+use crate::{helpers, PhotonImage, Rgb};
+use image::GenericImageView;
+use palette::{Hsl, Hsv, Hue, Lch, Pixel, Saturate, Shade, Srgba};
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
-/// Apply gamma correction. 
+/// Apply gamma correction.
 // #[wasm_bindgen]
 // pub fn gamma_correction(mut photon_image: &mut PhotonImage, red: f32, green: f32,  blue: f32) {
 //     let img = helpers::dyn_image_from_raw(&photon_image);
 //     let (width, height) = img.dimensions();
 //     let mut img = img.to_rgba();
 
-//     // Initialize gamma arrays 
+//     // Initialize gamma arrays
 //     let mut gammaR: Vec<u8> = vec![];
 //     let mut gammaG: Vec<u8> = vec![];
 //     let mut gammaB: Vec<u8> = vec![];
@@ -35,7 +35,7 @@ use wasm_bindgen::prelude::*;
 //     for x in 0..width {
 //         for y in 0..height {
 //             let px_data = img.get_pixel(x, y).data;
-            
+
 //             let r_val = px_data[0];
 //             let g_val = px_data[1];
 //             let b_val = px_data[2];
@@ -43,7 +43,7 @@ use wasm_bindgen::prelude::*;
 //             px_data[0] = gammaR[r_val as usize];
 //             px_data[1] = gammaG[g_val as usize];
 //             px_data[2] = gammaB[b_val as usize];
-            
+
 //             img.put_pixel(x, y, px);
 //             }
 //         }
@@ -51,14 +51,14 @@ use wasm_bindgen::prelude::*;
 // }
 
 /// Image manipulation effects in the LCh colour space
-/// 
+///
 /// Effects include:
 /// * **saturate** - Saturation increase.
 /// * **desaturate** - Desaturate the image.
 /// * **shift_hue** - Hue rotation by a specified number of degrees.
 /// * **darken** - Decrease the brightness.
 /// * **lighten** - Increase the brightness.
-/// 
+///
 /// # Arguments
 /// * `photon_image` - A PhotonImage.
 /// * `mode` - The effect desired to be applied. Choose from: `saturate`, `desaturate`, `shift_hue`, `darken`, `lighten`
@@ -67,10 +67,10 @@ use wasm_bindgen::prelude::*;
 /// ```
 /// // For example to increase the saturation by 10%:
 /// use photon::color_spaces::lch;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// lch(&mut img, "saturate", 0.1);
 /// ```
 #[wasm_bindgen]
@@ -81,38 +81,42 @@ pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     for x in 0..width {
         for y in 0..height {
             let px_data = img.get_pixel(x, y).data;
-            let lch_colour: Lch = Srgba::from_raw(&px_data)
-                .into_format()
-                .into_linear()
-                .into();
+            let lch_colour: Lch =
+                Srgba::from_raw(&px_data).into_format().into_linear().into();
 
             let new_color = match mode {
                 // Match a single value
                 "desaturate" => lch_colour.desaturate(amt),
                 "saturate" => lch_colour.saturate(amt),
-                "lighten" => lch_colour.lighten(amt), 
+                "lighten" => lch_colour.lighten(amt),
                 "darken" => lch_colour.darken(amt),
                 "shift_hue" => lch_colour.shift_hue(amt * 360.0),
                 _ => lch_colour.saturate(amt),
             };
-            
-            img.put_pixel(x, y, image::Rgba {
-                data: Srgba::from_linear(new_color.into()).into_format().into_raw()
-            });
-            }
+
+            img.put_pixel(
+                x,
+                y,
+                image::Rgba {
+                    data: Srgba::from_linear(new_color.into())
+                        .into_format()
+                        .into_raw(),
+                },
+            );
         }
+    }
     photon_image.raw_pixels = img.to_vec();
 }
 
 /// Image manipulation effects in the HSL colour space.
-/// 
+///
 /// Effects include:
 /// * **saturate** - Saturation increase.
 /// * **desaturate** - Desaturate the image.
 /// * **shift_hue** - Hue rotation by a specified number of degrees.
 /// * **darken** - Decrease the brightness.
 /// * **lighten** - Increase the brightness.
-/// 
+///
 /// # Arguments
 /// * `photon_image` - A PhotonImage.
 /// * `mode` - The effect desired to be applied. Choose from: `saturate`, `desaturate`, `shift_hue`, `darken`, `lighten`
@@ -121,99 +125,111 @@ pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 /// ```
 /// // For example to increase the saturation by 10%:
 /// use photon::color_spaces::hsl;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// hsl(&mut img, "saturate", 0.1);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn hsl(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
-    // The function logic is kept separate from other colour spaces for now, 
+    // The function logic is kept separate from other colour spaces for now,
     // since other HSL-specific logic may be implemented here, which isn't available in other colour spaces
     let mut img = helpers::dyn_image_from_raw(&photon_image).to_rgba();
     let (width, height) = img.dimensions();
-        for x in 0..width {
-            for y in 0..height {
-                let px_data = img.get_pixel(x, y).data;
+    for x in 0..width {
+        for y in 0..height {
+            let px_data = img.get_pixel(x, y).data;
 
-                let colour = Srgba::from_raw(&px_data).into_format();
+            let colour = Srgba::from_raw(&px_data).into_format();
 
-                let hsl_colour = Hsl::from(colour);
-                
-                let new_color = match mode {
-                    // Match a single value
-                    "desaturate" => hsl_colour.desaturate(amt),
-                    "saturate" => hsl_colour.saturate(amt),
-                    "lighten" => hsl_colour.lighten(amt), 
-                    "darken" => hsl_colour.darken(amt),
-                    "shift_hue" => hsl_colour.shift_hue(amt * 360.0),
-                    _ => hsl_colour.saturate(amt),
-                };
+            let hsl_colour = Hsl::from(colour);
 
-                img.put_pixel(x, y, image::Rgba {
-                    data: Srgba::from_linear(new_color.into()).into_format().into_raw()
-                });
-            }
+            let new_color = match mode {
+                // Match a single value
+                "desaturate" => hsl_colour.desaturate(amt),
+                "saturate" => hsl_colour.saturate(amt),
+                "lighten" => hsl_colour.lighten(amt),
+                "darken" => hsl_colour.darken(amt),
+                "shift_hue" => hsl_colour.shift_hue(amt * 360.0),
+                _ => hsl_colour.saturate(amt),
+            };
+
+            img.put_pixel(
+                x,
+                y,
+                image::Rgba {
+                    data: Srgba::from_linear(new_color.into())
+                        .into_format()
+                        .into_raw(),
+                },
+            );
         }
+    }
 
     photon_image.raw_pixels = img.to_vec();
 }
 
-/// Image manipulation in the HSV colour space. 
-/// 
+/// Image manipulation in the HSV colour space.
+///
 /// Effects include:
 /// * **saturate** - Saturation increase.
 /// * **desaturate** - Desaturate the image.
 /// * **shift_hue** - Hue rotation by a specified number of degrees.
 /// * **darken** - Decrease the brightness.
 /// * **lighten** - Increase the brightness.
-/// 
+///
 /// # Arguments
 /// * `photon_image` - A PhotonImage.
 /// * `mode` - The effect desired to be applied. Choose from: `saturate`, `desaturate`, `shift_hue`, `darken`, `lighten`
 /// * `amt` - A float value from 0 to 1 which represents the amount the effect should be increased by.
-/// 
+///
 /// # Example
 /// ```
 /// // For example to increase the saturation by 10%:
 /// use photon::color_spaces::hsv;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// hsv(&mut img, "saturate", 0.1);
 /// ```
 #[wasm_bindgen]
 pub fn hsv(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     let img = helpers::dyn_image_from_raw(&photon_image);
-    let mut img  = img.to_rgba();
+    let mut img = img.to_rgba();
 
     let (width, height) = img.dimensions();
 
-        for x in 0..width {
-            for y in 0..height {
-                let px_data = img.get_pixel(x, y).data;
+    for x in 0..width {
+        for y in 0..height {
+            let px_data = img.get_pixel(x, y).data;
 
-                let color = Srgba::from_raw(&px_data).into_format();
+            let color = Srgba::from_raw(&px_data).into_format();
 
-                let hsv_colour = Hsv::from(color);
+            let hsv_colour = Hsv::from(color);
 
-                let new_color = match mode {
-                    // Match a single value
-                    "desaturate" => hsv_colour.desaturate(amt),
-                    "saturate" => hsv_colour.saturate(amt),
-                    "lighten" => hsv_colour.lighten(amt), 
-                    "darken" => hsv_colour.darken(amt),
-                    "shift_hue" => hsv_colour.shift_hue(amt * 360.0),
-                    _ => hsv_colour.saturate(amt),
-                };
+            let new_color = match mode {
+                // Match a single value
+                "desaturate" => hsv_colour.desaturate(amt),
+                "saturate" => hsv_colour.saturate(amt),
+                "lighten" => hsv_colour.lighten(amt),
+                "darken" => hsv_colour.darken(amt),
+                "shift_hue" => hsv_colour.shift_hue(amt * 360.0),
+                _ => hsv_colour.saturate(amt),
+            };
 
-                img.put_pixel(x, y, image::Rgba {
-                    data: Srgba::from_linear(new_color.into()).into_format().into_raw()
-                });
-            }
+            img.put_pixel(
+                x,
+                y,
+                image::Rgba {
+                    data: Srgba::from_linear(new_color.into())
+                        .into_format()
+                        .into_raw(),
+                },
+            );
         }
+    }
     photon_image.raw_pixels = img.to_vec();
 }
 
@@ -221,17 +237,17 @@ pub fn hsv(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `mode` - A float value from 0 to 1 which is the amount to shift the hue by, or hue rotate by.
-/// 
+///
 /// # Example
 /// ```
 /// // For example to hue rotate/shift the hue by 120 degrees in the HSL colour space:
 /// use photon::color_spaces::hue_rotate_hsl;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// hue_rotate_hsl(&mut img, 120);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn hue_rotate_hsl(img: &mut PhotonImage, degrees: f32) {
     hsl(img, "shift_hue", degrees);
@@ -241,17 +257,17 @@ pub fn hue_rotate_hsl(img: &mut PhotonImage, degrees: f32) {
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `mode` - A float value from 0 to 1 which is the amount to shift the hue by, or hue rotate by.
-/// 
+///
 /// # Example
 /// ```
 /// // For example to hue rotate/shift the hue by 120 degrees in the HSV colour space:
 /// use photon::color_spaces::hue_rotate_hsv;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// hue_rotate_hsv(&mut img, 120);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn hue_rotate_hsv(img: &mut PhotonImage, degrees: f32) {
     hsv(img, "shift_hue", degrees);
@@ -261,43 +277,42 @@ pub fn hue_rotate_hsv(img: &mut PhotonImage, degrees: f32) {
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `mode` - A float value from 0 to 1 which is the amount to shift the hue by, or hue rotate by.
-/// 
+///
 /// # Example
 /// ```
 /// // For example to hue rotate/shift the hue by 120 degrees in the HSL colour space:
 /// use photon::color_spaces::hue_rotate_lch;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// hue_rotate_lch(&mut img, 120);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn hue_rotate_lch(img: &mut PhotonImage, degrees: f32) {
     lch(img, "shift_hue", degrees)
 }
 
 /// Increase the image's saturation by converting each pixel's colour to the HSL colour space
-/// and increasing the colour's saturation. 
+/// and increasing the colour's saturation.
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `level` - Float value from 0 to 1 representing the level to which to increase the saturation by.
-/// The `level` must be from 0 to 1 in floating-point, `f32` format. 
+/// The `level` must be from 0 to 1 in floating-point, `f32` format.
 /// Increasing saturation by 80% would be represented by a `level` of 0.8
-/// 
+///
 /// # Example
 /// ```
 /// // For example to increase saturation by 10% in the HSL colour space:
 /// use photon::color_spaces::saturate_hsl;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// saturate_hsl(&mut img, 0.1);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn saturate_hsl(img: &mut PhotonImage, level: f32) {
-
     return hsl(img, "saturate", level);
 }
 
@@ -305,19 +320,19 @@ pub fn saturate_hsl(img: &mut PhotonImage, level: f32) {
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `level` - Float value from 0 to 1 representing the level to which to increase the saturation by.
-/// The `level` must be from 0 to 1 in floating-point, `f32` format. 
+/// The `level` must be from 0 to 1 in floating-point, `f32` format.
 /// Increasing saturation by 80% would be represented by a `level` of 0.8
-/// 
+///
 /// # Example
 /// ```
 /// // For example to increase saturation by 40% in the Lch colour space:
 /// use photon::color_spaces::saturate_lch;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// saturate_lch(&mut img, 0.4);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn saturate_lch(img: &mut PhotonImage, level: f32) {
     return lch(img, "saturate", level);
@@ -327,42 +342,42 @@ pub fn saturate_lch(img: &mut PhotonImage, level: f32) {
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `level` - Float value from 0 to 1 representing the level by which to increase the saturation by.
-/// The `level` must be from 0 to 1 in floating-point, `f32` format. 
+/// The `level` must be from 0 to 1 in floating-point, `f32` format.
 /// Increasing saturation by 80% would be represented by a `level` of 0.8
-/// 
+///
 /// # Example
 /// ```
 /// // For example to increase saturation by 30% in the HSV colour space:
 /// use photon::color_spaces::saturate_hsv;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// saturate_hsv(&mut img, 0.3);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn saturate_hsv(img: &mut PhotonImage, level: f32) {
     return hsv(img, "saturate", level);
 }
 
 /// Lighten an image by a specified amount in the LCh colour space.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `level` - Float value from 0 to 1 representing the level to which to lighten the image by.
-/// The `level` must be from 0 to 1 in floating-point, `f32` format. 
+/// The `level` must be from 0 to 1 in floating-point, `f32` format.
 /// Lightening by 80% would be represented by a `level` of 0.8
-/// 
+///
 /// # Example
 /// ```
 /// // For example to lighten an image by 10% in the LCh colour space:
 /// use photon::color_spaces::lighten_lch;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// lighten_lch(&mut img, 0.1);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn lighten_lch(img: &mut PhotonImage, level: f32) {
     return lch(img, "lighten", level);
@@ -372,180 +387,180 @@ pub fn lighten_lch(img: &mut PhotonImage, level: f32) {
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `level` - Float value from 0 to 1 representing the level to which to lighten the image by.
-/// The `level` must be from 0 to 1 in floating-point, `f32` format. 
+/// The `level` must be from 0 to 1 in floating-point, `f32` format.
 /// Lightening by 80% would be represented by a `level` of 0.8
-/// 
+///
 /// # Example
 /// ```
 /// // For example to lighten an image by 10% in the HSL colour space:
 /// use photon::color_spaces::lighten_hsl;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// lighten_hsl(&mut img, 0.1);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn lighten_hsl(img: &mut PhotonImage, level: f32) {
     return hsl(img, "lighten", level);
 }
 
 /// Lighten an image by a specified amount in the HSV colour space.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `level` - Float value from 0 to 1 representing the level to which to lighten the image by.
-/// The `level` must be from 0 to 1 in floating-point, `f32` format. 
+/// The `level` must be from 0 to 1 in floating-point, `f32` format.
 /// Lightening by 80% would be represented by a `level` of 0.8
-/// 
+///
 /// # Example
 /// ```
 /// // For example to lighten an image by 10% in the HSV colour space:
 /// use photon::color_spaces::lighten_hsv;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// lighten_hsv(&mut img, 0.1);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn lighten_hsv(img: &mut PhotonImage, level: f32) {
     return hsv(img, "lighten", level);
 }
 
 /// Darken the image by a specified amount in the LCh colour space.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `level` - Float value from 0 to 1 representing the level to which to darken the image by.
-/// The `level` must be from 0 to 1 in floating-point, `f32` format. 
+/// The `level` must be from 0 to 1 in floating-point, `f32` format.
 /// Darkening by 80% would be represented by a `level` of 0.8
-/// 
+///
 /// # Example
 /// ```
 /// // For example to darken an image by 10% in the LCh colour space:
 /// use photon::color_spaces::darken_lch;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// darken_lch(&mut img, 0.1);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn darken_lch(img: &mut PhotonImage, level: f32) {
     return lch(img, "darken", level);
 }
 
 /// Darken the image by a specified amount in the HSL colour space.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `level` - Float value from 0 to 1 representing the level to which to darken the image by.
-/// The `level` must be from 0 to 1 in floating-point, `f32` format. 
+/// The `level` must be from 0 to 1 in floating-point, `f32` format.
 /// Darkening by 80% would be represented by a `level` of 0.8
-/// 
+///
 /// # Example
 /// ```
 /// // For example to darken an image by 10% in the HSL colour space:
 /// use photon::color_spaces::darken_hsl;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// darken_hsl(&mut img, 0.1);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn darken_hsl(img: &mut PhotonImage, level: f32) {
     return hsl(img, "darken", level);
 }
 
 /// Darken the image's colours by a specified amount in the HSV colour space.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `level` - Float value from 0 to 1 representing the level to which to darken the image by.
-/// The `level` must be from 0 to 1 in floating-point, `f32` format. 
+/// The `level` must be from 0 to 1 in floating-point, `f32` format.
 /// Darkening by 80% would be represented by a `level` of 0.8
-/// 
+///
 /// # Example
 /// ```
 /// // For example to darken an image by 10% in the HSV colour space:
 /// use photon::color_spaces::darken_hsv;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// darken_hsv(&mut img, 0.1);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn darken_hsv(img: &mut PhotonImage, level: f32) {
     return hsv(img, "darken", level);
 }
 
 /// Desaturate the image by a specified amount in the HSV colour space.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `level` - Float value from 0 to 1 representing the level to which to desaturate the image by.
-/// The `level` must be from 0 to 1 in floating-point, `f32` format. 
+/// The `level` must be from 0 to 1 in floating-point, `f32` format.
 /// Desaturating by 80% would be represented by a `level` of 0.8
-/// 
+///
 /// # Example
 /// ```
 /// // For example to desaturate an image by 10% in the HSV colour space:
 /// use photon::color_spaces::desaturate_hsv;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/mountains.PNG");
-/// 
+///
 /// desaturate_hsv(&mut img, 0.1);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn desaturate_hsv(img: &mut PhotonImage, level: f32) {
     return hsv(img, "desaturate", level);
 }
 
 /// Desaturate the image by a specified amount in the HSL colour space.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `level` - Float value from 0 to 1 representing the level to which to desaturate the image by.
-/// The `level` must be from 0 to 1 in floating-point, `f32` format. 
+/// The `level` must be from 0 to 1 in floating-point, `f32` format.
 /// Desaturating by 80% would be represented by a `level` of 0.8
-/// 
+///
 /// # Example
 /// ```
 /// // For example to desaturate an image by 10% in the LCh colour space:
 /// use photon::color_spaces::desaturate_hsl;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// desaturate_hsl(&mut img, 0.1);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn desaturate_hsl(img: &mut PhotonImage, level: f32) {
     return hsl(img, "desaturate", level);
 }
 
 /// Desaturate the image by a specified amount in the LCh colour space.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `level` - Float value from 0 to 1 representing the level to which to desaturate the image by.
-/// The `level` must be from 0 to 1 in floating-point, `f32` format. 
+/// The `level` must be from 0 to 1 in floating-point, `f32` format.
 /// Desaturating by 80% would be represented by a `level` of 0.8
-/// 
+///
 /// # Example
 /// ```
 /// // For example to desaturate an image by 10% in the LCh colour space:
 /// use photon::color_spaces::desaturate_lch;
-/// 
+///
 /// // Open the image. A PhotonImage is returned.
 /// let img: PhotonImage = open_image("images/flowers.PNG");
-/// 
+///
 /// desaturate_lch(&mut img, 0.1);
-/// ``` 
+/// ```
 #[wasm_bindgen]
 pub fn desaturate_lch(img: &mut PhotonImage, level: f32) {
     return lch(img, "desaturate", level);
@@ -590,9 +605,11 @@ pub fn mix_with_colour(photon_image: &mut PhotonImage, mix_colour: Rgb, opacity:
             let g_value = mix_green_offset + (px.data[1] as f32) * factor;
             let b_value = mix_blue_offset + (px.data[2] as f32) * factor;
             let alpha = px.data[3];
-            img.put_pixel(x, y, image::Rgba (
-                    [r_value as u8, g_value as u8, b_value as u8, alpha]
-            ));
+            img.put_pixel(
+                x,
+                y,
+                image::Rgba([r_value as u8, g_value as u8, b_value as u8, alpha]),
+            );
         }
     }
     photon_image.raw_pixels = img.to_vec();
@@ -609,7 +626,7 @@ pub fn mix_with_colour(photon_image: &mut PhotonImage, mix_colour: Rgb, opacity:
 
 //             // Reference colour to compare the current pixel's colour to
 //             let lab: Lab = Srgb::new(ref_color.r as f32 / 255.0, ref_color.g as f32 / 255.0, ref_color.b as f32 / 255.0).into();
-      
+
 //             // Convert the current pixel's colour to the l*a*b colour space
 //             let r_val: f32 = px.data[0] as f32 / 255.0;
 //             let g_val: f32 = px.data[1] as f32 / 255.0;
@@ -622,7 +639,7 @@ pub fn mix_with_colour(photon_image: &mut PhotonImage, mix_colour: Rgb, opacity:
 //                 let newr = (((new_color.r - ref_color.r) as f32) * fraction + new_color.r as f32) as u8;
 //                 let newg = (((new_color.g - ref_color.g) as f32) * fraction + new_color.g as f32) as u8;
 //                 let newb = (((new_color.b - ref_color.b) as f32) * fraction + new_color.b as f32) as u8;
-            
+
 //                 img.put_pixel(x, y, image::Rgba([newr, newg, newb, 255]));
 //             }
 //         }
@@ -649,12 +666,12 @@ pub fn mix_with_colour(photon_image: &mut PhotonImage, mix_colour: Rgb, opacity:
 //                 else {
 //                     colour_to_cspace = Lch::from(color);
 //                 }
-            
+
 //                 let new_color  = match mode {
 //                     // Match a single value
 //                     "desaturate" => colour_to_cspace.desaturate(amt),
 //                     "saturate" => colour_to_cspace.saturate(amt),
-//                     "lighten" => colour_to_cspace.lighten(amt), 
+//                     "lighten" => colour_to_cspace.lighten(amt),
 //                     "darken" => colour_to_cspace.darken(amt),
 //                     _ => colour_to_cspace.saturate(amt),
 //                 };

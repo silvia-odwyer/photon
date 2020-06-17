@@ -1,7 +1,7 @@
 extern crate photon_rs;
-use photon_rs::native::{open_image, save_image};
 use photon_rs::base64_to_image;
 use photon_rs::helpers;
+use photon_rs::native::{open_image, save_image};
 
 fn main() {
     // Open the image (a PhotonImage is returned)
@@ -11,10 +11,12 @@ fn main() {
     photon_rs::channels::alter_red_channel(&mut img, 40);
 
     let output_img_path = "raw_image.jpg";
-    
 
     // Write file to filesystem.
-    save_image(img, output_img_path);    
+    save_image(img, output_img_path);
 
-    println!("Saved image: {}. Please check this directory for the image.", output_img_path);
+    println!(
+        "Saved image: {}. Please check this directory for the image.",
+        output_img_path
+    );
 }

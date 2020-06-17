@@ -4,20 +4,20 @@ extern crate image;
 use image::{GenericImageView, ImageBuffer};
 extern crate wasm_bindgen;
 use crate::helpers;
-use crate::{PhotonImage};
+use crate::PhotonImage;
+use image::RgbaImage;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use image::RgbaImage;
 // use std::f64::consts::PI;
 // use std::f64;
-use web_sys::{ImageData, HtmlCanvasElement};
 use wasm_bindgen::Clamped;
+use web_sys::{HtmlCanvasElement, ImageData};
 
 /// Crop an image.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// ## Example
 ///
 /// ```
@@ -30,7 +30,13 @@ use wasm_bindgen::Clamped;
 /// ```
 #[cfg(not(target_arch = "wasm32"))]
 #[wasm_bindgen]
-pub fn crop(photon_image: &mut PhotonImage, x1: u32, y1: u32, x2: u32, y2: u32) -> PhotonImage {
+pub fn crop(
+    photon_image: &mut PhotonImage,
+    x1: u32,
+    y1: u32,
+    x2: u32,
+    y2: u32,
+) -> PhotonImage {
     let img = helpers::dyn_image_from_raw(&photon_image);
 
     let mut cropped_img: RgbaImage = ImageBuffer::new(x2 - x1, y2 - y1);
@@ -39,13 +45,16 @@ pub fn crop(photon_image: &mut PhotonImage, x1: u32, y1: u32, x2: u32, y2: u32) 
         for y in 0..cropped_img.height() {
             let px = img.get_pixel(x, y);
             cropped_img.put_pixel(x, y, px);
-
         }
     }
     let dynimage = image::ImageRgba8(cropped_img);
     let raw_pixels = dynimage.raw_pixels();
-    let cropped_photon_img = PhotonImage { raw_pixels: raw_pixels, width: dynimage.width(), height: dynimage.height()};
-    return cropped_photon_img
+    let cropped_photon_img = PhotonImage {
+        raw_pixels: raw_pixels,
+        width: dynimage.width(),
+        height: dynimage.height(),
+    };
+    return cropped_photon_img;
 }
 
 // #[cfg(target_arch = "wasm32")]
@@ -77,10 +86,10 @@ pub fn crop(photon_image: &mut PhotonImage, x1: u32, y1: u32, x2: u32, y2: u32) 
 // }
 
 /// Flip an image horizontally.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// ## Example
 ///
 /// ```
@@ -111,10 +120,10 @@ pub fn fliph(photon_image: &mut PhotonImage) {
 }
 
 /// Flip an image vertically.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// ## Example
 ///
 /// ```
@@ -155,18 +164,20 @@ pub enum SamplingFilter {
     Lanczos3 = 5,
 }
 
-fn filter_type_from_sampling_filter(sampling_filter: SamplingFilter) -> image::FilterType {
+fn filter_type_from_sampling_filter(
+    sampling_filter: SamplingFilter,
+) -> image::FilterType {
     match sampling_filter {
         SamplingFilter::Nearest => image::FilterType::Nearest,
         SamplingFilter::Triangle => image::FilterType::Triangle,
         SamplingFilter::CatmullRom => image::FilterType::CatmullRom,
         SamplingFilter::Gaussian => image::FilterType::Gaussian,
-        SamplingFilter::Lanczos3 => image::FilterType::Lanczos3
+        SamplingFilter::Lanczos3 => image::FilterType::Lanczos3,
     }
 }
 
 /// Resize an image on the web.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `width` - New width.
@@ -174,26 +185,44 @@ fn filter_type_from_sampling_filter(sampling_filter: SamplingFilter) -> image::F
 /// * `sampling_filter` - Nearest = 1, Triangle = 2, CatmullRom = 3, Gaussian = 4, Lanczos3 = 5
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
-pub fn resizeimg_browser(photon_img: &PhotonImage, width: u32, height: u32, sampling_filter: SamplingFilter) -> HtmlCanvasElement {
+pub fn resizeimg_browser(
+    photon_img: &PhotonImage,
+    width: u32,
+    height: u32,
+    sampling_filter: SamplingFilter,
+) -> HtmlCanvasElement {
     let sampling_filter = filter_type_from_sampling_filter(sampling_filter);
     let dyn_img = helpers::dyn_image_from_raw(&photon_img);
-    let resized_img = image::ImageRgba8(image::imageops::resize(&dyn_img, width, height, sampling_filter));
+    let resized_img = image::ImageRgba8(image::imageops::resize(
+        &dyn_img,
+        width,
+        height,
+        sampling_filter,
+    ));
 
     // TODO Check if in browser or Node.JS
     let document = web_sys::window().unwrap().document().unwrap();
     let canvas = document
-        .create_element("canvas").unwrap()
-        .dyn_into::<web_sys::HtmlCanvasElement>().unwrap();
+        .create_element("canvas")
+        .unwrap()
+        .dyn_into::<web_sys::HtmlCanvasElement>()
+        .unwrap();
 
     canvas.set_width(resized_img.width());
     canvas.set_height(resized_img.height());
 
-    let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut resized_img.raw_pixels()), canvas.width(), canvas.height());
+    let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(
+        Clamped(&mut resized_img.raw_pixels()),
+        canvas.width(),
+        canvas.height(),
+    );
 
     let ctx = canvas
-    .get_context("2d").unwrap()
-    .unwrap()
-    .dyn_into::<web_sys::CanvasRenderingContext2d>().unwrap();
+        .get_context("2d")
+        .unwrap()
+        .unwrap()
+        .dyn_into::<web_sys::CanvasRenderingContext2d>()
+        .unwrap();
 
     // Place the new imagedata onto the canvas
     ctx.put_image_data(&new_img_data.unwrap(), 0.0, 0.0);
@@ -202,18 +231,32 @@ pub fn resizeimg_browser(photon_img: &PhotonImage, width: u32, height: u32, samp
 }
 
 /// Resize an image.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
 /// * `width` - New width.
 /// * `height` - New height.
 /// * `sampling_filter` - Nearest = 1, Triangle = 2, CatmullRom = 3, Gaussian = 4, Lanczos3 = 5
 #[cfg(not(target_arch = "wasm32"))]
-pub fn resize(photon_img: &PhotonImage, width: u32, height: u32, sampling_filter: SamplingFilter) -> PhotonImage {
+pub fn resize(
+    photon_img: &PhotonImage,
+    width: u32,
+    height: u32,
+    sampling_filter: SamplingFilter,
+) -> PhotonImage {
     let sampling_filter = filter_type_from_sampling_filter(sampling_filter);
 
     let dyn_img = helpers::dyn_image_from_raw(&photon_img);
-    let resized_img = image::ImageRgba8(image::imageops::resize(&dyn_img, width, height, sampling_filter));
+    let resized_img = image::ImageRgba8(image::imageops::resize(
+        &dyn_img,
+        width,
+        height,
+        sampling_filter,
+    ));
 
-    return PhotonImage{ raw_pixels: resized_img.raw_pixels(), width: resized_img.width(), height: resized_img.height()}
+    return PhotonImage {
+        raw_pixels: resized_img.raw_pixels(),
+        width: resized_img.width(),
+        height: resized_img.height(),
+    };
 }

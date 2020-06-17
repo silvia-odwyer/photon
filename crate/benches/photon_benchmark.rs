@@ -1,17 +1,15 @@
-use criterion::{black_box, criterion_group, criterion_main, Criterion, BenchmarkId};
-use photon_rs::PhotonImage;
+use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
+use photon_rs::channels::alter_red_channel;
+use photon_rs::conv::gaussian_blur;
 use photon_rs::native::{open_image, save_image};
-use photon_rs::conv::{gaussian_blur};
-use photon_rs::channels::{alter_red_channel};
+use photon_rs::PhotonImage;
 
 fn gaussian_blur_3x3(img: &mut PhotonImage) {
     gaussian_blur(img, 3);
 }
 
-
 fn criterion_benchmark(c: &mut Criterion) {
-    c.bench_function("invert_image", 
-        |b| b.iter(|| invert_image()));
+    c.bench_function("invert_image", |b| b.iter(|| invert_image()));
 }
 
 fn invert_image() {
@@ -25,7 +23,6 @@ fn invert_image() {
 
     // Write to filesystem
     save_image(img, output_img_path);
-
 }
 
 fn alter_sample_size() -> Criterion {

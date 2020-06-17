@@ -7,13 +7,13 @@ extern crate imageproc;
 use imageproc::drawing::draw_filled_rect_mut;
 use imageproc::rect::Rect;
 extern crate rusttype;
-use crate::{PhotonImage, Rgb};
 use crate::helpers;
+use crate::{PhotonImage, Rgb};
+use image::Rgba;
 use wasm_bindgen::prelude::*;
-use image::{Rgba};
 
-/// Adds an offset to the image by a certain number of pixels. 
-/// 
+/// Adds an offset to the image by a certain number of pixels.
+///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
 /// * `offset` - The offset is added to the pixels in the image.  
@@ -35,14 +35,11 @@ pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32)
 
     for x in 0..width - 10 {
         for y in 0..height - 10 {
-
             let mut px = img.get_pixel(x, y);
 
-            if x + offset < width - 1 && y + offset < height - 1  {
-
-            let offset_px = img.get_pixel(x + offset, y + offset);
-            px.data[channel_index] = offset_px.data[channel_index];
-                
+            if x + offset < width - 1 && y + offset < height - 1 {
+                let offset_px = img.get_pixel(x + offset, y + offset);
+                px.data[channel_index] = offset_px.data[channel_index];
             }
             img.put_pixel(x, y, px);
         }
@@ -51,11 +48,11 @@ pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32)
     photon_image.raw_pixels = raw_pixels;
 }
 
-/// Adds an offset to the red channel by a certain number of pixels. 
-/// 
+/// Adds an offset to the red channel by a certain number of pixels.
+///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
-/// * `offset` - The offset you want to move the red channel by. 
+/// * `offset` - The offset you want to move the red channel by.
 /// # Example
 ///
 /// ```
@@ -68,8 +65,8 @@ pub fn offset_red(img: &mut PhotonImage, offset_amt: u32) {
     offset(img, 0, offset_amt)
 }
 
-/// Adds an offset to the green channel by a certain number of pixels. 
-/// 
+/// Adds an offset to the green channel by a certain number of pixels.
+///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
 /// * `offset` - The offset you want to move the green channel by.
@@ -85,14 +82,14 @@ pub fn offset_green(img: &mut PhotonImage, offset_amt: u32) {
     offset(img, 1, offset_amt)
 }
 
-/// Adds an offset to the blue channel by a certain number of pixels. 
-/// 
+/// Adds an offset to the blue channel by a certain number of pixels.
+///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
 /// * `offset_amt` - The offset you want to move the blue channel by.
 /// # Example
 /// // For example, to add an offset to the green channel by 40 pixels.
-/// 
+///
 /// ```
 /// use photon::effects;
 /// photon::effects::offset_blue(img, 40);
@@ -103,7 +100,7 @@ pub fn offset_blue(img: &mut PhotonImage, offset_amt: u32) {
 }
 
 /// Adds multiple offsets to the image by a certain number of pixels (on two channels).
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
 /// * `offset` - The offset is added to the pixels in the image.  
@@ -115,7 +112,12 @@ pub fn offset_blue(img: &mut PhotonImage, offset_amt: u32) {
 /// photon::effects::multiple_offsets(img, 30, 0, 2);
 /// ```
 #[wasm_bindgen]
-pub fn multiple_offsets(mut photon_image: &mut PhotonImage, offset: u32, channel_index: usize, channel_index2: usize) {
+pub fn multiple_offsets(
+    mut photon_image: &mut PhotonImage,
+    offset: u32,
+    channel_index: usize,
+    channel_index2: usize,
+) {
     if channel_index > 2 {
         panic!("Invalid channel index passed. Channel1 must be equal to 0, 1, or 2.");
     }
@@ -127,21 +129,18 @@ pub fn multiple_offsets(mut photon_image: &mut PhotonImage, offset: u32, channel
 
     for x in 0..width {
         for y in 0..height {
-
             let mut px = img.get_pixel(x, y);
 
-            if x + offset < width - 1 && y + offset < height - 1  {
-
+            if x + offset < width - 1 && y + offset < height - 1 {
                 let offset_px = img.get_pixel(x + offset, y);
 
                 px.data[channel_index] = offset_px.data[channel_index];
-                
             }
-            
-            if x as i32 - offset as i32 > 0 && y as i32 - offset as i32 > 0  {
-                let offset_px2 = img.get_pixel(x - offset, y );
 
-                px.data[channel_index2] = offset_px2.data[channel_index2];                
+            if x as i32 - offset as i32 > 0 && y as i32 - offset as i32 > 0 {
+                let offset_px2 = img.get_pixel(x - offset, y);
+
+                px.data[channel_index2] = offset_px2.data[channel_index2];
             }
 
             img.put_pixel(x, y, px);
@@ -155,20 +154,26 @@ pub fn multiple_offsets(mut photon_image: &mut PhotonImage, offset: u32, channel
 pub fn halftone(mut photon_image: PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
-    
 
     for x in (0..width).step_by(2 as usize) {
         for y in (0..height).step_by(2 as usize) {
-
             let mut px1 = img.get_pixel(x, y);
             let mut px2 = img.get_pixel(x, y + 1);
             let mut px3 = img.get_pixel(x + 1, y);
             let mut px4 = img.get_pixel(x + 1, y + 1);
 
-            let gray1 = (px1[0] as f64 * 0.299) + (px1[1] as f64 * 0.587) + (px1[2] as f64 * 0.114);
-            let gray2 = (px2[0] as f64 * 0.299) + (px2[1] as f64 * 0.587) + (px2[2] as f64 * 0.114);
-            let gray3 = (px3[0] as f64 * 0.299) + (px3[1] as f64 * 0.587) + (px3[2] as f64 * 0.114);            
-            let gray4 = (px4[0] as f64 * 0.299) + (px4[1] as f64 * 0.587) + (px4[2] as f64 * 0.114);
+            let gray1 = (px1[0] as f64 * 0.299)
+                + (px1[1] as f64 * 0.587)
+                + (px1[2] as f64 * 0.114);
+            let gray2 = (px2[0] as f64 * 0.299)
+                + (px2[1] as f64 * 0.587)
+                + (px2[2] as f64 * 0.114);
+            let gray3 = (px3[0] as f64 * 0.299)
+                + (px3[1] as f64 * 0.587)
+                + (px3[2] as f64 * 0.114);
+            let gray4 = (px4[0] as f64 * 0.299)
+                + (px4[1] as f64 * 0.587)
+                + (px4[2] as f64 * 0.114);
 
             let sat = (gray1 + gray2 + gray3 + gray4) / 4.0;
 
@@ -188,10 +193,7 @@ pub fn halftone(mut photon_image: PhotonImage) {
                 px4.data[0] = 255;
                 px4.data[1] = 255;
                 px4.data[2] = 255;
-
-            }
-
-            else if sat > 159.0 {
+            } else if sat > 159.0 {
                 px1.data[0] = 255;
                 px1.data[1] = 255;
                 px1.data[2] = 255;
@@ -207,9 +209,7 @@ pub fn halftone(mut photon_image: PhotonImage) {
                 px4.data[0] = 255;
                 px4.data[1] = 255;
                 px4.data[2] = 255;
-            }
-
-            else if sat > 95.0 {
+            } else if sat > 95.0 {
                 px1.data[0] = 255;
                 px1.data[1] = 255;
                 px1.data[2] = 255;
@@ -225,9 +225,7 @@ pub fn halftone(mut photon_image: PhotonImage) {
                 px4.data[0] = 255;
                 px4.data[1] = 255;
                 px4.data[2] = 255;
-            }
-
-            else if sat > 32.0 {
+            } else if sat > 32.0 {
                 px1.data[0] = 0;
                 px1.data[1] = 0;
                 px1.data[2] = 0;
@@ -238,22 +236,20 @@ pub fn halftone(mut photon_image: PhotonImage) {
 
                 px3.data[0] = 0;
                 px3.data[1] = 0;
-                px3.data[2] = 0;                
-                
+                px3.data[2] = 0;
+
                 px4.data[0] = 0;
                 px4.data[1] = 0;
                 px4.data[2] = 0;
-            }
-
-            else {
+            } else {
                 px1.data[0] = 0;
                 px1.data[1] = 0;
-                px1.data[2] = 0;                
-                
+                px1.data[2] = 0;
+
                 px2.data[0] = 0;
                 px2.data[1] = 0;
-                px2.data[2] = 0;                
-                
+                px2.data[2] = 0;
+
                 px3.data[0] = 0;
                 px3.data[1] = 0;
                 px3.data[2] = 0;
@@ -263,17 +259,16 @@ pub fn halftone(mut photon_image: PhotonImage) {
                 px4.data[2] = 0;
             }
 
-
             img.put_pixel(x, y, px1);
             // img.put_pixel(x, y + 1, px2);
-         }
+        }
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
 }
 
 /// Reduces an image to the primary colours.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
 /// # Example
@@ -288,9 +283,8 @@ pub fn primary(mut photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
-    for x in 0..width{
+    for x in 0..width {
         for y in 0..height {
-
             let mut px = img.get_pixel(x, y);
 
             let mut r_val = px.data[0];
@@ -299,23 +293,19 @@ pub fn primary(mut photon_image: &mut PhotonImage) {
 
             if r_val > 128 {
                 r_val = 255;
-            }
-
-            else {
+            } else {
                 r_val = 0;
             }
 
             if g_val > 128 {
                 g_val = 255;
-            }
-            else {
+            } else {
                 g_val = 0;
             }
 
             if b_val > 128 {
                 g_val = 255;
-            }
-            else {
+            } else {
                 b_val = 0;
             }
 
@@ -324,14 +314,14 @@ pub fn primary(mut photon_image: &mut PhotonImage) {
             px.data[2] = b_val;
 
             img.put_pixel(x, y, px);
-         }
+        }
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
 }
 
 /// Colorizes the green channels of the image.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
 /// # Example
@@ -350,11 +340,20 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
     for x in 0..width {
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
-            let px_as_rgb = Rgb{r: px.data[0], g: px.data[1], b: px.data[2]};
+            let px_as_rgb = Rgb {
+                r: px.data[0],
+                g: px.data[1],
+                b: px.data[2],
+            };
 
-            let baseline_color = Rgb{r: 0, g: 255, b: 255};
+            let baseline_color = Rgb {
+                r: 0,
+                g: 255,
+                b: 255,
+            };
 
-            let square_distance = crate::helpers::square_distance(baseline_color, px_as_rgb);
+            let square_distance =
+                crate::helpers::square_distance(baseline_color, px_as_rgb);
 
             let mut r = px.data[0] as f32;
             let mut g = px.data[1] as f32;
@@ -393,7 +392,7 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
 //                 min_intensity = cmp::min(min_intensity, intensity);
 //                 max_intensity = cmp::max(max_intensity, intensity);
 //             }
-            
+
 //         }
 //     }
 
@@ -427,7 +426,7 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
 // }
 
 /// Applies a solarizing effect to an image.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
 /// # Example
@@ -447,11 +446,11 @@ pub fn solarize(mut photon_image: &mut PhotonImage) {
         if 200 as i32 - r_val as i32 > 0 {
             photon_image.raw_pixels[i] = 200 - r_val;
         }
-    };
+    }
 }
 
 /// Applies a solarizing effect to an image and returns the resulting PhotonImage.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
 /// # Example
@@ -475,13 +474,16 @@ pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
             img.put_pixel(x, y, px);
         }
     }
-    let new_photon_image = PhotonImage { raw_pixels: img.raw_pixels(), width: img.width(), height: img.height()};
-    return new_photon_image
+    let new_photon_image = PhotonImage {
+        raw_pixels: img.raw_pixels(),
+        width: img.width(),
+        height: img.height(),
+    };
+    return new_photon_image;
 }
 
-
 /// Increase the brightness of an image by a factor.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
 /// * `brightness` - A u8 to add to the brightness.
@@ -500,23 +502,18 @@ pub fn inc_brightness(mut photon_image: &mut PhotonImage, brightness: u8) {
             let mut px = img.get_pixel(x, y);
             if px.data[0] <= 255 - brightness {
                 px.data[0] += brightness;
-            }
-            else {
+            } else {
                 px.data[0] = 255;
-            }            
+            }
             if px.data[1] <= 255 - brightness {
                 px.data[1] += brightness;
-            }
-
-            else {
+            } else {
                 px.data[1] = 255
             }
 
             if px.data[2] <= 255 - brightness {
                 px.data[2] += brightness;
-            }
-
-            else {
+            } else {
                 px.data[2] = 255
             }
 
@@ -547,7 +544,8 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
     // Some references:
     // https://math.stackexchange.com/questions/906240/algorithms-to-increase-or-decrease-the-contrast-of-an-image
     // https://www.dfstudios.co.uk/articles/programming/image-programming-algorithms/image-processing-algorithms-part-5-contrast-adjustment/
-    let factor = (259.0 * (clamped_contrast + 255.0)) / (255.0 * (259.0 - clamped_contrast));
+    let factor =
+        (259.0 * (clamped_contrast + 255.0)) / (255.0 * (259.0 - clamped_contrast));
     let mut lookup_table: Vec<u8> = vec![0; 256];
     let offset = -128.0 * factor + 128.0;
     for i in 0..256 {
@@ -568,7 +566,7 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
 }
 
 /// Tint an image by adding an offset to averaged RGB channel values.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
 /// * `r_offset` - The amount the  R channel should be incremented by.
@@ -580,20 +578,38 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
 /// // For example, to tint an image of type `PhotonImage`:
 /// photon::tint(img, 10, 20, 15);
 /// ```
-/// 
+///
 #[wasm_bindgen]
-pub fn tint(mut photon_image: &mut PhotonImage, r_offset: u32, g_offset: u32, b_offset: u32) {
+pub fn tint(
+    mut photon_image: &mut PhotonImage,
+    r_offset: u32,
+    g_offset: u32,
+    b_offset: u32,
+) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
     for x in 0..width {
         for y in 0..height {
             let mut px = img.get_pixel(x, y);
-            let (r_val, g_val, b_val) = (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
-            
-            px.data[0] = if r_val as u32 + r_offset < 255 { r_val as u8 + r_offset as u8} else { 255 };
-            px.data[1] = if g_val as u32 + g_offset < 255 { g_val as u8 + g_offset as u8} else { 255 };
-            px.data[2] = if b_val as u32 + b_offset < 255 { b_val as u8 + b_offset as u8} else { 255 };
+            let (r_val, g_val, b_val) =
+                (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
+
+            px.data[0] = if r_val as u32 + r_offset < 255 {
+                r_val as u8 + r_offset as u8
+            } else {
+                255
+            };
+            px.data[1] = if g_val as u32 + g_offset < 255 {
+                g_val as u8 + g_offset as u8
+            } else {
+                255
+            };
+            px.data[2] = if b_val as u32 + b_offset < 255 {
+                b_val as u8 + b_offset as u8
+            } else {
+                255
+            };
 
             img.put_pixel(x, y, px);
         }
@@ -601,7 +617,6 @@ pub fn tint(mut photon_image: &mut PhotonImage, r_offset: u32, g_offset: u32, b_
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
 }
-
 
 /// Horizontal strips. Divide an image into a series of equal-height strips, for an artistic effect.
 #[wasm_bindgen]
@@ -611,16 +626,24 @@ pub fn horizontal_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 
     let total_strips = (num_strips * 2) - 1;
     let height_strip = height / total_strips as u32;
-    let background_color = Rgb { r: 255, g: 255, b: 255};
+    let background_color = Rgb {
+        r: 255,
+        g: 255,
+        b: 255,
+    };
     let mut y_pos: u32 = 0;
     for i in 1..num_strips {
-
-        draw_filled_rect_mut(&mut img, 
-                        Rect::at(0, (y_pos + height_strip) as i32).of_size(width, height_strip), 
-                        Rgba([background_color.r, background_color.g, 
-                        background_color.b, 255u8]));
+        draw_filled_rect_mut(
+            &mut img,
+            Rect::at(0, (y_pos + height_strip) as i32).of_size(width, height_strip),
+            Rgba([
+                background_color.r,
+                background_color.g,
+                background_color.b,
+                255u8,
+            ]),
+        );
         y_pos = i as u32 * (height_strip * 2);
-
     }
 
     let raw_pixels = img.raw_pixels();
@@ -635,14 +658,23 @@ pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 
     let total_strips = (num_strips * 2) - 1;
     let width_strip = width / total_strips as u32;
-    let background_color = Rgb { r: 255, g: 255, b: 255};
+    let background_color = Rgb {
+        r: 255,
+        g: 255,
+        b: 255,
+    };
     let mut x_pos: u32 = 0;
     for i in 1..num_strips {
-
-        draw_filled_rect_mut(&mut img, 
-                        Rect::at((x_pos + width_strip) as i32, 0).of_size(width_strip, height), 
-                        Rgba([background_color.r, background_color.g, 
-                        background_color.b, 255u8]));
+        draw_filled_rect_mut(
+            &mut img,
+            Rect::at((x_pos + width_strip) as i32, 0).of_size(width_strip, height),
+            Rgba([
+                background_color.r,
+                background_color.g,
+                background_color.b,
+                255u8,
+            ]),
+        );
         x_pos = i as u32 * (width_strip * 2);
     }
 
@@ -660,7 +692,7 @@ pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 
 //     let end: i32 = 256 * 4;
 
-//     for i in (0..end).step_by(4){   
+//     for i in (0..end).step_by(4){
 //         let i: u8 = i as u8;
 //         let intensity_b = max_val - i;
 
@@ -672,15 +704,13 @@ pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 //         r_val = (i * color_a.get_red() + intensity_b * color_b.get_red()) / max_val;
 //         println!("r_val {}", r_val);
 //         gradient_map.push(Rgb {
-//             r: (256 - (i / 4) * color_a.get_red() + (i / 4) * color_b.r) / 256 , 
+//             r: (256 - (i / 4) * color_a.get_red() + (i / 4) * color_b.r) / 256 ,
 //             g: (i * color_a.get_green() + intensity_b * color_b.get_green()) / max_val ,
-//             b: (i * color_a.get_blue() + intensity_b * color_b.get_blue()) / max_val 
+//             b: (i * color_a.get_blue() + intensity_b * color_b.get_blue()) / max_val
 //         });
 
 //     }
 //     println!("{:?}", gradient_map);
-
-
 
 //     return gradient_map;
 // }
@@ -698,7 +728,7 @@ pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 //             let r = px.data[0];
 //             let g = px.data[1];
 //             let b = px.data[2];
-            
+
 //             px.data[0] = gradient_map[r as usize].r as u8;
 //             px.data[1] = gradient_map[g as usize].g as u8;
 //             px.data[2] = gradient_map[b as usize].b as u8;
