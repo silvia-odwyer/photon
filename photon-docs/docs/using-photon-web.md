@@ -44,7 +44,7 @@ See the sample code below.
         photon.filter(image, "radio");
         
         // Place the modified image back on the canvas
-        photon.putImageData(canvas, ctx, rust_image);
+        photon.putImageData(canvas, ctx, image);
     }
 
 ### Apply Multiple Effects 
@@ -72,5 +72,5 @@ For example, to add a "radio" filter effect, then convert to greyscale, and fina
         photon.alter_red_channel(image, 20);
         
         // Place the pixels back on the canvas
-        photon.putImageData(canvas, ctx, rust_image);
+        photon.putImageData(canvas, ctx, image);
     }

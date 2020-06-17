@@ -19,7 +19,7 @@ Add Photon as a dependency to your project:
 
     #!toml hl_lines="8"
     [dependencies]
-    photon_rs = "0.1.0"
+    photon_rs="0.2.0"
 
 Your Cargo.toml should look like this:
 
@@ -34,7 +34,7 @@ Your Cargo.toml should look like this:
     # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
     [dependencies]
-    photon=1.2
+    photon_rs="0.2.0"
 
 
 ## Writing The Program
@@ -45,7 +45,7 @@ Next up, open your `bin.rs` file. You'll find a sample function in there, remove
 To open an image:
 
 ##### bin.rs
-    #!rust hl_lines="4"
+    #!rust hl_lines="5"
     extern crate photon_rs;
     use photon_rs::native::{open_image};
 
@@ -116,12 +116,14 @@ If you'd like to find out how long it takes to process your image, you can add s
 Add the `time` dependency to your Cargo.toml:
 
 ###### Cargo.toml
+```
 [dependencies]
 time="0.2.1"
+```
 
 Then in your code:
 
-    #!rust hl_lines="11"
+    #!rust hl_lines="10"
     extern crate photon_rs;
     use photon_rs::native::{open_image, save_image};
     use time::{PreciseTime};

@@ -1,7 +1,12 @@
 # Using Photon Natively
 
 ## Prerequisites
-Ensure you have added Photon as a dependency to your Cargo.toml project. 
+Add Photon as a dependency to your project's Cargo.toml:
+
+##### Cargo.toml
+```
+photon-rs = "0.2.0"
+```
 
 ## Open an Image 
 To open an image:
@@ -22,7 +27,7 @@ To apply a filter effect to the opened image, we need to pass in our image and a
 
 Notice that we're passing a mutable reference to the image. This allows the function to modify the image, rather than return a new image.
 There are a variety of filter effects we can pass. Once you get the program compiled, try passing in "radio" instead of the filter above.
-For a full list, see the documentation. 
+For a full list, see the [documentation](https://docs.rs/photon-rs). 
 
 ## Write to the Filesystem
 Then, to write the image to the filesystem:
@@ -33,19 +38,19 @@ Then, to write the image to the filesystem:
 Notice here we're saving it as a JPG image, but we could also save it as a PNG or a different output format, by including a different file extension.
 
 ## Sample Program
-This program increases the red channel of the image, and then applies a sepia effect to the image.
+This program adds a sepia effect to an image:
 
-    #!rust hl_lines="11"
+    #!rust hl_lines="10"
     extern crate photon_rs;
-    use photon_rs::{filters, channels};
+    use photon_rs::{monochrome};
     use photon_rs::native::{open_image, save_image};
 
     fn main() {
         // Open the image (a PhotonImage is returned)
         let mut img = open_image("image.jpg");
 
-        // Apply a filter to the pixels
-        channels::alter_red_channel(&mut img, 10);
-        filters::filter(&mut img, "sepia");
+        // Apply a sepia effect to the image.
+        monochrome::sepia(&mut img);
+
         save_image(img, "raw_image.png");    
     }
