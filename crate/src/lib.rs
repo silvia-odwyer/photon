@@ -1,19 +1,19 @@
-//! A high-performance image processing library, available for use both natively and on the web. 
-//! 
+//! A high-performance image processing library, available for use both natively and on the web.
+//!
 //! #### Functions
 //! 96 functions are available, including:
 //! - **Transformations**: Resize, crop, and flip images.
-//! - **Image correction**: Hue rotation, sharpening, brightness adjustment, adjusting saturation, lightening/darkening all within various colour spaces. 
-//! - **Convolutions**: Sobel filters, blurs, Laplace effects, edge detection, etc., 
+//! - **Image correction**: Hue rotation, sharpening, brightness adjustment, adjusting saturation, lightening/darkening all within various colour spaces.
+//! - **Convolutions**: Sobel filters, blurs, Laplace effects, edge detection, etc.,
 //! - **Channel manipulation**: Increasing/decreasing RGB channel values, swapping channels, removing channels, etc.
 //! - **Monochrome effects**: Duotoning, greyscaling of various forms, thresholding, sepia, averaging RGB values
-//! - **Colour manipulation**: Work with the image in various colour spaces such as HSL, LCh, and sRGB, and adjust the colours accordingly. 
-//! - **Filters**: Over 30 pre-set filters available, incorporating various effects and transformations. 
+//! - **Colour manipulation**: Work with the image in various colour spaces such as HSL, LCh, and sRGB, and adjust the colours accordingly.
+//! - **Filters**: Over 30 pre-set filters available, incorporating various effects and transformations.
 //! - **Text**: Apply text to imagery in artistic ways, or to watermark, etc.,
-//! - **Watermarking**: Watermark images in multiple formats. 
-//! - **Blending**: Blend images together using 10 different techniques, change image backgrounds. 
-//! 
-//! ## Example 
+//! - **Watermarking**: Watermark images in multiple formats.
+//! - **Blending**: Blend images together using 10 different techniques, change image backgrounds.
+//!
+//! ## Example
 //! ```rust
 //! extern crate photon_rs;
 //! use photon_rs::{channels};
@@ -26,24 +26,24 @@
 //!     save_image(img, "raw_image.png");    
 //! }
 //! ```
-//! 
+//!
 //! This crate contains built-in preset functions, which provide default image processing functionality, as well as functions
 //! that allow for direct, low-level access to channel manipulation.
 //! To view a full demo of filtered imagery, visit the [official website](https://silvia-odwyer.github.io/photon).
-//! 
+//!
 //! ### WebAssembly Use
-//! To allow for universal communication between the core Rust library and WebAssembly, the functions have been generalised to allow for both native and in-browser use. 
+//! To allow for universal communication between the core Rust library and WebAssembly, the functions have been generalised to allow for both native and in-browser use.
 //! [Check out the official guide](https://silvia-odwyer.github.io/photon/guide/) on how to get started with Photon on the web.
-//! 
+//!
 //! ### Live Demo
 //! View the [official demo of WASM in action](https://silvia-odwyer.github.io/photon).
 
-use wasm_bindgen::prelude::*;
-use web_sys::{CanvasRenderingContext2d, ImageData, HtmlCanvasElement};
-use wasm_bindgen::Clamped;
-use image::{GenericImage, GenericImageView};
 use base64::{decode, encode};
-use serde::{Serialize, Deserialize};
+use image::{GenericImage, GenericImageView};
+use serde::{Deserialize, Serialize};
+use wasm_bindgen::prelude::*;
+use wasm_bindgen::Clamped;
+use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, ImageData};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -52,21 +52,25 @@ use serde::{Serialize, Deserialize};
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 /// Provides the image's height, width, and contains the image's raw pixels.
-/// For use when communicating between JS and WASM, and also natively. 
+/// For use when communicating between JS and WASM, and also natively.
 #[wasm_bindgen]
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct PhotonImage {
     raw_pixels: Vec<u8>,
-    width: u32, 
+    width: u32,
     height: u32,
 }
 
 #[wasm_bindgen]
-impl PhotonImage {   
+impl PhotonImage {
     #[wasm_bindgen(constructor)]
     /// Create a new PhotonImage from a Vec of u8s, which represent raw pixels.
     pub fn new(raw_pixels: Vec<u8>, width: u32, height: u32) -> PhotonImage {
-        return PhotonImage { raw_pixels: raw_pixels, width: width, height: height};
+        return PhotonImage {
+            raw_pixels: raw_pixels,
+            width: width,
+            height: height,
+        };
     }
 
     /// Create a new PhotonImage from a base64 string.
@@ -76,14 +80,18 @@ impl PhotonImage {
     }
 
     /// Create a new PhotonImage from a byteslice.
-    pub fn new_from_byteslice(vec: Vec<u8>) -> PhotonImage {    
+    pub fn new_from_byteslice(vec: Vec<u8>) -> PhotonImage {
         let slice = vec.as_slice();
 
         let img = image::load_from_memory(slice).unwrap();
-        
+
         let raw_pixels = img.to_rgba().to_vec();
-        
-        return PhotonImage { raw_pixels: raw_pixels, width: img.width(), height: img.height()};
+
+        return PhotonImage {
+            raw_pixels: raw_pixels,
+            width: img.width(),
+            height: img.height(),
+        };
     }
 
     /// Get the width of the PhotonImage.
@@ -117,7 +125,12 @@ impl PhotonImage {
 
     /// Convert the PhotonImage's raw pixels to JS-compatible ImageData.
     pub fn get_image_data(&mut self) -> ImageData {
-        let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut self.raw_pixels), self.width, self.height).unwrap();
+        let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(
+            Clamped(&mut self.raw_pixels),
+            self.width,
+            self.height,
+        )
+        .unwrap();
         new_img_data
     }
 
@@ -138,7 +151,11 @@ impl From<ImageData> for PhotonImage {
         let width = imgdata.width();
         let height = imgdata.height();
         let raw_pixels = to_raw_pixels(imgdata);
-        return PhotonImage {raw_pixels: raw_pixels, width: width, height: height}
+        return PhotonImage {
+            raw_pixels: raw_pixels,
+            width: width,
+            height: height,
+        };
     }
 }
 
@@ -148,7 +165,7 @@ impl From<ImageData> for PhotonImage {
 pub struct Rgb {
     r: u8,
     g: u8,
-    b: u8
+    b: u8,
 }
 
 #[wasm_bindgen]
@@ -156,7 +173,7 @@ impl Rgb {
     #[wasm_bindgen(constructor)]
     /// Create a new RGB struct.
     pub fn new(r: u8, g: u8, b: u8) -> Rgb {
-        return Rgb {r: r, g: g, b: b}
+        return Rgb { r: r, g: g, b: b };
     }
 
     /// Set the Red value.
@@ -206,12 +223,16 @@ pub fn run() -> Result<(), JsValue> {
     set_panic_hook();
 
     let window = web_sys::window().expect("No Window found, should have a Window");
-    let document = window.document().expect("No Document found, should have a Document");
+    let document = window
+        .document()
+        .expect("No Document found, should have a Document");
 
     let p: web_sys::Node = document.create_element("p")?.into();
     p.set_text_content(Some("You're successfully running WASM!"));
 
-    let body = document.body().expect("ERR: No body found, should have a body");
+    let body = document
+        .body()
+        .expect("ERR: No body found, should have a body");
     let body: &web_sys::Node = body.as_ref();
     body.append_child(&p)?;
     Ok(())
@@ -219,37 +240,57 @@ pub fn run() -> Result<(), JsValue> {
 
 /// Get the ImageData from a 2D canvas context
 #[wasm_bindgen]
-pub fn get_image_data(canvas: &HtmlCanvasElement, ctx: &CanvasRenderingContext2d) -> ImageData {
+pub fn get_image_data(
+    canvas: &HtmlCanvasElement,
+    ctx: &CanvasRenderingContext2d,
+) -> ImageData {
     set_panic_hook();
     let width = canvas.width();
     let height = canvas.height();
 
     // let data: ImageData = ctx.get_image_data(0.0, 0.0, 100.0, 100.0).unwrap();
-    let data = ctx.get_image_data(0.0, 0.0, width as f64, height as f64).unwrap();
+    let data = ctx
+        .get_image_data(0.0, 0.0, width as f64, height as f64)
+        .unwrap();
     let _vec_data = data.data().to_vec();
     return data;
 }
 
 /// Place a PhotonImage onto a 2D canvas.
 #[wasm_bindgen]
-pub fn putImageData(canvas: HtmlCanvasElement, ctx: CanvasRenderingContext2d, mut new_image: PhotonImage) {
+pub fn putImageData(
+    canvas: HtmlCanvasElement,
+    ctx: CanvasRenderingContext2d,
+    mut new_image: PhotonImage,
+) {
     // Convert the raw pixels back to an ImageData object.
-    let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut new_image.raw_pixels), canvas.width(), canvas.height());
+    let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(
+        Clamped(&mut new_image.raw_pixels),
+        canvas.width(),
+        canvas.height(),
+    );
 
     // Place the new imagedata onto the canvas
     ctx.put_image_data(&new_img_data.unwrap(), 0.0, 0.0);
 }
 
 /// Convert a HTML5 Canvas Element to a PhotonImage.
-/// 
+///
 /// This converts the ImageData found in the canvas context to a PhotonImage,
 /// which can then have effects or filters applied to it.
 #[wasm_bindgen]
 #[no_mangle]
-pub fn open_image(canvas: HtmlCanvasElement, ctx: CanvasRenderingContext2d) -> PhotonImage {
+pub fn open_image(
+    canvas: HtmlCanvasElement,
+    ctx: CanvasRenderingContext2d,
+) -> PhotonImage {
     let imgdata = get_image_data(&canvas, &ctx);
     let raw_pixels = to_raw_pixels(imgdata);
-    return PhotonImage {raw_pixels: raw_pixels, width: canvas.width(), height: canvas.height() }
+    return PhotonImage {
+        raw_pixels: raw_pixels,
+        width: canvas.width(),
+        height: canvas.height(),
+    };
 }
 
 /// Convert ImageData to a raw pixel vec of u8s.
@@ -262,7 +303,6 @@ pub fn to_raw_pixels(imgdata: ImageData) -> Vec<u8> {
 /// Convert a base64 string to a PhotonImage.
 #[wasm_bindgen]
 pub fn base64_to_image(base64: &str) -> PhotonImage {
-
     let base64_to_vec: Vec<u8> = base64_to_vec(base64);
 
     let slice = base64_to_vec.as_slice();
@@ -270,9 +310,12 @@ pub fn base64_to_image(base64: &str) -> PhotonImage {
     let mut img = image::load_from_memory(slice).unwrap();
     img = image::ImageRgba8(img.to_rgba());
     let raw_pixels = img.raw_pixels();
-    
-    return PhotonImage { raw_pixels: raw_pixels, width: img.width(), height: img.height()};
 
+    return PhotonImage {
+        raw_pixels: raw_pixels,
+        width: img.width(),
+        height: img.height(),
+    };
 }
 
 /// Convert a base64 string to a Vec of u8s.
@@ -288,7 +331,12 @@ pub fn to_image_data(photon_image: PhotonImage) -> ImageData {
     let mut raw_pixels = photon_image.raw_pixels;
     let width = photon_image.width;
     let height = photon_image.height;
-    let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut raw_pixels), width, height).unwrap();
+    let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(
+        Clamped(&mut raw_pixels),
+        width,
+        height,
+    )
+    .unwrap();
 
     return new_img_data;
 }
@@ -301,15 +349,15 @@ fn set_panic_hook() {
 }
 
 pub mod channels;
-pub mod effects;
-pub mod transform;
-pub mod conv;
-pub mod filters;
-pub mod monochrome;
-pub mod native;
-pub mod text;
 pub mod colour_spaces;
-pub mod multiple;
-pub mod noise;
+pub mod conv;
+pub mod effects;
+pub mod filters;
 pub mod helpers;
+pub mod monochrome;
+pub mod multiple;
+pub mod native;
+pub mod noise;
 mod tests;
+pub mod text;
+pub mod transform;

@@ -398,7 +398,7 @@ var newimg, watermark_img, img2;
     console.log("update benchmarks");
     let time_taken = endTime - startTime;
     let time_elem = document.getElementById("time");
-    time_elem.innerHTML = `Time: ${time_taken}ms`;
+    time_elem.innerHTML = `Time: ${time_taken.toFixed(2)}ms`;
   }
 
    function setUpImages() {

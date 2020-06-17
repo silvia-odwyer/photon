@@ -1,9 +1,9 @@
+extern crate image;
 extern crate photon;
 extern crate time;
-extern crate image;
+use image::GenericImageView;
+use photon::Rgb;
 use time::PreciseTime;
-use image::{GenericImageView};
-use photon::{Rgb};
 
 fn main() {
     // Replace the variable file_name with whatever image you would like to apply filters to
@@ -20,9 +20,9 @@ fn main() {
     photon::text::draw_text_with_border(&mut img, "Welcome to Photon!", 10, 20);
 
     // Write the contents of this image in PNG format.
-    photon::native::save_image(img, "new_image.png");    
+    photon::native::save_image(img, "new_image.png");
     let end = PreciseTime::now();
     println!("Took {} seconds to add text to image.", start.to(end));
-    
+
     println!("Check example_output dir for image with text applied.\nYou can compare them with the original in {}", file_name);
 }

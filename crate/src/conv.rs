@@ -1,9 +1,9 @@
 //! Convolution effects such as sharpening, blurs, sobel filters, etc.,
 
 extern crate image;
-use wasm_bindgen::prelude::*;
-use crate::{PhotonImage};
 use crate::helpers;
+use crate::PhotonImage;
+use wasm_bindgen::prelude::*;
 
 fn conv(mut photon_image: &mut PhotonImage, kernel: Vec<f32>) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
@@ -15,11 +15,11 @@ fn conv(mut photon_image: &mut PhotonImage, kernel: Vec<f32>) {
     photon_image.raw_pixels = filtered_img.raw_pixels();
 }
 
-/// Noise reduction. 
-/// 
+/// Noise reduction.
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -34,11 +34,11 @@ pub fn noise_reduction(photon_image: &mut PhotonImage) {
     return conv(photon_image, kernel);
 }
 
-/// Sharpen an image. 
-/// 
+/// Sharpen an image.
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -54,10 +54,10 @@ pub fn sharpen(photon_image: &mut PhotonImage) {
 }
 
 /// Apply edge detection to an image, to create a dark version with its edges highlighted.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -72,10 +72,10 @@ pub fn edge_detection(photon_image: &mut PhotonImage) {
 }
 
 /// Apply an identity kernel convolution to an image.
-/// 
+///
 /// # Arguments
 /// * `img` -A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -90,10 +90,10 @@ pub fn identity(photon_image: &mut PhotonImage) {
 }
 
 /// Apply a box blur effect.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -108,7 +108,7 @@ pub fn box_blur(photon_image: &mut PhotonImage) {
 }
 
 /// Gaussian blur in linear time.
-/// 
+///
 /// Reference: http://blog.ivank.net/fastest-gaussian-blur.html
 ///
 /// # Arguments
@@ -172,7 +172,13 @@ fn boxes_for_gauss(sigma: f32, n: usize) -> Vec<i32> {
     sizes
 }
 
-fn box_blur_inner(src: &mut Vec<u8>, target: &mut Vec<u8>, width: u32, height: u32, radius: i32) {
+fn box_blur_inner(
+    src: &mut Vec<u8>,
+    target: &mut Vec<u8>,
+    width: u32,
+    height: u32,
+    radius: i32,
+) {
     let length = (width * height * 4) as usize;
     for i in 0..length {
         target[i] = src[i];
@@ -181,11 +187,17 @@ fn box_blur_inner(src: &mut Vec<u8>, target: &mut Vec<u8>, width: u32, height: u
     box_blur_vertical(src, target, width, height, radius);
 }
 
-fn box_blur_horizontal(src: &Vec<u8>, target: &mut Vec<u8>, width: u32, height: u32, radius: i32) {
+fn box_blur_horizontal(
+    src: &Vec<u8>,
+    target: &mut Vec<u8>,
+    width: u32,
+    height: u32,
+    radius: i32,
+) {
     let iarr = 1.0 / (radius + radius + 1) as f32;
     for i in 0..height {
         let mut ti: usize = (i * width) as usize * 4;
-        let mut li: usize = ti; 
+        let mut li: usize = ti;
         let mut ri: usize = ti + radius as usize * 4;
 
         let fv_r = src[ti] as i32;
@@ -245,12 +257,18 @@ fn box_blur_horizontal(src: &Vec<u8>, target: &mut Vec<u8>, width: u32, height: 
     }
 }
 
-fn box_blur_vertical(src: &Vec<u8>, target: &mut Vec<u8>, width: u32, height: u32, radius: i32) {
+fn box_blur_vertical(
+    src: &Vec<u8>,
+    target: &mut Vec<u8>,
+    width: u32,
+    height: u32,
+    radius: i32,
+) {
     let iarr = 1.0 / (radius + radius + 1) as f32;
 
     for i in 0..width {
         let mut ti: usize = i as usize * 4;
-        let mut li: usize = ti; 
+        let mut li: usize = ti;
         let mut ri: usize = ti + (radius * width as i32) as usize * 4;
 
         let fv_r = src[ti] as i32;
@@ -302,7 +320,7 @@ fn box_blur_vertical(src: &Vec<u8>, target: &mut Vec<u8>, width: u32, height: u3
             val_b += lv_b as i32 - src[li + 2] as i32;
             li += width as usize * 4;
 
-            target[ti] = num::clamp(val_r as f32 * iarr, 0.0,  255.0) as u8;
+            target[ti] = num::clamp(val_r as f32 * iarr, 0.0, 255.0) as u8;
             target[ti + 1] = num::clamp(val_g as f32 * iarr, 0.0, 255.0) as u8;
             target[ti + 2] = num::clamp(val_b as f32 * iarr, 0.0, 255.0) as u8;
             ti += width as usize * 4;
@@ -311,10 +329,10 @@ fn box_blur_vertical(src: &Vec<u8>, target: &mut Vec<u8>, width: u32, height: u3
 }
 
 /// Detect horizontal lines in an image, and highlight these only.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -329,10 +347,10 @@ pub fn detect_horizontal_lines(photon_image: &mut PhotonImage) {
 }
 
 /// Detect vertical lines in an image, and highlight these only.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -347,10 +365,10 @@ pub fn detect_vertical_lines(photon_image: &mut PhotonImage) {
 }
 
 /// Detect lines at a forty five degree angle in an image, and highlight these only.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -365,10 +383,10 @@ pub fn detect_45_deg_lines(photon_image: &mut PhotonImage) {
 }
 
 /// Detect lines at a 135 degree angle in an image, and highlight these only.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -383,10 +401,10 @@ pub fn detect_135_deg_lines(photon_image: &mut PhotonImage) {
 }
 
 /// Apply a standard laplace convolution.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -401,10 +419,10 @@ pub fn laplace(photon_image: &mut PhotonImage) {
 }
 
 /// Preset edge effect.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -419,10 +437,10 @@ pub fn edge_one(photon_image: &mut PhotonImage) {
 }
 
 /// Apply an emboss effect to an image.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -437,10 +455,10 @@ pub fn emboss(photon_image: &mut PhotonImage) {
 }
 
 /// Apply a horizontal Sobel filter to an image.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -455,10 +473,10 @@ pub fn sobel_horizontal(photon_image: &mut PhotonImage) {
 }
 
 /// Apply a horizontal Prewitt convolution to an image.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -473,10 +491,10 @@ pub fn prewitt_horizontal(photon_image: &mut PhotonImage) {
 }
 
 /// Apply a vertical Sobel filter to an image.
-/// 
+///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```
