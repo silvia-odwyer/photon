@@ -150,15 +150,11 @@ pub fn grayscale_human_corrected(img: &mut PhotonImage) {
         let g_val = img.raw_pixels[i + 1] as f32;
         let b_val = img.raw_pixels[i + 2] as f32;
 
-        let mut avg: u8 = (r_val * 0.3 + g_val * 0.59 + b_val * 0.11) as u8;
+        let avg: u8 = (r_val * 0.3 + g_val * 0.59 + b_val * 0.11) as u8;
 
-        if avg >= 255 {
-            avg = 255
-        }
-
-        img.raw_pixels[i] = avg as u8;
-        img.raw_pixels[i + 1] = avg as u8;
-        img.raw_pixels[i + 2] = avg as u8;
+        img.raw_pixels[i] = avg;
+        img.raw_pixels[i + 1] = avg;
+        img.raw_pixels[i + 2] = avg;
     }
 }
 
@@ -187,11 +183,7 @@ pub fn desaturate(img: &mut PhotonImage) {
         let mut rgb_vals = vec![r_val, g_val, b_val];
         rgb_vals.sort();
 
-        let mut gray = ((rgb_vals[0] + rgb_vals[2]) / 2) as u8;
-
-        if gray >= 255 {
-            gray = 255
-        }
+        let gray: u8 = ((rgb_vals[0] + rgb_vals[2]) / 2) as u8;
 
         img.raw_pixels[i] = gray;
         img.raw_pixels[i + 1] = gray;
@@ -223,15 +215,11 @@ pub fn decompose_min(img: &mut PhotonImage) {
         let mut rgb_vals = vec![r_val, g_val, b_val];
         rgb_vals.sort();
 
-        let mut gray = rgb_vals[0] as u8;
+        let gray: u8 = rgb_vals[0] as u8;
 
-        if gray >= 255 {
-            gray = 255
-        }
-
-        img.raw_pixels[i] = gray as u8;
-        img.raw_pixels[i + 1] = gray as u8;
-        img.raw_pixels[i + 2] = gray as u8;
+        img.raw_pixels[i] = gray;
+        img.raw_pixels[i + 1] = gray;
+        img.raw_pixels[i + 2] = gray;
     }
 }
 
@@ -259,15 +247,11 @@ pub fn decompose_max(img: &mut PhotonImage) {
         let mut rgb_vals = vec![r_val, g_val, b_val];
         rgb_vals.sort();
 
-        let mut gray = rgb_vals[2] as u8;
+        let gray: u8 = rgb_vals[2] as u8;
 
-        if gray >= 255 {
-            gray = 255
-        }
-
-        img.raw_pixels[i] = gray as u8;
-        img.raw_pixels[i + 1] = gray as u8;
-        img.raw_pixels[i + 2] = gray as u8;
+        img.raw_pixels[i] = gray;
+        img.raw_pixels[i + 1] = gray;
+        img.raw_pixels[i + 2] = gray;
     }
 }
 
@@ -321,7 +305,7 @@ pub fn grayscale_shades(mut photon_image: &mut PhotonImage, num_shades: u8) {
 /// ```
 #[wasm_bindgen]
 pub fn r_grayscale(photon_image: &mut PhotonImage) {
-    return single_channel_grayscale(photon_image, 0);
+    single_channel_grayscale(photon_image, 0)
 }
 
 /// Convert an image to grayscale by setting a pixel's 3 RGB values to the Green channel's value.
@@ -336,7 +320,7 @@ pub fn r_grayscale(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn g_grayscale(photon_image: &mut PhotonImage) {
-    return single_channel_grayscale(photon_image, 1);
+    single_channel_grayscale(photon_image, 1)
 }
 
 /// Convert an image to grayscale by setting a pixel's 3 RGB values to the Blue channel's value.
@@ -351,7 +335,7 @@ pub fn g_grayscale(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn b_grayscale(photon_image: &mut PhotonImage) {
-    return single_channel_grayscale(photon_image, 2);
+    single_channel_grayscale(photon_image, 2)
 }
 
 /// Convert an image to grayscale by setting a pixel's 3 RGB values to a chosen channel's value.

@@ -49,12 +49,11 @@ pub fn crop(
     }
     let dynimage = image::ImageRgba8(cropped_img);
     let raw_pixels = dynimage.raw_pixels();
-    let cropped_photon_img = PhotonImage {
-        raw_pixels: raw_pixels,
+    PhotonImage {
+        raw_pixels,
         width: dynimage.width(),
         height: dynimage.height(),
-    };
-    return cropped_photon_img;
+    }
 }
 
 // #[cfg(target_arch = "wasm32")]
@@ -254,9 +253,9 @@ pub fn resize(
         sampling_filter,
     ));
 
-    return PhotonImage {
+    PhotonImage {
         raw_pixels: resized_img.raw_pixels(),
         width: resized_img.width(),
         height: resized_img.height(),
-    };
+    }
 }

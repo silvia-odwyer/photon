@@ -43,7 +43,7 @@ pub fn add_noise_rand(mut photon_image: PhotonImage) -> PhotonImage {
         }
     }
     photon_image.raw_pixels = img.raw_pixels();
-    return photon_image;
+    photon_image
 }
 
 /// Add pink-tinted noise to an image.

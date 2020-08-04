@@ -351,9 +351,9 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
             let mut b = px.data[2] as f32;
 
             if square_distance < i32::pow(threshold, 2) {
-                r = r * 0.5;
-                g = g * 1.25;
-                b = b * 0.5;
+                r *= 0.5;
+                g *= 1.25;
+                b *= 0.5;
             }
 
             px.data[0] = r as u8;
@@ -465,12 +465,11 @@ pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
             img.put_pixel(x, y, px);
         }
     }
-    let new_photon_image = PhotonImage {
+    PhotonImage {
         raw_pixels: img.raw_pixels(),
         width: img.width(),
         height: img.height(),
-    };
-    return new_photon_image;
+    }
 }
 
 /// Increase the brightness of an image by a factor.
