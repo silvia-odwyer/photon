@@ -70,7 +70,7 @@ pub fn alter_channel(img: &mut PhotonImage, channel: usize, amt: i16) {
 /// ```
 #[wasm_bindgen]
 pub fn alter_red_channel(photon_image: &mut PhotonImage, amt: i16) {
-    return alter_channel(photon_image, 0, amt);
+    alter_channel(photon_image, 0, amt)
 }
 
 /// Increment or decrement every pixel's Green channel by a constant.
@@ -88,7 +88,7 @@ pub fn alter_red_channel(photon_image: &mut PhotonImage, amt: i16) {
 /// ```
 #[wasm_bindgen]
 pub fn alter_green_channel(img: &mut PhotonImage, amt: i16) {
-    return alter_channel(img, 1, amt);
+    alter_channel(img, 1, amt)
 }
 
 /// Increment or decrement every pixel's Blue channel by a constant.
@@ -106,7 +106,7 @@ pub fn alter_green_channel(img: &mut PhotonImage, amt: i16) {
 /// ```
 #[wasm_bindgen]
 pub fn alter_blue_channel(img: &mut PhotonImage, amt: i16) {
-    return alter_channel(img, 2, amt);
+    alter_channel(img, 2, amt)
 }
 
 /// Increment/decrement two channels' values simultaneously by adding an amt to each channel per pixel.
@@ -236,7 +236,7 @@ pub fn remove_channel(img: &mut PhotonImage, channel: usize, min_filter: u8) {
 /// ```
 #[wasm_bindgen]
 pub fn remove_red_channel(img: &mut PhotonImage, min_filter: u8) {
-    return remove_channel(img, 0, min_filter);
+    remove_channel(img, 0, min_filter)
 }
 
 /// Remove the Green channel's influence in an image.
@@ -253,7 +253,7 @@ pub fn remove_red_channel(img: &mut PhotonImage, min_filter: u8) {
 /// ```
 #[wasm_bindgen]
 pub fn remove_green_channel(img: &mut PhotonImage, min_filter: u8) {
-    return remove_channel(img, 1, min_filter);
+    remove_channel(img, 1, min_filter)
 }
 
 /// Remove the Blue channel's influence in an image.
@@ -270,7 +270,7 @@ pub fn remove_green_channel(img: &mut PhotonImage, min_filter: u8) {
 /// ```
 #[wasm_bindgen]
 pub fn remove_blue_channel(img: &mut PhotonImage, min_filter: u8) {
-    return remove_channel(img, 2, min_filter);
+    remove_channel(img, 2, min_filter)
 }
 
 /// Swap two channels.
@@ -297,17 +297,13 @@ pub fn swap_channels(img: &mut PhotonImage, mut channel1: usize, mut channel2: u
     let end = img.raw_pixels.len() - 4;
 
     if channel1 > channel2 {
-        let temp = channel1;
-        channel1 = channel2;
-        channel2 = temp;
+        std::mem::swap(&mut channel1, &mut channel2);
     }
 
     for i in (channel1..end).step_by(4) {
         let difference = channel2 - channel1;
 
-        let temp_channel1 = img.raw_pixels[i];
-        img.raw_pixels[i] = img.raw_pixels[i + difference];
-        img.raw_pixels[i + difference] = temp_channel1;
+        img.raw_pixels.swap(i, i + difference);
     }
 }
 
@@ -413,9 +409,7 @@ pub fn color_sim(lab1: Lab, lab2: Lab) -> i64 {
     let b_comp_sq = b_comp.powf(2.0);
 
     let total = l_comp_sq + a_comp_sq + b_comp_sq;
-    let sq_rt = (total as f64).sqrt() as i64 + 1;
-
-    return sq_rt;
+    (total as f64).sqrt() as i64 + 1
 }
 
 /// Selectively lighten an image.
@@ -436,7 +430,7 @@ pub fn color_sim(lab1: Lab, lab2: Lab) -> i64 {
 /// ```
 #[wasm_bindgen]
 pub fn selective_lighten(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
-    return selective(img, "lighten", ref_color, amt);
+    selective(img, "lighten", ref_color, amt)
 }
 
 /// Selectively desaturate pixel colours which are similar to the reference colour provided.
@@ -458,7 +452,7 @@ pub fn selective_lighten(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn selective_desaturate(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
-    return selective(img, "desaturate", ref_color, amt);
+    selective(img, "desaturate", ref_color, amt)
 }
 
 /// Selectively saturate pixel colours which are similar to the reference colour provided.
