@@ -194,11 +194,11 @@ pub fn create_gradient(width: u32, height: u32) -> PhotonImage {
     }
     let rgba_img = image::ImageRgba8(image);
     let raw_pixels = rgba_img.raw_pixels();
-    return PhotonImage {
-        raw_pixels: raw_pixels,
-        width: width,
-        height: height,
-    };
+    PhotonImage {
+        raw_pixels,
+        width,
+        height,
+    }
 }
 
 /// Apply a gradient to an image.

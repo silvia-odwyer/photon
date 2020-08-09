@@ -31,11 +31,11 @@ pub fn open_image(img_path: &str) -> PhotonImage {
     let raw_pixels = img.to_rgba().to_vec();
 
     let photon_image: PhotonImage = PhotonImage {
-        raw_pixels: raw_pixels,
-        width: width,
-        height: height,
+        raw_pixels,
+        width,
+        height,
     };
-    return photon_image;
+    photon_image
 }
 
 /// Save the image to the filesystem at a given path.

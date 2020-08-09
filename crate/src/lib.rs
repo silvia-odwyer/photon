@@ -66,17 +66,16 @@ impl PhotonImage {
     #[wasm_bindgen(constructor)]
     /// Create a new PhotonImage from a Vec of u8s, which represent raw pixels.
     pub fn new(raw_pixels: Vec<u8>, width: u32, height: u32) -> PhotonImage {
-        return PhotonImage {
-            raw_pixels: raw_pixels,
-            width: width,
-            height: height,
-        };
+        PhotonImage {
+            raw_pixels,
+            width,
+            height,
+        }
     }
 
     /// Create a new PhotonImage from a base64 string.
     pub fn new_from_base64(base64: &str) -> PhotonImage {
-        let image = base64_to_image(base64);
-        return image;
+        base64_to_image(base64)
     }
 
     /// Create a new PhotonImage from a byteslice.
@@ -87,11 +86,11 @@ impl PhotonImage {
 
         let raw_pixels = img.to_rgba().to_vec();
 
-        return PhotonImage {
-            raw_pixels: raw_pixels,
+        PhotonImage {
+            raw_pixels,
             width: img.width(),
             height: img.height(),
-        };
+        }
     }
 
     /// Get the width of the PhotonImage.
@@ -125,13 +124,12 @@ impl PhotonImage {
 
     /// Convert the PhotonImage's raw pixels to JS-compatible ImageData.
     pub fn get_image_data(&mut self) -> ImageData {
-        let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(
+        ImageData::new_with_u8_clamped_array_and_sh(
             Clamped(&mut self.raw_pixels),
             self.width,
             self.height,
         )
-        .unwrap();
-        new_img_data
+        .unwrap()
     }
 
     /// Convert ImageData to raw pixels, and update the PhotonImage's raw pixels to this.
@@ -151,11 +149,11 @@ impl From<ImageData> for PhotonImage {
         let width = imgdata.width();
         let height = imgdata.height();
         let raw_pixels = to_raw_pixels(imgdata);
-        return PhotonImage {
-            raw_pixels: raw_pixels,
-            width: width,
-            height: height,
-        };
+        PhotonImage {
+            raw_pixels,
+            width,
+            height,
+        }
     }
 }
 
@@ -173,7 +171,7 @@ impl Rgb {
     #[wasm_bindgen(constructor)]
     /// Create a new RGB struct.
     pub fn new(r: u8, g: u8, b: u8) -> Rgb {
-        return Rgb { r: r, g: g, b: b };
+        Rgb { r, g, b }
     }
 
     /// Set the Red value.
@@ -212,8 +210,7 @@ impl From<Vec<u8>> for Rgb {
         if vec.len() != 3 {
             panic!("Vec length must be equal to 3.")
         }
-        let rgb = Rgb::new(vec[0], vec[1], vec[2]);
-        rgb
+        Rgb::new(vec[0], vec[1], vec[2])
     }
 }
 
@@ -253,7 +250,7 @@ pub fn get_image_data(
         .get_image_data(0.0, 0.0, width as f64, height as f64)
         .unwrap();
     let _vec_data = data.data().to_vec();
-    return data;
+    data
 }
 
 /// Place a PhotonImage onto a 2D canvas.
@@ -286,18 +283,17 @@ pub fn open_image(
 ) -> PhotonImage {
     let imgdata = get_image_data(&canvas, &ctx);
     let raw_pixels = to_raw_pixels(imgdata);
-    return PhotonImage {
-        raw_pixels: raw_pixels,
+    PhotonImage {
+        raw_pixels,
         width: canvas.width(),
         height: canvas.height(),
-    };
+    }
 }
 
 /// Convert ImageData to a raw pixel vec of u8s.
 #[wasm_bindgen]
 pub fn to_raw_pixels(imgdata: ImageData) -> Vec<u8> {
-    let img_vec = imgdata.data().to_vec();
-    return img_vec;
+    imgdata.data().to_vec()
 }
 
 /// Convert a base64 string to a PhotonImage.
@@ -311,18 +307,17 @@ pub fn base64_to_image(base64: &str) -> PhotonImage {
     img = image::ImageRgba8(img.to_rgba());
     let raw_pixels = img.raw_pixels();
 
-    return PhotonImage {
-        raw_pixels: raw_pixels,
+    PhotonImage {
+        raw_pixels,
         width: img.width(),
         height: img.height(),
-    };
+    }
 }
 
 /// Convert a base64 string to a Vec of u8s.
 #[wasm_bindgen]
 pub fn base64_to_vec(base64: &str) -> Vec<u8> {
-    let vec = decode(base64).unwrap();
-    return vec;
+    decode(base64).unwrap()
 }
 
 /// Convert a PhotonImage to JS-compatible ImageData.
@@ -331,15 +326,12 @@ pub fn to_image_data(photon_image: PhotonImage) -> ImageData {
     let mut raw_pixels = photon_image.raw_pixels;
     let width = photon_image.width;
     let height = photon_image.height;
-    let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(
+    ImageData::new_with_u8_clamped_array_and_sh(
         Clamped(&mut raw_pixels),
         width,
         height,
     )
-    .unwrap();
-
-    return new_img_data;
-}
+    .unwrap()}
 
 fn set_panic_hook() {
     // When the `console_error_panic_hook` feature is enabled, we can call the

@@ -313,7 +313,7 @@ pub fn hue_rotate_lch(img: &mut PhotonImage, degrees: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn saturate_hsl(img: &mut PhotonImage, level: f32) {
-    return hsl(img, "saturate", level);
+    hsl(img, "saturate", level)
 }
 
 /// Increase the image's saturation in the LCh colour space.
@@ -335,7 +335,7 @@ pub fn saturate_hsl(img: &mut PhotonImage, level: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn saturate_lch(img: &mut PhotonImage, level: f32) {
-    return lch(img, "saturate", level);
+    lch(img, "saturate", level)
 }
 
 /// Increase the image's saturation in the HSV colour space.
@@ -357,7 +357,7 @@ pub fn saturate_lch(img: &mut PhotonImage, level: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn saturate_hsv(img: &mut PhotonImage, level: f32) {
-    return hsv(img, "saturate", level);
+    hsv(img, "saturate", level)
 }
 
 /// Lighten an image by a specified amount in the LCh colour space.
@@ -380,7 +380,7 @@ pub fn saturate_hsv(img: &mut PhotonImage, level: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn lighten_lch(img: &mut PhotonImage, level: f32) {
-    return lch(img, "lighten", level);
+    lch(img, "lighten", level)
 }
 
 /// Lighten an image by a specified amount in the HSL colour space.
@@ -402,7 +402,7 @@ pub fn lighten_lch(img: &mut PhotonImage, level: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn lighten_hsl(img: &mut PhotonImage, level: f32) {
-    return hsl(img, "lighten", level);
+    hsl(img, "lighten", level)
 }
 
 /// Lighten an image by a specified amount in the HSV colour space.
@@ -425,7 +425,7 @@ pub fn lighten_hsl(img: &mut PhotonImage, level: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn lighten_hsv(img: &mut PhotonImage, level: f32) {
-    return hsv(img, "lighten", level);
+    hsv(img, "lighten", level)
 }
 
 /// Darken the image by a specified amount in the LCh colour space.
@@ -448,7 +448,7 @@ pub fn lighten_hsv(img: &mut PhotonImage, level: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn darken_lch(img: &mut PhotonImage, level: f32) {
-    return lch(img, "darken", level);
+    lch(img, "darken", level)
 }
 
 /// Darken the image by a specified amount in the HSL colour space.
@@ -471,7 +471,7 @@ pub fn darken_lch(img: &mut PhotonImage, level: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn darken_hsl(img: &mut PhotonImage, level: f32) {
-    return hsl(img, "darken", level);
+    hsl(img, "darken", level)
 }
 
 /// Darken the image's colours by a specified amount in the HSV colour space.
@@ -494,7 +494,7 @@ pub fn darken_hsl(img: &mut PhotonImage, level: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn darken_hsv(img: &mut PhotonImage, level: f32) {
-    return hsv(img, "darken", level);
+    hsv(img, "darken", level)
 }
 
 /// Desaturate the image by a specified amount in the HSV colour space.
@@ -517,7 +517,7 @@ pub fn darken_hsv(img: &mut PhotonImage, level: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn desaturate_hsv(img: &mut PhotonImage, level: f32) {
-    return hsv(img, "desaturate", level);
+    hsv(img, "desaturate", level)
 }
 
 /// Desaturate the image by a specified amount in the HSL colour space.
@@ -540,7 +540,7 @@ pub fn desaturate_hsv(img: &mut PhotonImage, level: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn desaturate_hsl(img: &mut PhotonImage, level: f32) {
-    return hsl(img, "desaturate", level);
+    hsl(img, "desaturate", level)
 }
 
 /// Desaturate the image by a specified amount in the LCh colour space.
@@ -563,7 +563,7 @@ pub fn desaturate_hsl(img: &mut PhotonImage, level: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn desaturate_lch(img: &mut PhotonImage, level: f32) {
-    return lch(img, "desaturate", level);
+    lch(img, "desaturate", level)
 }
 
 /// Mix image with a single color, supporting passing `opacity`.
