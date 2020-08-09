@@ -7,6 +7,7 @@ use image::GenericImageView;
 use palette::{Hsl, Hsv, Hue, Lch, Pixel, Saturate, Shade, Srgba};
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
+use crate::iter::ImageIterator;
 
 /// Apply gamma correction.
 // #[wasm_bindgen]
@@ -76,34 +77,32 @@ use wasm_bindgen::prelude::*;
 #[wasm_bindgen]
 pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     let img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
     let mut img = img.to_rgba();
-    for x in 0..width {
-        for y in 0..height {
-            let px_data = img.get_pixel(x, y).data;
-            let lch_colour: Lch =
-                Srgba::from_raw(&px_data).into_format().into_linear().into();
 
-            let new_color = match mode {
-                // Match a single value
-                "desaturate" => lch_colour.desaturate(amt),
-                "saturate" => lch_colour.saturate(amt),
-                "lighten" => lch_colour.lighten(amt),
-                "darken" => lch_colour.darken(amt),
-                "shift_hue" => lch_colour.shift_hue(amt * 360.0),
-                _ => lch_colour.saturate(amt),
-            };
+    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
+        let px_data = img.get_pixel(x, y).data;
+        let lch_colour: Lch =
+            Srgba::from_raw(&px_data).into_format().into_linear().into();
 
-            img.put_pixel(
-                x,
-                y,
-                image::Rgba {
-                    data: Srgba::from_linear(new_color.into())
-                        .into_format()
-                        .into_raw(),
-                },
-            );
-        }
+        let new_color = match mode {
+            // Match a single value
+            "desaturate" => lch_colour.desaturate(amt),
+            "saturate" => lch_colour.saturate(amt),
+            "lighten" => lch_colour.lighten(amt),
+            "darken" => lch_colour.darken(amt),
+            "shift_hue" => lch_colour.shift_hue(amt * 360.0),
+            _ => lch_colour.saturate(amt),
+        };
+
+        img.put_pixel(
+            x,
+            y,
+            image::Rgba {
+                data: Srgba::from_linear(new_color.into())
+                    .into_format()
+                    .into_raw(),
+            },
+        );
     }
     photon_image.raw_pixels = img.to_vec();
 }
@@ -136,35 +135,32 @@ pub fn hsl(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     // The function logic is kept separate from other colour spaces for now,
     // since other HSL-specific logic may be implemented here, which isn't available in other colour spaces
     let mut img = helpers::dyn_image_from_raw(&photon_image).to_rgba();
-    let (width, height) = img.dimensions();
-    for x in 0..width {
-        for y in 0..height {
-            let px_data = img.get_pixel(x, y).data;
+    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
+        let px_data = img.get_pixel(x, y).data;
 
-            let colour = Srgba::from_raw(&px_data).into_format();
+        let colour = Srgba::from_raw(&px_data).into_format();
 
-            let hsl_colour = Hsl::from(colour);
+        let hsl_colour = Hsl::from(colour);
 
-            let new_color = match mode {
-                // Match a single value
-                "desaturate" => hsl_colour.desaturate(amt),
-                "saturate" => hsl_colour.saturate(amt),
-                "lighten" => hsl_colour.lighten(amt),
-                "darken" => hsl_colour.darken(amt),
-                "shift_hue" => hsl_colour.shift_hue(amt * 360.0),
-                _ => hsl_colour.saturate(amt),
-            };
+        let new_color = match mode {
+            // Match a single value
+            "desaturate" => hsl_colour.desaturate(amt),
+            "saturate" => hsl_colour.saturate(amt),
+            "lighten" => hsl_colour.lighten(amt),
+            "darken" => hsl_colour.darken(amt),
+            "shift_hue" => hsl_colour.shift_hue(amt * 360.0),
+            _ => hsl_colour.saturate(amt),
+        };
 
-            img.put_pixel(
-                x,
-                y,
-                image::Rgba {
-                    data: Srgba::from_linear(new_color.into())
-                        .into_format()
-                        .into_raw(),
-                },
-            );
-        }
+        img.put_pixel(
+            x,
+            y,
+            image::Rgba {
+                data: Srgba::from_linear(new_color.into())
+                    .into_format()
+                    .into_raw(),
+            },
+        );
     }
 
     photon_image.raw_pixels = img.to_vec();
@@ -199,36 +195,32 @@ pub fn hsv(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     let img = helpers::dyn_image_from_raw(&photon_image);
     let mut img = img.to_rgba();
 
-    let (width, height) = img.dimensions();
+    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
+        let px_data = img.get_pixel(x, y).data;
 
-    for x in 0..width {
-        for y in 0..height {
-            let px_data = img.get_pixel(x, y).data;
+        let color = Srgba::from_raw(&px_data).into_format();
 
-            let color = Srgba::from_raw(&px_data).into_format();
+        let hsv_colour = Hsv::from(color);
 
-            let hsv_colour = Hsv::from(color);
+        let new_color = match mode {
+            // Match a single value
+            "desaturate" => hsv_colour.desaturate(amt),
+            "saturate" => hsv_colour.saturate(amt),
+            "lighten" => hsv_colour.lighten(amt),
+            "darken" => hsv_colour.darken(amt),
+            "shift_hue" => hsv_colour.shift_hue(amt * 360.0),
+            _ => hsv_colour.saturate(amt),
+        };
 
-            let new_color = match mode {
-                // Match a single value
-                "desaturate" => hsv_colour.desaturate(amt),
-                "saturate" => hsv_colour.saturate(amt),
-                "lighten" => hsv_colour.lighten(amt),
-                "darken" => hsv_colour.darken(amt),
-                "shift_hue" => hsv_colour.shift_hue(amt * 360.0),
-                _ => hsv_colour.saturate(amt),
-            };
-
-            img.put_pixel(
-                x,
-                y,
-                image::Rgba {
-                    data: Srgba::from_linear(new_color.into())
-                        .into_format()
-                        .into_raw(),
-                },
-            );
-        }
+        img.put_pixel(
+            x,
+            y,
+            image::Rgba {
+                data: Srgba::from_linear(new_color.into())
+                    .into_format()
+                    .into_raw(),
+            },
+        );
     }
     photon_image.raw_pixels = img.to_vec();
 }
@@ -589,7 +581,7 @@ pub fn desaturate_lch(img: &mut PhotonImage, level: f32) {
 #[wasm_bindgen]
 pub fn mix_with_colour(photon_image: &mut PhotonImage, mix_colour: Rgb, opacity: f32) {
     let img = helpers::dyn_image_from_raw(&photon_image);
-    let (_width, _height) = img.dimensions();
+    let (width, height) = img.dimensions();
     let mut img = img.to_rgba();
 
     // cache (mix_color_value * opacity) and (1 - opacity) so we dont need to calculate them each time during loop.
@@ -598,19 +590,17 @@ pub fn mix_with_colour(photon_image: &mut PhotonImage, mix_colour: Rgb, opacity:
     let mix_blue_offset = mix_colour.b as f32 * opacity;
     let factor = 1.0 - opacity;
 
-    for x in 0.._width {
-        for y in 0.._height {
-            let px = img.get_pixel(x, y);
-            let r_value = mix_red_offset + (px.data[0] as f32) * factor;
-            let g_value = mix_green_offset + (px.data[1] as f32) * factor;
-            let b_value = mix_blue_offset + (px.data[2] as f32) * factor;
-            let alpha = px.data[3];
-            img.put_pixel(
-                x,
-                y,
-                image::Rgba([r_value as u8, g_value as u8, b_value as u8, alpha]),
-            );
-        }
+    for (x, y) in ImageIterator::new(width, height) {
+        let px = img.get_pixel(x, y);
+        let r_value = mix_red_offset + (px.data[0] as f32) * factor;
+        let g_value = mix_green_offset + (px.data[1] as f32) * factor;
+        let b_value = mix_blue_offset + (px.data[2] as f32) * factor;
+        let alpha = px.data[3];
+        img.put_pixel(
+            x,
+            y,
+            image::Rgba([r_value as u8, g_value as u8, b_value as u8, alpha]),
+        );
     }
     photon_image.raw_pixels = img.to_vec();
 }

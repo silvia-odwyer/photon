@@ -346,6 +346,7 @@ pub mod conv;
 pub mod effects;
 pub mod filters;
 pub mod helpers;
+mod iter;
 pub mod monochrome;
 pub mod multiple;
 pub mod native;

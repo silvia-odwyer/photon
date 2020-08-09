@@ -5,6 +5,7 @@ use crate::helpers;
 use crate::PhotonImage;
 use image::{GenericImage, GenericImageView};
 use wasm_bindgen::prelude::*;
+use crate::iter::ImageIterator;
 
 /// Apply a monochrome effect of a certain colour.
 ///
@@ -270,24 +271,21 @@ pub fn decompose_max(img: &mut PhotonImage) {
 #[wasm_bindgen]
 pub fn grayscale_shades(mut photon_image: &mut PhotonImage, num_shades: u8) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
 
-    for x in 0..width {
-        for y in 0..height {
-            let px = img.get_pixel(x, y);
+    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
+        let px = img.get_pixel(x, y);
 
-            let conversion: f32 = 255.0 / (num_shades as f32 - 1.0);
-            let (r_val, g_val, b_val) =
-                (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
+        let conversion: f32 = 255.0 / (num_shades as f32 - 1.0);
+        let (r_val, g_val, b_val) =
+            (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
 
-            let avg: f32 = (r_val + g_val + b_val) as f32 / 3.0;
+        let avg: f32 = (r_val + g_val + b_val) as f32 / 3.0;
 
-            let dividend = avg / conversion as f32;
+        let dividend = avg / conversion as f32;
 
-            let gray = ((dividend + 0.5) * conversion) as u8;
+        let gray = ((dividend + 0.5) * conversion) as u8;
 
-            img.put_pixel(x, y, image::Rgba([gray, gray, gray, 255]));
-        }
+        img.put_pixel(x, y, image::Rgba([gray, gray, gray, 255]));
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
@@ -352,19 +350,16 @@ pub fn b_grayscale(photon_image: &mut PhotonImage) {
 #[wasm_bindgen]
 pub fn single_channel_grayscale(mut photon_image: &mut PhotonImage, channel: usize) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
 
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
+        let mut px = img.get_pixel(x, y);
 
-            let channel_data = px.data[channel];
+        let channel_data = px.data[channel];
 
-            px.data[0] = channel_data as u8;
-            px.data[1] = channel_data as u8;
-            px.data[2] = channel_data as u8;
-            img.put_pixel(x, y, px);
-        }
+        px.data[0] = channel_data as u8;
+        px.data[1] = channel_data as u8;
+        px.data[2] = channel_data as u8;
+        img.put_pixel(x, y, px);
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
