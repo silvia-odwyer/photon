@@ -332,9 +332,10 @@ pub fn selective_hue_rotate(
     degrees: f32,
 ) {
     let img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
 
     let mut img = img.to_rgba();
-    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
+    for (x, y) in ImageIterator::new(width, height) {
         let px = img.get_pixel(x, y);
 
         // Reference colour to compare the current pixel's colour to

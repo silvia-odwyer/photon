@@ -77,9 +77,10 @@ use crate::iter::ImageIterator;
 #[wasm_bindgen]
 pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     let img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
     let mut img = img.to_rgba();
 
-    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
+    for (x, y) in ImageIterator::new(width, height) {
         let px_data = img.get_pixel(x, y).data;
         let lch_colour: Lch =
             Srgba::from_raw(&px_data).into_format().into_linear().into();
@@ -193,9 +194,10 @@ pub fn hsl(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 #[wasm_bindgen]
 pub fn hsv(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     let img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
     let mut img = img.to_rgba();
 
-    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
+    for (x, y) in ImageIterator::new(width, height) {
         let px_data = img.get_pixel(x, y).data;
 
         let color = Srgba::from_raw(&px_data).into_format();
