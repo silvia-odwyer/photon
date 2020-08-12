@@ -7,6 +7,7 @@ use crate::{helpers, GenericImage, PhotonImage, Rgb};
 use image::{DynamicImage, GenericImageView, RgbaImage};
 use palette::{Blend, Gradient, Lab, Lch, LinSrgba, Pixel, Srgb, Srgba};
 use wasm_bindgen::prelude::*;
+use crate::iter::ImageIterator;
 
 /// Add a watermark to an image.
 ///
@@ -130,33 +131,31 @@ pub fn replace_background(
 ) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let img2 = helpers::dyn_image_from_raw(&img2);
-    let (width, height) = img.dimensions();
-    for x in 0..width {
-        for y in 0..height {
-            let px = img.get_pixel(x, y);
 
-            // Convert the current pixel's colour to the l*a*b colour space
-            let lab: Lab = Srgb::new(
-                background_color.r as f32 / 255.0,
-                background_color.g as f32 / 255.0,
-                background_color.b as f32 / 255.0,
-            )
-            .into();
+    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
+        let px = img.get_pixel(x, y);
 
-            let r_val: f32 = px.data[0] as f32 / 255.0;
-            let g_val: f32 = px.data[1] as f32 / 255.0;
-            let b_val: f32 = px.data[2] as f32 / 255.0;
+        // Convert the current pixel's colour to the l*a*b colour space
+        let lab: Lab = Srgb::new(
+            background_color.r as f32 / 255.0,
+            background_color.g as f32 / 255.0,
+            background_color.b as f32 / 255.0,
+        )
+        .into();
 
-            let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
+        let r_val: f32 = px.data[0] as f32 / 255.0;
+        let g_val: f32 = px.data[1] as f32 / 255.0;
+        let b_val: f32 = px.data[2] as f32 / 255.0;
 
-            let sim = color_sim(lab, px_lab);
+        let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
 
-            // Match
-            if sim < 20 {
-                img.put_pixel(x, y, img2.get_pixel(x, y));
-            } else {
-                img.put_pixel(x, y, px);
-            }
+        let sim = color_sim(lab, px_lab);
+
+        // Match
+        if sim < 20 {
+            img.put_pixel(x, y, img2.get_pixel(x, y));
+        } else {
+            img.put_pixel(x, y, px);
         }
     }
     let raw_pixels = img.raw_pixels();
@@ -184,11 +183,8 @@ pub fn create_gradient(width: u32, height: u32) -> PhotonImage {
         let c1 = Srgba::from_linear(c1).into_format().into_raw();
         {
             let mut sub_image = image.sub_image(i as u32, 0, 1, height);
-            let (width, height) = sub_image.dimensions();
-            for x in 0..width {
-                for y in 0..height {
-                    sub_image.put_pixel(x, y, image::Rgba { data: c1 });
-                }
+            for (x, y) in ImageIterator::with_dimension(&sub_image.dimensions()) {
+                sub_image.put_pixel(x, y, image::Rgba { data: c1 });
             }
         }
     }

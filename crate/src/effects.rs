@@ -11,6 +11,7 @@ use crate::helpers;
 use crate::{PhotonImage, Rgb};
 use image::Rgba;
 use wasm_bindgen::prelude::*;
+use crate::iter::ImageIterator;
 
 /// Adds an offset to the image by a certain number of pixels.
 ///
@@ -127,24 +128,22 @@ pub fn multiple_offsets(
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
+    for (x, y) in ImageIterator::new(width, height) {
+        let mut px = img.get_pixel(x, y);
 
-            if x + offset < width - 1 && y + offset < height - 1 {
-                let offset_px = img.get_pixel(x + offset, y);
+        if x + offset < width - 1 && y + offset < height - 1 {
+            let offset_px = img.get_pixel(x + offset, y);
 
-                px.data[channel_index] = offset_px.data[channel_index];
-            }
-
-            if x as i32 - offset as i32 > 0 && y as i32 - offset as i32 > 0 {
-                let offset_px2 = img.get_pixel(x - offset, y);
-
-                px.data[channel_index2] = offset_px2.data[channel_index2];
-            }
-
-            img.put_pixel(x, y, px);
+            px.data[channel_index] = offset_px.data[channel_index];
         }
+
+        if x as i32 - offset as i32 > 0 && y as i32 - offset as i32 > 0 {
+            let offset_px2 = img.get_pixel(x - offset, y);
+
+            px.data[channel_index2] = offset_px2.data[channel_index2];
+        }
+
+        img.put_pixel(x, y, px);
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
@@ -326,42 +325,39 @@ pub fn primary(img: &mut PhotonImage) {
 pub fn colorize(mut photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let threshold = 220;
-    let (width, height) = img.dimensions();
 
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            let px_as_rgb = Rgb {
-                r: px.data[0],
-                g: px.data[1],
-                b: px.data[2],
-            };
+    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
+        let mut px = img.get_pixel(x, y);
+        let px_as_rgb = Rgb {
+            r: px.data[0],
+            g: px.data[1],
+            b: px.data[2],
+        };
 
-            let baseline_color = Rgb {
-                r: 0,
-                g: 255,
-                b: 255,
-            };
+        let baseline_color = Rgb {
+            r: 0,
+            g: 255,
+            b: 255,
+        };
 
-            let square_distance =
-                crate::helpers::square_distance(baseline_color, px_as_rgb);
+        let square_distance =
+            crate::helpers::square_distance(baseline_color, px_as_rgb);
 
-            let mut r = px.data[0] as f32;
-            let mut g = px.data[1] as f32;
-            let mut b = px.data[2] as f32;
+        let mut r = px.data[0] as f32;
+        let mut g = px.data[1] as f32;
+        let mut b = px.data[2] as f32;
 
-            if square_distance < i32::pow(threshold, 2) {
-                r *= 0.5;
-                g *= 1.25;
-                b *= 0.5;
-            }
-
-            px.data[0] = r as u8;
-            px.data[1] = g as u8;
-            px.data[2] = b as u8;
-
-            img.put_pixel(x, y, px);
+        if square_distance < i32::pow(threshold, 2) {
+            r *= 0.5;
+            g *= 1.25;
+            b *= 0.5;
         }
+
+        px.data[0] = r as u8;
+        px.data[1] = g as u8;
+        px.data[2] = b as u8;
+
+        img.put_pixel(x, y, px);
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
@@ -454,16 +450,13 @@ pub fn solarize(photon_image: &mut PhotonImage) {
 #[wasm_bindgen]
 pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
 
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            if 200 as i32 - px.data[0] as i32 > 0 {
-                px.data[0] = 200 - px.data[0];
-            }
-            img.put_pixel(x, y, px);
+    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
+        let mut px = img.get_pixel(x, y);
+        if 200 as i32 - px.data[0] as i32 > 0 {
+            px.data[0] = 200 - px.data[0];
         }
+        img.put_pixel(x, y, px);
     }
     PhotonImage {
         raw_pixels: img.raw_pixels(),
@@ -524,7 +517,6 @@ pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
 #[wasm_bindgen]
 pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
 
     let clamped_contrast = num::clamp(contrast, -255.0, 255.0);
 
@@ -539,15 +531,13 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
         let new_val = i as f32 * factor + offset;
         lookup_table[i] = num::clamp(new_val, 0.0, 255.0) as u8;
     }
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            px.data[0] = lookup_table[px.data[0] as usize];
-            px.data[1] = lookup_table[px.data[1] as usize];
-            px.data[2] = lookup_table[px.data[2] as usize];
+    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
+        let mut px = img.get_pixel(x, y);
+        px.data[0] = lookup_table[px.data[0] as usize];
+        px.data[1] = lookup_table[px.data[1] as usize];
+        px.data[2] = lookup_table[px.data[2] as usize];
 
-            img.put_pixel(x, y, px);
-        }
+        img.put_pixel(x, y, px);
     }
     photon_image.raw_pixels = img.raw_pixels();
 }
@@ -574,32 +564,29 @@ pub fn tint(
     b_offset: u32,
 ) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let (width, height) = img.dimensions();
 
-    for x in 0..width {
-        for y in 0..height {
-            let mut px = img.get_pixel(x, y);
-            let (r_val, g_val, b_val) =
-                (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
+    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
+        let mut px = img.get_pixel(x, y);
+        let (r_val, g_val, b_val) =
+            (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
 
-            px.data[0] = if r_val as u32 + r_offset < 255 {
-                r_val as u8 + r_offset as u8
-            } else {
-                255
-            };
-            px.data[1] = if g_val as u32 + g_offset < 255 {
-                g_val as u8 + g_offset as u8
-            } else {
-                255
-            };
-            px.data[2] = if b_val as u32 + b_offset < 255 {
-                b_val as u8 + b_offset as u8
-            } else {
-                255
-            };
+        px.data[0] = if r_val as u32 + r_offset < 255 {
+            r_val as u8 + r_offset as u8
+        } else {
+            255
+        };
+        px.data[1] = if g_val as u32 + g_offset < 255 {
+            g_val as u8 + g_offset as u8
+        } else {
+            255
+        };
+        px.data[2] = if b_val as u32 + b_offset < 255 {
+            b_val as u8 + b_offset as u8
+        } else {
+            255
+        };
 
-            img.put_pixel(x, y, px);
-        }
+        img.put_pixel(x, y, px);
     }
     let raw_pixels = img.raw_pixels();
     photon_image.raw_pixels = raw_pixels;
