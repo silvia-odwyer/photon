@@ -21,8 +21,11 @@ use crate::iter::ImageIterator;
 ///
 /// ```
 /// // For example, to apply a monochrome effect to an image:
-/// use photon::monochrome;
-/// monochrome::monochroma(&mut img, 40, 50, 100);
+/// use photon_rs::monochrome::monochrome;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// monochrome(&mut img, 40_u32, 50_u32, 100_u32);
 /// ```
 ///
 #[wasm_bindgen]
@@ -66,9 +69,12 @@ pub fn monochrome(img: &mut PhotonImage, r_offset: u32, g_offset: u32, b_offset:
 /// # Example
 ///
 /// ```
-/// // For example, to tint an image of type `PhotonImage`:
-/// use photon::monochrome;
-/// monochrome::sepia(&mut img);
+/// // For example, to sepia an image of type `PhotonImage`:
+/// use photon_rs::monochrome::sepia;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// sepia(&mut img);
 /// ```
 ///
 #[wasm_bindgen]
@@ -107,9 +113,12 @@ pub fn sepia(img: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// // For example, to convert an image of type `PhotonImage` to greyscale:
-/// use photon::monochrome;
-/// monochrome::grayscale(&mut img);
+/// // For example, to convert an image of type `PhotonImage` to grayscale:
+/// use photon_rs::monochrome::grayscale;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// grayscale(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn grayscale(img: &mut PhotonImage) {
@@ -138,9 +147,12 @@ pub fn grayscale(img: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// // For example, to convert an image of type `PhotonImage` to greyscale with a human corrected factor:
-/// use photon::monochrome;
-/// monochrome::grayscale_human_corrected(&mut img);
+/// // For example, to convert an image of type `PhotonImage` to grayscale with a human corrected factor:
+/// use photon_rs::monochrome::grayscale_human_corrected;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// grayscale_human_corrected(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn grayscale_human_corrected(img: &mut PhotonImage) {
@@ -168,8 +180,11 @@ pub fn grayscale_human_corrected(img: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to desaturate an image:
-/// use photon::monochrome;
-/// monochrome::desaturate(&mut img);
+/// use photon_rs::monochrome::desaturate;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// desaturate(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn desaturate(img: &mut PhotonImage) {
@@ -201,7 +216,11 @@ pub fn desaturate(img: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to decompose an image with min decomposition:
-/// monochrome::decompose_min(&mut img);
+/// use photon_rs::monochrome::decompose_min;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// decompose_min(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn decompose_min(img: &mut PhotonImage) {
@@ -233,7 +252,11 @@ pub fn decompose_min(img: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to decompose an image with max decomposition:
-/// monochrome::decompose_max(&mut img);
+/// use photon_rs::monochrome::decompose_max;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// decompose_max(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn decompose_max(img: &mut PhotonImage) {
@@ -266,7 +289,11 @@ pub fn decompose_max(img: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to limit an image to four shades of gray only:
-/// monochrome::grayscale_shades(&mut img, 4);
+/// use photon_rs::monochrome::grayscale_shades;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// grayscale_shades(&mut img, 4_u8);
 /// ```
 #[wasm_bindgen]
 pub fn grayscale_shades(mut photon_image: &mut PhotonImage, num_shades: u8) {
@@ -299,7 +326,11 @@ pub fn grayscale_shades(mut photon_image: &mut PhotonImage, num_shades: u8) {
 /// # Example
 ///
 /// ```
-/// monochrome::r_grayscale(&mut img);
+/// use photon_rs::monochrome::r_grayscale;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// r_grayscale(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn r_grayscale(photon_image: &mut PhotonImage) {
@@ -314,7 +345,11 @@ pub fn r_grayscale(photon_image: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// monochrome::g_grayscale(&mut img);
+/// use photon_rs::monochrome::g_grayscale;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// g_grayscale(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn g_grayscale(photon_image: &mut PhotonImage) {
@@ -329,7 +364,11 @@ pub fn g_grayscale(photon_image: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// monochrome::b_grayscale(&mut img);
+/// use photon_rs::monochrome::b_grayscale;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// b_grayscale(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn b_grayscale(photon_image: &mut PhotonImage) {
@@ -345,7 +384,11 @@ pub fn b_grayscale(photon_image: &mut PhotonImage) {
 /// # Example
 /// To grayscale using only values from the Red channel:
 /// ```
-/// monochrome::single_channel_grayscale(&mut img, 0);
+/// use photon_rs::monochrome::single_channel_grayscale;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// single_channel_grayscale(&mut img, 0_usize);
 /// ```
 #[wasm_bindgen]
 pub fn single_channel_grayscale(mut photon_image: &mut PhotonImage, channel: usize) {
@@ -374,8 +417,11 @@ pub fn single_channel_grayscale(mut photon_image: &mut PhotonImage, channel: usi
 ///
 /// ```
 /// // For example, to threshold an image of type `PhotonImage`:
-/// use photon::monochrome;
-/// monochrome::threshold(&mut img, 30);
+/// use photon_rs::monochrome::threshold;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// threshold(&mut img, 30_u32);
 /// ```
 #[wasm_bindgen]
 pub fn threshold(img: &mut PhotonImage, threshold: u32) {

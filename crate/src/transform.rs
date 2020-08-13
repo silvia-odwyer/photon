@@ -22,11 +22,14 @@ use web_sys::{HtmlCanvasElement, ImageData};
 ///
 /// ```
 /// // For example, to crop an image at (0, 0) to (500, 800)
-/// use photon::transform;
-/// let img = photon::open_image("img.jpg");
-/// let cropped_img = photon::transform::crop(&mut img, 0, 0, 500, 800);
+/// use photon_rs::native::{open_image, save_image};
+/// use photon_rs::transform::crop;
+/// use photon_rs::PhotonImage;
+///
+/// let mut img = open_image("img.jpg");
+/// let cropped_img: PhotonImage = crop(&mut img, 0_u32, 0_u32, 500_u32, 800_u32);
 /// // Write the contents of this image in JPG format.
-/// photon::helpers::save_image(cropped_img, "cropped_image.png");
+/// save_image(cropped_img, "cropped_image.jpg");
 /// ```
 #[cfg(not(target_arch = "wasm32"))]
 #[wasm_bindgen]
@@ -93,11 +96,11 @@ pub fn crop(
 ///
 /// ```
 /// // For example, to flip an image horizontally:
-/// use photon::transform;
-/// let img = photon::open_image("img.jpg");
-/// let new_img = photon::transform::fliph(&mut img);
-/// // Write the contents of this image in JPG format.
-/// photon::helpers::save_image(new_img, "new_image.png");
+/// use photon_rs::native::open_image;
+/// use photon_rs::transform::fliph;
+///
+/// let mut img = open_image("img.jpg");
+/// fliph(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn fliph(photon_image: &mut PhotonImage) {
@@ -127,11 +130,11 @@ pub fn fliph(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to flip an image vertically:
-/// use photon::transform;
-/// let img = photon::open_image("img.jpg");
-/// let new_img = photon::transform::flipv(&mut img);
-/// // Write the contents of this image in JPG format.
-/// photon::helpers::save_image(new_img, "new_image.png");
+/// use photon_rs::native::open_image;
+/// use photon_rs::transform::flipv;
+///
+/// let mut img = open_image("img.jpg");
+/// flipv(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn flipv(photon_image: &mut PhotonImage) {

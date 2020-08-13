@@ -20,8 +20,12 @@ use crate::iter::ImageIterator;
 ///
 /// ```
 /// // For example, to add a watermark to an image at x: 30, y: 40:
-/// use photon::multiple;
-/// photon::multiple::watermark(img, watermark, 30, 40);
+/// use photon_rs::multiple::watermark;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// let water_mark = open_image("watermark.jpg");
+/// watermark(&mut img, &water_mark, 30_u32, 40_u32);
 /// ```
 #[wasm_bindgen]
 pub fn watermark(mut img: &mut PhotonImage, watermark: &PhotonImage, x: u32, y: u32) {
@@ -47,8 +51,12 @@ pub fn watermark(mut img: &mut PhotonImage, watermark: &PhotonImage, x: u32, y: 
 ///
 /// ```
 /// // For example, to blend two images with the `multiply` blend mode:
-/// use photon::multiple;
-/// photon::multiple::blend(&mut img, &img2, "multiply");
+/// use photon_rs::multiple::blend;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// let img2 = open_image("img2.jpg");
+/// blend(&mut img, &img2, "multiply");
 /// ```
 #[wasm_bindgen]
 pub fn blend(
@@ -120,9 +128,14 @@ pub fn blend(
 ///
 /// ```
 /// // For example, to replace the background of ImageA (which is RGB value 20, 40, 60) with the background of ImageB:
-/// use photon::multiple;
-/// let rgb = Rgb{20, 40, 60};
-/// photon::multiple::replace_background(img_b, img_a, rgb);
+/// use photon_rs::Rgb;
+/// use photon_rs::multiple::replace_background;
+/// use photon_rs::native::open_image;
+///
+/// let rgb = Rgb::new(20_u8, 40_u8, 60_u8);
+/// let mut img = open_image("img.jpg");
+/// let img2 = open_image("img2.jpg");
+/// replace_background(&mut img, &img2, rgb);
 /// ```
 pub fn replace_background(
     mut photon_image: &mut PhotonImage,

@@ -23,9 +23,12 @@ fn conv(mut photon_image: &mut PhotonImage, kernel: Vec<f32>) {
 /// # Example
 ///
 /// ```
-/// // For example, to sharpen an image:
-/// use photon::conv::sharpen;
-/// photon::channels::sharpen(img);
+/// // For example, to noise reduct an image:
+/// use photon_rs::conv::noise_reduction;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// noise_reduction(&mut img);
 /// ```
 /// Adds a constant to a select R, G, or B channel's value.
 #[wasm_bindgen]
@@ -43,8 +46,11 @@ pub fn noise_reduction(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to sharpen an image:
-/// use photon::conv::sharpen;
-/// photon::channels::sharpen(img);
+/// use photon_rs::conv::sharpen;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// sharpen(&mut img);
 /// ```
 /// Adds a constant to a select R, G, or B channel's value.
 #[wasm_bindgen]
@@ -62,8 +68,11 @@ pub fn sharpen(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to increase the Red channel for all pixels by 10:
-/// use photon::channels;
-/// photon::conv::edge_detection(img);
+/// use photon_rs::conv::edge_detection;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// edge_detection(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn edge_detection(photon_image: &mut PhotonImage) {
@@ -80,8 +89,11 @@ pub fn edge_detection(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to apply an identity kernel convolution:
-/// use photon::channels;
-/// photon::conv::identity(img);
+/// use photon_rs::conv::identity;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// identity(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn identity(photon_image: &mut PhotonImage) {
@@ -98,8 +110,11 @@ pub fn identity(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to apply a box blur effect:
-/// use photon::channels;
-/// photon::conv::box_blur(img);
+/// use photon_rs::conv::box_blur;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// box_blur(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn box_blur(photon_image: &mut PhotonImage) {
@@ -117,7 +132,11 @@ pub fn box_blur(photon_image: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// photon::conv:fast_gaussian_blur(photon_image, 3);
+/// use photon_rs::conv::gaussian_blur;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// gaussian_blur(&mut img, 3_i32);
 /// ```
 #[wasm_bindgen]
 pub fn gaussian_blur(photon_image: &mut PhotonImage, radius: i32) {
@@ -335,8 +354,11 @@ fn box_blur_vertical(
 ///
 /// ```
 /// // For example, to display the horizontal lines in an image:
-/// use photon::channels;
-/// photon::conv::detect_horizontal_lines(img);
+/// use photon_rs::conv::detect_horizontal_lines;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// detect_horizontal_lines(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn detect_horizontal_lines(photon_image: &mut PhotonImage) {
@@ -353,8 +375,11 @@ pub fn detect_horizontal_lines(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to display the vertical lines in an image:
-/// use photon::channels;
-/// photon::conv::detect_vertical_lines(img);
+/// use photon_rs::conv::detect_vertical_lines;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// detect_vertical_lines(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn detect_vertical_lines(photon_image: &mut PhotonImage) {
@@ -371,8 +396,11 @@ pub fn detect_vertical_lines(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to display the lines at a forty five degree angle in an image:
-/// use photon::channels;
-/// photon::conv::detect_fortyfivedeg_lines(img);
+/// use photon_rs::conv::detect_45_deg_lines;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// detect_45_deg_lines(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn detect_45_deg_lines(photon_image: &mut PhotonImage) {
@@ -389,8 +417,11 @@ pub fn detect_45_deg_lines(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to display the lines at a 135 degree angle in an image:
-/// use photon::channels;
-/// photon::conv::detect_hundredthirtyfive_deg_lines(img);
+/// use photon_rs::conv::detect_135_deg_lines;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// detect_135_deg_lines(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn detect_135_deg_lines(photon_image: &mut PhotonImage) {
@@ -407,8 +438,11 @@ pub fn detect_135_deg_lines(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to apply a laplace effect:
-/// use photon::conv;
-/// photon::conv::laplace(img);
+/// use photon_rs::conv::laplace;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// laplace(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn laplace(photon_image: &mut PhotonImage) {
@@ -425,8 +459,11 @@ pub fn laplace(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to apply this effect:
-/// use photon::conv;
-/// photon::conv::edge_one(img);
+/// use photon_rs::conv::edge_one;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// edge_one(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn edge_one(photon_image: &mut PhotonImage) {
@@ -443,8 +480,11 @@ pub fn edge_one(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to apply an emboss effect:
-/// use photon::conv;
-/// photon::conv::emboss(img);
+/// use photon_rs::conv::emboss;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// emboss(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn emboss(photon_image: &mut PhotonImage) {
@@ -479,8 +519,11 @@ pub fn sobel_horizontal(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to apply a horizontal Prewitt convolution effect:
-/// use photon::conv;
-/// photon::conv::prewitt_horizontal(img);
+/// use photon_rs::conv::prewitt_horizontal;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// prewitt_horizontal(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn prewitt_horizontal(photon_image: &mut PhotonImage) {
@@ -497,8 +540,11 @@ pub fn prewitt_horizontal(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to apply a vertical Sobel filter:
-/// use photon::conv;
-/// photon::conv::sobel_vertical(img);
+/// use photon_rs::conv::sobel_vertical;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// sobel_vertical(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn sobel_vertical(photon_image: &mut PhotonImage) {

@@ -26,12 +26,12 @@ use wasm_bindgen::prelude::*;
 /// # Example
 /// ```
 /// // For example to draw the string "Welcome to Photon!" at 10, 10:
-/// use photon::text::draw_text_with_border;
+/// use photon_rs::native::open_image;
+/// use photon_rs::text::draw_text_with_border;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let img: PhotonImage = open_image("images/cats.PNG");
-///
-/// draw_text_with_border(&mut img, "Welcome to Photon!", 10, 10);
+/// let mut img = open_image("img.jpg");
+/// draw_text_with_border(&mut img, "Welcome to Photon!", 10_u32, 10_u32);
 /// ```
 #[wasm_bindgen]
 pub fn draw_text_with_border(
@@ -105,12 +105,12 @@ pub fn draw_text_with_border(
 /// # Example
 /// ```
 /// // For example to draw the string "Welcome to Photon!" at 10, 10:
-/// use photon::text::draw_text;
+/// use photon_rs::native::open_image;
+/// use photon_rs::text::draw_text;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let img: PhotonImage = open_image("images/cats.PNG");
-///
-/// draw_text(&mut img, "Welcome to Photon!", 10, 10);
+/// let mut img = open_image("img.jpg");
+/// draw_text(&mut img, "Welcome to Photon!", 10_u32, 10_u32);
 /// ```
 #[wasm_bindgen]
 pub fn draw_text(mut photon_img: &mut PhotonImage, text: &str, x: u32, y: u32) {

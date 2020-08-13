@@ -15,7 +15,11 @@ use wasm_bindgen::prelude::*;
 /// # Example
 ///
 /// ```
-/// photon::filters::neue(&mut img);
+/// use photon_rs::filters::neue;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// neue(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn neue(photon_image: &mut PhotonImage) {
@@ -36,7 +40,11 @@ pub fn neue(photon_image: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// photon::filters::lix(&mut img);
+/// use photon_rs::filters::lix;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// lix(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn lix(photon_image: &mut PhotonImage) {
@@ -58,7 +66,11 @@ pub fn lix(photon_image: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// photon::filters::ryo(&mut img);
+/// use photon_rs::filters::ryo;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// ryo(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn ryo(photon_image: &mut PhotonImage) {
@@ -97,8 +109,11 @@ pub fn ryo(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to add a filter called "vintage" to an image:
-/// use photon::filters;
-/// photon::filters::filter(&mut img, "vintage");
+/// use photon_rs::filters::filter;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// filter(&mut img, "vintage");
 /// ```
 #[wasm_bindgen]
 pub fn filter(img: &mut PhotonImage, filter_name: &str) {
@@ -148,7 +163,11 @@ pub fn filter(img: &mut PhotonImage, filter_name: &str) {
 /// # Example
 ///
 /// ```
-/// photon::filters::lofi(&mut img);
+/// use photon_rs::filters::lofi;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// lofi(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn lofi(img: &mut PhotonImage) {
@@ -179,7 +198,11 @@ pub fn pastel_pink(img: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// photon::filters::golden(&mut img);
+/// use photon_rs::filters::golden;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// golden(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn golden(img: &mut PhotonImage) {
@@ -195,7 +218,11 @@ pub fn golden(img: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// photon::filters::cali(&mut img);
+/// use photon_rs::filters::cali;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// cali(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn cali(img: &mut PhotonImage) {
@@ -211,7 +238,11 @@ pub fn cali(img: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// photon::filters::dramatic(&mut img);
+/// use photon_rs::filters::dramatic;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// dramatic(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn dramatic(img: &mut PhotonImage) {
@@ -226,7 +257,11 @@ pub fn dramatic(img: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// photon::filters::firenze(&mut img);
+/// use photon_rs::filters::firenze;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// firenze(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn firenze(img: &mut PhotonImage) {
@@ -244,7 +279,11 @@ pub fn firenze(img: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// photon::filters::obsidian(&mut img);
+/// use photon_rs::filters::obsidian;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// obsidian(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn obsidian(img: &mut PhotonImage) {
