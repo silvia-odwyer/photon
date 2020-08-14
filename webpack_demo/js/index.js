@@ -12,7 +12,7 @@ var ctx, ctx2, watermark_ctx;
 import("../../crate/pkg").then(module => {
   var startTime;
   var endTime;
- 
+
   // Setup images
   const newimg = new Image();
   newimg.src = MainImage;
@@ -86,35 +86,8 @@ import("../../crate/pkg").then(module => {
   let change_image_btn = document.getElementById("change_img");
   change_image_btn.addEventListener("click", changeImageFromNav, false);
 
-  let vec_btn = document.getElementById("vec_to_photonimage");
-  vec_btn.addEventListener("click", vec_to_photonimage_example, false);
-
-  function base64_example() {
-    ctx.drawImage(newimg, 0, 0);
-    startTime = performance.now();
-    
-    console.time("canvas_data_url");   
-    let base64 = canvas.toDataURL();
-    console.timeEnd("canvas_data_url");
-
-
-    base64 = base64.substr(22, base64.length);
-    console.time("base64_wasm_time");     
-    // Convert the raw base64 data to a PhotonImage.
-    let photon_img = module.base64_to_image(base64);
-
-    module.grayscale(photon_img);
-
-    // Update the canvas with the new imagedata
-    module.putImageData(canvas, ctx, photon_img);
-    console.timeEnd("base64_wasm_time");
-    endTime = performance.now();
-    updateBenchmarks();
-    updateEffectName(event.target);
-  }
-
   function applyEffect(event) {
-    console.time("wasm_time"); 
+    console.time("wasm_time");
 
     ctx.drawImage(newimg, 0, 0);
     startTime = performance.now();
@@ -131,8 +104,8 @@ import("../../crate/pkg").then(module => {
     let watermark_img = module.open_image(watermark_canvas, watermark_ctx);
 
     // Maps the name of an effect to its relevant function in the Rust library
-    let filter_dict = {"grayscale" : function(){return module.grayscale(rust_image)}, 
-                      "offset_red": function(){return module.offset(rust_image, 0, 15)},                    
+    let filter_dict = {"grayscale" : function(){return module.grayscale(rust_image)},
+                      "offset_red": function(){return module.offset(rust_image, 0, 15)},
                       "offset_blue": function(){return module.offset(rust_image, 1, 15)},
                       "offset_green": function(){return module.offset(rust_image, 2, 15)},
                       "primary" : function() {return module.primary(rust_image)},
@@ -145,32 +118,32 @@ import("../../crate/pkg").then(module => {
                       "red_channel_grayscale": function() {module.single_channel_grayscale(rust_image, 0)},
                       "green_channel_grayscale": function() {module.single_channel_grayscale(rust_image, 1)},
                       "blue_channel_grayscale": function() {module.single_channel_grayscale(rust_image, 2)},
-                      "hue_rotate_hsl": function() {module.hue_rotate_hsl(rust_image, 0.3)}, 
-                      "hue_rotate_hsv": function() {module.hue_rotate_hsv(rust_image, 0.3)}, 
-                      "hue_rotate_lch": function() {module.hue_rotate_lch(rust_image, 0.3)}, 
-                      "lighten_hsl": function() {module.lighten_hsl(rust_image, 0.3)}, 
-                      "lighten_hsv": function() {module.lighten_hsv(rust_image, 0.3)}, 
-                      "lighten_lch": function() {module.lighten_lch(rust_image, 0.3)}, 
-                      "darken_hsl": function() {module.darken_hsl(rust_image, 0.3)}, 
-                      "darken_hsv": function() {module.darken_hsv(rust_image, 0.3)}, 
-                      "darken_lch": function() {module.darken_lch(rust_image, 0.3 )}, 
-                      "desaturate_hsl": function() {module.desaturate_hsl(rust_image, 0.3)}, 
-                      "desaturate_hsv": function() {module.desaturate_hsv(rust_image, 0.3)}, 
-                      "desaturate_lch": function() {module.desaturate_lch(rust_image, 0.3)}, 
-                      "saturate_hsl": function() {module.saturate_hsl(rust_image, 0.3)}, 
-                      "saturate_hsv": function() {module.saturate_hsv(rust_image, 0.3)}, 
-                      "saturate_lch": function() {module.saturate_lch(rust_image, 0.3)}, 
-                      "inc_red_channel": function() {return module.alter_red_channel(rust_image, 120)}, 
-                      "inc_blue_channel": function() {return module.alter_channel(rust_image, 2, 100)}, 
-                      "inc_green_channel": function() {return module.alter_channel(rust_image, 1, 100)}, 
-                      "inc_two_channels": function() {return module.alter_channel(rust_image, 1, 30);}, 
-                      "dec_red_channel": function() {return module.alter_channel(rust_image, 0, -30)}, 
-                      "dec_blue_channel": function() {return module.alter_channel(rust_image, 2, -30)}, 
-                      "dec_green_channel": function() {return module.alter_channel(rust_image, 1, -30)}, 
-                      "swap_rg_channels": function() {return module.swap_channels(rust_image, 0, 1);}, 
-                      "swap_rb_channels": function() {return module.swap_channels(rust_image, 0, 2);}, 
-                      "swap_gb_channels": function() {return module.swap_channels(rust_image, 1, 2);}, 
-                      "remove_red_channel": function() {return module.remove_red_channel(rust_image, 250);}, 
+                      "hue_rotate_hsl": function() {module.hue_rotate_hsl(rust_image, 0.3)},
+                      "hue_rotate_hsv": function() {module.hue_rotate_hsv(rust_image, 0.3)},
+                      "hue_rotate_lch": function() {module.hue_rotate_lch(rust_image, 0.3)},
+                      "lighten_hsl": function() {module.lighten_hsl(rust_image, 0.3)},
+                      "lighten_hsv": function() {module.lighten_hsv(rust_image, 0.3)},
+                      "lighten_lch": function() {module.lighten_lch(rust_image, 0.3)},
+                      "darken_hsl": function() {module.darken_hsl(rust_image, 0.3)},
+                      "darken_hsv": function() {module.darken_hsv(rust_image, 0.3)},
+                      "darken_lch": function() {module.darken_lch(rust_image, 0.3 )},
+                      "desaturate_hsl": function() {module.desaturate_hsl(rust_image, 0.3)},
+                      "desaturate_hsv": function() {module.desaturate_hsv(rust_image, 0.3)},
+                      "desaturate_lch": function() {module.desaturate_lch(rust_image, 0.3)},
+                      "saturate_hsl": function() {module.saturate_hsl(rust_image, 0.3)},
+                      "saturate_hsv": function() {module.saturate_hsv(rust_image, 0.3)},
+                      "saturate_lch": function() {module.saturate_lch(rust_image, 0.3)},
+                      "inc_red_channel": function() {return module.alter_red_channel(rust_image, 120)},
+                      "inc_blue_channel": function() {return module.alter_channel(rust_image, 2, 100)},
+                      "inc_green_channel": function() {return module.alter_channel(rust_image, 1, 100)},
+                      "inc_two_channels": function() {return module.alter_channel(rust_image, 1, 30);},
+                      "dec_red_channel": function() {return module.alter_channel(rust_image, 0, -30)},
+                      "dec_blue_channel": function() {return module.alter_channel(rust_image, 2, -30)},
+                      "dec_green_channel": function() {return module.alter_channel(rust_image, 1, -30)},
+                      "swap_rg_channels": function() {return module.swap_channels(rust_image, 0, 1);},
+                      "swap_rb_channels": function() {return module.swap_channels(rust_image, 0, 2);},
+                      "swap_gb_channels": function() {return module.swap_channels(rust_image, 1, 2);},
+                      "remove_red_channel": function() {return module.remove_red_channel(rust_image, 250);},
                       "remove_green_channel": function() {return module.remove_green_channel(rust_image, 250)},
                       "remove_blue_channel": function() {return module.remove_blue_channel(rust_image, 250)},
                       "emboss": function() {return module.emboss(rust_image)},
@@ -203,7 +176,7 @@ import("../../crate/pkg").then(module => {
                       "test": function() {return module.filter(rust_image, "rosetint")},
                     };
 
-    // Filter the image, the PhotonImage's raw pixels are modified and 
+    // Filter the image, the PhotonImage's raw pixels are modified and
     // the PhotonImage is returned
     filter_dict[filter_name]();
 
@@ -222,31 +195,8 @@ import("../../crate/pkg").then(module => {
     effect_name_elem.innerHTML = effect_name;
   }
 
-  function vec_to_photonimage_example() {
-    console.time("vec_wasm_time"); 
-
-    ctx.drawImage(newimg, 0, 0);
-    startTime = performance.now();
-
-    let base64 = canvas.toDataURL();
-    base64 = base64.substr(22, base64.length);
-    
-    // Convert the raw base64 data to a Vec of u8s.
-    let vec = module.base64_to_vec(base64);
-    
-    // Convert the Vec of u8s to a PhotonImage
-    let photon_img = module.photonimage_from_vec(vec); 
-    module.grayscale(photon_img);
-
-    // Update the canvas with the new imagedata
-    module.putImageData(canvas, ctx, photon_img);
-    console.timeEnd("vec_wasm_time");
-    endTime = performance.now();
-    updateBenchmarks();
-  }
-
   function blendImages(event) {
-    console.time("wasm_blend_time"); 
+    console.time("wasm_blend_time");
 
     ctx.drawImage(newimg, 0, 0);
     startTime = performance.now();
@@ -280,7 +230,7 @@ import("../../crate/pkg").then(module => {
                       "text_border": function() {return module.draw_text_with_border(rust_image, "welcome to the edge", 10, 20)},
                     };
 
-    // Filter the image, the PhotonImage's raw pixels are modified and 
+    // Filter the image, the PhotonImage's raw pixels are modified and
     // the PhotonImage is returned
     filter_dict[filter_name]();
 
@@ -291,10 +241,10 @@ import("../../crate/pkg").then(module => {
     updateBenchmarks();
     updateEffectName(event.target);
   }
-  
+
   function updateCanvas(new_image) {
     let new_pixels = module.to_image_data(new_image);
-    
+
     // Place the pixels back on the canvas
     ctx.putImageData(new_pixels, 0, 0);
   }
@@ -303,13 +253,13 @@ import("../../crate/pkg").then(module => {
     startTime = performance.now();
     ctx.drawImage(newimg, 0, 0);
     let filter_name = event.target.id;
-  
-    console.time("wasm_time"); 
+
+    console.time("wasm_time");
 
     // Convert the ImageData to a PhotonImage (so that it can communicate with the core Rust library)
     let rust_image = module.open_image(canvas, ctx);
 
-    // Filter the image, the PhotonImage's raw pixels are modified and 
+    // Filter the image, the PhotonImage's raw pixels are modified and
     // the PhotonImage is returned
     module.filter(rust_image, filter_name);
 
@@ -374,9 +324,6 @@ import("../../crate/pkg").then(module => {
     change_image_elem.addEventListener("click", changeImage, false);
   }
 
-  let base64_btn = document.querySelector("#base64");
-  base64_btn.addEventListener("click", base64_example, false);
-
   function changeImage(event) {
     console.log("image changed")
     let img_name = event.target.id;
@@ -401,7 +348,7 @@ import("../../crate/pkg").then(module => {
     }
   }
 
-    
+
   function editImage(canvas, ctx) {
     let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < imgData.data.length; i += 4) {
