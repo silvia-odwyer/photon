@@ -16,14 +16,16 @@
 //! ## Example
 //! ```rust
 //! extern crate photon_rs;
-//! use photon_rs::{channels};
+//!
+//! use photon_rs::channels::alter_red_channel;
 //! use photon_rs::native::{open_image, save_image};
+//!
 //! fn main() {
 //!     // Open the image (a PhotonImage is returned)
-//!     let mut img = open_image("image.jpg");
+//!     let mut img = open_image("img.jpg");
 //!     // Apply a filter to the pixels
-//!     channels::alter_red_channel(&mut img, 25);
-//!     save_image(img, "raw_image.png");    
+//!     alter_red_channel(&mut img, 25_i16);
+//!     save_image(img, "raw_image.jpg");
 //! }
 //! ```
 //!

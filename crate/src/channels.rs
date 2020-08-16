@@ -1,7 +1,9 @@
 //! Channel manipulation.
 
 extern crate image;
+
 use image::{GenericImage, GenericImageView};
+
 extern crate wasm_bindgen;
 use crate::helpers;
 use crate::{PhotonImage, Rgb};
@@ -24,11 +26,13 @@ use crate::iter::ImageIterator;
 ///
 /// ```
 /// // For example, to increase the Red channel for all pixels by 10:
-/// use photon::channels;
-/// let img = photon::open_image("img.jpg");
-/// photon::channels::alter_channel(&mut img, 0, 10);
+/// use photon_rs::channels::alter_channel;
+/// use photon_rs::native::{open_image, save_image};
+///
+/// let mut img = open_image("img.jpg");
+/// alter_channel(&mut img, 0_usize, 10_i16);
 /// // Write the contents of this image in JPG format.
-/// photon::helpers::save_image(img, "new_image.png");
+/// save_image(img, "new_image.jpg");
 /// ```
 ///
 /// Adds a constant to a select R, G, or B channel's value.
@@ -36,8 +40,11 @@ use crate::iter::ImageIterator;
 /// ### Decrease a channel's value
 /// // For example, to decrease the Green channel for all pixels by 20:
 /// ```
-/// use photon::channels;
-/// photon::channels::alter_channel(&mut img, 1, -20);
+/// use photon_rs::channels::alter_channel;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// alter_channel(&mut img, 1_usize, -20_i16);
 /// ```
 /// **Note**: Note the use of a minus symbol when decreasing the channel.
 #[wasm_bindgen]
@@ -66,8 +73,11 @@ pub fn alter_channel(img: &mut PhotonImage, channel: usize, amt: i16) {
 ///
 /// ```
 /// // For example, to increase the Red channel for all pixels by 10:
-/// use photon::channels;
-/// photon::channels::alter_red_channel(&mut img, 10);
+/// use photon_rs::channels::alter_red_channel;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// alter_red_channel(&mut mg, 10_i16);
 /// ```
 #[wasm_bindgen]
 pub fn alter_red_channel(photon_image: &mut PhotonImage, amt: i16) {
@@ -84,8 +94,11 @@ pub fn alter_red_channel(photon_image: &mut PhotonImage, amt: i16) {
 ///
 /// ```
 /// // For example, to increase the Green channel for all pixels by 20:
-/// use photon::channels;
-/// photon::channels::alter_green_channel(&mut img, 10);
+/// use photon_rs::channels::alter_green_channel;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// alter_green_channel(&mut img, 20_i16);
 /// ```
 #[wasm_bindgen]
 pub fn alter_green_channel(img: &mut PhotonImage, amt: i16) {
@@ -102,8 +115,11 @@ pub fn alter_green_channel(img: &mut PhotonImage, amt: i16) {
 ///
 /// ```
 /// // For example, to increase the Blue channel for all pixels by 10:
-/// use photon::channels;
-/// photon::channels::alter_blue_channel(&mut img, 10);
+/// use photon_rs::channels::alter_blue_channel;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// alter_blue_channel(&mut img, 10_i16);
 /// ```
 #[wasm_bindgen]
 pub fn alter_blue_channel(img: &mut PhotonImage, amt: i16) {
@@ -123,7 +139,11 @@ pub fn alter_blue_channel(img: &mut PhotonImage, amt: i16) {
 ///
 /// ```
 /// // For example, to increase the values of the Red and Blue channels per pixel:
-/// photon::channels::inc_two_channels(&mut img, 0, 10, 2, 20);
+/// use photon_rs::channels::alter_two_channels;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// alter_two_channels(&mut img, 0_usize, 10_i16, 2_usize, 20_i16);
 /// ```
 #[wasm_bindgen]
 pub fn alter_two_channels(
@@ -169,7 +189,11 @@ pub fn alter_two_channels(
 /// ```
 /// // For example, to increase the values of the Red channel by 10, the Green channel by 20,
 /// // and the Blue channel by 50:
-/// // photon::channels::alter_channels(&mut img, 10, 20, 50);
+/// use photon_rs::channels::alter_channels;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// alter_channels(&mut img, 10_i16, 20_i16, 50_i16);
 /// ```
 #[wasm_bindgen]
 pub fn alter_channels(img: &mut PhotonImage, r_amt: i16, g_amt: i16, b_amt: i16) {
@@ -208,7 +232,11 @@ pub fn alter_channels(img: &mut PhotonImage, r_amt: i16, g_amt: i16, b_amt: i16)
 ///
 /// ```
 /// // For example, to remove the Red channel with a min_filter of 100:
-/// photon::channels::remove_channel(&mut img, 0, 100);
+/// use photon_rs::channels::remove_channel;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// remove_channel(&mut img, 0_usize, 100_u8);
 /// ```
 #[wasm_bindgen]
 pub fn remove_channel(img: &mut PhotonImage, channel: usize, min_filter: u8) {
@@ -233,7 +261,11 @@ pub fn remove_channel(img: &mut PhotonImage, channel: usize, min_filter: u8) {
 ///
 /// ```
 /// // For example, to remove the red channel for red channel pixel values less than 50:
-/// photon::channels::remove_red_channel(&mut img, 50);
+/// use photon_rs::channels::remove_red_channel;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// remove_red_channel(&mut img, 50_u8);
 /// ```
 #[wasm_bindgen]
 pub fn remove_red_channel(img: &mut PhotonImage, min_filter: u8) {
@@ -250,7 +282,11 @@ pub fn remove_red_channel(img: &mut PhotonImage, min_filter: u8) {
 ///
 /// ```
 /// // For example, to remove the green channel for green channel pixel values less than 50:
-/// photon::channels::remove_green_channel(img, 50);
+/// use photon_rs::channels::remove_green_channel;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// remove_green_channel(&mut img, 50_u8);
 /// ```
 #[wasm_bindgen]
 pub fn remove_green_channel(img: &mut PhotonImage, min_filter: u8) {
@@ -267,7 +303,11 @@ pub fn remove_green_channel(img: &mut PhotonImage, min_filter: u8) {
 ///
 /// ```
 /// // For example, to remove the blue channel for blue channel pixel values less than 50:
-/// photon::channels::remove_blue_channel(&mut img, 50);
+/// use photon_rs::channels::remove_blue_channel;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// remove_blue_channel(&mut img, 50_u8);
 /// ```
 #[wasm_bindgen]
 pub fn remove_blue_channel(img: &mut PhotonImage, min_filter: u8) {
@@ -285,7 +325,11 @@ pub fn remove_blue_channel(img: &mut PhotonImage, min_filter: u8) {
 ///
 /// ```
 /// // For example, to swap the values of the Red channel with the values of the Blue channel:
-/// photon::channels::swap_channels(&mut img, 0, 2);
+/// use photon_rs::channels::swap_channels;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// swap_channels(&mut img, 0_usize, 2_usize);
 /// ```
 #[wasm_bindgen]
 pub fn swap_channels(img: &mut PhotonImage, mut channel1: usize, mut channel2: usize) {
@@ -322,8 +366,13 @@ pub fn swap_channels(img: &mut PhotonImage, mut channel1: usize, mut channel2: u
 ///
 /// ```
 /// // For example, to only rotate the pixels that are of RGB value RGB{20, 40, 60}:
-/// let ref_color = Rgb{20, 40, 60};
-/// photon::channels::selective_hue_rotate(&mut img, ref_color, 180);
+/// use photon_rs::Rgb;
+/// use photon_rs::channels::selective_hue_rotate;
+/// use photon_rs::native::open_image;
+///
+/// let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+/// let mut img = open_image("img.jpg");
+/// selective_hue_rotate(&mut img, ref_color, 180_f32);
 /// ```
 #[wasm_bindgen]
 pub fn selective_hue_rotate(
@@ -380,7 +429,11 @@ pub fn selective_hue_rotate(
 /// # Example
 ///
 /// ```
-/// photon::channels::invert(&mut img);
+/// use photon_rs::channels::invert;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// invert(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn invert(photon_image: &mut PhotonImage) {
@@ -424,8 +477,13 @@ pub fn color_sim(lab1: Lab, lab2: Lab) -> i64 {
 ///
 /// ```
 /// // For example, to only lighten the pixels that are of or similar to RGB value RGB{20, 40, 60}:
-/// let ref_color = Rgb{20, 40, 60};
-/// photon::channels::selective_lighten(&mut img, ref_color, 0.2);
+/// use photon_rs::Rgb;
+/// use photon_rs::channels::selective_lighten;
+/// use photon_rs::native::open_image;
+///
+/// let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+/// let mut img = open_image("img.jpg");
+/// selective_lighten(&mut img, ref_color, 0.2_f32);
 /// ```
 #[wasm_bindgen]
 pub fn selective_lighten(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
@@ -446,8 +504,13 @@ pub fn selective_lighten(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
 ///
 /// ```
 /// // For example, to only desaturate the pixels that are similar to the RGB value RGB{20, 40, 60}:
-/// let ref_color = Rgb{20, 40, 60};
-/// photon::channels::selective_desaturate(&mut img, ref_color, 0.1);
+/// use photon_rs::Rgb;
+/// use photon_rs::channels::selective_desaturate;
+/// use photon_rs::native::open_image;
+///
+/// let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+/// let mut img = open_image("img.jpg");
+/// selective_desaturate(&mut img, ref_color, 0.1_f32);
 /// ```
 #[wasm_bindgen]
 pub fn selective_desaturate(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
@@ -468,8 +531,13 @@ pub fn selective_desaturate(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
 ///
 /// ```
 /// // For example, to only increase the saturation of pixels that are similar to the RGB value RGB{20, 40, 60}:
-/// let ref_color = Rgb{20, 40, 60};
-/// photon::channels::selective_saturate(&mut img, ref_color, 0.1);
+/// use photon_rs::Rgb;
+/// use photon_rs::channels::selective_saturate;
+/// use photon_rs::native::open_image;
+///
+/// let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+/// let mut img = open_image("img.jpg");
+/// selective_saturate(&mut img, ref_color, 0.1_f32);
 /// ```
 #[wasm_bindgen]
 pub fn selective_saturate(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
@@ -546,8 +614,13 @@ fn selective(
 ///
 /// ```
 /// // For example, to greyscale all pixels that are *not* visually similar to the RGB colour RGB{20, 40, 60}:
-/// let ref_color = Rgb{20, 40, 60};
-/// photon::channels::selective_greyscale(&mut img, ref_color);
+/// use photon_rs::Rgb;
+/// use photon_rs::channels::selective_greyscale;
+/// use photon_rs::native::open_image;
+///
+/// let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+/// let mut img = open_image("img.jpg");
+/// selective_greyscale(img, ref_color);
 /// ```
 #[wasm_bindgen]
 pub fn selective_greyscale(mut photon_image: PhotonImage, ref_color: Rgb) {

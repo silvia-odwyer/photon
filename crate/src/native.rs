@@ -15,10 +15,10 @@ use crate::PhotonImage;
 /// # Example
 /// ```
 /// // For example:
-/// use photon::native::open_image;
+/// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let img: PhotonImage = open_image("images/flowers.PNG");
+/// let img = open_image("img.jpg");
 ///
 /// // ... image editing functionality here ...
 /// ```

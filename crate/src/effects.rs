@@ -22,8 +22,11 @@ use crate::iter::ImageIterator;
 ///
 /// ```
 /// // For example, to offset pixels by 30 pixels on the red channel:
-/// use photon::effects;
-/// photon::effects::offset(img, 0, 30);
+/// use photon_rs::effects::offset;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// offset(&mut img, 0_usize, 30_u32);
 /// ```
 #[wasm_bindgen]
 pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32) {
@@ -58,8 +61,11 @@ pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32)
 ///
 /// ```
 /// // For example, to add an offset to the red channel by 30 pixels.
-/// use photon::effects;
-/// photon::effects::offset_red(img, 30);
+/// use photon_rs::effects::offset_red;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// offset_red(&mut img, 30_u32);
 /// ```
 #[wasm_bindgen]
 pub fn offset_red(img: &mut PhotonImage, offset_amt: u32) {
@@ -75,8 +81,11 @@ pub fn offset_red(img: &mut PhotonImage, offset_amt: u32) {
 ///
 /// ```
 /// // For example, to add an offset to the green channel by 30 pixels.
-/// use photon::effects;
-/// photon::effects::offset_green(img, 40);
+/// use photon_rs::effects::offset_green;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// offset_green(&mut img, 30_u32);
 /// ```
 #[wasm_bindgen]
 pub fn offset_green(img: &mut PhotonImage, offset_amt: u32) {
@@ -92,8 +101,11 @@ pub fn offset_green(img: &mut PhotonImage, offset_amt: u32) {
 /// // For example, to add an offset to the green channel by 40 pixels.
 ///
 /// ```
-/// use photon::effects;
-/// photon::effects::offset_blue(img, 40);
+/// use photon_rs::effects::offset_blue;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// offset_blue(&mut img, 40_u32);
 /// ```
 #[wasm_bindgen]
 pub fn offset_blue(img: &mut PhotonImage, offset_amt: u32) {
@@ -109,8 +121,11 @@ pub fn offset_blue(img: &mut PhotonImage, offset_amt: u32) {
 ///
 /// ```
 /// // For example, to add a 30-pixel offset to both the red and blue channels:
-/// use photon::effects;
-/// photon::effects::multiple_offsets(img, 30, 0, 2);
+/// use photon_rs::effects::multiple_offsets;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// multiple_offsets(&mut img, 30_u32, 0_usize, 2_usize);
 /// ```
 #[wasm_bindgen]
 pub fn multiple_offsets(
@@ -274,8 +289,11 @@ pub fn halftone(mut photon_image: PhotonImage) {
 ///
 /// ```
 /// // For example, to add a primary colour effect to an image of type `DynamicImage`:
-/// use photon::effects;
-/// photon::effects::primary(img);
+/// use photon_rs::effects::primary;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// primary(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn primary(img: &mut PhotonImage) {
@@ -318,8 +336,11 @@ pub fn primary(img: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to colorize an image of type `PhotonImage`:
-/// use photon::effects;
-/// photon::effects::colorize(img);
+/// use photon_rs::effects::colorize;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// colorize(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn colorize(mut photon_image: &mut PhotonImage) {
@@ -420,8 +441,11 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to colorize an image of type `PhotonImage`:
-/// use photon::effects;
-/// photon::effects::solarize(img);
+/// use photon_rs::effects::solarize;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// solarize(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn solarize(photon_image: &mut PhotonImage) {
@@ -443,9 +467,13 @@ pub fn solarize(photon_image: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// // For example, to solarize an image of type `PhotonImage`:
-/// use photon::effects;
-/// let img = photon::effects::solarize(img);
+/// // For example, to solarize "retimg" an image of type `PhotonImage`:
+/// use photon_rs::effects::solarize_retimg;
+/// use photon_rs::native::open_image;
+/// use photon_rs::PhotonImage;
+///
+/// let img = open_image("img.jpg");
+/// let result: PhotonImage = solarize_retimg(&img);
 /// ```
 #[wasm_bindgen]
 pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
@@ -473,7 +501,11 @@ pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
 /// # Example
 ///
 /// ```
-/// photon::effects::inc_brightness(img, 10);
+/// use photon_rs::effects::inc_brightness;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// inc_brightness(&mut img, 10_u8);
 /// ```
 #[wasm_bindgen]
 pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
@@ -512,7 +544,11 @@ pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
 /// # Example
 ///
 /// ```
-/// photon::effects::adjust_contrast(photon_image, 30.0);
+/// use photon_rs::effects::adjust_contrast;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// adjust_contrast(&mut img, 30_f32);
 /// ```
 #[wasm_bindgen]
 pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
@@ -546,14 +582,18 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
 ///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
-/// * `r_offset` - The amount the  R channel should be incremented by.
+/// * `r_offset` - The amount the R channel should be incremented by.
 /// * `g_offset` - The amount the G channel should be incremented by.
 /// * `b_offset` - The amount the B channel should be incremented by.
 /// # Example
 ///
 /// ```
 /// // For example, to tint an image of type `PhotonImage`:
-/// photon::tint(img, 10, 20, 15);
+/// use photon_rs::effects::tint;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// tint(&mut img, 10_u32, 20_u32, 15_u32);
 /// ```
 ///
 #[wasm_bindgen]
