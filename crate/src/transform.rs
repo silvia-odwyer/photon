@@ -187,7 +187,7 @@ fn filter_type_from_sampling_filter(
 /// * `sampling_filter` - Nearest = 1, Triangle = 2, CatmullRom = 3, Gaussian = 4, Lanczos3 = 5
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
-pub fn resizeimg_browser(
+pub fn resize_img_browser(
     photon_img: &PhotonImage,
     width: u32,
     height: u32,
