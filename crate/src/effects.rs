@@ -563,9 +563,10 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
         (259.0 * (clamped_contrast + 255.0)) / (255.0 * (259.0 - clamped_contrast));
     let mut lookup_table: Vec<u8> = vec![0; 256];
     let offset = -128.0 * factor + 128.0;
-    for i in 0..256 {
+
+    for (i, table) in lookup_table.iter_mut().enumerate().take(256_usize) {
         let new_val = i as f32 * factor + offset;
-        lookup_table[i] = num::clamp(new_val, 0.0, 255.0) as u8;
+        *table = num::clamp(new_val, 0.0, 255.0) as u8;
     }
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let mut px = img.get_pixel(x, y);

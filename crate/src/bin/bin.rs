@@ -1,18 +1,27 @@
 extern crate photon_rs;
-use photon_rs::helpers;
+extern crate time;
+
+use photon_rs::channels::alter_red_channel;
 use photon_rs::native::{open_image, save_image};
+use time::Instant;
 
 fn main() {
     // Open the image (a PhotonImage is returned)
-    let mut img = open_image("fruit_1920_1080.jpg");
+    let mut img = open_image("examples/input_images/daisies_fuji.jpg");
 
+    let start = Instant::now();
     // Increment the red channel by 40
-    photon_rs::channels::alter_red_channel(&mut img, 30);
+    alter_red_channel(&mut img, 40_i16);
 
     let output_img_path = "output.jpg";
 
     // Write file to filesystem.
     save_image(img, output_img_path);
+    let end = Instant::now();
+    println!(
+        "Took {} seconds to increment red channel by 40 on image.",
+        (end - start).as_seconds_f64()
+    );
 
     println!(
         "Saved image: {}. Please check this directory for the image.",

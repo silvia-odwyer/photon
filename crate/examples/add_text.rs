@@ -1,8 +1,6 @@
 extern crate image;
 extern crate photon_rs as photon;
 extern crate time;
-use image::GenericImageView;
-use photon::Rgb;
 use time::Instant;
 
 fn main() {
@@ -20,7 +18,7 @@ fn main() {
     photon::text::draw_text_with_border(&mut img, "Welcome to Photon!", 10, 20);
 
     // Write the contents of this image in PNG format.
-    photon::native::save_image(img, "new_image.png");
+    photon::native::save_image(img, "output_new_image.png");
     let end = Instant::now();
     println!(
         "Took {} seconds to add text to image.",

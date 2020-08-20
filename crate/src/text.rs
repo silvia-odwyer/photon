@@ -12,6 +12,7 @@ use imageproc::drawing::draw_text_mut;
 use imageproc::morphology::dilate_mut;
 use rusttype::{FontCollection, Scale};
 use wasm_bindgen::prelude::*;
+use crate::iter::ImageIterator;
 
 /// Add bordered-text to an image.
 /// The only font available as of now is Roboto.
@@ -69,13 +70,11 @@ pub fn draw_text_with_border(
     dilate_mut(&mut image2, Norm::LInf, 4u8);
 
     // Add a border to the text.
-    for x in 0..image2.width() {
-        for y in 0..image2.height() {
-            let pixval = 255 - image2.get_pixel(x, y).data[0];
-            if pixval != 255 {
-                let new_pix = Rgba([pixval, pixval, pixval, 255]);
-                image.put_pixel(x, y, new_pix);
-            }
+    for (x, y) in ImageIterator::with_dimension(&image2.dimensions()) {
+        let pixval = 255 - image2.get_pixel(x, y).data[0];
+        if pixval != 255 {
+            let new_pix = Rgba([pixval, pixval, pixval, 255]);
+            image.put_pixel(x, y, new_pix);
         }
     }
 
