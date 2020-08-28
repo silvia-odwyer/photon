@@ -192,10 +192,10 @@ Photon is always ready for new filters and functions, so if you'd like to contri
 - Duotone filtering
 - Tests in a headless web browser for WebAssembly version of library
 
-## Authors
+## Contributors
 
-* **Silvia O'Dwyer** - [GitHub Profile](https://github.com/silvia-odwyer)
-* **Ivan Zvonimir Horvat** - [GitHub Profile](https://github.com/Horki)
+* **Silvia O'Dwyer** - [@silvia-odwyer](https://github.com/silvia-odwyer)
+* **Ivan Zvonimir Horvat** - [@Horki](https://github.com/Horki)
 * **Future You(?)** - (See Contributing above ;) 
 
 ## License
