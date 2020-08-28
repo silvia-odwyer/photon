@@ -40,7 +40,7 @@ You can run Photon:
 - on Node with WebAssembly
 
 ### Features 
-- **Fast:** Photon outperforms even the fastest of libraries, including ImageMagick. On the web, its high-performance allows it to run at near-native speed.[Benchmarks can be found here](https://github.com/silvia-odwyer/photon/wiki/Benchmarks).
+- **Fast:** Photon outperforms even the fastest of libraries, including ImageMagick. On the web, its high-performance allows it to run at near-native speed. Benchmarks can be found [here](https://github.com/silvia-odwyer/photon/wiki/Benchmarks).
 - **Call with JS:** Want to use Photon on the web or with Node? Using a simple npm package, you're good to go. Get all the benefits of WebAssembly
 with zero-cost abstraction. 
 - **Use Natively:** For command-line apps, native photo editing apps, and so forth, Photon's core codebase is in Rust, allowing for cross-platform
