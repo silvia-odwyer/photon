@@ -12,8 +12,8 @@
   [![Status](https://img.shields.io/badge/status-active-success.svg)]() 
   [![GitHub Issues](https://img.shields.io/github/issues/silvia-odwyer/photon.svg)](https://github.com/silvia-odwyer/photon/issues)
   [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/silvia-odwyer/photon.svg)](https://github.com/silvia-odwyer/photon/pulls)
-  [![License](https://img.shields.io/badge/license-APACHE%202-blue)](/LICENSE)
   [![Gitter chat](https://badges.gitter.im/silvia-odwyer/photon.png)](https://gitter.im/photonlibrary/community "Gitter chat")
+  [![NPM Monthly Downloads](https://img.shields.io/npm/dm/@silvia-odwyer/photon.png)]() 
 
 </div>
 

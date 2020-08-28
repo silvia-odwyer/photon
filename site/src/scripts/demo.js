@@ -10,10 +10,9 @@ var canvas, canvas2, watermark_canvas;
 var ctx, ctx2, watermark_ctx;
 var newimg, watermark_img, img2;
 
- import("@silvia-odwyer/photon").then(module => {
+ import("../../../crate/pkg").then(module => {
   var startTime;
   var endTime;
-
 
   setUpEventListeners();
 
@@ -26,6 +25,11 @@ var newimg, watermark_img, img2;
       let button = resize_btns[i];
       button.addEventListener("click", function(){resize(event)}, false);
     }
+
+    let crop_btn = document.getElementById("crop");
+
+    crop_btn.addEventListener("click", function(){crop(event)}, false);
+   
    
      let filter_buttons = document.getElementsByClassName("filter");
      for (let i = 0; i < filter_buttons.length; i++) {
@@ -48,11 +52,46 @@ var newimg, watermark_img, img2;
      let overlay_buttons = document.getElementsByClassName("overlay");		
      for (let i = 0; i < overlay_buttons.length; i++) {		
        let button = overlay_buttons[i];		
-       button.addEventListener("click", function(){overlayImage(event)}, false);		
+       button.addEventListener("click", function(){watermark(event)}, false);		
      }
+
+     let watermark_js_btn = document.getElementById("watermark_js");
+     watermark_js_btn.addEventListener("click", watermark_js, false);
 
      setUpImages();
    }
+
+   function watermark() {
+    startTime = performance.now();
+    setUpWatermark();
+    for (let i = 0; i < 1500; i++) {
+      let src_canvas = document.getElementById("canvas");
+
+  
+      let img = document.getElementById("img");
+  
+      module.watermark_img_browser(src_canvas, img, 30, 40);  
+    }
+
+
+    endTime = performance.now();
+
+    updateBenchmarks();
+   }
+
+   function watermark_js() {
+    startTime = performance.now();
+
+    for (let k = 0; k < 1500; k++) {
+      let img = document.getElementById("img");
+
+      ctx.drawImage(img, 50, 70);
+    }
+
+    endTime = performance.now();
+
+    updateBenchmarks();
+  }
 
    function blendImages(event) {
      console.time("wasm_blend_time"); 
@@ -87,7 +126,7 @@ var newimg, watermark_img, img2;
                        "exclusion": function() {return module.blend(rust_image, rust_image2, "exclusion")},
                        "lighten": function() {return module.blend(rust_image, rust_image2, "lighten")},
                        "darken": function() {return module.blend(rust_image, rust_image2, "darken")},
-                       "watermark": function() {return module.watermark(rust_image, watermark_img, 10, 30)},
+                       "watermark": function() {return module.watermark(canvas, watermark_canvas, 10, 30)},
                        "text": function() {return module.draw_text(rust_image, "welcome to wasm", 10, 20)},
                        "text_border": function() {return module.draw_text_with_border(rust_image, "welcome to wasm", 10, 20)},
                      };
@@ -202,6 +241,15 @@ var newimg, watermark_img, img2;
      // Place the pixels back on the canvas
      module.putImageData(canvas, ctx, rust_image);
      console.timeEnd("wasm_time");
+   }
+
+   function crop() {
+      startTime = performance.now();
+      let cropped_canvas = module.crop_img_browser(canvas, 300, 500, 40, 40);
+      let resized_img_container = document.getElementById("resized_imgs");
+      resized_img_container.appendChild(cropped_canvas);
+      endTime = performance.now()
+      updateBenchmarks()
    }
 
    function resize(event) {
