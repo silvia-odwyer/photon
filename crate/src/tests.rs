@@ -3,6 +3,8 @@ mod test {
     use super::*;
     use crate::channels::*;
     use crate::PhotonImage;
+    use crate::transform::seam_carve;
+
     #[test]
     fn test_alter_red_channel() {
         let width = 4;
@@ -157,5 +159,48 @@ mod test {
         let mut photon_image = PhotonImage::new(raw_pix, width, height);
         swap_channels(&mut photon_image, 1, 0);
         assert_eq!(photon_image.raw_pixels, correct_pix);
+    }
+
+    #[test]
+    fn test_seam_carve() {
+        let width = 4_u32;
+        let height = 4_u32;
+        // Create an image from a vec of pixels
+        let raw_pix: Vec<u8> = vec![
+            134, 122, 131, 255, 131, 131, 139, 255, 135, 134, 137, 255, 138, 134, 130,
+            255, 126, 125, 119, 255, 131, 134, 129, 255, 137, 134, 132, 255, 130, 126,
+            130, 255, 132, 125, 132, 255, 122, 142, 129, 255, 134, 135, 128, 255, 138,
+            120, 125, 255, 125, 134, 110, 255, 121, 122, 137, 255, 141, 140, 141, 255,
+            125, 144, 120, 255,
+        ];
+
+        let correct_pix: Vec<u8> = vec![
+            132, 125, 132, 255, 131, 134, 129, 255, 134, 135, 128, 255, 125, 134, 110,
+            255, 121, 122, 137, 255, 125, 144, 120, 255,
+        ];
+
+        let photon_image: PhotonImage = PhotonImage::new(raw_pix.clone(), width, height);
+        {
+            // Original image
+            assert_eq!(photon_image.get_width(), width);
+            assert_eq!(photon_image.get_height(), height);
+        }
+        {
+            // Un-carved image
+            // Will return the same image
+            let result: PhotonImage = seam_carve(&photon_image, 100_u32, 100_u32);
+            assert_eq!(result.get_width(), width);
+            assert_eq!(result.get_height(), height);
+            assert_eq!(result.get_raw_pixels(), raw_pix);
+        }
+        {
+            // Carved Image, from 4x4 --> 3x2
+            let new_w = 3_u32;
+            let new_h = 2_u32;
+            let result: PhotonImage = seam_carve(&photon_image, new_w, new_h);
+            assert_eq!(result.get_width(), new_w);
+            assert_eq!(result.get_height(), new_h);
+            assert_eq!(result.get_raw_pixels(), correct_pix);
+        }
     }
 }
