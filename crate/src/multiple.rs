@@ -8,7 +8,8 @@ use image::{DynamicImage, GenericImageView, RgbaImage};
 use palette::{Blend, Gradient, Lab, Lch, LinSrgba, Pixel, Srgb, Srgba};
 use wasm_bindgen::prelude::*;
 use crate::iter::ImageIterator;
-
+use web_sys::{HtmlCanvasElement, HtmlImageElement};
+use wasm_bindgen::JsCast;
 /// Add a watermark to an image.
 ///
 /// # Arguments
@@ -33,6 +34,18 @@ pub fn watermark(mut img: &mut PhotonImage, watermark: &PhotonImage, x: u32, y: 
     let mut dyn_img: DynamicImage = crate::helpers::dyn_image_from_raw(&img);
     image::imageops::overlay(&mut dyn_img, &dyn_watermark, x, y);
     img.raw_pixels = dyn_img.raw_pixels();
+}
+
+#[wasm_bindgen]
+pub fn watermark_img_browser(source_canvas: HtmlCanvasElement, watermark_img: HtmlImageElement, left: f64, top: f64) {
+    let document = web_sys::window().unwrap().document().unwrap();
+
+    let ctx = source_canvas
+    .get_context("2d").unwrap()
+    .unwrap()
+    .dyn_into::<web_sys::CanvasRenderingContext2d>().unwrap();
+    
+    ctx.draw_image_with_html_image_element(&watermark_img, left, top).unwrap();
 }
 
 /// Blend two images together.
