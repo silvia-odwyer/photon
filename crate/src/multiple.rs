@@ -3,11 +3,11 @@
 extern crate image;
 extern crate rand;
 use crate::channels::color_sim;
+use crate::iter::ImageIterator;
 use crate::{helpers, GenericImage, PhotonImage, Rgb};
 use image::{DynamicImage, GenericImageView, RgbaImage};
 use palette::{Blend, Gradient, Lab, Lch, LinSrgba, Pixel, Srgb, Srgba};
 use wasm_bindgen::prelude::*;
-use crate::iter::ImageIterator;
 
 /// Add a watermark to an image.
 ///
@@ -76,43 +76,41 @@ pub fn blend(
     let mut img = img.to_rgba();
     let img2 = img2.to_rgba();
 
-    for x in 0..width {
-        for y in 0..height {
-            let px_data = img.get_pixel(x, y).data;
+    for (x, y) in ImageIterator::new(width, height) {
+        let px_data = img.get_pixel(x, y).data;
 
-            let color: LinSrgba = LinSrgba::from_raw(&px_data).into_format();
+        let color: LinSrgba = LinSrgba::from_raw(&px_data).into_format();
 
-            let px_data2 = img2.get_pixel(x, y).data;
+        let px_data2 = img2.get_pixel(x, y).data;
 
-            let color2: LinSrgba = LinSrgba::from_raw(&px_data2).into_format();
+        let color2: LinSrgba = LinSrgba::from_raw(&px_data2).into_format();
 
-            let blended = match blend_mode {
-                // Match a single value
-                "overlay" => color2.overlay(color),
-                "over" => color2.over(color),
-                "atop" => color2.atop(color),
-                "xor" => color2.xor(color),
-                "plus" => color2.plus(color),
-                "multiply" => color2.multiply(color),
-                "burn" => color2.burn(color),
-                "difference" => color2.difference(color),
-                "soft_light" => color2.soft_light(color),
-                "hard_light" => color2.hard_light(color),
-                "dodge" => color2.dodge(color),
-                "exclusion" => color2.exclusion(color),
-                "lighten" => color2.lighten(color),
-                "darken" => color2.darken(color),
-                _ => color2.overlay(color),
-            };
+        let blended = match blend_mode {
+            // Match a single value
+            "overlay" => color2.overlay(color),
+            "over" => color2.over(color),
+            "atop" => color2.atop(color),
+            "xor" => color2.xor(color),
+            "plus" => color2.plus(color),
+            "multiply" => color2.multiply(color),
+            "burn" => color2.burn(color),
+            "difference" => color2.difference(color),
+            "soft_light" => color2.soft_light(color),
+            "hard_light" => color2.hard_light(color),
+            "dodge" => color2.dodge(color),
+            "exclusion" => color2.exclusion(color),
+            "lighten" => color2.lighten(color),
+            "darken" => color2.darken(color),
+            _ => color2.overlay(color),
+        };
 
-            img.put_pixel(
-                x,
-                y,
-                image::Rgba {
-                    data: blended.into_format().into_raw(),
-                },
-            );
-        }
+        img.put_pixel(
+            x,
+            y,
+            image::Rgba {
+                data: blended.into_format().into_raw(),
+            },
+        );
     }
     let dynimage = image::ImageRgba8(img);
     photon_image.raw_pixels = dynimage.raw_pixels();

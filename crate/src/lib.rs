@@ -257,6 +257,7 @@ pub fn get_image_data(
 
 /// Place a PhotonImage onto a 2D canvas.
 #[wasm_bindgen]
+#[allow(non_snake_case)]
 pub fn putImageData(
     canvas: HtmlCanvasElement,
     ctx: CanvasRenderingContext2d,

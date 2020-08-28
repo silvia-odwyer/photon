@@ -5,7 +5,9 @@ use crate::helpers;
 use crate::PhotonImage;
 use wasm_bindgen::prelude::*;
 
-fn conv(mut photon_image: &mut PhotonImage, kernel: Vec<f32>) {
+type Kernel = [f32; 9];
+
+fn conv(photon_image: &mut PhotonImage, kernel: Kernel) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     img = image::ImageRgb8(img.to_rgb());
 
@@ -33,8 +35,7 @@ fn conv(mut photon_image: &mut PhotonImage, kernel: Vec<f32>) {
 /// Adds a constant to a select R, G, or B channel's value.
 #[wasm_bindgen]
 pub fn noise_reduction(photon_image: &mut PhotonImage) {
-    let kernel = vec![0.0f32, -1.0, 7.0, -1.0, 5.0, 9.0, 0.0, 7.0, 9.0];
-    conv(photon_image, kernel)
+    conv(photon_image, [0.0_f32, -1.0, 7.0, -1.0, 5.0, 9.0, 0.0, 7.0, 9.0]);
 }
 
 /// Sharpen an image.
@@ -55,8 +56,7 @@ pub fn noise_reduction(photon_image: &mut PhotonImage) {
 /// Adds a constant to a select R, G, or B channel's value.
 #[wasm_bindgen]
 pub fn sharpen(photon_image: &mut PhotonImage) {
-    let kernel = vec![0.0f32, -1.0, 0.0, -1.0, 5.0, -1.0, 0.0, -1.0, 0.0];
-    conv(photon_image, kernel)
+    conv(photon_image, [0.0_f32, -1.0, 0.0, -1.0, 5.0, -1.0, 0.0, -1.0, 0.0]);
 }
 
 /// Apply edge detection to an image, to create a dark version with its edges highlighted.
@@ -76,8 +76,7 @@ pub fn sharpen(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn edge_detection(photon_image: &mut PhotonImage) {
-    let kernel = vec![-1.0f32, -1.0, -1.0, -1.0, 8.0, -1.0, -1.0, -1.0, -1.0];
-    conv(photon_image, kernel)
+    conv(photon_image, [-1.0_f32, -1.0, -1.0, -1.0, 8.0, -1.0, -1.0, -1.0, -1.0]);
 }
 
 /// Apply an identity kernel convolution to an image.
@@ -97,8 +96,7 @@ pub fn edge_detection(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn identity(photon_image: &mut PhotonImage) {
-    let kernel = vec![0.0f32, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0];
-    conv(photon_image, kernel)
+    conv(photon_image, [0.0_f32, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0]);
 }
 
 /// Apply a box blur effect.
@@ -118,8 +116,7 @@ pub fn identity(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn box_blur(photon_image: &mut PhotonImage) {
-    let kernel = vec![1.0f32, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
-    conv(photon_image, kernel)
+    conv(photon_image, [1.0_f32, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]);
 }
 
 /// Gaussian blur in linear time.
@@ -362,8 +359,7 @@ fn box_blur_vertical(
 /// ```
 #[wasm_bindgen]
 pub fn detect_horizontal_lines(photon_image: &mut PhotonImage) {
-    let kernel = vec![-1.0f32, -1.0, -1.0, 2.0, 2.0, 2.0, -1.0, -1.0, -1.0];
-    conv(photon_image, kernel)
+    conv(photon_image, [-1.0_f32, -1.0, -1.0, 2.0, 2.0, 2.0, -1.0, -1.0, -1.0]);
 }
 
 /// Detect vertical lines in an image, and highlight these only.
@@ -383,8 +379,7 @@ pub fn detect_horizontal_lines(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn detect_vertical_lines(photon_image: &mut PhotonImage) {
-    let kernel = vec![-1.0f32, 2.0, -1.0, -1.0, 2.0, -1.0, -1.0, 2.0, -1.0];
-    conv(photon_image, kernel)
+    conv(photon_image, [-1.0_f32, 2.0, -1.0, -1.0, 2.0, -1.0, -1.0, 2.0, -1.0]);
 }
 
 /// Detect lines at a forty five degree angle in an image, and highlight these only.
@@ -404,8 +399,7 @@ pub fn detect_vertical_lines(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn detect_45_deg_lines(photon_image: &mut PhotonImage) {
-    let kernel = vec![-1.0f32, -1.0, 2.0, -1.0, 2.0, -1.0, 2.0, -1.0, -1.0];
-    conv(photon_image, kernel)
+    conv(photon_image, [-1.0_f32, -1.0, 2.0, -1.0, 2.0, -1.0, 2.0, -1.0, -1.0]);
 }
 
 /// Detect lines at a 135 degree angle in an image, and highlight these only.
@@ -425,8 +419,7 @@ pub fn detect_45_deg_lines(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn detect_135_deg_lines(photon_image: &mut PhotonImage) {
-    let kernel = vec![2.0f32, -1.0, -1.0, -1.0, 2.0, -1.0, -1.0, -1.0, 2.0];
-    conv(photon_image, kernel)
+    conv(photon_image, [2.0_f32, -1.0, -1.0, -1.0, 2.0, -1.0, -1.0, -1.0, 2.0]);
 }
 
 /// Apply a standard laplace convolution.
@@ -446,8 +439,7 @@ pub fn detect_135_deg_lines(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn laplace(photon_image: &mut PhotonImage) {
-    let kernel = vec![0.0f32, -1.0, 0.0, -1.0, 4.0, -1.0, 0.0, -1.0, 0.0];
-    conv(photon_image, kernel)
+    conv(photon_image, [0.0_f32, -1.0, 0.0, -1.0, 4.0, -1.0, 0.0, -1.0, 0.0]);
 }
 
 /// Preset edge effect.
@@ -467,8 +459,7 @@ pub fn laplace(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn edge_one(photon_image: &mut PhotonImage) {
-    let kernel = vec![0.0f32, -2.2, -0.6, -0.4, 2.8, -0.3, -0.8, -1.0, 2.7];
-    conv(photon_image, kernel)
+    conv(photon_image, [0.0_f32, -2.2, -0.6, -0.4, 2.8, -0.3, -0.8, -1.0, 2.7]);
 }
 
 /// Apply an emboss effect to an image.
@@ -488,8 +479,7 @@ pub fn edge_one(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn emboss(photon_image: &mut PhotonImage) {
-    let kernel = vec![-2.0f32, -1.0, 0.0, -1.0, 1.0, 1.0, 0.0, 1.0, 2.0];
-    conv(photon_image, kernel)
+    conv(photon_image, [-2.0_f32, -1.0, 0.0, -1.0, 1.0, 1.0, 0.0, 1.0, 2.0]);
 }
 
 /// Apply a horizontal Sobel filter to an image.
@@ -501,13 +491,15 @@ pub fn emboss(photon_image: &mut PhotonImage) {
 ///
 /// ```
 /// // For example, to apply a horizontal Sobel filter:
-/// use photon::conv;
-/// photon::conv::sobel_horizontal(img);
+/// use photon_rs::conv::sobel_horizontal;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// sobel_horizontal(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn sobel_horizontal(photon_image: &mut PhotonImage) {
-    let kernel = vec![-1.0f32, -2.0, -1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0];
-    conv(photon_image, kernel)
+    conv(photon_image, [-1.0_f32, -2.0, -1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0]);
 }
 
 /// Apply a horizontal Prewitt convolution to an image.
@@ -527,8 +519,7 @@ pub fn sobel_horizontal(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn prewitt_horizontal(photon_image: &mut PhotonImage) {
-    let kernel = vec![5.0f32, -3.0, -3.0, 5.0, 0.0, -3.0, 5.0, -3.0, -3.0];
-    conv(photon_image, kernel)
+    conv(photon_image, [5.0_f32, -3.0, -3.0, 5.0, 0.0, -3.0, 5.0, -3.0, -3.0]);
 }
 
 /// Apply a vertical Sobel filter to an image.
@@ -548,6 +539,5 @@ pub fn prewitt_horizontal(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn sobel_vertical(photon_image: &mut PhotonImage) {
-    let kernel = vec![-1.0f32, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0];
-    conv(photon_image, kernel)
+    conv(photon_image, [-1.0_f32, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0]);
 }

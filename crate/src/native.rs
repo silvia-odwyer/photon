@@ -30,12 +30,11 @@ pub fn open_image(img_path: &str) -> PhotonImage {
     // Convert the DynamicImage type to raw vec representing RGBA pixels (not RGB)
     let raw_pixels = img.to_rgba().to_vec();
 
-    let photon_image: PhotonImage = PhotonImage {
+    PhotonImage {
         raw_pixels,
         width,
         height,
-    };
-    photon_image
+    }
 }
 
 /// Save the image to the filesystem at a given path.
@@ -46,11 +45,11 @@ pub fn open_image(img_path: &str) -> PhotonImage {
 /// # Example
 /// ```
 /// // For example:
-/// use photon::native::save_image;
+/// use photon_rs::native::{save_image, open_image};
 ///
+/// let img = open_image("img.jpg");
 /// // Save the image at the given path.
-/// save_image(img, "images/flowers.PNG");
-///
+/// save_image(img, "output.jpg");
 /// ```
 pub fn save_image(img: PhotonImage, img_path: &str) {
     let raw_pixels = img.raw_pixels;

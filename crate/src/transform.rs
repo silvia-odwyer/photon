@@ -8,10 +8,10 @@ use crate::PhotonImage;
 use image::RgbaImage;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-// use std::f64::consts::PI;
-// use std::f64;
 use wasm_bindgen::Clamped;
 use web_sys::{HtmlCanvasElement, ImageData};
+use crate::iter::ImageIterator;
+use self::image::{DynamicImage, GenericImage};
 
 /// Crop an image.
 ///
@@ -44,11 +44,9 @@ pub fn crop(
 
     let mut cropped_img: RgbaImage = ImageBuffer::new(x2 - x1, y2 - y1);
 
-    for x in 0..cropped_img.width() {
-        for y in 0..cropped_img.height() {
-            let px = img.get_pixel(x, y);
-            cropped_img.put_pixel(x, y, px);
-        }
+    for (x, y) in ImageIterator::with_dimension(&cropped_img.dimensions()) {
+        let px = img.get_pixel(x, y);
+        cropped_img.put_pixel(x, y, px);
     }
     let dynimage = image::ImageRgba8(cropped_img);
     let raw_pixels = dynimage.raw_pixels();
@@ -107,13 +105,12 @@ pub fn fliph(photon_image: &mut PhotonImage) {
     let img = helpers::dyn_image_from_raw(&photon_image);
 
     let width = img.width();
-    let mut flipped_img: RgbaImage = ImageBuffer::new(width, img.height());
+    let height = img.height();
+    let mut flipped_img: RgbaImage = ImageBuffer::new(width, height);
 
-    for x in 0..width {
-        for y in 0..img.height() {
-            let px = img.get_pixel(x, y);
-            flipped_img.put_pixel(width - x - 1, y, px);
-        }
+    for (x, y) in ImageIterator::new(width, height) {
+        let px = img.get_pixel(x, y);
+        flipped_img.put_pixel(width - x - 1, y, px);
     }
 
     let dynimage = image::ImageRgba8(flipped_img);
@@ -145,11 +142,9 @@ pub fn flipv(photon_image: &mut PhotonImage) {
 
     let mut flipped_img: RgbaImage = ImageBuffer::new(width, height);
 
-    for x in 0..width {
-        for y in 0..height {
-            let px = img.get_pixel(x, y);
-            flipped_img.put_pixel(x, height - y - 1, px);
-        }
+    for (x, y) in ImageIterator::new(width, height) {
+        let px = img.get_pixel(x, y);
+        flipped_img.put_pixel(x, height - y - 1, px);
     }
 
     let dynimage = image::ImageRgba8(flipped_img);
@@ -260,5 +255,53 @@ pub fn resize(
         raw_pixels: resized_img.raw_pixels(),
         width: resized_img.width(),
         height: resized_img.height(),
+    }
+}
+
+/// Resize image using seam carver.
+/// Resize only if new dimensions are smaller, than original image.
+/// # NOTE: This is still experimental feature, and pretty slow.
+///
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// * `width` - New width.
+/// * `height` - New height.
+///
+/// ## Example
+///
+/// ```
+/// // For example, resize image using seam carver:
+/// use photon_rs::native::open_image;
+/// use photon_rs::transform::seam_carve;
+/// use photon_rs::PhotonImage;
+///
+/// let img = open_image("img.jpg");
+/// let result: PhotonImage = seam_carve(&img, 100_u32, 100_u32);
+/// ```
+#[wasm_bindgen]
+pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
+    let mut img: RgbaImage = ImageBuffer::from_raw(img.get_width(), img.get_height(), img.raw_pixels.to_vec()).unwrap();
+    let (w, h) = img.dimensions();
+    let (diff_w, diff_h) = (w - w.min(width), h - h.min(height));
+
+    for _ in 0..diff_w {
+        let vec_steam = imageproc::seam_carving::find_vertical_seam(&img);
+        img = imageproc::seam_carving::remove_vertical_seam(&mut img, &vec_steam);
+    }
+    if diff_h.ne(&0_u32) {
+        img = image::imageops::rotate90(&mut img);
+        for _ in 0..diff_h {
+            let vec_steam = imageproc::seam_carving::find_vertical_seam(&img);
+            img = imageproc::seam_carving::remove_vertical_seam(&mut img, &vec_steam);
+        }
+        img = image::imageops::rotate270(&mut img);
+    }
+
+    let img = image::ImageRgba8(img);
+
+    PhotonImage {
+        raw_pixels: img.raw_pixels(),
+        width: img.width(),
+        height: img.height(),
     }
 }
