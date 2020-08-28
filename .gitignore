@@ -9,3 +9,5 @@ webpack_demo/dist
 webpack_demo/package-lock.json
 react_app_demo/node_modules
 photon-docs/site
+output*.jpg
+output*.png

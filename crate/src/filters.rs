@@ -182,7 +182,11 @@ pub fn lofi(img: &mut PhotonImage) {
 /// # Example
 ///
 /// ```
-/// photon::filters::pastel_pink(&mut img);
+/// use photon_rs::filters::pastel_pink;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg");
+/// pastel_pink(&mut img);
 /// ```
 #[wasm_bindgen]
 pub fn pastel_pink(img: &mut PhotonImage) {

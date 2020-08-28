@@ -1,8 +1,6 @@
 extern crate image;
 extern crate photon_rs as photon;
 extern crate time;
-use image::GenericImageView;
-use photon::Rgb;
 use time::Instant;
 
 fn main() {
@@ -20,12 +18,12 @@ fn main() {
         let start = Instant::now();
 
         // Apply the effect in the HSV colour space
-        photon::colour_spaces::hsl(&mut img, effect, 0.2);
+        photon::colour_spaces::hsl(&mut img, effect, 0.2_f32);
 
         // Write the contents of this image in JPG format.
         photon::native::save_image(
             img,
-            &format!("{}.jpg", effect)[..],
+            &format!("output_{}.jpg", effect)[..],
         );
 
         let end = Instant::now();
