@@ -195,6 +195,7 @@ Photon is always ready for new filters and functions, so if you'd like to contri
 ## Authors
 
 * **Silvia O'Dwyer** - [GitHub Profile](https://github.com/silvia-odwyer)
+* **Ivan Zvonimir Horvat** - [GitHub Profile](https://github.com/Horki)
 * **Future You(?)** - (See Contributing above ;) 
 
 ## License
