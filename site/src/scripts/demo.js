@@ -261,7 +261,17 @@ var newimg, watermark_img, img2;
      let resized_img_container = document.getElementById("resized_imgs");
      let photon_img = module.open_image(canvas, ctx);
  
-     let newcanvas = module.resize(photon_img, 200, 200, resize_type);
+     let newcanvas = module.resize_img_browser(photon_img, 360, 239, resize_type);
+    //  let ctx2 = newcanvas.getContext("2d");
+    //  let photon_img3 = module.open_image(newcanvas, ctx2);
+    //  module.sharpen(photon_img3);
+
+    //  let final_canvas = document.createElement("canvas");
+    //  final_canvas.width = newcanvas.width;
+    //  final_canvas.height = newcanvas.height;
+
+    //  let final_ctx = final_canvas.getContext("2d");
+    //   final_ctx.putImageData(photon_img3.get_image_data(), 0, 0);
      resized_img_container.appendChild(newcanvas);
 
      endTime = performance.now();
