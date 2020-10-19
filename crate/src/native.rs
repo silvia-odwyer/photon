@@ -3,9 +3,24 @@
 
 extern crate image;
 extern crate rand;
-use image::{GenericImageView, ImageBuffer};
+use std::io;
+
+use image::{GenericImageView, ImageBuffer, ImageError};
 // use wasm_bindgen::prelude::*;
 use crate::PhotonImage;
+use thiserror::Error;
+
+#[derive(Debug, Error)]
+#[error(transparent)]
+pub struct OpenError(#[from] ImageError);
+
+#[derive(Debug, Error)]
+pub enum SaveError {
+    #[error(transparent)]
+    Io(#[from] io::Error),
+    #[error("Buffer size is not big enough")]
+    BufferSize,
+}
 
 /// Open an image at a given path from the filesystem.
 /// A PhotonImage is returned.
@@ -22,19 +37,19 @@ use crate::PhotonImage;
 ///
 /// // ... image editing functionality here ...
 /// ```
-pub fn open_image(img_path: &str) -> PhotonImage {
-    let img = image::open(img_path).unwrap();
+pub fn open_image(img_path: &str) -> Result<PhotonImage, OpenError> {
+    let img = image::open(img_path)?;
 
     let (width, height) = img.dimensions();
 
     // Convert the DynamicImage type to raw vec representing RGBA pixels (not RGB)
     let raw_pixels = img.to_rgba().to_vec();
 
-    PhotonImage {
+    Ok(PhotonImage {
         raw_pixels,
         width,
         height,
-    }
+    })
 }
 
 /// Save the image to the filesystem at a given path.
@@ -47,17 +62,17 @@ pub fn open_image(img_path: &str) -> PhotonImage {
 /// // For example:
 /// use photon_rs::native::{save_image, open_image};
 ///
-/// let img = open_image("img.jpg");
+/// let img = open_image("img.jpg").expect("File should open");
 /// // Save the image at the given path.
-/// save_image(img, "output.jpg");
+/// save_image(img, "output.jpg").expect("File should be saved");
 /// ```
-pub fn save_image(img: PhotonImage, img_path: &str) {
+pub fn save_image(img: PhotonImage, img_path: &str) -> Result<(), SaveError> {
     let raw_pixels = img.raw_pixels;
     let width = img.width;
     let height = img.height;
 
-    let img_buffer = ImageBuffer::from_vec(width, height, raw_pixels).unwrap();
+    let img_buffer = ImageBuffer::from_vec(width, height, raw_pixels).ok_or(SaveError::BufferSize)?;
     let dynimage = image::ImageRgba8(img_buffer);
 
-    dynimage.save(img_path).unwrap();
+    Ok(dynimage.save(img_path)?)
 }
