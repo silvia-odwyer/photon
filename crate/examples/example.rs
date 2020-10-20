@@ -3,7 +3,7 @@ extern crate photon_rs as photon;
 extern crate time;
 use time::Instant;
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Replace the variable file_name with whatever image you would like to apply filters to
     // Ensure it is in the example_output directory, which can be found one sub-dir inside the photon dir.
     // However the image referenced below, along with sample images, have been included in the dir.
@@ -14,7 +14,7 @@ fn main() {
         ["saturate", "desaturate", "lighten", "darken", "shift_hue"];
 
     for &effect in effects.iter() {
-        let mut img = photon::native::open_image(file_name);
+        let mut img = photon::native::open_image(file_name)?;
         let start = Instant::now();
 
         // Apply the effect in the HSV colour space
@@ -24,7 +24,7 @@ fn main() {
         photon::native::save_image(
             img,
             &format!("output_{}.jpg", effect)[..],
-        );
+        )?;
 
         let end = Instant::now();
         println!(
@@ -34,4 +34,6 @@ fn main() {
         );
     }
     println!("Check example_output dir for filtered images.\nYou can compare them with the original in {}", file_name);
+
+    Ok(())
 }

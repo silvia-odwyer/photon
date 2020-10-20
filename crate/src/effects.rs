@@ -17,15 +17,15 @@ use crate::iter::ImageIterator;
 ///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
-/// * `offset` - The offset is added to the pixels in the image.  
+/// * `offset` - The offset is added to the pixels in the image.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to offset pixels by 30 pixels on the red channel:
 /// use photon_rs::effects::offset;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// offset(&mut img, 0_usize, 30_u32);
 /// ```
 #[wasm_bindgen]
@@ -59,12 +59,12 @@ pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32)
 /// * `offset` - The offset you want to move the red channel by.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to add an offset to the red channel by 30 pixels.
 /// use photon_rs::effects::offset_red;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// offset_red(&mut img, 30_u32);
 /// ```
 #[wasm_bindgen]
@@ -79,12 +79,12 @@ pub fn offset_red(img: &mut PhotonImage, offset_amt: u32) {
 /// * `offset` - The offset you want to move the green channel by.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to add an offset to the green channel by 30 pixels.
 /// use photon_rs::effects::offset_green;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// offset_green(&mut img, 30_u32);
 /// ```
 #[wasm_bindgen]
@@ -100,11 +100,11 @@ pub fn offset_green(img: &mut PhotonImage, offset_amt: u32) {
 /// # Example
 /// // For example, to add an offset to the green channel by 40 pixels.
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::effects::offset_blue;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// offset_blue(&mut img, 40_u32);
 /// ```
 #[wasm_bindgen]
@@ -116,15 +116,15 @@ pub fn offset_blue(img: &mut PhotonImage, offset_amt: u32) {
 ///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
-/// * `offset` - The offset is added to the pixels in the image.  
+/// * `offset` - The offset is added to the pixels in the image.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to add a 30-pixel offset to both the red and blue channels:
 /// use photon_rs::effects::multiple_offsets;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// multiple_offsets(&mut img, 30_u32, 0_usize, 2_usize);
 /// ```
 #[wasm_bindgen]
@@ -287,12 +287,12 @@ pub fn halftone(mut photon_image: PhotonImage) {
 /// * `img` - A PhotonImage that contains a view into the image.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to add a primary colour effect to an image of type `DynamicImage`:
 /// use photon_rs::effects::primary;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// primary(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -334,12 +334,12 @@ pub fn primary(img: &mut PhotonImage) {
 /// * `img` - A PhotonImage that contains a view into the image.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to colorize an image of type `PhotonImage`:
 /// use photon_rs::effects::colorize;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// colorize(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -439,12 +439,12 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
 /// * `img` - A PhotonImage that contains a view into the image.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to colorize an image of type `PhotonImage`:
 /// use photon_rs::effects::solarize;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// solarize(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -466,13 +466,13 @@ pub fn solarize(photon_image: &mut PhotonImage) {
 /// * `img` - A PhotonImage that contains a view into the image.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to solarize "retimg" an image of type `PhotonImage`:
 /// use photon_rs::effects::solarize_retimg;
 /// use photon_rs::native::open_image;
 /// use photon_rs::PhotonImage;
 ///
-/// let img = open_image("img.jpg");
+/// let img = open_image("img.jpg").expect("File should open");
 /// let result: PhotonImage = solarize_retimg(&img);
 /// ```
 #[wasm_bindgen]
@@ -500,11 +500,11 @@ pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
 /// * `brightness` - A u8 to add to the brightness.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::effects::inc_brightness;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// inc_brightness(&mut img, 10_u8);
 /// ```
 #[wasm_bindgen]
@@ -543,11 +543,11 @@ pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
 /// clamp results if passed factor is out of range.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::effects::adjust_contrast;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// adjust_contrast(&mut img, 30_f32);
 /// ```
 #[wasm_bindgen]
@@ -588,12 +588,12 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
 /// * `b_offset` - The amount the B channel should be incremented by.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to tint an image of type `PhotonImage`:
 /// use photon_rs::effects::tint;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// tint(&mut img, 10_u32, 20_u32, 15_u32);
 /// ```
 ///

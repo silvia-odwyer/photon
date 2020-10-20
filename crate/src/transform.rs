@@ -18,15 +18,15 @@ use self::image::{DynamicImage, GenericImage};
 /// # Arguments
 /// * `img` - A PhotonImage.
 ///
-/// ## Example
+/// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to crop an image at (0, 0) to (500, 800)
 /// use photon_rs::native::{open_image, save_image};
 /// use photon_rs::transform::crop;
 /// use photon_rs::PhotonImage;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// let cropped_img: PhotonImage = crop(&mut img, 0_u32, 0_u32, 500_u32, 800_u32);
 /// // Write the contents of this image in JPG format.
 /// save_image(cropped_img, "cropped_image.jpg");
@@ -72,7 +72,7 @@ pub fn crop_img_browser(source_canvas: HtmlCanvasElement, width: f64, height: f6
     .unwrap()
     .dyn_into::<web_sys::CanvasRenderingContext2d>().unwrap();
 
-    ctx.draw_image_with_html_canvas_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(&source_canvas, 
+    ctx.draw_image_with_html_canvas_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(&source_canvas,
         left, top, width, height, 0.0, 0.0, width, height).unwrap();
 
     return dest_canvas;
@@ -83,14 +83,14 @@ pub fn crop_img_browser(source_canvas: HtmlCanvasElement, width: f64, height: f6
 /// # Arguments
 /// * `img` - A PhotonImage.
 ///
-/// ## Example
+/// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to flip an image horizontally:
 /// use photon_rs::native::open_image;
 /// use photon_rs::transform::fliph;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// fliph(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -116,14 +116,14 @@ pub fn fliph(photon_image: &mut PhotonImage) {
 /// # Arguments
 /// * `img` - A PhotonImage.
 ///
-/// ## Example
+/// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to flip an image vertically:
 /// use photon_rs::native::open_image;
 /// use photon_rs::transform::flipv;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// flipv(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -260,15 +260,15 @@ pub fn resize(
 /// * `width` - New width.
 /// * `height` - New height.
 ///
-/// ## Example
+/// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, resize image using seam carver:
 /// use photon_rs::native::open_image;
 /// use photon_rs::transform::seam_carve;
 /// use photon_rs::PhotonImage;
 ///
-/// let img = open_image("img.jpg");
+/// let img = open_image("img.jpg").expect("File should open");
 /// let result: PhotonImage = seam_carve(&img, 100_u32, 100_u32);
 /// ```
 #[wasm_bindgen]

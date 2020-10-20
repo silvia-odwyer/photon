@@ -28,12 +28,11 @@ pub enum SaveError {
 /// * `img_path` - Path to the image you wish to edit.
 ///
 /// # Example
-/// ```
-/// // For example:
+/// ```no_run
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let img = open_image("img.jpg");
+/// let img = open_image("img.jpg").expect("File should open");
 ///
 /// // ... image editing functionality here ...
 /// ```
@@ -58,8 +57,7 @@ pub fn open_image(img_path: &str) -> Result<PhotonImage, OpenError> {
 /// * `img_path` - Path for the outputted image.
 ///
 /// # Example
-/// ```
-/// // For example:
+/// ```no_run
 /// use photon_rs::native::{save_image, open_image};
 ///
 /// let img = open_image("img.jpg").expect("File should open");
