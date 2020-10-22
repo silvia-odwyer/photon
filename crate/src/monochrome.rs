@@ -19,12 +19,12 @@ use crate::iter::ImageIterator;
 ///
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to apply a monochrome effect to an image:
 /// use photon_rs::monochrome::monochrome;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// monochrome(&mut img, 40_u32, 50_u32, 100_u32);
 /// ```
 ///
@@ -68,12 +68,12 @@ pub fn monochrome(img: &mut PhotonImage, r_offset: u32, g_offset: u32, b_offset:
 /// * `photon_image` - A PhotonImage.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to sepia an image of type `PhotonImage`:
 /// use photon_rs::monochrome::sepia;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// sepia(&mut img);
 /// ```
 ///
@@ -112,12 +112,12 @@ pub fn sepia(img: &mut PhotonImage) {
 
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to convert an image of type `PhotonImage` to grayscale:
 /// use photon_rs::monochrome::grayscale;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// grayscale(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -146,12 +146,12 @@ pub fn grayscale(img: &mut PhotonImage) {
 
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to convert an image of type `PhotonImage` to grayscale with a human corrected factor:
 /// use photon_rs::monochrome::grayscale_human_corrected;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// grayscale_human_corrected(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -178,12 +178,12 @@ pub fn grayscale_human_corrected(img: &mut PhotonImage) {
 
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to desaturate an image:
 /// use photon_rs::monochrome::desaturate;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// desaturate(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -214,12 +214,12 @@ pub fn desaturate(img: &mut PhotonImage) {
 
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to decompose an image with min decomposition:
 /// use photon_rs::monochrome::decompose_min;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// decompose_min(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -250,12 +250,12 @@ pub fn decompose_min(img: &mut PhotonImage) {
 
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to decompose an image with max decomposition:
 /// use photon_rs::monochrome::decompose_max;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// decompose_max(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -287,12 +287,12 @@ pub fn decompose_max(img: &mut PhotonImage) {
 
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to limit an image to four shades of gray only:
 /// use photon_rs::monochrome::grayscale_shades;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// grayscale_shades(&mut img, 4_u8);
 /// ```
 #[wasm_bindgen]
@@ -325,11 +325,11 @@ pub fn grayscale_shades(mut photon_image: &mut PhotonImage, num_shades: u8) {
 
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::monochrome::r_grayscale;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// r_grayscale(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -344,11 +344,11 @@ pub fn r_grayscale(photon_image: &mut PhotonImage) {
 
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::monochrome::g_grayscale;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// g_grayscale(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -363,11 +363,11 @@ pub fn g_grayscale(photon_image: &mut PhotonImage) {
 
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::monochrome::b_grayscale;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// b_grayscale(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -383,11 +383,11 @@ pub fn b_grayscale(photon_image: &mut PhotonImage) {
 
 /// # Example
 /// To grayscale using only values from the Red channel:
-/// ```
+/// ```no_run
 /// use photon_rs::monochrome::single_channel_grayscale;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// single_channel_grayscale(&mut img, 0_usize);
 /// ```
 #[wasm_bindgen]
@@ -415,12 +415,12 @@ pub fn single_channel_grayscale(mut photon_image: &mut PhotonImage, channel: usi
 /// * `threshold` - The amount the image should be thresholded by from 0 to 255.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to threshold an image of type `PhotonImage`:
 /// use photon_rs::monochrome::threshold;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// threshold(&mut img, 30_u32);
 /// ```
 #[wasm_bindgen]

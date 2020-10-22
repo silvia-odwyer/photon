@@ -20,7 +20,7 @@ fn criterion_benchmark(c: &mut Criterion) {
 
 fn invert_image() {
     // Open the image (a PhotonImage is returned)
-    let mut img = open_image("examples/input_images/underground.jpg");
+    let mut img = open_image("examples/input_images/underground.jpg").expect("File should open");
 
     // Invert the image
     photon_rs::channels::invert(&mut img);
@@ -28,28 +28,28 @@ fn invert_image() {
     let output_img_path = "output.jpg";
 
     // Write to filesystem
-    save_image(img, output_img_path);
+    save_image(img, output_img_path).expect("File should be saved");
 }
 
 fn resize_png() {
-    let mut img = open_image("examples/input_images/underground.png");
+    let mut img = open_image("examples/input_images/underground.png").expect("File should open");
 
     let resized_img = resize(&mut img, 800, 600, SamplingFilter::Lanczos3);
 
     let output_img_path = "output.png";
 
-    save_image(resized_img, output_img_path);
+    save_image(resized_img, output_img_path).expect("File should be saved");
 }
 
 fn resize_jpg() {
     // Open the image (a PhotonImage is returned)
-    let mut img = open_image("examples/input_images/underground.jpg");
+    let mut img = open_image("examples/input_images/underground.jpg").expect("File should open");
 
     let resized_img = resize(&mut img, 800, 600, SamplingFilter::Lanczos3);
 
     let output_img_path = "output.jpg";
 
-    save_image(resized_img, output_img_path);
+    save_image(resized_img, output_img_path).expect("File should be saved");
 }
 
 fn alter_sample_size() -> Criterion {

@@ -20,13 +20,13 @@ use crate::iter::ImageIterator;
 ///
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example:
 /// use photon_rs::native::open_image;
 /// use photon_rs::noise::add_noise_rand;
 /// use photon_rs::PhotonImage;
 ///
-/// let img = open_image("img.jpg");
+/// let img = open_image("img.jpg").expect("File should open");
 /// let result: PhotonImage = add_noise_rand(img);
 /// ```
 pub fn add_noise_rand(mut photon_image: PhotonImage) -> PhotonImage {
@@ -57,12 +57,12 @@ pub fn add_noise_rand(mut photon_image: PhotonImage) -> PhotonImage {
 ///
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to add pink-tinted noise to an image:
 /// use photon_rs::native::open_image;
 /// use photon_rs::noise::pink_noise;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// pink_noise(&mut img);
 /// ```
 pub fn pink_noise(mut photon_image: &mut PhotonImage) {

@@ -18,13 +18,13 @@ use wasm_bindgen::prelude::*;
 /// * `y` - The y coordinate where the watermark's top corner should be positioned.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to add a watermark to an image at x: 30, y: 40:
 /// use photon_rs::multiple::watermark;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
-/// let water_mark = open_image("watermark.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// let water_mark = open_image("watermark.jpg").expect("File should open");
 /// watermark(&mut img, &water_mark, 30_u32, 40_u32);
 /// ```
 #[wasm_bindgen]
@@ -49,13 +49,13 @@ pub fn watermark(mut img: &mut PhotonImage, watermark: &PhotonImage, x: u32, y: 
 /// * `blend_mode` - The blending mode to use. See above for complete list of blend modes available.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to blend two images with the `multiply` blend mode:
 /// use photon_rs::multiple::blend;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
-/// let img2 = open_image("img2.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// let img2 = open_image("img2.jpg").expect("File should open");
 /// blend(&mut img, &img2, "multiply");
 /// ```
 #[wasm_bindgen]
@@ -118,8 +118,8 @@ pub fn blend(
 
 // #[wasm_bindgen]
 // pub fn blend_img_browser(
-//     source_canvas: HtmlCanvasElement, 
-//     overlay_img: HtmlImageElement, 
+//     source_canvas: HtmlCanvasElement,
+//     overlay_img: HtmlImageElement,
 //     blend_mode: &str) {
 
 //     let ctx = source_canvas
@@ -130,7 +130,7 @@ pub fn blend(
 //     ctx.draw_image_with_html_image_element(&overlay_img, 0.0, 0.0);
 //     ctx.set_global_composite_operation(blend_mode);
 //     ctx.set_global_alpha(1.0);
-    
+
 // }
 
 
@@ -142,15 +142,15 @@ pub fn blend(
 /// * `background_color` - The RGB value of the background, which should be replaced.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to replace the background of ImageA (which is RGB value 20, 40, 60) with the background of ImageB:
 /// use photon_rs::Rgb;
 /// use photon_rs::multiple::replace_background;
 /// use photon_rs::native::open_image;
 ///
 /// let rgb = Rgb::new(20_u8, 40_u8, 60_u8);
-/// let mut img = open_image("img.jpg");
-/// let img2 = open_image("img2.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// let img2 = open_image("img2.jpg").expect("File should open");
 /// replace_background(&mut img, &img2, rgb);
 /// ```
 pub fn replace_background(
