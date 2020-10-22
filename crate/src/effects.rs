@@ -165,7 +165,7 @@ pub fn multiple_offsets(
 }
 
 /// Halftoning effect.
-pub fn halftone(mut photon_image: PhotonImage) {
+pub fn halftone(mut photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
