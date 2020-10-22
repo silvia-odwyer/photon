@@ -3,7 +3,7 @@ extern crate photon_rs;
 extern crate time;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let file_name = "examples/input_images/daisies_fuji.jpg";
+    let file_name = "crate/examples/input_images/daisies_fuji.jpg";
     println!("file name = {}", file_name);
 
     // // Open the image

@@ -9,9 +9,9 @@ use crate::helpers;
 use crate::{PhotonImage, Rgb};
 extern crate palette;
 use crate::channels::palette::Hue;
+use crate::iter::ImageIterator;
 use palette::{Lab, Lch, Pixel, Saturate, Shade, Srgb, Srgba};
 use wasm_bindgen::prelude::*;
-use crate::iter::ImageIterator;
 
 /// Alter a select channel by incrementing or decrementing its value by a constant.
 ///

@@ -69,7 +69,8 @@ pub fn save_image(img: PhotonImage, img_path: &str) -> Result<(), SaveError> {
     let width = img.width;
     let height = img.height;
 
-    let img_buffer = ImageBuffer::from_vec(width, height, raw_pixels).ok_or(SaveError::BufferSize)?;
+    let img_buffer =
+        ImageBuffer::from_vec(width, height, raw_pixels).ok_or(SaveError::BufferSize)?;
     let dynimage = image::ImageRgba8(img_buffer);
 
     Ok(dynimage.save(img_path)?)

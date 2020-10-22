@@ -8,10 +8,10 @@ use imageproc::drawing::draw_filled_rect_mut;
 use imageproc::rect::Rect;
 extern crate rusttype;
 use crate::helpers;
+use crate::iter::ImageIterator;
 use crate::{PhotonImage, Rgb};
 use image::Rgba;
 use wasm_bindgen::prelude::*;
-use crate::iter::ImageIterator;
 
 /// Adds an offset to the image by a certain number of pixels.
 ///
@@ -361,8 +361,7 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
             b: 255,
         };
 
-        let square_distance =
-            crate::helpers::square_distance(baseline_color, px_as_rgb);
+        let square_distance = crate::helpers::square_distance(baseline_color, px_as_rgb);
 
         let mut r = px.data[0] as f32;
         let mut g = px.data[1] as f32;

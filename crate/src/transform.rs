@@ -4,14 +4,15 @@ extern crate image;
 use image::{GenericImageView, ImageBuffer};
 extern crate wasm_bindgen;
 use crate::helpers;
+use crate::iter::ImageIterator;
 use crate::PhotonImage;
 use image::RgbaImage;
 use wasm_bindgen::prelude::*;
-use wasm_bindgen::JsCast;
-use wasm_bindgen::Clamped;
+
+#[cfg(target_arch = "wasm32")]
+use wasm_bindgen::{Clamped, JsCast};
+#[cfg(target_arch = "wasm32")]
 use web_sys::{HtmlCanvasElement, ImageData};
-use crate::iter::ImageIterator;
-use self::image::{DynamicImage, GenericImage};
 
 /// Crop an image.
 ///
@@ -29,7 +30,7 @@ use self::image::{DynamicImage, GenericImage};
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// let cropped_img: PhotonImage = crop(&mut img, 0_u32, 0_u32, 500_u32, 800_u32);
 /// // Write the contents of this image in JPG format.
-/// save_image(cropped_img, "cropped_image.jpg");
+/// save_image(cropped_img, "cropped_image.jpg").expect("Should save file");
 /// ```
 #[wasm_bindgen]
 pub fn crop(
@@ -58,22 +59,42 @@ pub fn crop(
 
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
-pub fn crop_img_browser(source_canvas: HtmlCanvasElement, width: f64, height: f64, left: f64, top: f64) -> HtmlCanvasElement {
+pub fn crop_img_browser(
+    source_canvas: HtmlCanvasElement,
+    width: f64,
+    height: f64,
+    left: f64,
+    top: f64,
+) -> HtmlCanvasElement {
     let document = web_sys::window().unwrap().document().unwrap();
     let dest_canvas = document
-        .create_element("canvas").unwrap()
-        .dyn_into::<web_sys::HtmlCanvasElement>().unwrap();
+        .create_element("canvas")
+        .unwrap()
+        .dyn_into::<web_sys::HtmlCanvasElement>()
+        .unwrap();
 
     dest_canvas.set_width(width as u32);
     dest_canvas.set_height(height as u32);
 
     let ctx = dest_canvas
-    .get_context("2d").unwrap()
-    .unwrap()
-    .dyn_into::<web_sys::CanvasRenderingContext2d>().unwrap();
+        .get_context("2d")
+        .unwrap()
+        .unwrap()
+        .dyn_into::<web_sys::CanvasRenderingContext2d>()
+        .unwrap();
 
-    ctx.draw_image_with_html_canvas_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(&source_canvas,
-        left, top, width, height, 0.0, 0.0, width, height).unwrap();
+    ctx.draw_image_with_html_canvas_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(
+        &source_canvas,
+        left,
+        top,
+        width,
+        height,
+        0.0,
+        0.0,
+        width,
+        height,
+    )
+    .unwrap();
 
     return dest_canvas;
 }
@@ -215,7 +236,8 @@ pub fn resize_img_browser(
         .unwrap();
 
     // Place the new imagedata onto the canvas
-    ctx.put_image_data(&new_img_data.unwrap(), 0.0, 0.0).unwrap();
+    ctx.put_image_data(&new_img_data.unwrap(), 0.0, 0.0)
+        .unwrap();
 
     return canvas;
 }
@@ -273,21 +295,26 @@ pub fn resize(
 /// ```
 #[wasm_bindgen]
 pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
-    let mut img: RgbaImage = ImageBuffer::from_raw(img.get_width(), img.get_height(), img.raw_pixels.to_vec()).unwrap();
+    let mut img: RgbaImage = ImageBuffer::from_raw(
+        img.get_width(),
+        img.get_height(),
+        img.raw_pixels.to_vec(),
+    )
+    .unwrap();
     let (w, h) = img.dimensions();
     let (diff_w, diff_h) = (w - w.min(width), h - h.min(height));
 
     for _ in 0..diff_w {
         let vec_steam = imageproc::seam_carving::find_vertical_seam(&img);
-        img = imageproc::seam_carving::remove_vertical_seam(&mut img, &vec_steam);
+        img = imageproc::seam_carving::remove_vertical_seam(&img, &vec_steam);
     }
     if diff_h.ne(&0_u32) {
-        img = image::imageops::rotate90(&mut img);
+        img = image::imageops::rotate90(&img);
         for _ in 0..diff_h {
             let vec_steam = imageproc::seam_carving::find_vertical_seam(&img);
-            img = imageproc::seam_carving::remove_vertical_seam(&mut img, &vec_steam);
+            img = imageproc::seam_carving::remove_vertical_seam(&img, &vec_steam);
         }
-        img = image::imageops::rotate270(&mut img);
+        img = image::imageops::rotate270(&img);
     }
 
     let img = image::ImageRgba8(img);

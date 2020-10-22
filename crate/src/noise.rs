@@ -7,8 +7,8 @@ use image::{GenericImage, GenericImageView};
 use rand::Rng;
 // use wasm_bindgen::prelude::*;
 use crate::helpers;
-use crate::PhotonImage;
 use crate::iter::ImageIterator;
+use crate::PhotonImage;
 
 /// Add randomized noise to an image.
 /// This function adds a Gaussian Noise Sample to each pixel through incrementing each channel by a randomized offset.
@@ -35,13 +35,16 @@ pub fn add_noise_rand(mut photon_image: PhotonImage) -> PhotonImage {
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let offset = rng.gen_range(0, 150);
-        let px = img.get_pixel(x, y).map(|ch| {
-            if ch <= 255 - offset {
-                ch + offset
-            } else {
-                255
-            }
-        });
+        let px =
+            img.get_pixel(x, y).map(
+                |ch| {
+                    if ch <= 255 - offset {
+                        ch + offset
+                    } else {
+                        255
+                    }
+                },
+            );
         img.put_pixel(x, y, px);
     }
     photon_image.raw_pixels = img.raw_pixels();

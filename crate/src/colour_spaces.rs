@@ -6,8 +6,8 @@ use crate::{helpers, PhotonImage, Rgb};
 use image::GenericImageView;
 use palette::{Hsl, Hsv, Hue, Lch, Pixel, Saturate, Shade, Srgba};
 extern crate wasm_bindgen;
-use wasm_bindgen::prelude::*;
 use crate::iter::ImageIterator;
+use wasm_bindgen::prelude::*;
 
 /// Apply gamma correction.
 // #[wasm_bindgen]

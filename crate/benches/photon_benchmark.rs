@@ -1,14 +1,7 @@
-use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
-use photon_rs::channels::alter_red_channel;
-use photon_rs::conv::gaussian_blur;
+use criterion::{criterion_group, criterion_main, Criterion};
 use photon_rs::native::{open_image, save_image};
 use photon_rs::transform::{resize, SamplingFilter};
-use photon_rs::PhotonImage;
 use std::time::Duration;
-
-fn gaussian_blur_3x3(img: &mut PhotonImage) {
-    gaussian_blur(img, 3);
-}
 
 fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("invert_image", |b| b.iter(|| invert_image()));
@@ -20,7 +13,8 @@ fn criterion_benchmark(c: &mut Criterion) {
 
 fn invert_image() {
     // Open the image (a PhotonImage is returned)
-    let mut img = open_image("examples/input_images/underground.jpg").expect("File should open");
+    let mut img =
+        open_image("examples/input_images/underground.jpg").expect("File should open");
 
     // Invert the image
     photon_rs::channels::invert(&mut img);
@@ -32,7 +26,8 @@ fn invert_image() {
 }
 
 fn resize_png() {
-    let mut img = open_image("examples/input_images/underground.png").expect("File should open");
+    let mut img =
+        open_image("examples/input_images/underground.png").expect("File should open");
 
     let resized_img = resize(&mut img, 800, 600, SamplingFilter::Lanczos3);
 
@@ -43,7 +38,8 @@ fn resize_png() {
 
 fn resize_jpg() {
     // Open the image (a PhotonImage is returned)
-    let mut img = open_image("examples/input_images/underground.jpg").expect("File should open");
+    let mut img =
+        open_image("examples/input_images/underground.jpg").expect("File should open");
 
     let resized_img = resize(&mut img, 800, 600, SamplingFilter::Lanczos3);
 

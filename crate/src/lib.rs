@@ -116,7 +116,8 @@ impl PhotonImage {
         img = image::ImageRgba8(img.to_rgba());
 
         let mut buffer = vec![];
-        img.write_to(&mut buffer, image::ImageOutputFormat::PNG);
+        img.write_to(&mut buffer, image::ImageOutputFormat::PNG)
+            .expect("Should write to buffer");
         let base64 = encode(&buffer);
 
         let res_base64 = format!("data:image/png;base64,{}", base64.replace("\r\n", ""));
@@ -271,7 +272,8 @@ pub fn putImageData(
     );
 
     // Place the new imagedata onto the canvas
-    ctx.put_image_data(&new_img_data.unwrap(), 0.0, 0.0);
+    ctx.put_image_data(&new_img_data.unwrap(), 0.0, 0.0)
+        .expect("Should put image data on Canvas");
 }
 
 /// Convert a HTML5 Canvas Element to a PhotonImage.
@@ -329,12 +331,9 @@ pub fn to_image_data(photon_image: PhotonImage) -> ImageData {
     let mut raw_pixels = photon_image.raw_pixels;
     let width = photon_image.width;
     let height = photon_image.height;
-    ImageData::new_with_u8_clamped_array_and_sh(
-        Clamped(&mut raw_pixels),
-        width,
-        height,
-    )
-    .unwrap()}
+    ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut raw_pixels), width, height)
+        .unwrap()
+}
 
 fn set_panic_hook() {
     // When the `console_error_panic_hook` feature is enabled, we can call the
