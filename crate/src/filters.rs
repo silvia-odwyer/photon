@@ -14,11 +14,11 @@ use wasm_bindgen::prelude::*;
 /// * `img` - A PhotonImage.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::filters::neue;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// neue(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -39,11 +39,11 @@ pub fn neue(photon_image: &mut PhotonImage) {
 /// * `img` - A PhotonImage.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::filters::lix;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// lix(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -65,11 +65,11 @@ pub fn lix(photon_image: &mut PhotonImage) {
 /// * `img` - A PhotonImage.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::filters::ryo;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// ryo(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -107,12 +107,12 @@ pub fn ryo(photon_image: &mut PhotonImage) {
 /// * `filter_name` - The filter's name. Choose from the selection above, eg: "oceanic"
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to add a filter called "vintage" to an image:
 /// use photon_rs::filters::filter;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// filter(&mut img, "vintage");
 /// ```
 #[wasm_bindgen]
@@ -162,11 +162,11 @@ pub fn filter(img: &mut PhotonImage, filter_name: &str) {
 /// * `img` - A PhotonImage.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::filters::lofi;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// lofi(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -181,11 +181,11 @@ pub fn lofi(img: &mut PhotonImage) {
 /// * `img` - A PhotonImage.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::filters::pastel_pink;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// pastel_pink(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -201,11 +201,11 @@ pub fn pastel_pink(img: &mut PhotonImage) {
 /// * `img` - A PhotonImage.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::filters::golden;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// golden(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -221,11 +221,11 @@ pub fn golden(img: &mut PhotonImage) {
 /// * `img` - A PhotonImage.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::filters::cali;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// cali(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -241,11 +241,11 @@ pub fn cali(img: &mut PhotonImage) {
 /// * `img` - A PhotonImage.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::filters::dramatic;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// dramatic(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -260,11 +260,11 @@ pub fn dramatic(img: &mut PhotonImage) {
 /// * `img` - A PhotonImage.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::filters::firenze;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// firenze(&mut img);
 /// ```
 #[wasm_bindgen]
@@ -282,11 +282,11 @@ pub fn firenze(img: &mut PhotonImage) {
 /// * `img` - A PhotonImage.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// use photon_rs::filters::obsidian;
 /// use photon_rs::native::open_image;
 ///
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// obsidian(&mut img);
 /// ```
 #[wasm_bindgen]

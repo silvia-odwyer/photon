@@ -25,13 +25,14 @@ use crate::iter::ImageIterator;
 /// * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
 ///
 /// # Example
-/// ```
+///
+/// ```no_run
 /// // For example to draw the string "Welcome to Photon!" at 10, 10:
 /// use photon_rs::native::open_image;
 /// use photon_rs::text::draw_text_with_border;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// draw_text_with_border(&mut img, "Welcome to Photon!", 10_u32, 10_u32);
 /// ```
 #[wasm_bindgen]
@@ -102,13 +103,14 @@ pub fn draw_text_with_border(
 /// * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
 ///
 /// # Example
-/// ```
+///
+/// ```no_run
 /// // For example to draw the string "Welcome to Photon!" at 10, 10:
 /// use photon_rs::native::open_image;
 /// use photon_rs::text::draw_text;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// draw_text(&mut img, "Welcome to Photon!", 10_u32, 10_u32);
 /// ```
 #[wasm_bindgen]

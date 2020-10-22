@@ -65,13 +65,13 @@ use crate::iter::ImageIterator;
 /// * `mode` - The effect desired to be applied. Choose from: `saturate`, `desaturate`, `shift_hue`, `darken`, `lighten`
 /// * `amt` - A float value from 0 to 1 which represents the amount the effect should be increased by.
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to increase the saturation by 10%:
 /// use photon_rs::colour_spaces::lch;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// lch(&mut img, "saturate", 0.1_f32);
 /// ```
 #[wasm_bindgen]
@@ -122,13 +122,13 @@ pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 /// * `mode` - The effect desired to be applied. Choose from: `saturate`, `desaturate`, `shift_hue`, `darken`, `lighten`
 /// * `amt` - A float value from 0 to 1 which represents the amount the effect should be increased by.
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to increase the saturation by 10%:
 /// use photon_rs::colour_spaces::hsl;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// hsl(&mut img, "saturate", 0.1_f32);
 /// ```
 #[wasm_bindgen]
@@ -182,13 +182,13 @@ pub fn hsl(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 /// * `amt` - A float value from 0 to 1 which represents the amount the effect should be increased by.
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to increase the saturation by 10%:
 /// use photon_rs::colour_spaces::hsv;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// hsv(&mut img, "saturate", 0.1_f32);
 /// ```
 #[wasm_bindgen]
@@ -233,13 +233,13 @@ pub fn hsv(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 /// * `mode` - A float value from 0 to 1 which is the amount to shift the hue by, or hue rotate by.
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to hue rotate/shift the hue by 120 degrees in the HSL colour space:
 /// use photon_rs::colour_spaces::hue_rotate_hsl;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// hue_rotate_hsl(&mut img, 120_f32);
 /// ```
 #[wasm_bindgen]
@@ -253,13 +253,13 @@ pub fn hue_rotate_hsl(img: &mut PhotonImage, degrees: f32) {
 /// * `mode` - A float value from 0 to 1 which is the amount to shift the hue by, or hue rotate by.
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to hue rotate/shift the hue by 120 degrees in the HSV colour space:
 /// use photon_rs::colour_spaces::hue_rotate_hsv;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// hue_rotate_hsv(&mut img, 120_f32);
 /// ```
 #[wasm_bindgen]
@@ -273,13 +273,13 @@ pub fn hue_rotate_hsv(img: &mut PhotonImage, degrees: f32) {
 /// * `mode` - A float value from 0 to 1 which is the amount to shift the hue by, or hue rotate by.
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to hue rotate/shift the hue by 120 degrees in the HSL colour space:
 /// use photon_rs::colour_spaces::hue_rotate_lch;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// hue_rotate_lch(&mut img, 120_f32);
 /// ```
 #[wasm_bindgen]
@@ -296,13 +296,13 @@ pub fn hue_rotate_lch(img: &mut PhotonImage, degrees: f32) {
 /// Increasing saturation by 80% would be represented by a `level` of 0.8
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to increase saturation by 10% in the HSL colour space:
 /// use photon_rs::colour_spaces::saturate_hsl;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// saturate_hsl(&mut img, 0.1_f32);
 /// ```
 #[wasm_bindgen]
@@ -318,13 +318,13 @@ pub fn saturate_hsl(img: &mut PhotonImage, level: f32) {
 /// Increasing saturation by 80% would be represented by a `level` of 0.8
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to increase saturation by 40% in the Lch colour space:
 /// use photon_rs::colour_spaces::saturate_lch;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// saturate_lch(&mut img, 0.4_f32);
 /// ```
 #[wasm_bindgen]
@@ -340,13 +340,13 @@ pub fn saturate_lch(img: &mut PhotonImage, level: f32) {
 /// Increasing saturation by 80% would be represented by a `level` of 0.8
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to increase saturation by 30% in the HSV colour space:
 /// use photon_rs::colour_spaces::saturate_hsv;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// saturate_hsv(&mut img, 0.3_f32);
 /// ```
 #[wasm_bindgen]
@@ -363,13 +363,13 @@ pub fn saturate_hsv(img: &mut PhotonImage, level: f32) {
 /// Lightening by 80% would be represented by a `level` of 0.8
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to lighten an image by 10% in the LCh colour space:
 /// use photon_rs::colour_spaces::lighten_lch;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// lighten_lch(&mut img, 0.1_f32);
 /// ```
 #[wasm_bindgen]
@@ -385,13 +385,13 @@ pub fn lighten_lch(img: &mut PhotonImage, level: f32) {
 /// Lightening by 80% would be represented by a `level` of 0.8
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to lighten an image by 10% in the HSL colour space:
 /// use photon_rs::colour_spaces::lighten_hsl;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// lighten_hsl(&mut img, 0.1_f32);
 /// ```
 #[wasm_bindgen]
@@ -408,13 +408,13 @@ pub fn lighten_hsl(img: &mut PhotonImage, level: f32) {
 /// Lightening by 80% would be represented by a `level` of 0.8
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to lighten an image by 10% in the HSV colour space:
 /// use photon_rs::colour_spaces::lighten_hsv;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// lighten_hsv(&mut img, 0.1_f32);
 /// ```
 #[wasm_bindgen]
@@ -431,13 +431,13 @@ pub fn lighten_hsv(img: &mut PhotonImage, level: f32) {
 /// Darkening by 80% would be represented by a `level` of 0.8
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to darken an image by 10% in the LCh colour space:
 /// use photon_rs::colour_spaces::darken_lch;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// darken_lch(&mut img, 0.1_f32);
 /// ```
 #[wasm_bindgen]
@@ -454,13 +454,13 @@ pub fn darken_lch(img: &mut PhotonImage, level: f32) {
 /// Darkening by 80% would be represented by a `level` of 0.8
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to darken an image by 10% in the HSL colour space:
 /// use photon_rs::colour_spaces::darken_hsl;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// darken_hsl(&mut img, 0.1_f32);
 /// ```
 #[wasm_bindgen]
@@ -477,13 +477,13 @@ pub fn darken_hsl(img: &mut PhotonImage, level: f32) {
 /// Darkening by 80% would be represented by a `level` of 0.8
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to darken an image by 10% in the HSV colour space:
 /// use photon_rs::colour_spaces::darken_hsv;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// darken_hsv(&mut img, 0.1_f32);
 /// ```
 #[wasm_bindgen]
@@ -500,13 +500,13 @@ pub fn darken_hsv(img: &mut PhotonImage, level: f32) {
 /// Desaturating by 80% would be represented by a `level` of 0.8
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to desaturate an image by 10% in the HSV colour space:
 /// use photon_rs::colour_spaces::desaturate_hsv;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// desaturate_hsv(&mut img, 0.1_f32);
 /// ```
 #[wasm_bindgen]
@@ -523,13 +523,13 @@ pub fn desaturate_hsv(img: &mut PhotonImage, level: f32) {
 /// Desaturating by 80% would be represented by a `level` of 0.8
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to desaturate an image by 10% in the LCh colour space:
 /// use photon_rs::colour_spaces::desaturate_hsl;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// desaturate_hsl(&mut img, 0.1_f32);
 /// ```
 #[wasm_bindgen]
@@ -546,13 +546,13 @@ pub fn desaturate_hsl(img: &mut PhotonImage, level: f32) {
 /// Desaturating by 80% would be represented by a `level` of 0.8
 ///
 /// # Example
-/// ```
+/// ```no_run
 /// // For example to desaturate an image by 10% in the LCh colour space:
 /// use photon_rs::colour_spaces::desaturate_lch;
 /// use photon_rs::native::open_image;
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// desaturate_lch(&mut img, 0.1_f32);
 /// ```
 #[wasm_bindgen]
@@ -573,14 +573,14 @@ pub fn desaturate_lch(img: &mut PhotonImage, level: f32) {
 /// * `opacity` - the opacity of color when mixed to image. Float value from 0 to 1.
 /// # Example
 ///
-/// ```
+/// ```no_run
 /// // For example, to mix an image with rgb (50, 255, 254) and opacity 0.4:
 /// use photon_rs::Rgb;
 /// use photon_rs::colour_spaces::mix_with_colour;
 /// use photon_rs::native::open_image;
 ///
 /// let mix_colour = Rgb::new(50_u8, 255_u8, 254_u8);
-/// let mut img = open_image("img.jpg");
+/// let mut img = open_image("img.jpg").expect("File should open");
 /// mix_with_colour(&mut img, mix_colour, 0.4_f32);
 /// ```
 #[wasm_bindgen]
