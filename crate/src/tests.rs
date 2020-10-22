@@ -1,9 +1,8 @@
 #[cfg(test)]
 mod test {
-    use super::*;
     use crate::channels::*;
-    use crate::PhotonImage;
     use crate::transform::seam_carve;
+    use crate::PhotonImage;
 
     #[test]
     fn test_alter_red_channel() {

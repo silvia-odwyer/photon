@@ -133,7 +133,6 @@ pub fn blend(
 
 // }
 
-
 /// Change the background of an image (using a green screen/color screen).
 ///
 /// # Arguments

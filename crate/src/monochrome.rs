@@ -2,10 +2,10 @@
 
 extern crate image;
 use crate::helpers;
+use crate::iter::ImageIterator;
 use crate::PhotonImage;
 use image::{GenericImage, GenericImageView};
 use wasm_bindgen::prelude::*;
-use crate::iter::ImageIterator;
 
 /// Apply a monochrome effect of a certain colour.
 ///
@@ -197,7 +197,7 @@ pub fn desaturate(img: &mut PhotonImage) {
 
         // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
         let mut rgb_vals = vec![r_val, g_val, b_val];
-        rgb_vals.sort();
+        rgb_vals.sort_unstable();
 
         let gray: u8 = ((rgb_vals[0] + rgb_vals[2]) / 2) as u8;
 
@@ -233,7 +233,7 @@ pub fn decompose_min(img: &mut PhotonImage) {
 
         // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
         let mut rgb_vals = vec![r_val, g_val, b_val];
-        rgb_vals.sort();
+        rgb_vals.sort_unstable();
 
         let gray: u8 = rgb_vals[0] as u8;
 
@@ -269,7 +269,7 @@ pub fn decompose_max(img: &mut PhotonImage) {
 
         // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
         let mut rgb_vals = vec![r_val, g_val, b_val];
-        rgb_vals.sort();
+        rgb_vals.sort_unstable();
 
         let gray: u8 = rgb_vals[2] as u8;
 

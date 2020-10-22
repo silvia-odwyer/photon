@@ -6,13 +6,13 @@ extern crate image;
 use image::{DynamicImage, Rgba};
 extern crate imageproc;
 extern crate rusttype;
+use crate::iter::ImageIterator;
 use crate::{helpers, PhotonImage};
 use imageproc::distance_transform::Norm;
 use imageproc::drawing::draw_text_mut;
 use imageproc::morphology::dilate_mut;
 use rusttype::{FontCollection, Scale};
 use wasm_bindgen::prelude::*;
-use crate::iter::ImageIterator;
 
 /// Add bordered-text to an image.
 /// The only font available as of now is Roboto.

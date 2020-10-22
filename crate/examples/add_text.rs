@@ -7,7 +7,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Replace the variable file_name with whatever image you would like to apply filters to
     // Ensure it is in the example_output directory, which can be found one sub-dir inside the photon dir.
     // However the image referenced below, along with sample images, have been included in the dir.
-    let file_name = "examples/input_images/daisies_fuji.jpg";
+    let file_name = "crate/examples/input_images/daisies_fuji.jpg";
 
     // Open the image
     let mut img = photon::native::open_image(file_name)?;

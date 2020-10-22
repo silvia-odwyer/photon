@@ -112,6 +112,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 ##### See More Examples
 [For more examples, check out the guide on how to get started with Photon natively.](https://silvia-odwyer.github.io/photon/guide/using-photon-natively/)
 
+### Building WebAssembly package
+
+In order to build the WebAssembly package you will need `wasm-pack`. Check https://rustwasm.github.io/wasm-pack/installer/ on how to install it. Then you can run the command:
+
+
+```bash
+wasm-pack build ./crate
+```
+
 ## Get Started With WebAssembly
 ### Using a Bundler?
 #### Installing Photon
@@ -155,7 +164,6 @@ git clone https://github.com/silvia-odwyer/photon
 
 Run the binary, which will perform an image processing function on an image:
 ```sh
-cd crate
 cargo run --release
 ```
 

@@ -1,9 +1,9 @@
 dist
-crate/bin
-crate/pkg
-crate/target
-crate/wasm-pack.log
-crate/Cargo.lock
+bin
+pkg
+target
+wasm-pack.log
+Cargo.lock
 webpack_demo/node_modules
 webpack_demo/dist
 webpack_demo/package-lock.json
