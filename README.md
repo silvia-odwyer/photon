@@ -40,12 +40,21 @@ You can run Photon:
 - on Node with WebAssembly
 
 ### Features
-- **Fast:** Photon outperforms even the fastest of libraries, including ImageMagick. On the web, its high-performance allows it to run at near-native speed. Benchmarks can be found [here](https://github.com/silvia-odwyer/photon/wiki/Benchmarks).
+- **Fast:** On the web, Photon's high-performance allows it to run at near-native speed. Benchmarks can be found [here](https://github.com/silvia-odwyer/photon/wiki/Benchmarks).
 - **Call with JS:** Want to use Photon on the web or with Node? Using a simple npm package, you're good to go. Get all the benefits of WebAssembly
 with zero-cost abstraction.
 - **Use Natively:** For command-line apps, native photo editing apps, and so forth, Photon's core codebase is in Rust, allowing for cross-platform
 development.
 - **Pure Rust** - Unlike other libraries, 100% of the library's codebase is written in Rust, so security and safety is guaranteed.
+
+### Supported Image Formats
+The following image formats are supported:
+
+- PNG
+- JPEG
+- BMP
+- ICO 
+- TIFF
 
 ### Live Demo
 View the [official demo of WASM in action](https://silvia-odwyer.github.io/photon/demo.html).

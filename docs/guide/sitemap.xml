@@ -1,58 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
      <loc>https://github.com/silvia-odwyer/photon/</loc>
-     <lastmod>2020-06-17</lastmod>
+     <lastmod>2020-10-24</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-    <url>
+    </url><url>
      <loc>https://github.com/silvia-odwyer/photon/getting-started/</loc>
-     <lastmod>2020-06-17</lastmod>
+     <lastmod>2020-10-24</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-    <url>
+    </url><url>
      <loc>https://github.com/silvia-odwyer/photon/using-photon-natively/</loc>
-     <lastmod>2020-06-17</lastmod>
+     <lastmod>2020-10-24</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-    <url>
+    </url><url>
      <loc>https://github.com/silvia-odwyer/photon/using-photon-web/</loc>
-     <lastmod>2020-06-17</lastmod>
+     <lastmod>2020-10-24</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-    <url>
+    </url><url>
      <loc>https://github.com/silvia-odwyer/photon/using-photon-node/</loc>
-     <lastmod>2020-06-17</lastmod>
+     <lastmod>2020-10-24</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-    <url>
+    </url><url>
      <loc>https://github.com/silvia-odwyer/photon/all-effects/</loc>
-     <lastmod>2020-06-17</lastmod>
+     <lastmod>2020-10-24</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-    <url>
+    </url><url>
      <loc>https://github.com/silvia-odwyer/photon/web-tutorial/</loc>
-     <lastmod>2020-06-17</lastmod>
+     <lastmod>2020-10-24</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-    <url>
+    </url><url>
      <loc>https://github.com/silvia-odwyer/photon/native-tutorial/</loc>
-     <lastmod>2020-06-17</lastmod>
+     <lastmod>2020-10-24</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-    <url>
+    </url><url>
      <loc>https://github.com/silvia-odwyer/photon/serialize-to-json/</loc>
-     <lastmod>2020-06-17</lastmod>
+     <lastmod>2020-10-24</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-    <url>
+    </url><url>
      <loc>https://github.com/silvia-odwyer/photon/contributing/</loc>
-     <lastmod>2020-06-17</lastmod>
+     <lastmod>2020-10-24</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-    <url>
+    </url><url>
      <loc>https://github.com/silvia-odwyer/photon/contact-developer/</loc>
-     <lastmod>2020-06-17</lastmod>
+     <lastmod>2020-10-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>

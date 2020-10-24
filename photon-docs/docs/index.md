@@ -21,8 +21,16 @@ This guide will help you install Photon and start using it either natively or on
 - **Correction** - Sharpen, brighten, darken, saturate, color correction
 
 ## Web Demo
-
 To view a demo of Photon in action, [click here](https://silvia-odwyer.github.io/photon/demo.html).
+
+### Supported Image Formats
+The following image formats are supported:
+
+- PNG
+- JPEG
+- BMP
+- ICO 
+- TIFF
 
 ## Documentation
 [See the documentation here.](https://docs.rs/photon-rs/0.1.0/)

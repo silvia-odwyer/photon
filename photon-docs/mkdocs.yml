@@ -7,10 +7,10 @@ repo_url: 'https://github.com/silvia-odwyer/photon'
 
 theme:
   name: 'material'
-  feature:
-    tabs: true
-  logo:
-    icon: 'photo'
+  features:
+    - tabs
+  icon:
+    logo:  material/cloud
 
 markdown_extensions:
   - admonition
