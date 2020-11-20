@@ -623,7 +623,7 @@ fn selective(
 /// selective_greyscale(img, ref_color);
 /// ```
 #[wasm_bindgen]
-pub fn selective_greyscale(mut photon_image: PhotonImage, ref_color: Rgb) {
+pub fn selective_greyscale(mut photon_image: &mut PhotonImage, ref_color: Rgb) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let mut px = img.get_pixel(x, y);
