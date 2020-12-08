@@ -28,12 +28,10 @@ use wasm_bindgen::prelude::*;
 /// ```no_run
 /// // For example, to increase the Red channel for all pixels by 10:
 /// use photon_rs::channels::alter_channel;
-/// use photon_rs::native::{open_image, save_image};
+/// use photon_rs::native::{open_image};
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// alter_channel(&mut img, 0_usize, 10_i16);
-/// // Write the contents of this image in JPG format.
-/// save_image(img, "new_image.jpg").expect("File should be saved");
 /// ```
 ///
 /// Adds a constant to a select R, G, or B channel's value.

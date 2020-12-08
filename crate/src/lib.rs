@@ -18,14 +18,13 @@
 //! extern crate photon_rs;
 //!
 //! use photon_rs::channels::alter_red_channel;
-//! use photon_rs::native::{open_image, save_image};
+//! use photon_rs::native::{open_image};
 //!
 //! fn main() {
 //!     // Open the image (a PhotonImage is returned)
 //!     let mut img = open_image("img.jpg").expect("File should open");
 //!     // Apply a filter to the pixels
 //!     alter_red_channel(&mut img, 25_i16);
-//!     save_image(img, "raw_image.jpg").expect("File should be saved");
 //! }
 //! ```
 //!

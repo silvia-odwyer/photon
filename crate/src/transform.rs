@@ -25,14 +25,13 @@ use web_sys::{HtmlCanvasElement, ImageData};
 ///
 /// ```no_run
 /// // For example, to crop an image at (0, 0) to (500, 800)
-/// use photon_rs::native::{open_image, save_image};
+/// use photon_rs::native::{open_image};
 /// use photon_rs::transform::crop;
 /// use photon_rs::PhotonImage;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// let cropped_img: PhotonImage = crop(&mut img, 0_u32, 0_u32, 500_u32, 800_u32);
 /// // Write the contents of this image in JPG format.
-/// save_image(cropped_img, "cropped_image.jpg").expect("Should save file");
 /// ```
 #[wasm_bindgen]
 pub fn crop(
