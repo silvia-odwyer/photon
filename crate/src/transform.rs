@@ -8,6 +8,8 @@ use crate::iter::ImageIterator;
 use crate::PhotonImage;
 use image::RgbaImage;
 use wasm_bindgen::prelude::*;
+use image::DynamicImage::ImageRgba8;
+use image::imageops::FilterType;
 
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::{Clamped, JsCast};
@@ -48,8 +50,8 @@ pub fn crop(
         let px = img.get_pixel(x, y);
         cropped_img.put_pixel(x, y, px);
     }
-    let dynimage = image::ImageRgba8(cropped_img);
-    let raw_pixels = dynimage.raw_pixels();
+    let dynimage = ImageRgba8(cropped_img);
+    let raw_pixels = dynimage.to_bytes();
     PhotonImage {
         raw_pixels,
         width: dynimage.width(),
@@ -127,8 +129,8 @@ pub fn fliph(photon_image: &mut PhotonImage) {
         flipped_img.put_pixel(width - x - 1, y, px);
     }
 
-    let dynimage = image::ImageRgba8(flipped_img);
-    let raw_pixels = dynimage.raw_pixels();
+    let dynimage = ImageRgba8(flipped_img);
+    let raw_pixels = dynimage.to_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -161,8 +163,8 @@ pub fn flipv(photon_image: &mut PhotonImage) {
         flipped_img.put_pixel(x, height - y - 1, px);
     }
 
-    let dynimage = image::ImageRgba8(flipped_img);
-    let raw_pixels = dynimage.raw_pixels();
+    let dynimage = ImageRgba8(flipped_img);
+    let raw_pixels = dynimage.to_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -177,13 +179,13 @@ pub enum SamplingFilter {
 
 fn filter_type_from_sampling_filter(
     sampling_filter: SamplingFilter,
-) -> image::FilterType {
+) -> FilterType {
     match sampling_filter {
-        SamplingFilter::Nearest => image::FilterType::Nearest,
-        SamplingFilter::Triangle => image::FilterType::Triangle,
-        SamplingFilter::CatmullRom => image::FilterType::CatmullRom,
-        SamplingFilter::Gaussian => image::FilterType::Gaussian,
-        SamplingFilter::Lanczos3 => image::FilterType::Lanczos3,
+        SamplingFilter::Nearest => FilterType::Nearest,
+        SamplingFilter::Triangle => FilterType::Triangle,
+        SamplingFilter::CatmullRom => FilterType::CatmullRom,
+        SamplingFilter::Gaussian => FilterType::Gaussian,
+        SamplingFilter::Lanczos3 => FilterType::Lanczos3,
     }
 }
 
@@ -204,7 +206,7 @@ pub fn resize_img_browser(
 ) -> HtmlCanvasElement {
     let sampling_filter = filter_type_from_sampling_filter(sampling_filter);
     let dyn_img = helpers::dyn_image_from_raw(&photon_img);
-    let resized_img = image::ImageRgba8(image::imageops::resize(
+    let resized_img = ImageRgba8(image::imageops::resize(
         &dyn_img,
         width,
         height,
@@ -223,7 +225,7 @@ pub fn resize_img_browser(
     canvas.set_height(resized_img.height());
 
     let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(
-        Clamped(&mut resized_img.raw_pixels()),
+        Clamped(&mut resized_img.to_bytes()),
         canvas.width(),
         canvas.height(),
     );
@@ -259,7 +261,7 @@ pub fn resize(
     let sampling_filter = filter_type_from_sampling_filter(sampling_filter);
 
     let dyn_img = helpers::dyn_image_from_raw(&photon_img);
-    let resized_img = image::ImageRgba8(image::imageops::resize(
+    let resized_img = ImageRgba8(image::imageops::resize(
         &dyn_img,
         width,
         height,
@@ -267,7 +269,7 @@ pub fn resize(
     ));
 
     PhotonImage {
-        raw_pixels: resized_img.raw_pixels(),
+        raw_pixels: resized_img.to_bytes(),
         width: resized_img.width(),
         height: resized_img.height(),
     }
@@ -317,10 +319,10 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
         img = image::imageops::rotate270(&img);
     }
 
-    let img = image::ImageRgba8(img);
+    let img = ImageRgba8(img);
 
     PhotonImage {
-        raw_pixels: img.raw_pixels(),
+        raw_pixels: img.to_bytes(),
         width: img.width(),
         height: img.height(),
     }

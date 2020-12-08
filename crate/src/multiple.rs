@@ -6,8 +6,11 @@ use crate::channels::color_sim;
 use crate::iter::ImageIterator;
 use crate::{helpers, GenericImage, PhotonImage, Rgb};
 use image::{DynamicImage, GenericImageView, RgbaImage};
-use palette::{Blend, Gradient, Lab, Lch, LinSrgba, Pixel, Srgb, Srgba};
+use palette::{Blend, Gradient, Lab, IntoColor, Lch, LinSrgba, Pixel, Srgb, Srgba, FromColor};
+use palette::rgb::Rgba;
 use wasm_bindgen::prelude::*;
+use image::Pixel as ImagePixel;
+use image::DynamicImage::ImageRgba8;
 
 /// Add a watermark to an image.
 ///
@@ -32,7 +35,7 @@ pub fn watermark(mut img: &mut PhotonImage, watermark: &PhotonImage, x: u32, y: 
     let dyn_watermark: DynamicImage = crate::helpers::dyn_image_from_raw(&watermark);
     let mut dyn_img: DynamicImage = crate::helpers::dyn_image_from_raw(&img);
     image::imageops::overlay(&mut dyn_img, &dyn_watermark, x, y);
-    img.raw_pixels = dyn_img.raw_pixels();
+    img.raw_pixels = dyn_img.to_bytes();
 }
 
 /// Blend two images together.
@@ -73,17 +76,22 @@ pub fn blend(
     if width > width2 || height > height2 {
         panic!("First image parameter must be smaller than second image parameter. To fix, swap img and img2 params.");
     }
-    let mut img = img.to_rgba();
-    let img2 = img2.to_rgba();
+    let mut img = img.to_rgba8();
+    let img2 = img2.to_rgba8();
 
     for (x, y) in ImageIterator::new(width, height) {
-        let px_data = img.get_pixel(x, y).data;
+        let pixel = img.get_pixel(x, y);
+        let px_data = pixel.channels();
+        // let rgb_color: Rgba = Rgba::new(px_data[0] as f32, px_data[1] as f32, px_data[2] as f32, 255.0);
+        // let color: LinSrgba = LinSrgba::from_color(&rgb_color).into_format();
 
-        let color: LinSrgba = LinSrgba::from_raw(&px_data).into_format();
+        let px_data2 = img2.get_pixel(x, y).channels();
 
-        let px_data2 = img2.get_pixel(x, y).data;
+        let color = Srgb::new(px_data[0] as f32 / 255.0, px_data[1] as f32 / 255.0, px_data[2]  as f32 / 255.0).into_linear();
+        let color2 = Srgb::new(px_data[0] as f32 / 255.0, px_data[1] as f32 / 255.0, px_data[2] as f32 / 255.0).into_linear();
 
-        let color2: LinSrgba = LinSrgba::from_raw(&px_data2).into_format();
+        // let rgb_color2: Rgba = Rgba::new(px_data2[0] as f32, px_data2[1] as f32, px_data2[2] as f32, 255.0);
+        // let color2: LinSrgba = LinSrgba::from_color(&rgb_color2).into_format();
 
         let blended = match blend_mode {
             // Match a single value
@@ -103,17 +111,17 @@ pub fn blend(
             "darken" => color2.darken(color),
             _ => color2.overlay(color),
         };
+        let components = blended.into_components();
+
 
         img.put_pixel(
             x,
             y,
-            image::Rgba {
-                data: blended.into_format().into_raw(),
-            },
+            image::Rgba([(components.0 * 255.0) as u8, (components.1 * 255.0) as u8, (components.2 * 255.0) as u8 , 255])
         );
     }
-    let dynimage = image::ImageRgba8(img);
-    photon_image.raw_pixels = dynimage.raw_pixels();
+    let dynimage = ImageRgba8(img);
+    photon_image.raw_pixels = dynimage.to_bytes();
 }
 
 // #[wasm_bindgen]
@@ -171,9 +179,11 @@ pub fn replace_background(
         )
         .into();
 
-        let r_val: f32 = px.data[0] as f32 / 255.0;
-        let g_val: f32 = px.data[1] as f32 / 255.0;
-        let b_val: f32 = px.data[2] as f32 / 255.0;
+        let channels = px.channels();
+
+        let r_val: f32 = channels[0] as f32 / 255.0;
+        let g_val: f32 = channels[1] as f32 / 255.0;
+        let b_val: f32 = channels[2] as f32 / 255.0;
 
         let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
 
@@ -186,7 +196,7 @@ pub fn replace_background(
             img.put_pixel(x, y, px);
         }
     }
-    let raw_pixels = img.raw_pixels();
+    let raw_pixels = img.to_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -208,16 +218,19 @@ pub fn create_gradient(width: u32, height: u32) -> PhotonImage {
     ]);
 
     for (i, c1) in grad1.take(width as usize).enumerate() {
-        let c1 = Srgba::from_linear(c1).into_format().into_raw();
+        let c1: Srgba = Srgba::from_linear(c1).into_format();
         {
             let mut sub_image = image.sub_image(i as u32, 0, 1, height);
             for (x, y) in ImageIterator::with_dimension(&sub_image.dimensions()) {
-                sub_image.put_pixel(x, y, image::Rgba { data: c1 });
+                let components = c1.into_components();
+                sub_image.put_pixel(x, y, 
+                    image::Rgba([(components.0 * 255.0) as u8, (components.1 * 255.0) as u8, (components.2 * 255.0) as u8 , 255])
+                );
             }
         }
     }
-    let rgba_img = image::ImageRgba8(image);
-    let raw_pixels = rgba_img.raw_pixels();
+    let rgba_img = ImageRgba8(image);
+    let raw_pixels = rgba_img.to_bytes();
     PhotonImage {
         raw_pixels,
         width,

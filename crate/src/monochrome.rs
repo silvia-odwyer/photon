@@ -6,6 +6,7 @@ use crate::iter::ImageIterator;
 use crate::PhotonImage;
 use image::{GenericImage, GenericImageView};
 use wasm_bindgen::prelude::*;
+use image::Pixel;
 
 /// Apply a monochrome effect of a certain colour.
 ///
@@ -303,8 +304,9 @@ pub fn grayscale_shades(mut photon_image: &mut PhotonImage, num_shades: u8) {
         let px = img.get_pixel(x, y);
 
         let conversion: f32 = 255.0 / (num_shades as f32 - 1.0);
+        let channels = px.channels();
         let (r_val, g_val, b_val) =
-            (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
+            (channels[0] as u32, channels[1] as u32, channels[2] as u32);
 
         let avg: f32 = (r_val + g_val + b_val) as f32 / 3.0;
 
@@ -314,7 +316,7 @@ pub fn grayscale_shades(mut photon_image: &mut PhotonImage, num_shades: u8) {
 
         img.put_pixel(x, y, image::Rgba([gray, gray, gray, 255]));
     }
-    let raw_pixels = img.raw_pixels();
+    let raw_pixels = img.to_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -395,16 +397,14 @@ pub fn single_channel_grayscale(mut photon_image: &mut PhotonImage, channel: usi
     let mut img = helpers::dyn_image_from_raw(&photon_image);
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
-        let mut px = img.get_pixel(x, y);
+        let px = img.get_pixel(x, y);
 
-        let channel_data = px.data[channel];
+        let channels = px.channels();
+        let channel_data = channels[channel];
 
-        px.data[0] = channel_data as u8;
-        px.data[1] = channel_data as u8;
-        px.data[2] = channel_data as u8;
-        img.put_pixel(x, y, px);
+        img.put_pixel(x, y, image::Rgba([channel_data as u8, channel_data as u8, channel_data as u8, 255]));
     }
-    let raw_pixels = img.raw_pixels();
+    let raw_pixels = img.to_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 

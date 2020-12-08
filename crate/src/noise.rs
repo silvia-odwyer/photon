@@ -47,7 +47,7 @@ pub fn add_noise_rand(mut photon_image: PhotonImage) -> PhotonImage {
             );
         img.put_pixel(x, y, px);
     }
-    photon_image.raw_pixels = img.raw_pixels();
+    photon_image.raw_pixels = img.to_bytes();
     photon_image
 }
 
@@ -82,10 +82,13 @@ pub fn pink_noise(mut photon_image: &mut PhotonImage) {
         let ran_color3: f64 = 0.6 + ran3 * 0.4;
 
         let mut px = img.get_pixel(x, y);
-        px.data[0] = (px.data[0] as f64 * 0.99 * ran_color1) as u8;
-        px.data[1] = (px.data[1] as f64 * 0.99 * ran_color2) as u8;
-        px.data[2] = (px.data[2] as f64 * 0.99 * ran_color3) as u8;
+        let channels = px.channels();
+
+        let new_r_val = (channels[0] as f64 * 0.99 * ran_color1) as u8;
+        let new_g_val = (channels[1] as f64 * 0.99 * ran_color2) as u8;
+        let new_b_val = (channels[2] as f64 * 0.99 * ran_color3) as u8;
+        px = image::Rgba([new_r_val, new_g_val, new_b_val, 255]);
         img.put_pixel(x, y, px);
     }
-    photon_image.raw_pixels = img.raw_pixels();
+    photon_image.raw_pixels = img.to_bytes();
 }

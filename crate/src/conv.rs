@@ -4,17 +4,19 @@ extern crate image;
 use crate::helpers;
 use crate::PhotonImage;
 use wasm_bindgen::prelude::*;
+use image::Pixel;
+use image::DynamicImage::ImageRgba8;
 
 type Kernel = [f32; 9];
 
 fn conv(photon_image: &mut PhotonImage, kernel: Kernel) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
-    img = image::ImageRgb8(img.to_rgb());
+    img = ImageRgba8(img.to_rgba8());
 
     let mut filtered_img = img.filter3x3(&kernel);
-    filtered_img = image::ImageRgba8(filtered_img.to_rgba());
+    filtered_img = ImageRgba8(filtered_img.to_rgba8());
 
-    photon_image.raw_pixels = filtered_img.raw_pixels();
+    photon_image.raw_pixels = filtered_img.to_bytes();
 }
 
 /// Noise reduction.
@@ -154,7 +156,7 @@ pub fn box_blur(photon_image: &mut PhotonImage) {
 pub fn gaussian_blur(photon_image: &mut PhotonImage, radius: i32) {
     // construct pixel data
     let img = helpers::dyn_image_from_raw(&photon_image);
-    let mut src = img.raw_pixels();
+    let mut src = img.to_bytes();
 
     let width = photon_image.get_width();
     let height = photon_image.get_height();

@@ -12,6 +12,7 @@ use crate::iter::ImageIterator;
 use crate::{PhotonImage, Rgb};
 use image::Rgba;
 use wasm_bindgen::prelude::*;
+use image::Pixel;
 
 /// Adds an offset to the image by a certain number of pixels.
 ///
@@ -43,12 +44,22 @@ pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32)
 
             if x + offset < width - 1 && y + offset < height - 1 {
                 let offset_px = img.get_pixel(x + offset, y + offset);
-                px.data[channel_index] = offset_px.data[channel_index];
+                let offset_px_channels = offset_px.channels();
+
+                let px_channels = px.channels();
+
+                let px = match channel_index {
+                    0 => image::Rgb([offset_px_channels[0], px_channels[1], px_channels[2]]),
+                    1 => image::Rgb([px_channels[0], offset_px_channels[1], px_channels[2]]),
+                    2 => image::Rgb([px_channels[0], px_channels[1], offset_px_channels[2]]),
+                    _ => image::Rgb([px_channels[0], px_channels[1], offset_px_channels[2]]),
+                };
+                img.put_pixel(x, y, px);
+
             }
-            img.put_pixel(x, y, px);
         }
     }
-    let raw_pixels = img.raw_pixels();
+    let raw_pixels = img.to_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -149,18 +160,18 @@ pub fn multiple_offsets(
         if x + offset < width - 1 && y + offset < height - 1 {
             let offset_px = img.get_pixel(x + offset, y);
 
-            px.data[channel_index] = offset_px.data[channel_index];
+            px[channel_index] = offset_px[channel_index];
         }
 
         if x as i32 - offset as i32 > 0 && y as i32 - offset as i32 > 0 {
             let offset_px2 = img.get_pixel(x - offset, y);
 
-            px.data[channel_index2] = offset_px2.data[channel_index2];
+            px[channel_index2] = offset_px2[channel_index2];
         }
 
         img.put_pixel(x, y, px);
     }
-    let raw_pixels = img.raw_pixels();
+    let raw_pixels = img.to_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -169,8 +180,8 @@ pub fn halftone(mut photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
-    for x in (0..width).step_by(2 as usize) {
-        for y in (0..height).step_by(2 as usize) {
+    for x in (0..width - 4).step_by(2 as usize) {
+        for y in (0..height - 4).step_by(2 as usize) {
             let mut px1 = img.get_pixel(x, y);
             let mut px2 = img.get_pixel(x, y + 1);
             let mut px3 = img.get_pixel(x + 1, y);
@@ -192,92 +203,92 @@ pub fn halftone(mut photon_image: &mut PhotonImage) {
             let sat = (gray1 + gray2 + gray3 + gray4) / 4.0;
 
             if sat > 200.0 {
-                px1.data[0] = 255;
-                px1.data[1] = 255;
-                px1.data[2] = 255;
+                px1[0] = 255;
+                px1[1] = 255;
+                px1[2] = 255;
 
-                px2.data[0] = 255;
-                px2.data[1] = 255;
-                px2.data[2] = 255;
+                px2[0] = 255;
+                px2[1] = 255;
+                px2[2] = 255;
 
-                px3.data[0] = 255;
-                px3.data[1] = 255;
-                px3.data[2] = 255;
+                px3[0] = 255;
+                px3[1] = 255;
+                px3[2] = 255;
 
-                px4.data[0] = 255;
-                px4.data[1] = 255;
-                px4.data[2] = 255;
+                px4[0] = 255;
+                px4[1] = 255;
+                px4[2] = 255;
             } else if sat > 159.0 {
-                px1.data[0] = 255;
-                px1.data[1] = 255;
-                px1.data[2] = 255;
+                px1[0] = 255;
+                px1[1] = 255;
+                px1[2] = 255;
 
-                px2.data[0] = 0;
-                px2.data[1] = 0;
-                px2.data[2] = 0;
+                px2[0] = 0;
+                px2[1] = 0;
+                px2[2] = 0;
 
-                px3.data[0] = 255;
-                px3.data[1] = 255;
-                px3.data[2] = 255;
+                px3[0] = 255;
+                px3[1] = 255;
+                px3[2] = 255;
 
-                px4.data[0] = 255;
-                px4.data[1] = 255;
-                px4.data[2] = 255;
+                px4[0] = 255;
+                px4[1] = 255;
+                px4[2] = 255;
             } else if sat > 95.0 {
-                px1.data[0] = 255;
-                px1.data[1] = 255;
-                px1.data[2] = 255;
+                px1[0] = 255;
+                px1[1] = 255;
+                px1[2] = 255;
 
-                px2.data[0] = 0;
-                px2.data[1] = 0;
-                px2.data[2] = 0;
+                px2[0] = 0;
+                px2[1] = 0;
+                px2[2] = 0;
 
-                px3.data[0] = 0;
-                px3.data[1] = 0;
-                px3.data[2] = 0;
+                px3[0] = 0;
+                px3[1] = 0;
+                px3[2] = 0;
 
-                px4.data[0] = 255;
-                px4.data[1] = 255;
-                px4.data[2] = 255;
+                px4[0] = 255;
+                px4[1] = 255;
+                px4[2] = 255;
             } else if sat > 32.0 {
-                px1.data[0] = 0;
-                px1.data[1] = 0;
-                px1.data[2] = 0;
+                px1[0] = 0;
+                px1[1] = 0;
+                px1[2] = 0;
 
-                px2.data[0] = 255;
-                px2.data[0] = 255;
-                px2.data[0] = 255;
+                px2[0] = 255;
+                px2[1] = 255;
+                px2[2] = 255;
 
-                px3.data[0] = 0;
-                px3.data[1] = 0;
-                px3.data[2] = 0;
+                px3[0] = 0;
+                px3[1] = 0;
+                px3[2] = 0;
 
-                px4.data[0] = 0;
-                px4.data[1] = 0;
-                px4.data[2] = 0;
+                px4[0] = 0;
+                px4[1] = 0;
+                px4[2] = 0;
             } else {
-                px1.data[0] = 0;
-                px1.data[1] = 0;
-                px1.data[2] = 0;
+                px1[0] = 0;
+                px1[1] = 0;
+                px1[2] = 0;
 
-                px2.data[0] = 0;
-                px2.data[1] = 0;
-                px2.data[2] = 0;
+                px2[0] = 0;
+                px2[1] = 0;
+                px2[2] = 0;
 
-                px3.data[0] = 0;
-                px3.data[1] = 0;
-                px3.data[2] = 0;
+                px3[0] = 0;
+                px3[1] = 0;
+                px3[2] = 0;
 
-                px4.data[0] = 0;
-                px4.data[1] = 0;
-                px4.data[2] = 0;
+                px4[0] = 0;
+                px4[1] = 0;
+                px4[2] = 0;
             }
 
             img.put_pixel(x, y, px1);
             // img.put_pixel(x, y + 1, px2);
         }
     }
-    let raw_pixels = img.raw_pixels();
+    let raw_pixels = img.to_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -349,10 +360,11 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let mut px = img.get_pixel(x, y);
+        let channels = px.channels();
         let px_as_rgb = Rgb {
-            r: px.data[0],
-            g: px.data[1],
-            b: px.data[2],
+            r: channels[0],
+            g: channels[1],
+            b: channels[2],
         };
 
         let baseline_color = Rgb {
@@ -363,9 +375,9 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
 
         let square_distance = crate::helpers::square_distance(baseline_color, px_as_rgb);
 
-        let mut r = px.data[0] as f32;
-        let mut g = px.data[1] as f32;
-        let mut b = px.data[2] as f32;
+        let mut r = channels[0] as f32;
+        let mut g = channels[1] as f32;
+        let mut b = channels[2] as f32;
 
         if square_distance < i32::pow(threshold, 2) {
             r *= 0.5;
@@ -373,13 +385,10 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
             b *= 0.5;
         }
 
-        px.data[0] = r as u8;
-        px.data[1] = g as u8;
-        px.data[2] = b as u8;
-
+        px = image::Rgba([r as u8, g as u8, b as u8, 255]);
         img.put_pixel(x, y, px);
     }
-    let raw_pixels = img.raw_pixels();
+    let raw_pixels = img.to_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -479,14 +488,17 @@ pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
-        let mut px = img.get_pixel(x, y);
-        if 200 as i32 - px.data[0] as i32 > 0 {
-            px.data[0] = 200 - px.data[0];
-        }
-        img.put_pixel(x, y, px);
-    }
+            let mut px = img.get_pixel(x, y);
+            let channels = px.channels();
+            if 200 as i32 - channels[0] as i32 > 0 {
+                let new_r_val = 200 - channels[0];
+                px = image::Rgba([new_r_val, channels[1], channels[2], channels[3]]);
+            }
+            img.put_pixel(x, y, px);
+        } 
+    
     PhotonImage {
-        raw_pixels: img.raw_pixels(),
+        raw_pixels: img.to_bytes(),
         width: img.width(),
         height: img.height(),
     }
@@ -567,15 +579,20 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
         let new_val = i as f32 * factor + offset;
         *table = num::clamp(new_val, 0.0, 255.0) as u8;
     }
-    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
-        let mut px = img.get_pixel(x, y);
-        px.data[0] = lookup_table[px.data[0] as usize];
-        px.data[1] = lookup_table[px.data[1] as usize];
-        px.data[2] = lookup_table[px.data[2] as usize];
 
-        img.put_pixel(x, y, px);
-    }
-    photon_image.raw_pixels = img.raw_pixels();
+    for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
+            let mut px = img.get_pixel(x, y);
+            let channels = px.channels();
+
+            px = image::Rgba([lookup_table[channels[0] as usize], 
+                lookup_table[channels[1] as usize],
+                lookup_table[channels[2] as usize],
+                255
+                ]);
+            img.put_pixel(x, y, px);
+        }
+    
+    photon_image.raw_pixels = img.to_bytes();
 }
 
 /// Tint an image by adding an offset to averaged RGB channel values.
@@ -606,29 +623,34 @@ pub fn tint(
     let mut img = helpers::dyn_image_from_raw(&photon_image);
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
-        let mut px = img.get_pixel(x, y);
-        let (r_val, g_val, b_val) =
-            (px.data[0] as u32, px.data[1] as u32, px.data[2] as u32);
+            let mut px = img.get_pixel(x, y);
+            let channels = px.channels();
+            let (r_val, g_val, b_val) =
+                (channels[0] as u32, channels[1] as u32, channels[2] as u32);
+    
+            let new_r_val = if r_val as u32 + r_offset < 255 {
+                r_val as u8 + r_offset as u8
+            } else {
+                255
+            };
+            let new_g_val = if g_val as u32 + g_offset < 255 {
+                g_val as u8 + g_offset as u8
+            } else {
+                255
+            };
+            let new_b_val = if b_val as u32 + b_offset < 255 {
+                b_val as u8 + b_offset as u8
+            } else {
+                255
+            };
 
-        px.data[0] = if r_val as u32 + r_offset < 255 {
-            r_val as u8 + r_offset as u8
-        } else {
-            255
-        };
-        px.data[1] = if g_val as u32 + g_offset < 255 {
-            g_val as u8 + g_offset as u8
-        } else {
-            255
-        };
-        px.data[2] = if b_val as u32 + b_offset < 255 {
-            b_val as u8 + b_offset as u8
-        } else {
-            255
-        };
-
-        img.put_pixel(x, y, px);
+            px = image::Rgba([new_r_val, new_g_val, new_b_val, 255]);
+    
+            img.put_pixel(x, y, px);
     }
-    let raw_pixels = img.raw_pixels();
+    
+
+    let raw_pixels = img.to_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -660,7 +682,7 @@ pub fn horizontal_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
         y_pos = i as u32 * (height_strip * 2);
     }
 
-    let raw_pixels = img.raw_pixels();
+    let raw_pixels = img.to_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -692,7 +714,7 @@ pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
         x_pos = i as u32 * (width_strip * 2);
     }
 
-    let raw_pixels = img.raw_pixels();
+    let raw_pixels = img.to_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 

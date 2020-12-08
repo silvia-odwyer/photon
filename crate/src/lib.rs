@@ -46,6 +46,8 @@ use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::Clamped;
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, ImageData};
+use js_sys::{ArrayBuffer, Uint8Array};
+use image::DynamicImage::{ImageRgba8};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -62,6 +64,8 @@ pub struct PhotonImage {
     width: u32,
     height: u32,
 }
+
+
 
 #[wasm_bindgen]
 impl PhotonImage {
@@ -86,7 +90,7 @@ impl PhotonImage {
 
         let img = image::load_from_memory(slice).unwrap();
 
-        let raw_pixels = img.to_rgba().to_vec();
+        let raw_pixels = img.to_rgba8().to_vec();
 
         PhotonImage {
             raw_pixels,
@@ -94,6 +98,21 @@ impl PhotonImage {
             height: img.height(),
         }
     }
+
+    // pub fn new_from_buffer(buffer: &Buffer, width: u32, height: u32) -> PhotonImage {
+    //     // Convert a Node.js Buffer into a Vec<u8>
+    //     let raw_pixels: Vec<u8> = Uint8Array::new_with_byte_offset_and_length(
+    //         &buffer.buffer(),
+    //         buffer.byte_offset(),
+    //         buffer.length(),
+    //     ).to_vec();
+
+    //     PhotonImage {
+    //         raw_pixels,
+    //         width,
+    //         height,
+    //     }
+    // }
 
     /// Get the width of the PhotonImage.
     pub fn get_width(&self) -> u32 {
@@ -113,11 +132,10 @@ impl PhotonImage {
     /// Convert the PhotonImage to base64.
     pub fn get_base64(&self) -> String {
         let mut img = helpers::dyn_image_from_raw(&self);
-        img = image::ImageRgba8(img.to_rgba());
+        img = ImageRgba8(img.to_rgba8());
 
         let mut buffer = vec![];
-        img.write_to(&mut buffer, image::ImageOutputFormat::PNG)
-            .expect("Should write to buffer");
+        img.write_to(&mut buffer, image::ImageOutputFormat::Png);
         let base64 = encode(&buffer);
 
         let res_base64 = format!("data:image/png;base64,{}", base64.replace("\r\n", ""));
@@ -309,8 +327,8 @@ pub fn base64_to_image(base64: &str) -> PhotonImage {
     let slice = base64_to_vec.as_slice();
 
     let mut img = image::load_from_memory(slice).unwrap();
-    img = image::ImageRgba8(img.to_rgba());
-    let raw_pixels = img.raw_pixels();
+    img = ImageRgba8(img.to_rgba8());
+    let raw_pixels = img.to_bytes();
 
     PhotonImage {
         raw_pixels,
@@ -354,5 +372,4 @@ pub mod multiple;
 pub mod native;
 pub mod noise;
 mod tests;
-pub mod text;
 pub mod transform;

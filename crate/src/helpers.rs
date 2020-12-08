@@ -5,6 +5,7 @@ extern crate image;
 use crate::{PhotonImage, Rgb};
 use image::{DynamicImage, ImageBuffer};
 extern crate wasm_bindgen;
+use image::DynamicImage::ImageRgba8;
 
 /// Gets the square distance between two colours
 pub fn square_distance(color1: Rgb, color2: Rgb) -> i32 {
@@ -33,7 +34,7 @@ pub fn save_dyn_image(img: DynamicImage, filtered_img_path: &str) {
 /// Get raw pixels (as a vec of u8s) from a DynamicImage
 pub fn get_pixels(img: DynamicImage) -> Vec<u8> {
     // get an image's raw pixels, and return as a vec of u8s
-    img.raw_pixels()
+    img.to_bytes()
 }
 
 /// Convert a PhotonImage to a DynamicImage type (struct used by the `image` crate)
@@ -47,5 +48,5 @@ pub fn dyn_image_from_raw(photon_image: &PhotonImage) -> DynamicImage {
         raw_pixels.to_vec(),
     )
     .unwrap();
-    image::ImageRgba8(img_buffer)
+    ImageRgba8(img_buffer)
 }
