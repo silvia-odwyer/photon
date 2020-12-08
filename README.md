@@ -63,6 +63,14 @@ View the [official demo of WASM in action](https://silvia-odwyer.github.io/photo
 
 ![Imgur](https://i.imgur.com/PShSZ6k.png)
 
+### Version 0.3.0 Updates
+Version 0.3.0 is currently in development, and will be expected to complete mid-December. 
+Features include:
+
+- Node.js image resizing
+- Improved performance
+- Faster encoding of images, thanks to updating dependencies to the `image` crate
+
 ### Get Started
 #### Getting Started Guide
 Check out Photon's [getting started guide, complete with tutorials, installation instructions, and more](https://silvia-odwyer.github.io/photon/guide)
