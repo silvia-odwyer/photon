@@ -6,10 +6,10 @@ extern crate wasm_bindgen;
 use crate::helpers;
 use crate::iter::ImageIterator;
 use crate::PhotonImage;
+use image::imageops::FilterType;
+use image::DynamicImage::ImageRgba8;
 use image::RgbaImage;
 use wasm_bindgen::prelude::*;
-use image::DynamicImage::ImageRgba8;
-use image::imageops::FilterType;
 
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::{Clamped, JsCast};
@@ -177,9 +177,7 @@ pub enum SamplingFilter {
     Lanczos3 = 5,
 }
 
-fn filter_type_from_sampling_filter(
-    sampling_filter: SamplingFilter,
-) -> FilterType {
+fn filter_type_from_sampling_filter(sampling_filter: SamplingFilter) -> FilterType {
     match sampling_filter {
         SamplingFilter::Nearest => FilterType::Nearest,
         SamplingFilter::Triangle => FilterType::Triangle,

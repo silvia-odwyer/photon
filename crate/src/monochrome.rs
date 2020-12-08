@@ -4,9 +4,9 @@ extern crate image;
 use crate::helpers;
 use crate::iter::ImageIterator;
 use crate::PhotonImage;
+use image::Pixel;
 use image::{GenericImage, GenericImageView};
 use wasm_bindgen::prelude::*;
-use image::Pixel;
 
 /// Apply a monochrome effect of a certain colour.
 ///
@@ -402,7 +402,16 @@ pub fn single_channel_grayscale(mut photon_image: &mut PhotonImage, channel: usi
         let channels = px.channels();
         let channel_data = channels[channel];
 
-        img.put_pixel(x, y, image::Rgba([channel_data as u8, channel_data as u8, channel_data as u8, 255]));
+        img.put_pixel(
+            x,
+            y,
+            image::Rgba([
+                channel_data as u8,
+                channel_data as u8,
+                channel_data as u8,
+                255,
+            ]),
+        );
     }
     let raw_pixels = img.to_bytes();
     photon_image.raw_pixels = raw_pixels;

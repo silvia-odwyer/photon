@@ -41,12 +41,12 @@
 //! View the [official demo of WASM in action](https://silvia-odwyer.github.io/photon).
 
 use base64::{decode, encode};
+use image::DynamicImage::ImageRgba8;
 use image::{GenericImage, GenericImageView};
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::Clamped;
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, ImageData};
-use image::DynamicImage::{ImageRgba8};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -63,8 +63,6 @@ pub struct PhotonImage {
     width: u32,
     height: u32,
 }
-
-
 
 #[wasm_bindgen]
 impl PhotonImage {
@@ -134,7 +132,8 @@ impl PhotonImage {
         img = ImageRgba8(img.to_rgba8());
 
         let mut buffer = vec![];
-        img.write_to(&mut buffer, image::ImageOutputFormat::Png);
+        img.write_to(&mut buffer, image::ImageOutputFormat::Png)
+            .unwrap();
         let base64 = encode(&buffer);
 
         let res_base64 = format!("data:image/png;base64,{}", base64.replace("\r\n", ""));

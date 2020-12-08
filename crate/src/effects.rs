@@ -10,9 +10,9 @@ extern crate rusttype;
 use crate::helpers;
 use crate::iter::ImageIterator;
 use crate::{PhotonImage, Rgb};
+use image::Pixel;
 use image::Rgba;
 use wasm_bindgen::prelude::*;
-use image::Pixel;
 
 /// Adds an offset to the image by a certain number of pixels.
 ///
@@ -49,13 +49,32 @@ pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32)
                 let px_channels = px.channels();
 
                 let px = match channel_index {
-                    0 => image::Rgba([offset_px_channels[0], px_channels[1], px_channels[2], 255]),
-                    1 => image::Rgba([px_channels[0], offset_px_channels[1], px_channels[2], 255]),
-                    2 => image::Rgba([px_channels[0], px_channels[1], offset_px_channels[2], 255]),
-                    _ => image::Rgba([px_channels[0], px_channels[1], offset_px_channels[2], 255]),
+                    0 => image::Rgba([
+                        offset_px_channels[0],
+                        px_channels[1],
+                        px_channels[2],
+                        255,
+                    ]),
+                    1 => image::Rgba([
+                        px_channels[0],
+                        offset_px_channels[1],
+                        px_channels[2],
+                        255,
+                    ]),
+                    2 => image::Rgba([
+                        px_channels[0],
+                        px_channels[1],
+                        offset_px_channels[2],
+                        255,
+                    ]),
+                    _ => image::Rgba([
+                        px_channels[0],
+                        px_channels[1],
+                        offset_px_channels[2],
+                        255,
+                    ]),
                 };
                 img.put_pixel(x, y, px);
-
             }
         }
     }
@@ -488,15 +507,15 @@ pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
-            let mut px = img.get_pixel(x, y);
-            let channels = px.channels();
-            if 200 as i32 - channels[0] as i32 > 0 {
-                let new_r_val = 200 - channels[0];
-                px = image::Rgba([new_r_val, channels[1], channels[2], channels[3]]);
-            }
-            img.put_pixel(x, y, px);
-        } 
-    
+        let mut px = img.get_pixel(x, y);
+        let channels = px.channels();
+        if 200 as i32 - channels[0] as i32 > 0 {
+            let new_r_val = 200 - channels[0];
+            px = image::Rgba([new_r_val, channels[1], channels[2], channels[3]]);
+        }
+        img.put_pixel(x, y, px);
+    }
+
     PhotonImage {
         raw_pixels: img.to_bytes(),
         width: img.width(),
@@ -581,17 +600,18 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
     }
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
-            let mut px = img.get_pixel(x, y);
-            let channels = px.channels();
+        let mut px = img.get_pixel(x, y);
+        let channels = px.channels();
 
-            px = image::Rgba([lookup_table[channels[0] as usize], 
-                lookup_table[channels[1] as usize],
-                lookup_table[channels[2] as usize],
-                255
-                ]);
-            img.put_pixel(x, y, px);
-        }
-    
+        px = image::Rgba([
+            lookup_table[channels[0] as usize],
+            lookup_table[channels[1] as usize],
+            lookup_table[channels[2] as usize],
+            255,
+        ]);
+        img.put_pixel(x, y, px);
+    }
+
     photon_image.raw_pixels = img.to_bytes();
 }
 
@@ -623,32 +643,31 @@ pub fn tint(
     let mut img = helpers::dyn_image_from_raw(&photon_image);
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
-            let mut px = img.get_pixel(x, y);
-            let channels = px.channels();
-            let (r_val, g_val, b_val) =
-                (channels[0] as u32, channels[1] as u32, channels[2] as u32);
-    
-            let new_r_val = if r_val as u32 + r_offset < 255 {
-                r_val as u8 + r_offset as u8
-            } else {
-                255
-            };
-            let new_g_val = if g_val as u32 + g_offset < 255 {
-                g_val as u8 + g_offset as u8
-            } else {
-                255
-            };
-            let new_b_val = if b_val as u32 + b_offset < 255 {
-                b_val as u8 + b_offset as u8
-            } else {
-                255
-            };
+        let mut px = img.get_pixel(x, y);
+        let channels = px.channels();
+        let (r_val, g_val, b_val) =
+            (channels[0] as u32, channels[1] as u32, channels[2] as u32);
 
-            px = image::Rgba([new_r_val, new_g_val, new_b_val, 255]);
-    
-            img.put_pixel(x, y, px);
+        let new_r_val = if r_val as u32 + r_offset < 255 {
+            r_val as u8 + r_offset as u8
+        } else {
+            255
+        };
+        let new_g_val = if g_val as u32 + g_offset < 255 {
+            g_val as u8 + g_offset as u8
+        } else {
+            255
+        };
+        let new_b_val = if b_val as u32 + b_offset < 255 {
+            b_val as u8 + b_offset as u8
+        } else {
+            255
+        };
+
+        px = image::Rgba([new_r_val, new_g_val, new_b_val, 255]);
+
+        img.put_pixel(x, y, px);
     }
-    
 
     let raw_pixels = img.to_bytes();
     photon_image.raw_pixels = raw_pixels;

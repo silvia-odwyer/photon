@@ -3,9 +3,9 @@
 
 extern crate image;
 extern crate rand;
-use std::io;
 use image::DynamicImage::ImageRgba8;
 use image::{GenericImageView, ImageBuffer, ImageError};
+use std::io;
 // use wasm_bindgen::prelude::*;
 use crate::PhotonImage;
 use thiserror::Error;
@@ -64,13 +64,12 @@ pub fn open_image(img_path: &str) -> Result<PhotonImage, OpenError> {
 /// // Save the image at the given path.
 /// save_image(img, "output.jpg").expect("File should be saved");
 /// ```
-pub fn save_image(img: PhotonImage, img_path: &str)  {
+pub fn save_image(img: PhotonImage, img_path: &str) {
     let raw_pixels = img.raw_pixels;
     let width = img.width;
     let height = img.height;
 
-    let img_buffer =
-        ImageBuffer::from_vec(width, height, raw_pixels).unwrap();
+    let img_buffer = ImageBuffer::from_vec(width, height, raw_pixels).unwrap();
     let dynimage = ImageRgba8(img_buffer);
 
     dynimage.save(img_path).unwrap();

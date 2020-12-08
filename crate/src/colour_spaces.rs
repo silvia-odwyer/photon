@@ -7,8 +7,8 @@ use image::GenericImageView;
 use palette::{Hsl, Hsv, Hue, Lch, Saturate, Shade, Srgba};
 extern crate wasm_bindgen;
 use crate::iter::ImageIterator;
-use wasm_bindgen::prelude::*;
 use image::Pixel as ImagePixel;
+use wasm_bindgen::prelude::*;
 
 /// Apply gamma correction.
 // #[wasm_bindgen]
@@ -83,8 +83,10 @@ pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 
     for (x, y) in ImageIterator::new(width, height) {
         let px_data = img.get_pixel(x, y).channels();
-        let lch_colour: Lch =
-            Srgba::new(px_data[0], px_data[1], px_data[2], 255).into_format().into_linear().into();
+        let lch_colour: Lch = Srgba::new(px_data[0], px_data[1], px_data[2], 255)
+            .into_format()
+            .into_linear()
+            .into();
 
         let new_color = match mode {
             // Match a single value
@@ -95,16 +97,19 @@ pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
             "shift_hue" => lch_colour.shift_hue(amt * 360.0),
             _ => lch_colour.saturate(amt),
         };
-        let final_color: Srgba = Srgba::from_linear(new_color.into())
-        .into_format();
+        let final_color: Srgba = Srgba::from_linear(new_color.into()).into_format();
 
-        let components = final_color
-        .into_components();
+        let components = final_color.into_components();
 
         img.put_pixel(
             x,
             y,
-            image::Rgba([(components.0 * 255.0) as u8, (components.1 * 255.0) as u8, (components.2 * 255.0) as u8 , 255])
+            image::Rgba([
+                (components.0 * 255.0) as u8,
+                (components.1 * 255.0) as u8,
+                (components.2 * 255.0) as u8,
+                255,
+            ]),
         );
     }
     photon_image.raw_pixels = img.to_vec();
@@ -154,18 +159,19 @@ pub fn hsl(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
             "shift_hue" => hsl_colour.shift_hue(amt * 360.0),
             _ => hsl_colour.saturate(amt),
         };
-        let final_color: Srgba = Srgba::from_linear(new_color.into())
-        .into_format();
+        let final_color: Srgba = Srgba::from_linear(new_color.into()).into_format();
 
-        let components = final_color
-        .into_components();
+        let components = final_color.into_components();
 
-        
         img.put_pixel(
             x,
             y,
-            image::Rgba([(components.0 * 255.0) as u8, (components.1 * 255.0) as u8, (components.2 * 255.0) as u8 , 255])
-
+            image::Rgba([
+                (components.0 * 255.0) as u8,
+                (components.1 * 255.0) as u8,
+                (components.2 * 255.0) as u8,
+                255,
+            ]),
         );
     }
 
@@ -219,16 +225,19 @@ pub fn hsv(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
             _ => hsv_colour.saturate(amt),
         };
 
-        let final_color: Srgba = Srgba::from_linear(new_color.into())
-        .into_format();
+        let final_color: Srgba = Srgba::from_linear(new_color.into()).into_format();
 
-        let components = final_color
-        .into_components();
+        let components = final_color.into_components();
 
         img.put_pixel(
             x,
             y,
-            image::Rgba([(components.0 * 255.0) as u8, (components.1 * 255.0) as u8, (components.2 * 255.0) as u8 , 255])
+            image::Rgba([
+                (components.0 * 255.0) as u8,
+                (components.1 * 255.0) as u8,
+                (components.2 * 255.0) as u8,
+                255,
+            ]),
         );
     }
     photon_image.raw_pixels = img.to_vec();

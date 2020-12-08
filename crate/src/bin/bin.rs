@@ -16,7 +16,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let output_img_path = "output.jpg";
 
     // Write file to filesystem.
-    save_image(img, output_img_path)?;
+    save_image(img, output_img_path);
     let end = Instant::now();
     println!(
         "Took {} seconds to increment red channel by 40 on image.",

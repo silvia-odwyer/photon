@@ -5,11 +5,11 @@ extern crate rand;
 use crate::channels::color_sim;
 use crate::iter::ImageIterator;
 use crate::{helpers, GenericImage, PhotonImage, Rgb};
+use image::DynamicImage::ImageRgba8;
+use image::Pixel as ImagePixel;
 use image::{DynamicImage, GenericImageView, RgbaImage};
 use palette::{Blend, Gradient, Lab, Lch, LinSrgba, Srgb, Srgba};
 use wasm_bindgen::prelude::*;
-use image::Pixel as ImagePixel;
-use image::DynamicImage::ImageRgba8;
 
 /// Add a watermark to an image.
 ///
@@ -87,8 +87,18 @@ pub fn blend(
         // let rgb_color: Rgba = Rgba::new(px_data[0] as f32, px_data[1] as f32, px_data[2] as f32, 255.0);
         // let color: LinSrgba = LinSrgba::from_color(&rgb_color).into_format();
 
-        let color = Srgb::new(px_data[0] as f32 / 255.0, px_data[1] as f32 / 255.0, px_data[2]  as f32 / 255.0).into_linear();
-        let color2 = Srgb::new(px_data2[0] as f32 / 255.0, px_data2[1] as f32 / 255.0, px_data2[2] as f32 / 255.0).into_linear();
+        let color = Srgb::new(
+            px_data[0] as f32 / 255.0,
+            px_data[1] as f32 / 255.0,
+            px_data[2] as f32 / 255.0,
+        )
+        .into_linear();
+        let color2 = Srgb::new(
+            px_data2[0] as f32 / 255.0,
+            px_data2[1] as f32 / 255.0,
+            px_data2[2] as f32 / 255.0,
+        )
+        .into_linear();
 
         // let rgb_color2: Rgba = Rgba::new(px_data2[0] as f32, px_data2[1] as f32, px_data2[2] as f32, 255.0);
         // let color2: LinSrgba = LinSrgba::from_color(&rgb_color2).into_format();
@@ -113,11 +123,15 @@ pub fn blend(
         };
         let components = blended.into_components();
 
-
         img.put_pixel(
             x,
             y,
-            image::Rgba([(components.0 * 255.0) as u8, (components.1 * 255.0) as u8, (components.2 * 255.0) as u8 , 255])
+            image::Rgba([
+                (components.0 * 255.0) as u8,
+                (components.1 * 255.0) as u8,
+                (components.2 * 255.0) as u8,
+                255,
+            ]),
         );
     }
     let dynimage = ImageRgba8(img);
@@ -223,8 +237,15 @@ pub fn create_gradient(width: u32, height: u32) -> PhotonImage {
             let mut sub_image = image.sub_image(i as u32, 0, 1, height);
             for (x, y) in ImageIterator::with_dimension(&sub_image.dimensions()) {
                 let components = c1.into_components();
-                sub_image.put_pixel(x, y, 
-                    image::Rgba([(components.0 * 255.0) as u8, (components.1 * 255.0) as u8, (components.2 * 255.0) as u8 , 255])
+                sub_image.put_pixel(
+                    x,
+                    y,
+                    image::Rgba([
+                        (components.0 * 255.0) as u8,
+                        (components.1 * 255.0) as u8,
+                        (components.2 * 255.0) as u8,
+                        255,
+                    ]),
                 );
             }
         }
