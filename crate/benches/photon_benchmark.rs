@@ -22,7 +22,7 @@ fn invert_image() {
     let output_img_path = "output.jpg";
 
     // Write to filesystem
-    save_image(img, output_img_path).expect("File should be saved");
+    save_image(img, output_img_path);
 }
 
 fn resize_png() {
@@ -33,7 +33,7 @@ fn resize_png() {
 
     let output_img_path = "output.png";
 
-    save_image(resized_img, output_img_path).expect("File should be saved");
+    save_image(resized_img, output_img_path);
 }
 
 fn resize_jpg() {
@@ -45,7 +45,7 @@ fn resize_jpg() {
 
     let output_img_path = "output.jpg";
 
-    save_image(resized_img, output_img_path).expect("File should be saved");
+    save_image(resized_img, output_img_path);
 }
 
 fn alter_sample_size() -> Criterion {

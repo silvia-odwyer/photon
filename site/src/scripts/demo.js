@@ -30,7 +30,6 @@ var newimg, watermark_img, img2;
 
     crop_btn.addEventListener("click", function(){crop(event)}, false);
    
-   
      let filter_buttons = document.getElementsByClassName("filter");
      for (let i = 0; i < filter_buttons.length; i++) {
        let button = filter_buttons[i];
@@ -127,8 +126,6 @@ var newimg, watermark_img, img2;
                        "lighten": function() {return module.blend(rust_image, rust_image2, "lighten")},
                        "darken": function() {return module.blend(rust_image, rust_image2, "darken")},
                        "watermark": function() {return module.watermark(canvas, watermark_canvas, 10, 30)},
-                       "text": function() {return module.draw_text(rust_image, "welcome to wasm", 10, 20)},
-                       "text_border": function() {return module.draw_text_with_border(rust_image, "welcome to wasm", 10, 20)},
                      };
 
      // Filter the image, the PhotonImage's raw pixels are modified and 
@@ -348,8 +345,6 @@ var newimg, watermark_img, img2;
                        "inc_lum": function() {return module.inc_luminosity(rust_image)},
                        "grayscale_human_corrected": function() {return module.grayscale_human_corrected(rust_image)},
                        "watermark": function() {return module.watermark(rust_image, watermark_img, 10, 30)},
-                       "text": function() {return module.draw_text(rust_image, "Welcome to WebAssembly!", 10, 20)},
-                       "text_border": function() {return module.draw_text_with_border(rust_image, "Welcome to WebAssembly!", 10, 20)},
                        "flipv": function() {return module.flipv(rust_image)}, 
                        "fliph": function() {return module.fliph(rust_image)},
                        "sobel_horizontal": function() {return module.sobel_horizontal(rust_image)},
