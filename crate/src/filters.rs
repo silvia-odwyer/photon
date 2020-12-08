@@ -175,7 +175,7 @@ pub fn lofi(img: &mut PhotonImage) {
     colour_spaces::saturate_hsl(img, 0.2);
 }
 
-/// Add a rose tint to an image.
+/// Apply a rose tint to an image.
 ///
 /// # Arguments
 /// * `img` - A PhotonImage.
@@ -235,7 +235,7 @@ pub fn cali(img: &mut PhotonImage) {
     adjust_contrast(img, 50.0);
 }
 
-/// Increased contrast, greyscale effect.
+/// Greyscale effect with increased contrast.
 ///
 /// # Arguments
 /// * `img` - A PhotonImage.

@@ -58,11 +58,10 @@ pub fn open_image(img_path: &str) -> Result<PhotonImage, OpenError> {
 ///
 /// # Example
 /// ```no_run
-/// use photon_rs::native::{save_image, open_image};
+/// use photon_rs::native::{open_image};
 ///
 /// let img = open_image("img.jpg").expect("File should open");
 /// // Save the image at the given path.
-/// save_image(img, "output.jpg").expect("File should be saved");
 /// ```
 pub fn save_image(img: PhotonImage, img_path: &str) {
     let raw_pixels = img.raw_pixels;

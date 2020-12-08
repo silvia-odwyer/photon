@@ -16,6 +16,8 @@ use wasm_bindgen::prelude::*;
 
 /// Adds an offset to the image by a certain number of pixels.
 ///
+/// This creates an RGB shift effect.
+///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
 /// * `offset` - The offset is added to the pixels in the image.
