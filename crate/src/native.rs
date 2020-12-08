@@ -42,7 +42,7 @@ pub fn open_image(img_path: &str) -> Result<PhotonImage, OpenError> {
     let (width, height) = img.dimensions();
 
     // Convert the DynamicImage type to raw vec representing RGBA pixels (not RGB)
-    let raw_pixels = img.to_rgba().to_vec();
+    let raw_pixels = img.to_rgba8().to_vec();
 
     Ok(PhotonImage {
         raw_pixels,

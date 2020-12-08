@@ -40,7 +40,7 @@ pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32)
 
     for x in 0..width - 10 {
         for y in 0..height - 10 {
-            let mut px = img.get_pixel(x, y);
+            let px = img.get_pixel(x, y);
 
             if x + offset < width - 1 && y + offset < height - 1 {
                 let offset_px = img.get_pixel(x + offset, y + offset);
@@ -49,10 +49,10 @@ pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32)
                 let px_channels = px.channels();
 
                 let px = match channel_index {
-                    0 => image::Rgb([offset_px_channels[0], px_channels[1], px_channels[2]]),
-                    1 => image::Rgb([px_channels[0], offset_px_channels[1], px_channels[2]]),
-                    2 => image::Rgb([px_channels[0], px_channels[1], offset_px_channels[2]]),
-                    _ => image::Rgb([px_channels[0], px_channels[1], offset_px_channels[2]]),
+                    0 => image::Rgba([offset_px_channels[0], px_channels[1], px_channels[2], 255]),
+                    1 => image::Rgba([px_channels[0], offset_px_channels[1], px_channels[2], 255]),
+                    2 => image::Rgba([px_channels[0], px_channels[1], offset_px_channels[2], 255]),
+                    _ => image::Rgba([px_channels[0], px_channels[1], offset_px_channels[2], 255]),
                 };
                 img.put_pixel(x, y, px);
 

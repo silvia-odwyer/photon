@@ -4,7 +4,6 @@ extern crate image;
 use crate::helpers;
 use crate::PhotonImage;
 use wasm_bindgen::prelude::*;
-use image::Pixel;
 use image::DynamicImage::ImageRgba8;
 
 type Kernel = [f32; 9];

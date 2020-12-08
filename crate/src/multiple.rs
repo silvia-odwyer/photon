@@ -6,8 +6,7 @@ use crate::channels::color_sim;
 use crate::iter::ImageIterator;
 use crate::{helpers, GenericImage, PhotonImage, Rgb};
 use image::{DynamicImage, GenericImageView, RgbaImage};
-use palette::{Blend, Gradient, Lab, IntoColor, Lch, LinSrgba, Pixel, Srgb, Srgba, FromColor};
-use palette::rgb::Rgba;
+use palette::{Blend, Gradient, Lab, Lch, LinSrgba, Srgb, Srgba};
 use wasm_bindgen::prelude::*;
 use image::Pixel as ImagePixel;
 use image::DynamicImage::ImageRgba8;
@@ -81,14 +80,15 @@ pub fn blend(
 
     for (x, y) in ImageIterator::new(width, height) {
         let pixel = img.get_pixel(x, y);
+        let pixel_img2 = img2.get_pixel(x, y);
+
         let px_data = pixel.channels();
+        let px_data2 = pixel_img2.channels();
         // let rgb_color: Rgba = Rgba::new(px_data[0] as f32, px_data[1] as f32, px_data[2] as f32, 255.0);
         // let color: LinSrgba = LinSrgba::from_color(&rgb_color).into_format();
 
-        let px_data2 = img2.get_pixel(x, y).channels();
-
         let color = Srgb::new(px_data[0] as f32 / 255.0, px_data[1] as f32 / 255.0, px_data[2]  as f32 / 255.0).into_linear();
-        let color2 = Srgb::new(px_data[0] as f32 / 255.0, px_data[1] as f32 / 255.0, px_data[2] as f32 / 255.0).into_linear();
+        let color2 = Srgb::new(px_data2[0] as f32 / 255.0, px_data2[1] as f32 / 255.0, px_data2[2] as f32 / 255.0).into_linear();
 
         // let rgb_color2: Rgba = Rgba::new(px_data2[0] as f32, px_data2[1] as f32, px_data2[2] as f32, 255.0);
         // let color2: LinSrgba = LinSrgba::from_color(&rgb_color2).into_format();

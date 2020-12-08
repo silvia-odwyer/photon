@@ -9,9 +9,10 @@ use crate::helpers;
 use crate::{PhotonImage, Rgb};
 extern crate palette;
 use crate::channels::palette::Hue;
-use palette::{Lab, Lch, Pixel, Saturate, Shade, Srgb, Srgba};
+use palette::{Lab, Lch, Saturate, Shade, Srgb, Srgba};
 use wasm_bindgen::prelude::*;
 use crate::channels::image::Pixel as OtherPixel;
+use crate::iter::ImageIterator;
 
 /// Alter a select channel by incrementing or decrementing its value by a constant.
 ///
@@ -378,6 +379,355 @@ pub fn invert(photon_image: &mut PhotonImage) {
         photon_image.raw_pixels[i + 1] = 255 - g_val;
         photon_image.raw_pixels[i + 2] = 255 - b_val;
     }
+}
+
+
+/// Selective hue rotation.
+///
+/// Only rotate the hue of a pixel if its RGB values are within a specified range.
+/// This function only rotates a pixel's hue to another  if it is visually similar to the colour specified.
+/// For example, if a user wishes all pixels that are blue to be changed to red, they can selectively specify  only the blue pixels to be changed.
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// * `ref_color` - The `RGB` value of the reference color (to be compared to)
+/// * `degrees` - The amount of degrees to hue rotate by.
+///
+/// # Example
+///
+/// ```no_run
+/// // For example, to only rotate the pixels that are of RGB value RGB{20, 40, 60}:
+/// use photon_rs::Rgb;
+/// use photon_rs::channels::selective_hue_rotate;
+/// use photon_rs::native::open_image;
+///
+/// let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// selective_hue_rotate(&mut img, ref_color, 180_f32);
+/// ```
+#[wasm_bindgen]
+pub fn selective_hue_rotate(
+    mut photon_image: &mut PhotonImage,
+    ref_color: Rgb,
+    degrees: f32,
+) {
+    let img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
+
+    let mut img = img.to_rgba8();
+    for (x, y) in ImageIterator::new(width, height) {
+
+            let px = img.get_pixel(x, y);
+
+            // Reference colour to compare the current pixel's colour to
+            let lab: Lab = Srgb::new(
+                ref_color.r as f32 / 255.0,
+                ref_color.g as f32 / 255.0,
+                ref_color.b as f32 / 255.0,
+            )
+            .into();
+            let channels = px.channels();
+            // Convert the current pixel's colour to the l*a*b colour space
+            let r_val: f32 = channels[0] as f32 / 255.0;
+            let g_val: f32 = channels[1] as f32 / 255.0;
+            let b_val: f32 = channels[2] as f32 / 255.0;
+    
+            let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
+    
+            let sim = color_sim(lab, px_lab);
+            if sim > 0 && sim < 40 {
+                let px_data = img.get_pixel(x, y).channels();
+                let color = Srgba::new(px_data[0], px_data[1], px_data[2], 255).into_format();
+    
+                let hue_rotated_color = Lch::from(color).shift_hue(degrees);
+
+                let final_color: Srgba = Srgba::from_linear(hue_rotated_color.into())
+                .into_format();
+        
+                let components = final_color
+                .into_components();
+        
+                img.put_pixel(
+                    x,
+                    y,
+                    image::Rgba([(components.0 * 255.0) as u8, (components.1 * 255.0) as u8, (components.2 * 255.0) as u8 , 255])
+                );
+            }
+        }
+        
+    photon_image.raw_pixels = img.to_vec();
+}
+
+// #[wasm_bindgen]
+// pub fn selective_color_convert(mut photon_image: &mut PhotonImage, ref_color:Rgb, new_color:Rgb, fraction: f32) {
+//     let img = helpers::dyn_image_from_raw(&photon_image);
+//     let (_width, _height) = img.dimensions();
+//     let mut img = img.to_rgba8();
+//     for x in 0.._width {
+//         for y in 0.._height {
+//             let mut px = img.get_pixel(x, y);
+
+//             // Reference colour to compare the current pixel's colour to
+//             let lab: Lab = Srgb::new(ref_color.r as f32 / 255.0, ref_color.g as f32 / 255.0, ref_color.b as f32 / 255.0).into();
+
+//             // Convert the current pixel's colour to the l*a*b colour space
+//             let r_val: f32 = px.data[0] as f32 / 255.0;
+//             let g_val: f32 = px.data[1] as f32 / 255.0;
+//             let b_val: f32 = px.data[2] as f32 / 255.0;
+
+//             let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
+
+//             let sim = color_sim(lab, px_lab);
+//             if sim > 0 && sim < 40 {
+//                 let newr = (((new_color.r - ref_color.r) as f32) * fraction + new_color.r as f32) as u8;
+//                 let newg = (((new_color.g - ref_color.g) as f32) * fraction + new_color.g as f32) as u8;
+//                 let newb = (((new_color.b - ref_color.b) as f32) * fraction + new_color.b as f32) as u8;
+
+//                 img.put_pixel(x, y, image::Rgba([newr, newg, newb, 255]));
+//             }
+//         }
+//     }
+//     photon_image.raw_pixels = img.to_vec();
+// }
+
+// pub fn correct(img: &DynamicImage, mode: &'static str, colour_space: &'static str, amt: f32) -> DynamicImage {
+//     let mut img  = img.to_rgb();
+
+//     let (width, height) = img.dimensions();
+
+//         for x in 0..width {
+//             for y in 0..height {
+//                 let px_data = img.get_pixel(x, y).data;
+
+//                 let colour_to_cspace;
+//                 if colour_space == "hsv" {
+//                     colour_to_cspace: Hsv = Srgb::from_raw(&px_data).into_format();
+//                 }
+//                 else if colour_space == "hsl" {
+//                     colour_to_cspace = Hsl::from(color);
+//                 }
+//                 else {
+//                     colour_to_cspace = Lch::from(color);
+//                 }
+
+//                 let new_color  = match mode {
+//                     // Match a single value
+//                     "desaturate" => colour_to_cspace.desaturate(amt),
+//                     "saturate" => colour_to_cspace.saturate(amt),
+//                     "lighten" => colour_to_cspace.lighten(amt),
+//                     "darken" => colour_to_cspace.darken(amt),
+//                     _ => colour_to_cspace.saturate(amt),
+//                 };
+
+//                 img.put_pixel(x, y, image::Rgb {
+//                     data: Srgb::from_linear(new_color.into()).into_format().into_raw()
+//                 });
+//             }
+//         }
+
+//     let dynimage = image::ImageRgb8(img);
+//     return dynimage;
+// }
+
+
+/// Selectively lighten an image.
+///
+/// Only lighten the hue of a pixel if its colour matches or is similar to the RGB colour specified.
+/// For example, if a user wishes all pixels that are blue to be lightened, they can selectively specify  only the blue pixels to be changed.
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// * `ref_color` - The `RGB` value of the reference color (to be compared to)
+/// * `amt` - The level from 0 to 1 to lighten the hue by. Increasing by 10% would have an `amt` of 0.1
+///
+/// # Example
+///
+/// ```no_run
+/// // For example, to only lighten the pixels that are of or similar to RGB value RGB{20, 40, 60}:
+/// use photon_rs::Rgb;
+/// use photon_rs::channels::selective_lighten;
+/// use photon_rs::native::open_image;
+///
+/// let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// selective_lighten(&mut img, ref_color, 0.2_f32);
+/// ```
+#[wasm_bindgen]
+pub fn selective_lighten(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
+    selective(img, "lighten", ref_color, amt)
+}
+
+/// Selectively desaturate pixel colours which are similar to the reference colour provided.
+///
+/// Similarity between two colours is calculated via the CIE76 formula.
+/// Only desaturates the hue of a pixel if its similarity to the reference colour is within the range in the algorithm.
+/// For example, if a user wishes all pixels that are blue to be desaturated by 0.1, they can selectively specify  only the blue pixels to be changed.
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// * `ref_color` - The `RGB` value of the reference color (to be compared to)
+/// * `amt` - The amount of desaturate the colour by.
+///
+/// # Example
+///
+/// ```no_run
+/// // For example, to only desaturate the pixels that are similar to the RGB value RGB{20, 40, 60}:
+/// use photon_rs::Rgb;
+/// use photon_rs::channels::selective_desaturate;
+/// use photon_rs::native::open_image;
+///
+/// let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// selective_desaturate(&mut img, ref_color, 0.1_f32);
+/// ```
+#[wasm_bindgen]
+pub fn selective_desaturate(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
+    selective(img, "desaturate", ref_color, amt)
+}
+
+/// Selectively saturate pixel colours which are similar to the reference colour provided.
+///
+/// Similarity between two colours is calculated via the CIE76 formula.
+/// Only saturates the hue of a pixel if its similarity to the reference colour is within the range in the algorithm.
+/// For example, if a user wishes all pixels that are blue to have an increase in saturation by 10%, they can selectively specify only the blue pixels to be changed.
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// * `ref_color` - The `RGB` value of the reference color (to be compared to)
+/// * `amt` - The amount of saturate the colour by.
+///
+/// # Example
+///
+/// ```no_run
+/// // For example, to only increase the saturation of pixels that are similar to the RGB value RGB{20, 40, 60}:
+/// use photon_rs::Rgb;
+/// use photon_rs::channels::selective_saturate;
+/// use photon_rs::native::open_image;
+///
+/// let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// selective_saturate(&mut img, ref_color, 0.1_f32);
+/// ```
+#[wasm_bindgen]
+pub fn selective_saturate(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
+    selective(img, "saturate", ref_color, amt);
+}
+
+fn selective(
+    mut photon_image: &mut PhotonImage,
+    mode: &'static str,
+    ref_color: Rgb,
+    amt: f32,
+) {
+    let img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
+    let mut img = img.to_rgba8();
+
+    for (x, y) in ImageIterator::new(width, height) {
+
+            let px = img.get_pixel(x, y);
+
+            // Reference colour to compare the current pixel's colour to
+            let lab: Lab = Srgb::new(
+                ref_color.r as f32 / 255.0,
+                ref_color.g as f32 / 255.0,
+                ref_color.b as f32 / 255.0,
+            )
+            .into();
+            let channels = px.channels();
+            // Convert the current pixel's colour to the l*a*b colour space
+            let r_val: f32 = channels[0] as f32 / 255.0;
+            let g_val: f32 = channels[1] as f32 / 255.0;
+            let b_val: f32 = channels[2] as f32 / 255.0;
+    
+            let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
+    
+            let sim = color_sim(lab, px_lab);
+            if sim > 0 && sim < 40 {
+                let px_data = img.get_pixel(x, y).channels();
+                let lch_colour: Lch =
+                    Srgb::new(px_data[0], px_data[1], px_data[2]).into_format().into_linear().into();
+    
+                let new_color = match mode {
+                    // Match a single value
+                    "desaturate" => lch_colour.desaturate(amt),
+                    "saturate" => lch_colour.saturate(amt),
+                    "lighten" => lch_colour.lighten(amt),
+                    "darken" => lch_colour.darken(amt),
+                    _ => lch_colour.saturate(amt),
+                };
+
+                let final_color: Srgba = Srgba::from_linear(new_color.into())
+                .into_format();
+        
+                let components = final_color
+                .into_components();
+        
+                img.put_pixel(
+                    x,
+                    y,
+                    image::Rgba([(components.0 * 255.0) as u8, (components.1 * 255.0) as u8, (components.2 * 255.0) as u8 , 255])
+                );
+        }
+    } 
+    
+    photon_image.raw_pixels = img.to_vec();
+}
+
+/// Selectively changes a pixel to greyscale if it is *not* visually similar or close to the colour specified.
+/// Only changes the colour of a pixel if its RGB values are within a specified range.
+///
+/// (Similarity between two colours is calculated via the CIE76 formula.)
+/// For example, if a user wishes all pixels that are *NOT* blue to be displayed in greyscale, they can selectively specify only the blue pixels to be
+/// kept in the photo.
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// * `ref_color` - The `RGB` value of the reference color (to be compared to)
+///
+/// # Example
+///
+/// ```no_run
+/// // For example, to greyscale all pixels that are *not* visually similar to the RGB colour RGB{20, 40, 60}:
+/// use photon_rs::Rgb;
+/// use photon_rs::channels::selective_greyscale;
+/// use photon_rs::native::open_image;
+///
+/// let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// selective_greyscale(img, ref_color);
+/// ```
+#[wasm_bindgen]
+pub fn selective_greyscale(mut photon_image: PhotonImage, ref_color: Rgb) {
+    let mut img = helpers::dyn_image_from_raw(&photon_image);
+
+    for (x, y) in ImageIterator::new(img.width(), img.height()) {
+
+            let mut px = img.get_pixel(x, y);
+
+            // Reference colour to compare the current pixel's colour to
+            let lab: Lab = Srgb::new(
+                ref_color.r as f32 / 255.0,
+                ref_color.g as f32 / 255.0,
+                ref_color.b as f32 / 255.0,
+            )
+            .into();
+            let channels = px.channels();
+            // Convert the current pixel's colour to the l*a*b colour space
+            let r_val: f32 = channels[0] as f32 / 255.0;
+            let g_val: f32 = channels[1] as f32 / 255.0;
+            let b_val: f32 = channels[2] as f32 / 255.0;
+    
+            let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
+    
+            let sim = color_sim(lab, px_lab);
+            if sim > 30 {
+                let avg = channels[0] as f32 * 0.3
+                    + channels[1] as f32 * 0.59
+                    + channels[2] as f32 * 0.11;
+                px = image::Rgba([avg as u8, avg as u8, avg as u8, 255]);                
+            }
+            img.put_pixel(x, y, px);
+        
+    }
+    
+    let raw_pixels = img.to_bytes();
+    photon_image.raw_pixels = raw_pixels;
 }
 
 /// Get the similarity of two colours in the l*a*b colour space using the CIE76 formula.

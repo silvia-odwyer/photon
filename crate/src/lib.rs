@@ -46,7 +46,6 @@ use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::Clamped;
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, ImageData};
-use js_sys::{ArrayBuffer, Uint8Array};
 use image::DynamicImage::{ImageRgba8};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
