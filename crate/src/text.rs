@@ -2,10 +2,10 @@
 //! For extended graphic design/text-drawing functionality, see [GDL](https://github.com/silvia-odwyer/gdl),
 //! which is a graphic design library, compatible with Photon.
 
-extern crate image;
+use image;
 use image::{DynamicImage, Rgba};
-extern crate imageproc;
-extern crate rusttype;
+use imageproc;
+use rusttype;
 use crate::iter::ImageIterator;
 use crate::{helpers, PhotonImage};
 use imageproc::distance_transform::Norm;

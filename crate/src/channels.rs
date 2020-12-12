@@ -1,13 +1,13 @@
 //! Channel manipulation.
 
-extern crate image;
+use image;
 
 use image::{GenericImage, GenericImageView};
 
-extern crate wasm_bindgen;
+use wasm_bindgen;
 use crate::helpers;
 use crate::{PhotonImage, Rgb};
-extern crate palette;
+use palette;
 use crate::channels::image::Pixel as OtherPixel;
 use crate::channels::palette::Hue;
 use crate::iter::ImageIterator;

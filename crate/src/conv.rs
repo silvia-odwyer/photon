@@ -1,6 +1,6 @@
 //! Convolution effects such as sharpening, blurs, sobel filters, etc.,
 
-extern crate image;
+use image;
 use crate::helpers;
 use crate::PhotonImage;
 use image::DynamicImage::ImageRgba8;

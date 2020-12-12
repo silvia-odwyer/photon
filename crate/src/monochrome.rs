@@ -1,6 +1,6 @@
 //! Monochrome-related effects and greyscaling/duotoning.
 
-extern crate image;
+use image;
 use crate::helpers;
 use crate::iter::ImageIterator;
 use crate::PhotonImage;

@@ -1,6 +1,6 @@
 //! Preset color filters.
 
-extern crate image;
+use image;
 use crate::colour_spaces;
 use crate::colour_spaces::mix_with_colour;
 use crate::effects::{adjust_contrast, inc_brightness};

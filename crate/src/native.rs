@@ -1,11 +1,13 @@
 //! Native-only functions.
 //! Includes functions that open images from the file-system, etc.,
 
-extern crate image;
-extern crate rand;
+use image;
+use rand;
 use image::DynamicImage::ImageRgba8;
 use image::{GenericImageView, ImageBuffer, ImageError};
 use std::io;
+use std::io;
+use std::fs::File;
 // use wasm_bindgen::prelude::*;
 use crate::PhotonImage;
 use thiserror::Error;
@@ -51,6 +53,34 @@ pub fn open_image(img_path: &str) -> Result<PhotonImage, OpenError> {
     })
 }
 
+/// Saves a image from a byte slice
+/// A PhotonImage is returned.
+/// # Arguments
+/// * `buffer` - A byte slice containing the image you want to edit.
+///
+/// # Example
+/// ```no_run
+/// use photon_rs::native::open_image_from_bytes;
+///
+/// // Code to read a file to buffer. If you are reading from a file its better to use `open_image`
+/// let buffer = std::fs::read("file.png")?.as_slice();
+///
+/// // Open the image. A PhotonImage is returned.
+/// let img = open_image_from_bytes(buffer).expect("File should open");
+///
+/// // ... image editing functionality here ...
+/// ```
+pub fn open_image_from_bytes(buffer: &[u8]) -> Result<PhotonImage, OpenError> {
+    let img = image::load_from_memory(buffer)?;
+    let (width, height) = img.dimensions();
+    let raw_pixels = img.to_rgba8().to_vec();
+
+    Ok(PhotonImage {
+        raw_pixels,
+        width,
+        height,
+    })
+}
 /// Save the image to the filesystem at a given path.
 /// # Arguments
 /// * img: The PhotonImage you wish to save.
@@ -58,10 +88,11 @@ pub fn open_image(img_path: &str) -> Result<PhotonImage, OpenError> {
 ///
 /// # Example
 /// ```no_run
-/// use photon_rs::native::{open_image};
+/// use photon_rs::native::{open_image, save_image};
 ///
 /// let img = open_image("img.jpg").expect("File should open");
 /// // Save the image at the given path.
+/// save_image(img,"manipulated_image.jpg");
 /// ```
 pub fn save_image(img: PhotonImage, img_path: &str) {
     let raw_pixels = img.raw_pixels;
@@ -72,4 +103,27 @@ pub fn save_image(img: PhotonImage, img_path: &str) {
     let dynimage = ImageRgba8(img_buffer);
 
     dynimage.save(img_path).unwrap();
+}
+
+/// Save the image to a byte slice
+/// # Arguments
+/// * img: The PhotonImage you wish to save.
+///
+/// # Example
+/// ```no_run
+/// use photon_rs::native::{open_image,save_image_to_bytes};
+///
+/// let img = open_image("img.jpg").expect("File should open");
+/// // Save the image at a byteslice
+/// let byt = save_image_to_bytes(img);
+/// ```
+pub fn save_image_to_bytes(img: PhotonImage) -> &[u8] {
+    let raw_pixels = img.raw_pixels;
+    let raw_pixels = img.raw_pixels;
+    let width = img.width;
+    let height = img.height;
+
+    let img_buffer = ImageBuffer::from_vec(width, height, raw_pixels).unwrap();
+    let dynimage = ImageRgba8(img_buffer);
+    dynimage.as_bytes()
 }

@@ -1,11 +1,11 @@
 //! Image manipulation effects in HSL, LCh and HSV.
 
-extern crate image;
-extern crate rand;
+use image;
+use rand;
 use crate::{helpers, PhotonImage, Rgb};
 use image::GenericImageView;
 use palette::{Hsl, Hsv, Hue, Lch, Saturate, Shade, Srgba};
-extern crate wasm_bindgen;
+use wasm_bindgen;
 use crate::iter::ImageIterator;
 use image::Pixel as ImagePixel;
 use wasm_bindgen::prelude::*;

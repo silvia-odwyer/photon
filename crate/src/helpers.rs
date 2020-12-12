@@ -1,7 +1,7 @@
 //! Helper functions for converting between various formats
 
-extern crate base64;
-extern crate image;
+use base64;
+use image;
 use crate::{PhotonImage, Rgb};
 use image::{DynamicImage, ImageBuffer};
 extern crate wasm_bindgen;

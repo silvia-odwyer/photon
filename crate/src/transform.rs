@@ -1,8 +1,8 @@
 //! Image transformations, ie: scale, crop, resize, etc.,
 
-extern crate image;
+use image;
 use image::{GenericImageView, ImageBuffer};
-extern crate wasm_bindgen;
+use wasm_bindgen;
 use crate::helpers;
 use crate::iter::ImageIterator;
 use crate::PhotonImage;

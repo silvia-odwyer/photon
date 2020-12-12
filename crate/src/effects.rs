@@ -1,12 +1,12 @@
 //! Special effects.
 
-extern crate image;
+use image;
 use image::{GenericImage, GenericImageView};
 use std::f64;
-extern crate imageproc;
+use imageproc;
 use imageproc::drawing::draw_filled_rect_mut;
 use imageproc::rect::Rect;
-extern crate rusttype;
+use rusttype;
 use crate::helpers;
 use crate::iter::ImageIterator;
 use crate::{PhotonImage, Rgb};
