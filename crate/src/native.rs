@@ -59,10 +59,10 @@ pub fn open_image(img_path: &str) -> Result<PhotonImage, OpenError> {
 /// use photon_rs::native::open_image_from_bytes;
 ///
 /// // Code to read a file to buffer. If you are reading from a file its better to use `open_image`
-/// let buffer = std::fs::read("img.jpg").expect("File Should Open").as_slice();
+/// let buffer = std::fs::read("img.jpg").expect("File Should Open");
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let img = open_image_from_bytes(buffer).expect("File should open");
+/// let img = open_image_from_bytes(buffer.as_slice()).expect("File should open");
 ///
 /// // ... image editing functionality here ...
 /// ```
