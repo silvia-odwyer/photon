@@ -2,11 +2,9 @@
 
 use crate::iter::ImageIterator;
 use crate::{helpers, PhotonImage, Rgb};
-use image;
 use image::GenericImageView;
 use image::Pixel as ImagePixel;
 use palette::{Hsl, Hsv, Hue, Lch, Saturate, Shade, Srgba};
-use wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
 /// Apply gamma correction.

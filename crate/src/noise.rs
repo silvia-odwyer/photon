@@ -1,9 +1,7 @@
 //! Add noise to images.
 
-use image;
 use image::Pixel;
 use image::{GenericImage, GenericImageView};
-use rand;
 use rand::Rng;
 // use wasm_bindgen::prelude::*;
 use crate::helpers;

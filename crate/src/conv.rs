@@ -2,7 +2,6 @@
 
 use crate::helpers;
 use crate::PhotonImage;
-use image;
 use image::DynamicImage::ImageRgba8;
 use wasm_bindgen::prelude::*;
 

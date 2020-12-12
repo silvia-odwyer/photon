@@ -1,7 +1,6 @@
 //! Helper functions for converting between various formats
 
 use crate::{PhotonImage, Rgb};
-use image;
 use image::{DynamicImage, ImageBuffer};
 extern crate wasm_bindgen;
 use image::DynamicImage::ImageRgba8;

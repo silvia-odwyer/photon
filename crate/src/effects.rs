@@ -3,11 +3,9 @@
 use crate::helpers;
 use crate::iter::ImageIterator;
 use crate::{PhotonImage, Rgb};
-use image;
 use image::Pixel;
 use image::Rgba;
 use image::{GenericImage, GenericImageView};
-use imageproc;
 use imageproc::drawing::draw_filled_rect_mut;
 use imageproc::rect::Rect;
 use std::f64;

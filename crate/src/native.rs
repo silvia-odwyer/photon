@@ -1,7 +1,6 @@
 //! Native-only functions.
 //! Includes functions that open images from the file-system, etc.,
 
-use image;
 use image::DynamicImage::ImageRgba8;
 use image::{GenericImageView, ImageBuffer, ImageError};
 use std::io;
@@ -115,7 +114,6 @@ pub fn save_image(img: PhotonImage, img_path: &str) {
 /// let byt = save_image_to_bytes(img);
 /// ```
 pub fn image_to_bytes(img: PhotonImage) -> Vec<u8> {
-    let raw_pixels = img.raw_pixels;
     let raw_pixels = img.raw_pixels;
     let width = img.width;
     let height = img.height;
