@@ -59,7 +59,7 @@ pub fn open_image(img_path: &str) -> Result<PhotonImage, OpenError> {
 /// use photon_rs::native::open_image_from_bytes;
 ///
 /// // Code to read a file to buffer. If you are reading from a file its better to use `open_image`
-/// let buffer = std::fs::read("file.png")?.as_slice();
+/// let buffer = std::fs::read("img.jpg").expect("File Should Open").as_slice();
 ///
 /// // Open the image. A PhotonImage is returned.
 /// let img = open_image_from_bytes(buffer).expect("File should open");
@@ -111,7 +111,7 @@ pub fn save_image(img: PhotonImage, img_path: &str) {
 ///
 /// let img = open_image("img.jpg").expect("File should open");
 /// // Save the image at a vec<u8>
-/// let byt = save_image_to_bytes(img);
+/// let byt = image_to_bytes(img);
 /// ```
 pub fn image_to_bytes(img: PhotonImage) -> Vec<u8> {
     let raw_pixels = img.raw_pixels;
