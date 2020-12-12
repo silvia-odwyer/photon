@@ -4,14 +4,14 @@ use image;
 
 use image::{GenericImage, GenericImageView};
 
-use wasm_bindgen;
-use crate::helpers;
-use crate::{PhotonImage, Rgb};
-use palette;
 use crate::channels::image::Pixel as OtherPixel;
 use crate::channels::palette::Hue;
+use crate::helpers;
 use crate::iter::ImageIterator;
+use crate::{PhotonImage, Rgb};
+use palette;
 use palette::{Lab, Lch, Saturate, Shade, Srgb, Srgba};
+use wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
 /// Alter a select channel by incrementing or decrementing its value by a constant.

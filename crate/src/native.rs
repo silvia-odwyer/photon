@@ -2,12 +2,9 @@
 //! Includes functions that open images from the file-system, etc.,
 
 use image;
-use rand;
 use image::DynamicImage::ImageRgba8;
 use image::{GenericImageView, ImageBuffer, ImageError};
-use std::io;
-use std::io;
-use std::fs::File;
+
 // use wasm_bindgen::prelude::*;
 use crate::PhotonImage;
 use thiserror::Error;
@@ -105,19 +102,19 @@ pub fn save_image(img: PhotonImage, img_path: &str) {
     dynimage.save(img_path).unwrap();
 }
 
-/// Save the image to a byte slice
+/// Save the image to a vector of bytes
 /// # Arguments
 /// * img: The PhotonImage you wish to save.
 ///
 /// # Example
 /// ```no_run
-/// use photon_rs::native::{open_image,save_image_to_bytes};
+/// use photon_rs::native::{open_image,image_to_bytes};
 ///
 /// let img = open_image("img.jpg").expect("File should open");
-/// // Save the image at a byteslice
+/// // Save the image at a vec<u8>
 /// let byt = save_image_to_bytes(img);
 /// ```
-pub fn save_image_to_bytes(img: PhotonImage) -> &[u8] {
+pub fn image_to_bytes(img: PhotonImage) -> Vec<u8> {
     let raw_pixels = img.raw_pixels;
     let raw_pixels = img.raw_pixels;
     let width = img.width;
@@ -125,5 +122,5 @@ pub fn save_image_to_bytes(img: PhotonImage) -> &[u8] {
 
     let img_buffer = ImageBuffer::from_vec(width, height, raw_pixels).unwrap();
     let dynimage = ImageRgba8(img_buffer);
-    dynimage.as_bytes()
+    dynimage.to_bytes()
 }

@@ -1,13 +1,12 @@
 //! Image manipulation effects in HSL, LCh and HSV.
 
-use image;
-use rand;
+use crate::iter::ImageIterator;
 use crate::{helpers, PhotonImage, Rgb};
+use image;
 use image::GenericImageView;
+use image::Pixel as ImagePixel;
 use palette::{Hsl, Hsv, Hue, Lch, Saturate, Shade, Srgba};
 use wasm_bindgen;
-use crate::iter::ImageIterator;
-use image::Pixel as ImagePixel;
 use wasm_bindgen::prelude::*;
 
 /// Apply gamma correction.

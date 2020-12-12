@@ -1,9 +1,9 @@
 //! Monochrome-related effects and greyscaling/duotoning.
 
-use image;
 use crate::helpers;
 use crate::iter::ImageIterator;
 use crate::PhotonImage;
+use image;
 use image::Pixel;
 use image::{GenericImage, GenericImageView};
 use wasm_bindgen::prelude::*;

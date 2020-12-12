@@ -1,8 +1,8 @@
 //! Convolution effects such as sharpening, blurs, sobel filters, etc.,
 
-use image;
 use crate::helpers;
 use crate::PhotonImage;
+use image;
 use image::DynamicImage::ImageRgba8;
 use wasm_bindgen::prelude::*;
 
