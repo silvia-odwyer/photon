@@ -1,17 +1,13 @@
 //! Channel manipulation.
 
-extern crate image;
+use image::Pixel as OtherPixel;
 
 use image::{GenericImage, GenericImageView};
 
-extern crate wasm_bindgen;
 use crate::helpers;
-use crate::{PhotonImage, Rgb};
-extern crate palette;
-use crate::channels::image::Pixel as OtherPixel;
-use crate::channels::palette::Hue;
 use crate::iter::ImageIterator;
-use palette::{Lab, Lch, Saturate, Shade, Srgb, Srgba};
+use crate::{PhotonImage, Rgb};
+use palette::{Hue, Lab, Lch, Saturate, Shade, Srgb, Srgba};
 use wasm_bindgen::prelude::*;
 
 /// Alter a select channel by incrementing or decrementing its value by a constant.
@@ -434,7 +430,6 @@ pub fn selective_hue_rotate(
             let px_data = img.get_pixel(x, y).channels();
             let color =
                 Srgba::new(px_data[0], px_data[1], px_data[2], 255).into_format();
-
             let hue_rotated_color = Lch::from(color).shift_hue(degrees);
 
             let final_color: Srgba =

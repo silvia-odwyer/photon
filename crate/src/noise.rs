@@ -1,7 +1,5 @@
 //! Add noise to images.
 
-extern crate image;
-extern crate rand;
 use image::Pixel;
 use image::{GenericImage, GenericImageView};
 use rand::Rng;

@@ -1,14 +1,12 @@
 //! Image transformations, ie: scale, crop, resize, etc.,
 
-extern crate image;
-use image::{GenericImageView, ImageBuffer};
-extern crate wasm_bindgen;
 use crate::helpers;
 use crate::iter::ImageIterator;
 use crate::PhotonImage;
 use image::imageops::FilterType;
 use image::DynamicImage::ImageRgba8;
 use image::RgbaImage;
+use image::{GenericImageView, ImageBuffer};
 use wasm_bindgen::prelude::*;
 
 #[cfg(target_arch = "wasm32")]

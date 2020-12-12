@@ -1,7 +1,5 @@
 //! Image manipulation with multiple images, including adding watermarks, changing backgrounds, etc.,
 
-extern crate image;
-extern crate rand;
 use crate::channels::color_sim;
 use crate::iter::ImageIterator;
 use crate::{helpers, GenericImage, PhotonImage, Rgb};

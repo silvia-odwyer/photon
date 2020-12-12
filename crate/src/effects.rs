@@ -1,17 +1,14 @@
 //! Special effects.
 
-extern crate image;
-use image::{GenericImage, GenericImageView};
-use std::f64;
-extern crate imageproc;
-use imageproc::drawing::draw_filled_rect_mut;
-use imageproc::rect::Rect;
-extern crate rusttype;
 use crate::helpers;
 use crate::iter::ImageIterator;
 use crate::{PhotonImage, Rgb};
 use image::Pixel;
 use image::Rgba;
+use image::{GenericImage, GenericImageView};
+use imageproc::drawing::draw_filled_rect_mut;
+use imageproc::rect::Rect;
+use std::f64;
 use wasm_bindgen::prelude::*;
 
 /// Adds an offset to the image by a certain number of pixels.

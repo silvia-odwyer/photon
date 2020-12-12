@@ -2,12 +2,9 @@
 //! For extended graphic design/text-drawing functionality, see [GDL](https://github.com/silvia-odwyer/gdl),
 //! which is a graphic design library, compatible with Photon.
 
-extern crate image;
-use image::{DynamicImage, Rgba};
-extern crate imageproc;
-extern crate rusttype;
 use crate::iter::ImageIterator;
 use crate::{helpers, PhotonImage};
+use image::{DynamicImage, Rgba};
 use imageproc::distance_transform::Norm;
 use imageproc::drawing::draw_text_mut;
 use imageproc::morphology::dilate_mut;
