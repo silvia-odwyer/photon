@@ -294,6 +294,7 @@ var newimg, watermark_img, img2;
                        "offset_green": function(){return module.offset(rust_image, 2, 25)},
                        "primary" : function() {return module.primary(rust_image)},
                        "solarize" : function() {return module.solarize(rust_image)},
+                       "oil" : function() {return module.oil(rust_image,4,55.0)},
                        "threshold" : function() {return module.threshold(rust_image, 100)},
                        "sepia" : function() {return module.sepia(rust_image)},
                        "decompose_min" : function(){return module.decompose_min(rust_image)},
