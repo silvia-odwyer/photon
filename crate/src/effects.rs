@@ -8,6 +8,7 @@ use image::Rgba;
 use image::{GenericImage, GenericImageView};
 use imageproc::drawing::draw_filled_rect_mut;
 use imageproc::rect::Rect;
+use std::collections::HashMap;
 use std::f64;
 use wasm_bindgen::prelude::*;
 
@@ -736,6 +737,110 @@ pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
     photon_image.raw_pixels = raw_pixels;
 }
 
+struct Intensity {
+    val: i32,
+    r: i32,
+    g: i32,
+    b: i32,
+}
+/// Turn an image into an oil painting
+///
+/// # Arguments
+/// * `img` - A PhotonImage that contains a view into the image.
+/// * `radius` - Radius of each paint particle
+/// * `intesnity` - How artsy an Image should be
+/// # Example
+///
+/// ```no_run
+/// // For example, to oil an image of type `PhotonImage`:
+/// use photon_rs::effects::oil;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// oil(&mut img, 4i32, 55.0);
+/// ```
+///
+#[wasm_bindgen]
+pub fn oil(mut photon_image: &mut PhotonImage, radius: i32, intensity: f64) {
+    let img = helpers::dyn_image_from_raw(&photon_image);
+    let (width, height) = img.dimensions();
+    let mut target = image::DynamicImage::new_rgba8(width, height);
+    let mut pixel_intensity_count: HashMap<usize, Intensity>;
+    let mut intensity_lut = vec![vec![0; width as usize]; height as usize];
+
+    for y in 0..height {
+        for x in 0..width {
+            let single_pix = img.get_pixel(x, y);
+            let current_val = single_pix.channels();
+            let avg = (current_val[0] as i32
+                + current_val[1] as i32
+                + current_val[2] as i32) as f64
+                / 3.0;
+            let val = (avg * intensity) / 255.0;
+            intensity_lut[y as usize][x as usize] = val.round() as usize;
+        }
+    }
+
+    for y in 0..height {
+        for x in 0..width {
+            pixel_intensity_count = HashMap::new();
+
+            for yy in -radius..=radius {
+                let yyy = (y as i32) + yy;
+                for xx in -radius..=radius {
+                    let xxx = (x as i32) + xx;
+                    if yyy > 0
+                        && yyy < (height as i32)
+                        && xxx > 0
+                        && xxx < (width as i32)
+                    {
+                        let idx_x = xxx as usize;
+                        let idx_y = yyy as usize;
+                        let intensity_val = intensity_lut[idx_y][idx_x];
+                        let single_pix = img.get_pixel(idx_x as u32, idx_y as u32);
+                        let pix = single_pix.channels();
+                        match pixel_intensity_count.get_mut(&(intensity_val as usize)) {
+                            Some(val) => {
+                                val.val += 1;
+                                val.r += pix[0] as i32;
+                                val.g += pix[1] as i32;
+                                val.b += pix[2] as i32;
+                            }
+                            None => {
+                                pixel_intensity_count.insert(
+                                    intensity_val as usize,
+                                    Intensity {
+                                        val: 1,
+                                        r: pix[0] as i32,
+                                        g: pix[1] as i32,
+                                        b: pix[2] as i32,
+                                    },
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+
+            let mut map_vec: Vec<_> = pixel_intensity_count.iter().collect();
+            map_vec.sort_by(|a, b| (b.1.val - a.1.val).cmp(&0));
+
+            let cur_max = map_vec[0].1;
+            target.put_pixel(
+                x,
+                y,
+                Rgba::<u8>([
+                    (cur_max.r / cur_max.val) as u8,
+                    (cur_max.g / cur_max.val) as u8,
+                    (cur_max.b / cur_max.val) as u8,
+                    255,
+                ]),
+            )
+        }
+    }
+    let raw_pixels = target.to_bytes();
+    photon_image.raw_pixels = raw_pixels;
+}
 // pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
 //     println!("hi");
 //     println!("{}", color_a.get_red());

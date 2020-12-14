@@ -97,6 +97,7 @@ function drawChart() {
        "offset_green": function(){return module.offset(rust_image, 2, 15)},
        "primary" : function() {return module.primary(rust_image)},
        "solarize" : function() {return module.solarize(rust_image)},
+       "oil" : function() {return module.oil(rust_image,4,55.0)},
        "threshold" : function() {return module.threshold(rust_image, 100)},
        "sepia" : function() {return module.sepia(rust_image)},
        "decompose_min" : function(){return module.decompose_min(rust_image)},
@@ -247,7 +248,7 @@ function drawChart() {
      function setUpTimeouts() {
        let landing_effects = ["primary", "inc_red_channel", "inc_blue_channel", "remove_red_channel", 
        "solarize", "threshold", "sepia", "decompose_min", "swap_rg_channels", "swap_gb_channels", 
-       "remove_red_channel", "dec_green_channel", "dec_blue_channel", "dec_red_channel", "emboss", "sharpen"];
+       "remove_red_channel", "dec_green_channel", "dec_blue_channel", "dec_red_channel", "emboss", "sharpen","oil"];
   
        var timer = 2000;
        var time_dec = 0;
