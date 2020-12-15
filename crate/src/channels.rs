@@ -521,7 +521,7 @@ pub fn selective_hue_rotate(
 //         }
 
 //     let dynimage = image::ImageRgb8(img);
-//     return dynimage;
+//     dynimage
 // }
 
 /// Selectively lighten an image.

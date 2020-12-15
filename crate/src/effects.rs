@@ -457,7 +457,7 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
 //     }
 //     let mut raw_pixels = img.raw_pixels();
 //     photon_image.raw_pixels = raw_pixels;
-//     return photon_image;
+//     photon_image
 // }
 
 /// Applies a solarizing effect to an image.
@@ -871,7 +871,7 @@ pub fn oil(mut photon_image: &mut PhotonImage, radius: i32, intensity: f64) {
 //     }
 //     println!("{:?}", gradient_map);
 
-//     return gradient_map;
+//     gradient_map
 // }
 
 // pub fn duotone(mut img: DynamicImage, color_a : Rgb, color_b : Rgb) -> DynamicImage {
@@ -895,5 +895,5 @@ pub fn oil(mut photon_image: &mut PhotonImage, radius: i32, intensity: f64) {
 //             img.put_pixel(x, y, px);
 //         }
 //     }
-//     return img;
+//     img
 // }
