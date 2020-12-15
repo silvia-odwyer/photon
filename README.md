@@ -14,6 +14,7 @@
   [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/silvia-odwyer/photon.svg)](https://github.com/silvia-odwyer/photon/pulls)
   [![Gitter chat](https://badges.gitter.im/silvia-odwyer/photon.png)](https://gitter.im/photonlibrary/community "Gitter chat")
   [![NPM Monthly Downloads](https://img.shields.io/npm/dm/@silvia-odwyer/photon.png)]()
+  [![Continuous Integration](https://github.com/silvia-odwyer/photon/workflows/Continuous%20Integration/badge.svg)]()
 
 </div>
 
