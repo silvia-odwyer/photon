@@ -8,6 +8,7 @@ webpack_demo/node_modules
 webpack_demo/dist
 webpack_demo/package-lock.json
 react_app_demo/node_modules
+react_app_demo/package-lock.json
 photon-docs/site
 output*.jpg
 output*.png

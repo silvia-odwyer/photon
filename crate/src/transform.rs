@@ -95,7 +95,7 @@ pub fn crop_img_browser(
     )
     .unwrap();
 
-    return dest_canvas;
+    dest_canvas
 }
 
 /// Flip an image horizontally.
@@ -236,7 +236,7 @@ pub fn resize_img_browser(
     ctx.put_image_data(&new_img_data.unwrap(), 0.0, 0.0)
         .unwrap();
 
-    return canvas;
+    canvas
 }
 
 /// Resize an image.
