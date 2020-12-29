@@ -50,7 +50,7 @@ To open an image:
     use photon_rs::native::{open_image};
 
     fn main() {
-        let mut img = open_image("image.jpg").expect("File should open");
+        let mut img = open_image("image.jpg");
     }
 
 #### Apply a Filter Effect
@@ -68,7 +68,7 @@ For a full list, see the documentation.
 Then, to write the image to the filesystem:
 
     #!rust
-    save_image(img, "new_image.jpg").expect("File should be saved");
+    save_image(img, "new_image.jpg");
 
 Notice here we're saving it as a JPG image, but we could also save it as a PNG or a different output format, by including a different file extension.
 
@@ -89,13 +89,13 @@ The final code looks like this:
 
     fn main() {
         // Open the image (a PhotonImage is returned)
-        let mut img = open_image("image.jpg").expect("File should open");
+        let mut img = open_image("image.jpg");
 
         // Apply a filter to the pixels
         filters::filter(&mut img, "twenties");
 
         // Write the new image to the filesystem.
-        save_image(img, "new_image.jpg").expect("File should be saved");
+        save_image(img, "new_image.jpg");
 
     }
 
@@ -130,14 +130,14 @@ Then in your code:
 
     fn main() {
         // Open the image (a PhotonImage is returned)
-        let mut img = open_image("image.jpg").expect("File should open");
+        let mut img = open_image("image.jpg");
 
         // Start time
         let start = PreciseTime::now();
 
         // Process image
         photon_rs::channels::alter_channel(&mut img, 1, -20);
-        save_image(img, "raw_image.png").expect("File should be saved");
+        save_image(img, "raw_image.png");
 
         // Output time taken.
         let end = PreciseTime::now();
