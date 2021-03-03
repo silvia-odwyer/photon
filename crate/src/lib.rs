@@ -143,7 +143,7 @@ impl PhotonImage {
     /// Convert the PhotonImage's raw pixels to JS-compatible ImageData.
     pub fn get_image_data(&mut self) -> ImageData {
         ImageData::new_with_u8_clamped_array_and_sh(
-            Clamped(&mut self.raw_pixels),
+            Clamped(&self.raw_pixels),
             self.width,
             self.height,
         )
@@ -277,11 +277,11 @@ pub fn get_image_data(
 pub fn putImageData(
     canvas: HtmlCanvasElement,
     ctx: CanvasRenderingContext2d,
-    mut new_image: PhotonImage,
+    new_image: PhotonImage,
 ) {
     // Convert the raw pixels back to an ImageData object.
     let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(
-        Clamped(&mut new_image.raw_pixels),
+        Clamped(&new_image.raw_pixels),
         canvas.width(),
         canvas.height(),
     );
@@ -343,10 +343,10 @@ pub fn base64_to_vec(base64: &str) -> Vec<u8> {
 /// Convert a PhotonImage to JS-compatible ImageData.
 #[wasm_bindgen]
 pub fn to_image_data(photon_image: PhotonImage) -> ImageData {
-    let mut raw_pixels = photon_image.raw_pixels;
+    let raw_pixels = photon_image.raw_pixels;
     let width = photon_image.width;
     let height = photon_image.height;
-    ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut raw_pixels), width, height)
+    ImageData::new_with_u8_clamped_array_and_sh(Clamped(&raw_pixels), width, height)
         .unwrap()
 }
 
