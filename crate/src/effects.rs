@@ -199,8 +199,8 @@ pub fn halftone(mut photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
-    for x in (0..width - 4).step_by(2 as usize) {
-        for y in (0..height - 4).step_by(2 as usize) {
+    for x in (0..width - 4).step_by(2_usize) {
+        for y in (0..height - 4).step_by(2_usize) {
             let mut px1 = img.get_pixel(x, y);
             let mut px2 = img.get_pixel(x, y + 1);
             let mut px3 = img.get_pixel(x + 1, y);
@@ -481,7 +481,7 @@ pub fn solarize(photon_image: &mut PhotonImage) {
     for i in (0..end).step_by(4) {
         let r_val = photon_image.raw_pixels[i];
 
-        if 200 as i32 - r_val as i32 > 0 {
+        if 200 - r_val as i32 > 0 {
             photon_image.raw_pixels[i] = 200 - r_val;
         }
     }

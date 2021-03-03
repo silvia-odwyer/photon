@@ -26,7 +26,7 @@ pub fn neue(photon_image: &mut PhotonImage) {
 
     for i in (0..end).step_by(4) {
         let b_val = photon_image.raw_pixels[i + 2];
-        if 255 as i32 - b_val as i32 > 0 {
+        if 255_i32 - b_val as i32 > 0 {
             photon_image.raw_pixels[i + 2] = 255 - b_val;
         }
     }
