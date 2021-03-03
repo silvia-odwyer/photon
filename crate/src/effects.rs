@@ -509,7 +509,7 @@ pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let mut px = img.get_pixel(x, y);
         let channels = px.channels();
-        if 200 as i32 - channels[0] as i32 > 0 {
+        if 200_i32 - channels[0] as i32 > 0 {
             let new_r_val = 200 - channels[0];
             px = image::Rgba([new_r_val, channels[1], channels[2], channels[3]]);
         }
