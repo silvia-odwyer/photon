@@ -53,26 +53,22 @@ var newimg, watermark_img, img2;
        let button = overlay_buttons[i];		
        button.addEventListener("click", function(){watermark(event)}, false);		
      }
-
-     let watermark_js_btn = document.getElementById("watermark_js");
-     watermark_js_btn.addEventListener("click", watermark_js, false);
-
      setUpImages();
    }
 
    function watermark() {
     startTime = performance.now();
     setUpWatermark();
-    for (let i = 0; i < 1500; i++) {
-      let src_canvas = document.getElementById("canvas");
 
-  
-      let img = document.getElementById("img");
-  
-      module.watermark_img_browser(src_canvas, img, 30, 40);  
-    }
+    let src_canvas = document.getElementById("canvas");
+    let src_photon_img = module.open_image(canvas, ctx)
+    let watermark_photon_img = module.open_image(watermark_canvas, watermark_ctx);
 
+    console.log(watermark_photon_img)
+    console.log(src_photon_img)
 
+    module.watermark(src_photon_img, watermark_photon_img, 30, 40);  
+    module.putImageData(canvas, ctx, src_photon_img);		
     endTime = performance.now();
 
     updateBenchmarks();
