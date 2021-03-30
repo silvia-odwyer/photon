@@ -140,6 +140,7 @@ impl PhotonImage {
         res_base64
     }
 
+    #[allow(clippy::unnecessary_mut_passed)]
     /// Convert the PhotonImage's raw pixels to JS-compatible ImageData.
     pub fn get_image_data(&mut self) -> ImageData {
         ImageData::new_with_u8_clamped_array_and_sh(
@@ -272,6 +273,7 @@ pub fn get_image_data(
 }
 
 /// Place a PhotonImage onto a 2D canvas.
+#[allow(clippy::unnecessary_mut_passed)]
 #[wasm_bindgen]
 #[allow(non_snake_case)]
 pub fn putImageData(
@@ -340,6 +342,7 @@ pub fn base64_to_vec(base64: &str) -> Vec<u8> {
     decode(base64).unwrap()
 }
 
+#[allow(clippy::unnecessary_mut_passed)]
 /// Convert a PhotonImage to JS-compatible ImageData.
 #[wasm_bindgen]
 pub fn to_image_data(photon_image: PhotonImage) -> ImageData {

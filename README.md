@@ -48,15 +48,6 @@ with zero-cost abstraction.
 development.
 - **Pure Rust** - Unlike other libraries, 100% of the library's codebase is written in Rust, so security and safety is guaranteed.
 
-### Supported Image Formats
-The following image formats are supported:
-
-- PNG
-- JPEG
-- BMP
-- ICO 
-- TIFF
-
 ### Live Demo
 View the [official demo of WASM in action](https://silvia-odwyer.github.io/photon/demo.html).
 
@@ -65,12 +56,21 @@ View the [official demo of WASM in action](https://silvia-odwyer.github.io/photo
 ![Imgur](https://i.imgur.com/PShSZ6k.png)
 
 ### Version 0.3.0 Updates
-Version 0.3.0 is currently in development, and will be expected to complete mid-December. 
+Version 0.3.0 is currently nearing completion, and will be released in April.
 Features include:
 
 - Node.js image resizing
 - Improved performance
 - Faster encoding of images, thanks to updating dependencies to the `image` crate
+
+### Supported Image Formats
+The following image formats are supported:
+
+- PNG
+- JPEG
+- BMP
+- ICO 
+- TIFF
 
 ### Get Started
 #### Getting Started Guide
