@@ -19,7 +19,7 @@ Add Photon as a dependency to your project:
 
     #!toml hl_lines="8"
     [dependencies]
-    photon_rs="0.2.0"
+    photon-rs="0.2.0"
 
 Your Cargo.toml should look like this:
 
@@ -34,7 +34,7 @@ Your Cargo.toml should look like this:
     # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
     [dependencies]
-    photon_rs="0.2.0"
+    photon-rs="0.2.0"
 
 
 ## Writing The Program
