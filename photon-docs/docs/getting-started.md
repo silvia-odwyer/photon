@@ -28,7 +28,7 @@ If you’d like to use Photon with a Rust project, you can install the `photon-r
 #### Cargo.toml
 ```
 [dependencies]
-photon_rs = "0.2.0"
+photon-rs = "0.2.0"
 ```
 
 ### Using Photon Natively 
