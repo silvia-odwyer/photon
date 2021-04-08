@@ -1,4 +1,4 @@
-//! Padding PhotonImages
+//! Padding PhotonImages.
 
 use crate::PhotonImage;
 
