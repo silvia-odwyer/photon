@@ -18,7 +18,6 @@ use crate::PhotonImage;
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// uniform(&img, 10_u32);
 /// ```
-
 pub fn uniform(img: &PhotonImage, padding: u32) -> PhotonImage {
     let image_buffer = img.get_raw_pixels();
     let img_width = img.get_width();
@@ -76,7 +75,6 @@ pub fn uniform(img: &PhotonImage, padding: u32) -> PhotonImage {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// left(&img, 10_u32);
 /// ```
-
 pub fn left(img: &PhotonImage, padding: u32) -> PhotonImage {
     let image_buffer = img.get_raw_pixels();
     let img_width = img.get_width();
@@ -118,7 +116,6 @@ pub fn left(img: &PhotonImage, padding: u32) -> PhotonImage {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// right(&img, 10_u32);
 /// ```
-
 pub fn right(img: &PhotonImage, padding: u32) -> PhotonImage {
     let image_buffer = img.get_raw_pixels();
     let img_width = img.get_width();
@@ -159,7 +156,6 @@ pub fn right(img: &PhotonImage, padding: u32) -> PhotonImage {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// top(&img, 10_u32);
 /// ```
-
 pub fn top(img: &PhotonImage, padding: u32) -> PhotonImage {
     let image_buffer = img.get_raw_pixels();
     let img_width = img.get_width();
@@ -201,7 +197,6 @@ pub fn top(img: &PhotonImage, padding: u32) -> PhotonImage {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// bottom(&img, 10_u32);
 /// ```
-
 pub fn bottom(img: &PhotonImage, padding: u32) -> PhotonImage {
     let image_buffer = img.get_raw_pixels();
     let img_width = img.get_width();
