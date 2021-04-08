@@ -371,6 +371,5 @@ pub mod monochrome;
 pub mod multiple;
 pub mod native;
 pub mod noise;
-pub mod padding;
 mod tests;
 pub mod transform;
