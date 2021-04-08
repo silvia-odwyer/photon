@@ -334,7 +334,7 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
 ///
 /// ```no_run
 /// // For example, to apply a padding of 10 pixels around a PhotonImage:
-/// use photon_rs::padding::uniform;
+/// use photon_rs::transform::padding_uniform;
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
@@ -396,7 +396,7 @@ pub fn padding_uniform(
 ///
 /// ```no_run
 /// // For example, to apply a padding of 10 pixels on the left side of a PhotonImage:
-/// use photon_rs::padding::left;
+/// use photon_rs::transform::padding_left;
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
@@ -443,7 +443,7 @@ pub fn padding_left(
 ///
 /// ```no_run
 /// // For example, to apply a padding of 10 pixels on the right side of a PhotonImage:
-/// use photon_rs::padding::right;
+/// use photon_rs::transform::padding_right;
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
@@ -489,7 +489,7 @@ pub fn padding_right(
 ///
 /// ```no_run
 /// // For example, to apply a padding of 10 pixels on the top of a PhotonImage:
-/// use photon_rs::padding::top;
+/// use photon_rs::transform::padding_top;
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
@@ -535,7 +535,7 @@ pub fn padding_top(
 ///
 /// ```no_run
 /// // For example, to apply a padding of 10 pixels on the bottom of a PhotonImage:
-/// use photon_rs::padding::bottom;
+/// use photon_rs::transform::padding_bottom;
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
