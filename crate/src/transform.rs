@@ -338,7 +338,7 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// padding_uniform(&img, 10_u32);
+/// padding_uniform(&img, 10_u32, (200_u8, 100_u8, 150_u8, 255_u8));
 /// ```
 pub fn padding_uniform(
     img: &PhotonImage,
@@ -400,7 +400,7 @@ pub fn padding_uniform(
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// padding_left(&img, 10_u32);
+/// padding_left(&img, 10_u32, (200_u8, 100_u8, 150_u8, 255_u8));
 /// ```
 pub fn padding_left(
     img: &PhotonImage,
@@ -447,7 +447,7 @@ pub fn padding_left(
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// padding_right(&img, 10_u32);
+/// padding_right(&img, 10_u32, (200_u8, 100_u8, 150_u8, 255_u8));
 /// ```
 pub fn padding_right(
     img: &PhotonImage,
@@ -493,7 +493,7 @@ pub fn padding_right(
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// padding_top(&img, 10_u32);
+/// padding_top(&img, 10_u32, (200_u8, 100_u8, 150_u8, 255_u8));
 /// ```
 pub fn padding_top(
     img: &PhotonImage,
@@ -539,7 +539,7 @@ pub fn padding_top(
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// padding_bottom(&img, 10_u32);
+/// padding_bottom(&img, 10_u32, (200_u8, 100_u8, 150_u8, 255_u8));
 /// ```
 pub fn padding_bottom(
     img: &PhotonImage,
