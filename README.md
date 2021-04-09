@@ -55,13 +55,15 @@ View the [official demo of WASM in action](https://silvia-odwyer.github.io/photo
 
 ![Imgur](https://i.imgur.com/PShSZ6k.png)
 
-### Version 0.3.0 Updates
-Version 0.3.0 is currently nearing completion, and will be released in April.
+### Version 0.3.0 Release
+Version 0.3.0 has been released on Crates.io and NPM, including new features such as image resizing 
+in Node and new filters.
+
 Features include:
 
 - Node.js image resizing
 - Improved performance
-- Faster encoding of images, thanks to updating dependencies to the `image` crate
+- Faster encoding of images
 
 ### Supported Image Formats
 The following image formats are supported:
