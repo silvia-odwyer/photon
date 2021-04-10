@@ -103,7 +103,7 @@ Add the following line to the dependencies section of your Rust project's Cargo.
 ###### Cargo.toml
 ```toml
 [dependencies]
-photon-rs = "0.2.0"
+photon-rs = "0.3.0"
 ```
 
 #### Using Photon Natively
