@@ -2,7 +2,7 @@
 
 use crate::helpers;
 use crate::iter::ImageIterator;
-use crate::PhotonImage;
+use crate::{PhotonImage, Rgba};
 use image::imageops::FilterType;
 use image::DynamicImage::ImageRgba8;
 use image::RgbaImage;
@@ -344,7 +344,7 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
 pub fn padding_uniform(
     img: &PhotonImage,
     padding: u32,
-    padding_rgba: (u8, u8, u8, u8),
+    padding_rgba: Rgba,
 ) -> PhotonImage {
     let image_buffer = img.get_raw_pixels();
     let img_width = img.get_width();
@@ -355,19 +355,19 @@ pub fn padding_uniform(
     let height_padded: u32 = img_height + 2 * padding;
 
     for _ in 0..((width_padded + 1) * padding) {
-        img_padded_buffer.push(padding_rgba.0);
-        img_padded_buffer.push(padding_rgba.1);
-        img_padded_buffer.push(padding_rgba.2);
-        img_padded_buffer.push(padding_rgba.3);
+        img_padded_buffer.push(padding_rgba.get_red());
+        img_padded_buffer.push(padding_rgba.get_green());
+        img_padded_buffer.push(padding_rgba.get_blue());
+        img_padded_buffer.push(padding_rgba.get_alpha());
     }
 
     for i in (0..image_buffer.len()).step_by(4) {
         if (i / 4) % img_width as usize == 0 && i != 0 {
             for _ in (0..2 * padding).step_by(1) {
-                img_padded_buffer.push(padding_rgba.0);
-                img_padded_buffer.push(padding_rgba.1);
-                img_padded_buffer.push(padding_rgba.2);
-                img_padded_buffer.push(padding_rgba.3);
+                img_padded_buffer.push(padding_rgba.get_red());
+                img_padded_buffer.push(padding_rgba.get_green());
+                img_padded_buffer.push(padding_rgba.get_blue());
+                img_padded_buffer.push(padding_rgba.get_alpha());
             }
         }
         img_padded_buffer.push(image_buffer[i]);
@@ -377,10 +377,10 @@ pub fn padding_uniform(
     }
 
     for _ in 0..((width_padded + 1) * padding) {
-        img_padded_buffer.push(padding_rgba.0);
-        img_padded_buffer.push(padding_rgba.1);
-        img_padded_buffer.push(padding_rgba.2);
-        img_padded_buffer.push(padding_rgba.3);
+        img_padded_buffer.push(padding_rgba.get_red());
+        img_padded_buffer.push(padding_rgba.get_green());
+        img_padded_buffer.push(padding_rgba.get_blue());
+        img_padded_buffer.push(padding_rgba.get_alpha());
     }
 
     PhotonImage::new(img_padded_buffer, width_padded, height_padded)
@@ -407,7 +407,7 @@ pub fn padding_uniform(
 pub fn padding_left(
     img: &PhotonImage,
     padding: u32,
-    padding_rgba: (u8, u8, u8, u8),
+    padding_rgba: Rgba,
 ) -> PhotonImage {
     let image_buffer = img.get_raw_pixels();
     let img_width = img.get_width();
@@ -422,10 +422,10 @@ pub fn padding_left(
             .to_owned();
 
         for _ in 0..padding {
-            img_padded_buffer.push(padding_rgba.0);
-            img_padded_buffer.push(padding_rgba.1);
-            img_padded_buffer.push(padding_rgba.2);
-            img_padded_buffer.push(padding_rgba.3);
+            img_padded_buffer.push(padding_rgba.get_red());
+            img_padded_buffer.push(padding_rgba.get_green());
+            img_padded_buffer.push(padding_rgba.get_blue());
+            img_padded_buffer.push(padding_rgba.get_alpha());
         }
         for x in img_slice {
             img_padded_buffer.push(x);
@@ -455,7 +455,7 @@ pub fn padding_left(
 pub fn padding_right(
     img: &PhotonImage,
     padding: u32,
-    padding_rgba: (u8, u8, u8, u8),
+    padding_rgba: Rgba,
 ) -> PhotonImage {
     let image_buffer = img.get_raw_pixels();
     let img_width = img.get_width();
@@ -472,10 +472,10 @@ pub fn padding_right(
             img_padded_buffer.push(x);
         }
         for _ in 0..padding {
-            img_padded_buffer.push(padding_rgba.0);
-            img_padded_buffer.push(padding_rgba.1);
-            img_padded_buffer.push(padding_rgba.2);
-            img_padded_buffer.push(padding_rgba.3);
+            img_padded_buffer.push(padding_rgba.get_red());
+            img_padded_buffer.push(padding_rgba.get_green());
+            img_padded_buffer.push(padding_rgba.get_blue());
+            img_padded_buffer.push(padding_rgba.get_alpha());
         }
     }
     PhotonImage::new(img_padded_buffer, width_padded, img_height)
@@ -502,7 +502,7 @@ pub fn padding_right(
 pub fn padding_top(
     img: &PhotonImage,
     padding: u32,
-    padding_rgba: (u8, u8, u8, u8),
+    padding_rgba: Rgba,
 ) -> PhotonImage {
     let image_buffer = img.get_raw_pixels();
     let img_width = img.get_width();
@@ -512,10 +512,10 @@ pub fn padding_top(
     let mut img_padded_buffer: Vec<u8> = Vec::<u8>::new();
 
     for _ in 0..(padding * img_width) {
-        img_padded_buffer.push(padding_rgba.0);
-        img_padded_buffer.push(padding_rgba.1);
-        img_padded_buffer.push(padding_rgba.2);
-        img_padded_buffer.push(padding_rgba.3);
+        img_padded_buffer.push(padding_rgba.get_red());
+        img_padded_buffer.push(padding_rgba.get_green());
+        img_padded_buffer.push(padding_rgba.get_blue());
+        img_padded_buffer.push(padding_rgba.get_alpha());
     }
 
     for i in (0..image_buffer.len()).step_by(4) {
@@ -549,7 +549,7 @@ pub fn padding_top(
 pub fn padding_bottom(
     img: &PhotonImage,
     padding: u32,
-    padding_rgba: (u8, u8, u8, u8),
+    padding_rgba: Rgba,
 ) -> PhotonImage {
     let image_buffer = img.get_raw_pixels();
     let img_width = img.get_width();
@@ -566,10 +566,10 @@ pub fn padding_bottom(
     }
 
     for _ in 0..(padding * img_width) {
-        img_padded_buffer.push(padding_rgba.0);
-        img_padded_buffer.push(padding_rgba.1);
-        img_padded_buffer.push(padding_rgba.2);
-        img_padded_buffer.push(padding_rgba.3);
+        img_padded_buffer.push(padding_rgba.get_red());
+        img_padded_buffer.push(padding_rgba.get_green());
+        img_padded_buffer.push(padding_rgba.get_blue());
+        img_padded_buffer.push(padding_rgba.get_alpha());
     }
 
     PhotonImage::new(img_padded_buffer, img_width, height_padded)

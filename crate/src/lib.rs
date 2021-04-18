@@ -233,6 +233,74 @@ impl From<Vec<u8>> for Rgb {
     }
 }
 
+/// RGBA color type.
+#[wasm_bindgen]
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Rgba {
+    r: u8,
+    g: u8,
+    b: u8,
+    a: u8,
+}
+
+#[wasm_bindgen]
+impl Rgba {
+    #[wasm_bindgen(constructor)]
+    /// Create a new RGBA struct.
+    pub fn new(r: u8, g: u8, b: u8, a: u8) -> Rgba {
+        Rgba { r, g, b, a }
+    }
+
+    /// Set the Red value.
+    pub fn set_red(&mut self, r: u8) {
+        self.r = r;
+    }
+
+    /// Get the Green value.
+    pub fn set_green(&mut self, g: u8) {
+        self.g = g;
+    }
+
+    /// Set the Blue value.
+    pub fn set_blue(&mut self, b: u8) {
+        self.b = b;
+    }
+
+    /// Set the alpha value.
+    pub fn set_alpha(&mut self, a: u8) {
+        self.a = a;
+    }
+
+    /// Get the Red value.
+    pub fn get_red(&self) -> u8 {
+        self.r
+    }
+
+    /// Get the Green value.
+    pub fn get_green(&self) -> u8 {
+        self.g
+    }
+
+    /// Get the Blue value.
+    pub fn get_blue(&self) -> u8 {
+        self.b
+    }
+
+    /// Get the alpha value for this color.
+    pub fn get_alpha(&self) -> u8 {
+        self.a
+    }
+}
+
+impl From<Vec<u8>> for Rgba {
+    fn from(vec: Vec<u8>) -> Self {
+        if vec.len() != 4 {
+            panic!("Vec length must be equal to 4.")
+        }
+        Rgba::new(vec[0], vec[1], vec[2], vec[3])
+    }
+}
+
 ///! [temp] Check if WASM is supported.
 #[wasm_bindgen]
 pub fn run() -> Result<(), JsValue> {
