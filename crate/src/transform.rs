@@ -338,7 +338,8 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// padding_uniform(&img, 10_u32, (200_u8, 100_u8, 150_u8, 255_u8));
+/// let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
+/// padding_uniform(&img, 10_u32, rgba);
 /// ```
 #[wasm_bindgen]
 pub fn padding_uniform(
@@ -401,14 +402,11 @@ pub fn padding_uniform(
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// padding_left(&img, 10_u32, (200_u8, 100_u8, 150_u8, 255_u8));
+/// let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
+/// padding_left(&img, 10_u32, rgba);
 /// ```
 #[wasm_bindgen]
-pub fn padding_left(
-    img: &PhotonImage,
-    padding: u32,
-    padding_rgba: Rgba,
-) -> PhotonImage {
+pub fn padding_left(img: &PhotonImage, padding: u32, padding_rgba: Rgba) -> PhotonImage {
     let image_buffer = img.get_raw_pixels();
     let img_width = img.get_width();
     let img_height = img.get_height();
@@ -449,7 +447,8 @@ pub fn padding_left(
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// padding_right(&img, 10_u32, (200_u8, 100_u8, 150_u8, 255_u8));
+/// let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
+/// padding_right(&img, 10_u32, rgba);
 /// ```
 #[wasm_bindgen]
 pub fn padding_right(
@@ -496,14 +495,11 @@ pub fn padding_right(
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// padding_top(&img, 10_u32, (200_u8, 100_u8, 150_u8, 255_u8));
+/// let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
+/// padding_top(&img, 10_u32, rgba);
 /// ```
 #[wasm_bindgen]
-pub fn padding_top(
-    img: &PhotonImage,
-    padding: u32,
-    padding_rgba: Rgba,
-) -> PhotonImage {
+pub fn padding_top(img: &PhotonImage, padding: u32, padding_rgba: Rgba) -> PhotonImage {
     let image_buffer = img.get_raw_pixels();
     let img_width = img.get_width();
     let img_height = img.get_height();
@@ -543,7 +539,8 @@ pub fn padding_top(
 /// use photon_rs::native::open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// padding_bottom(&img, 10_u32, (200_u8, 100_u8, 150_u8, 255_u8));
+/// let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
+/// padding_bottom(&img, 10_u32, rgba);
 /// ```
 #[wasm_bindgen]
 pub fn padding_bottom(
