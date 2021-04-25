@@ -673,30 +673,22 @@ pub fn tint(
     photon_image.raw_pixels = raw_pixels;
 }
 
-/// Horizontal strips. Divide an image into a series of equal-height strips, for an artistic effect.
-#[wasm_bindgen]
-pub fn horizontal_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
+fn draw_horizontal_strips(
+    mut photon_image: &mut PhotonImage,
+    num_strips: u8,
+    color: Rgb,
+) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
     let total_strips = (num_strips * 2) - 1;
     let height_strip = height / total_strips as u32;
-    let background_color = Rgb {
-        r: 255,
-        g: 255,
-        b: 255,
-    };
     let mut y_pos: u32 = 0;
     for i in 1..num_strips {
         draw_filled_rect_mut(
             &mut img,
             Rect::at(0, (y_pos + height_strip) as i32).of_size(width, height_strip),
-            Rgba([
-                background_color.r,
-                background_color.g,
-                background_color.b,
-                255u8,
-            ]),
+            Rgba([color.r, color.g, color.b, 255u8]),
         );
         y_pos = i as u32 * (height_strip * 2);
     }
@@ -705,36 +697,132 @@ pub fn horizontal_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
     photon_image.raw_pixels = raw_pixels;
 }
 
-/// Vertical strips. Divide an image into a series of equal-width strips, for an artistic effect.
+/// Horizontal strips. Divide an image into a series of equal-height strips, for an artistic effect.
+///
+/// # Arguments
+/// * `img` - A PhotonImage that contains a view into the image.
+/// * `num_strips` - The numbder of strips
+/// # Example
+///
+/// ```no_run
+/// // For example, to oil an image of type `PhotonImage`:
+/// use photon_rs::effects::horizontal_strips;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// horizontal_strips(&mut img, 8u8);
+/// ```
+///
 #[wasm_bindgen]
-pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
+pub fn horizontal_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
+    let color = Rgb {
+        r: 255,
+        g: 255,
+        b: 255,
+    };
+    draw_horizontal_strips(&mut photon_image, num_strips, color)
+}
+
+/// Horizontal strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
+///
+/// # Arguments
+/// * `img` - A PhotonImage that contains a view into the image.
+/// * `num_strips` - The numbder of strips
+/// * `color` - Color of strips.
+/// # Example
+///
+/// ```no_run
+/// // For example, to oil an image of type `PhotonImage`:
+/// use photon_rs::effects::horizontal_strips_colored;
+/// use photon_rs::native::open_image;
+/// user photon_rs::Rgb;
+///
+/// color = Rgb::new(255u8, 0u8, 0u8);
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// horizontal_strips_colored(&mut img, 8u8, color);
+/// ```
+///
+#[wasm_bindgen]
+pub fn horizontal_strips_colored(
+    mut photon_image: &mut PhotonImage,
+    num_strips: u8,
+    color: Rgb,
+) {
+    draw_horizontal_strips(&mut photon_image, num_strips, color)
+}
+
+fn draw_vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8, color: Rgb) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
     let (width, height) = img.dimensions();
 
     let total_strips = (num_strips * 2) - 1;
     let width_strip = width / total_strips as u32;
-    let background_color = Rgb {
-        r: 255,
-        g: 255,
-        b: 255,
-    };
     let mut x_pos: u32 = 0;
     for i in 1..num_strips {
         draw_filled_rect_mut(
             &mut img,
             Rect::at((x_pos + width_strip) as i32, 0).of_size(width_strip, height),
-            Rgba([
-                background_color.r,
-                background_color.g,
-                background_color.b,
-                255u8,
-            ]),
+            Rgba([color.r, color.g, color.b, 255u8]),
         );
         x_pos = i as u32 * (width_strip * 2);
     }
 
     let raw_pixels = img.to_bytes();
     photon_image.raw_pixels = raw_pixels;
+}
+
+/// Vertical strips. Divide an image into a series of equal-width strips, for an artistic effect.
+///
+/// # Arguments
+/// * `img` - A PhotonImage that contains a view into the image.
+/// * `num_strips` - The numbder of strips
+/// # Example
+///
+/// ```no_run
+/// // For example, to oil an image of type `PhotonImage`:
+/// use photon_rs::effects::vertical_strips;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// vertical_strips(&mut img, 8u8);
+/// ```
+///
+#[wasm_bindgen]
+pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
+    let color = Rgb {
+        r: 255,
+        g: 255,
+        b: 255,
+    };
+    draw_vertical_strips(&mut photon_image, num_strips, color)
+}
+
+/// Vertical strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
+///
+/// # Arguments
+/// * `img` - A PhotonImage that contains a view into the image.
+/// * `num_strips` - The numbder of strips
+/// * `color` - Color of strips.
+/// # Example
+///
+/// ```no_run
+/// // For example, to oil an image of type `PhotonImage`:
+/// use photon_rs::effects::vertical_strips_colored;
+/// use photon_rs::native::open_image;
+/// user photon_rs::Rgb;
+///
+/// color = Rgb::new(255u8, 0u8, 0u8);
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// vertical_strips_colored(&mut img, 8u8, color);
+/// ```
+///
+#[wasm_bindgen]
+pub fn vertical_strips_colored(
+    mut photon_image: &mut PhotonImage,
+    num_strips: u8,
+    color: Rgb,
+) {
+    draw_vertical_strips(&mut photon_image, num_strips, color)
 }
 
 struct Intensity {
