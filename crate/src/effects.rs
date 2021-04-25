@@ -736,7 +736,7 @@ pub fn horizontal_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 /// use photon_rs::native::open_image;
 /// use photon_rs::Rgb;
 ///
-/// color = Rgb::new(255u8, 0u8, 0u8);
+/// let color = Rgb::new(255u8, 0u8, 0u8);
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// color_horizontal_strips(&mut img, 8u8, color);
 /// ```
@@ -810,7 +810,7 @@ pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 /// use photon_rs::native::open_image;
 /// use photon_rs::Rgb;
 ///
-/// color = Rgb::new(255u8, 0u8, 0u8);
+/// let color = Rgb::new(255u8, 0u8, 0u8);
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// color_vertical_strips(&mut img, 8u8, color);
 /// ```
