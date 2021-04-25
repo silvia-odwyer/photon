@@ -540,7 +540,6 @@ pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
 #[wasm_bindgen]
 pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
     let end = photon_image.get_raw_pixels().len() - 4;
-
     for i in (0..end).step_by(4) {
         let r_val = photon_image.raw_pixels[i];
         let g_val = photon_image.raw_pixels[i + 1];
@@ -733,17 +732,17 @@ pub fn horizontal_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 ///
 /// ```no_run
 /// // For example, to oil an image of type `PhotonImage`:
-/// use photon_rs::effects::horizontal_strips_colored;
+/// use photon_rs::effects::color_horizontal_strips;
 /// use photon_rs::native::open_image;
 /// user photon_rs::Rgb;
 ///
 /// color = Rgb::new(255u8, 0u8, 0u8);
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// horizontal_strips_colored(&mut img, 8u8, color);
+/// color_horizontal_strips(&mut img, 8u8, color);
 /// ```
 ///
 #[wasm_bindgen]
-pub fn horizontal_strips_colored(
+pub fn color_horizontal_strips(
     mut photon_image: &mut PhotonImage,
     num_strips: u8,
     color: Rgb,
@@ -807,17 +806,17 @@ pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 ///
 /// ```no_run
 /// // For example, to oil an image of type `PhotonImage`:
-/// use photon_rs::effects::vertical_strips_colored;
+/// use photon_rs::effects::color_vertical_strips;
 /// use photon_rs::native::open_image;
 /// user photon_rs::Rgb;
 ///
 /// color = Rgb::new(255u8, 0u8, 0u8);
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// vertical_strips_colored(&mut img, 8u8, color);
+/// color_vertical_strips(&mut img, 8u8, color);
 /// ```
 ///
 #[wasm_bindgen]
-pub fn vertical_strips_colored(
+pub fn color_vertical_strips(
     mut photon_image: &mut PhotonImage,
     num_strips: u8,
     color: Rgb,
