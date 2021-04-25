@@ -852,17 +852,16 @@ pub fn oil(mut photon_image: &mut PhotonImage, radius: i32, intensity: f64) {
 /// // For example, to turn an image of type `PhotonImage` into frosted glass see through:
 /// use photon_rs::effects::frosted_glass;
 /// use photon_rs::native::open_image;
-/// use photon_rs::PhotonImage;
 ///
-/// let img = open_image("img.jpg").expect("File should open");
-/// let frosted_img: PhotonImage = frosted_glass(&img);
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// frosted_glass(&mut img);
 /// ```
 ///
 #[wasm_bindgen]
-pub fn frosted_glass(img: &PhotonImage) -> PhotonImage {
-    let img_orig_buf = img.get_raw_pixels();
-    let width = img.get_width();
-    let height = img.get_height();
+pub fn frosted_glass(photon_image: &mut PhotonImage) {
+    let img_orig_buf = photon_image.get_raw_pixels();
+    let width = photon_image.get_width();
+    let height = photon_image.get_height();
     let end = img_orig_buf.len();
 
     let mut img_buf = Vec::<u8>::new();
@@ -894,7 +893,7 @@ pub fn frosted_glass(img: &PhotonImage) -> PhotonImage {
         img_buf[pixel as usize + 3] = img_orig_buf[pixel_new as usize + 3];
     }
 
-    PhotonImage::new(img_buf, width, height)
+    photon_image.raw_pixels = img_buf;
 }
 // pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
 //     println!("hi");
