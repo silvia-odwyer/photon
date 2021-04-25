@@ -734,7 +734,7 @@ pub fn horizontal_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 /// // For example, to oil an image of type `PhotonImage`:
 /// use photon_rs::effects::color_horizontal_strips;
 /// use photon_rs::native::open_image;
-/// user photon_rs::Rgb;
+/// use photon_rs::Rgb;
 ///
 /// color = Rgb::new(255u8, 0u8, 0u8);
 /// let mut img = open_image("img.jpg").expect("File should open");
@@ -808,7 +808,7 @@ pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 /// // For example, to oil an image of type `PhotonImage`:
 /// use photon_rs::effects::color_vertical_strips;
 /// use photon_rs::native::open_image;
-/// user photon_rs::Rgb;
+/// use photon_rs::Rgb;
 ///
 /// color = Rgb::new(255u8, 0u8, 0u8);
 /// let mut img = open_image("img.jpg").expect("File should open");
