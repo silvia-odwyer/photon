@@ -55,15 +55,8 @@ View the [official demo of WASM in action](https://silvia-odwyer.github.io/photo
 
 ![Imgur](https://i.imgur.com/PShSZ6k.png)
 
-### Version 0.3.0 Release
-Version 0.3.0 has been released on Crates.io and NPM, including new features such as image resizing 
-in Node and new filters.
-
-Features include:
-
-- Node.js image resizing
-- Improved performance
-- Faster encoding of images
+### Version 0.3.1 Release
+Version 0.3.1 has been released on Crates.io and NPM, including new features such as a frosted glass effect and new filters.
 
 ### Supported Image Formats
 The following image formats are supported:
@@ -103,7 +96,7 @@ Add the following line to the dependencies section of your Rust project's Cargo.
 ###### Cargo.toml
 ```toml
 [dependencies]
-photon-rs = "0.3.0"
+photon-rs = "0.3.1"
 ```
 
 #### Using Photon Natively
