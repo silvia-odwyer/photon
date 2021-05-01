@@ -22,7 +22,7 @@ image = "0.23.12"
 palette="0.5.0"
 rand="0.7.2"
 num="0.3.1"
-imageproc="0.22.0"
+imageproc = { version = "0.22.0", default-features = false }
 rusttype="0.9.2"
 base64="0.13.0"
 time="0.2.23"
