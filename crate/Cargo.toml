@@ -18,7 +18,7 @@ homepage = "https://silvia-odwyer.github.io/photon/"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-image = "0.23.12"
+image = { version = "0.23.12", default-features = false, features = ["gif", "jpeg", "ico", "png", "pnm", "tga", "tiff", "webp", "bmp", "hdr", "dxt", "dds", "farbfeld"] }
 palette="0.5.0"
 rand="0.7.2"
 num="0.3.1"
@@ -73,4 +73,5 @@ features = [
 ]
 
 [features]
-default = ["console_error_panic_hook"]
+default = ["console_error_panic_hook", "rayon"]
+rayon = ["image/jpeg_rayon", "imageproc/rayon"]
