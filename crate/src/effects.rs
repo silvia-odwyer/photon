@@ -8,6 +8,7 @@ use image::Rgba;
 use image::{GenericImage, GenericImageView};
 use imageproc::drawing::draw_filled_rect_mut;
 use imageproc::rect::Rect;
+use perlin2d::PerlinNoise2D;
 use std::collections::HashMap;
 use std::f64;
 use wasm_bindgen::prelude::*;
@@ -927,6 +928,59 @@ pub fn oil(mut photon_image: &mut PhotonImage, radius: i32, intensity: f64) {
     }
     let raw_pixels = target.to_bytes();
     photon_image.raw_pixels = raw_pixels;
+}
+/// Turn an image into an frosted glass see through
+///
+/// # Arguments
+/// * `img` - A PhotonImage that contains a view into the image.
+/// # Example
+///
+/// ```no_run
+/// // For example, to turn an image of type `PhotonImage` into frosted glass see through:
+/// use photon_rs::effects::frosted_glass;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// frosted_glass(&mut img);
+/// ```
+///
+#[wasm_bindgen]
+pub fn frosted_glass(photon_image: &mut PhotonImage) {
+    let img_orig_buf = photon_image.get_raw_pixels();
+    let width = photon_image.get_width();
+    let height = photon_image.get_height();
+    let end = img_orig_buf.len();
+
+    let mut img_buf = Vec::<u8>::new();
+    Vec::resize(&mut img_buf, end, 0_u8);
+
+    let perlin = PerlinNoise2D::new(2, 10.0, 10.0, 10.0, 1.0, (100.0, 100.0), 0.5, 101);
+
+    for pixel in (0..end).step_by(4) {
+        let x = (pixel / 4) / width as usize;
+        let y = (pixel / 4) % width as usize;
+
+        let res = [
+            perlin.get_noise(x as f64, y as f64) - 0.5,
+            (perlin.get_noise(100.0 + x as f64, y as f64) - 0.5) * 4.0,
+        ];
+
+        let x_new = f64::clamp(f64::floor(x as f64 + res[0]), 0.0, height as f64 - 1.0);
+        let x_new = x_new as usize;
+        let y_new = f64::clamp(f64::floor(y as f64 + res[1]), 0.0, width as f64 - 1.0);
+        let y_new = y_new as usize;
+
+        let pixel_new = (x_new * width as usize + y_new) * 4;
+        if pixel_new > end as usize {
+            continue;
+        }
+        img_buf[pixel as usize] = img_orig_buf[pixel_new as usize];
+        img_buf[pixel as usize + 1] = img_orig_buf[pixel_new as usize + 1];
+        img_buf[pixel as usize + 2] = img_orig_buf[pixel_new as usize + 2];
+        img_buf[pixel as usize + 3] = img_orig_buf[pixel_new as usize + 3];
+    }
+
+    photon_image.raw_pixels = img_buf;
 }
 // pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
 //     println!("hi");

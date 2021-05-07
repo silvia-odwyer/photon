@@ -6,7 +6,7 @@ license = "Apache-2.0"
 name = "photon-rs"
 readme = "./README.md"
 repository = "https://github.com/silvia-odwyer/photon"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2018"
 exclude = [
     "pkg/*",
@@ -18,11 +18,11 @@ homepage = "https://silvia-odwyer.github.io/photon/"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-image = "0.23.12"
+image = { version = "0.23.12", default-features = false, features = ["gif", "jpeg", "ico", "png", "pnm", "tga", "tiff", "webp", "bmp", "hdr", "dxt", "dds", "farbfeld"] }
 palette="0.5.0"
 rand="0.7.2"
 num="0.3.1"
-imageproc="0.22.0"
+imageproc = { version = "0.22.0", default-features = false }
 rusttype="0.9.2"
 base64="0.13.0"
 time="0.2.23"
@@ -31,6 +31,7 @@ serde = { version = "1.0", features = ["derive"] }
 thiserror = "1.0"
 js-sys = "0.3.45"
 node-sys = "0.4.2"
+perlin2d = "0.2.6"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
@@ -72,4 +73,5 @@ features = [
 ]
 
 [features]
-default = ["console_error_panic_hook"]
+default = ["console_error_panic_hook", "rayon"]
+rayon = ["image/jpeg_rayon", "imageproc/rayon"]

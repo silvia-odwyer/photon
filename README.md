@@ -8,13 +8,16 @@
 <h3 align="center">Photon</h3>
 
 <div align="center">
+    
+  [![Status](https://img.shields.io/badge/status-active-success.svg?style=for-the-badge&logo=statuspal)]()
+  [![GitHub Issues](https://img.shields.io/github/issues/silvia-odwyer/photon.svg?style=for-the-badge&logo=github)](https://github.com/silvia-odwyer/photon/issues)
+  [![Gitter Chat](https://img.shields.io/gitter/room/silvia-odwyer/photon?color=cyan&logo=Gitter&style=for-the-badge)](https://gitter.im/photonlibrary/community "Gitter chat")
+  [![NPM Monthly Downloads](https://img.shields.io/npm/dm/@silvia-odwyer/photon?logo=npm&style=for-the-badge&color=pink)]()
+  [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/silvia-odwyer/photon/Continuous%20Integration?logo=github&style=for-the-badge)]()
 
-  [![Status](https://img.shields.io/badge/status-active-success.svg)]()
-  [![GitHub Issues](https://img.shields.io/github/issues/silvia-odwyer/photon.svg)](https://github.com/silvia-odwyer/photon/issues)
-  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/silvia-odwyer/photon.svg)](https://github.com/silvia-odwyer/photon/pulls)
-  [![Gitter chat](https://badges.gitter.im/silvia-odwyer/photon.png)](https://gitter.im/photonlibrary/community "Gitter chat")
-  [![NPM Monthly Downloads](https://img.shields.io/npm/dm/@silvia-odwyer/photon.png)]()
-  [![Continuous Integration](https://github.com/silvia-odwyer/photon/workflows/Continuous%20Integration/badge.svg)]()
+  [![Crates.io](https://img.shields.io/crates/v/photon_rs?logo=rust&style=for-the-badge)](https://crates.io/crates/photon_rs)
+  [![License](https://img.shields.io/github/license/silvia-odwyer/photon?style=for-the-badge)]()
+  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/silvia-odwyer/photon.svg?style=for-the-badge&logo=github-actions)](https://github.com/silvia-odwyer/photon/pulls)
 
 </div>
 
@@ -55,15 +58,8 @@ View the [official demo of WASM in action](https://silvia-odwyer.github.io/photo
 
 ![Imgur](https://i.imgur.com/PShSZ6k.png)
 
-### Version 0.3.0 Release
-Version 0.3.0 has been released on Crates.io and NPM, including new features such as image resizing 
-in Node and new filters.
-
-Features include:
-
-- Node.js image resizing
-- Improved performance
-- Faster encoding of images
+### Version 0.3.1 Release
+Version 0.3.1 has been released on Crates.io and NPM, including new features such as a frosted glass effect and new filters.
 
 ### Supported Image Formats
 The following image formats are supported:
@@ -103,7 +99,7 @@ Add the following line to the dependencies section of your Rust project's Cargo.
 ###### Cargo.toml
 ```toml
 [dependencies]
-photon-rs = "0.3.0"
+photon-rs = "0.3.1"
 ```
 
 #### Using Photon Natively
