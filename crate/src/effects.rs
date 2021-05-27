@@ -19,6 +19,7 @@ use wasm_bindgen::prelude::*;
 ///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
+/// * `channel_index`: The index of the channel to increment. 0 for red, 1 for green and 2 for blue.
 /// * `offset` - The offset is added to the pixels in the image.
 /// # Example
 ///
