@@ -44,7 +44,7 @@ pub fn crop(
     let mut cropped_img: RgbaImage = ImageBuffer::new(x2 - x1, y2 - y1);
 
     for (x, y) in ImageIterator::with_dimension(&cropped_img.dimensions()) {
-        let px = img.get_pixel(x, y);
+        let px = img.get_pixel(x1 + x, y1 + y);
         cropped_img.put_pixel(x, y, px);
     }
     let dynimage = ImageRgba8(cropped_img);
