@@ -8,7 +8,7 @@ use image::{DynamicImage, Rgba};
 use imageproc::distance_transform::Norm;
 use imageproc::drawing::draw_text_mut;
 use imageproc::morphology::dilate_mut;
-use rusttype::{FontCollection, Scale};
+use rusttype::{Font, Scale};
 use wasm_bindgen::prelude::*;
 
 /// Add bordered-text to an image.
@@ -39,16 +39,13 @@ pub fn draw_text_with_border(
     x: u32,
     y: u32,
 ) {
-    let mut image = helpers::dyn_image_from_raw(&photon_img).to_rgba();
+    let mut image = helpers::dyn_image_from_raw(&photon_img).to_rgba8();
 
     let mut image2: DynamicImage =
         DynamicImage::new_luma8(image.width(), image.height());
 
     let font = Vec::from(include_bytes!("../fonts/Roboto-Regular.ttf") as &[u8]);
-    let font = FontCollection::from_bytes(font)
-        .unwrap()
-        .into_font()
-        .unwrap();
+    let font = Font::try_from_bytes(&font).unwrap();
     let height = 90f32;
     let scale = Scale {
         x: height * 1.0,
@@ -64,12 +61,12 @@ pub fn draw_text_with_border(
         text,
     );
 
-    let mut image2 = image2.to_luma();
+    let mut image2 = image2.to_luma8();
     dilate_mut(&mut image2, Norm::LInf, 4u8);
 
     // Add a border to the text.
     for (x, y) in ImageIterator::with_dimension(&image2.dimensions()) {
-        let pixval = 255 - image2.get_pixel(x, y).data[0];
+        let pixval = 255 - image2.get_pixel(x, y)[0];
         if pixval != 255 {
             let new_pix = Rgba([pixval, pixval, pixval, 255]);
             image.put_pixel(x, y, new_pix);
@@ -85,8 +82,8 @@ pub fn draw_text_with_border(
         &font,
         text,
     );
-    let dynimage = image::ImageRgba8(image);
-    photon_img.raw_pixels = dynimage.raw_pixels();
+    let dynimage = image::DynamicImage::ImageRgba8(image);
+    photon_img.raw_pixels = dynimage.into_bytes();
 }
 
 /// Add text to an image.
@@ -112,16 +109,13 @@ pub fn draw_text_with_border(
 /// ```
 #[wasm_bindgen]
 pub fn draw_text(mut photon_img: &mut PhotonImage, text: &str, x: u32, y: u32) {
-    let mut image = helpers::dyn_image_from_raw(&photon_img).to_rgba();
+    let mut image = helpers::dyn_image_from_raw(&photon_img).to_rgba8();
 
     let mut image2: DynamicImage =
         DynamicImage::new_luma8(image.width(), image.height());
 
     let font = Vec::from(include_bytes!("../fonts/Roboto-Regular.ttf") as &[u8]);
-    let font = FontCollection::from_bytes(font)
-        .unwrap()
-        .into_font()
-        .unwrap();
+    let font = Font::try_from_bytes(&font).unwrap();
     let height = 90f32;
     let scale = Scale {
         x: height * 1.0,
@@ -137,7 +131,7 @@ pub fn draw_text(mut photon_img: &mut PhotonImage, text: &str, x: u32, y: u32) {
         text,
     );
 
-    let mut image2 = image2.to_luma();
+    let mut image2 = image2.to_luma8();
     dilate_mut(&mut image2, Norm::LInf, 4u8);
 
     draw_text_mut(
@@ -149,6 +143,6 @@ pub fn draw_text(mut photon_img: &mut PhotonImage, text: &str, x: u32, y: u32) {
         &font,
         text,
     );
-    let dynimage = image::ImageRgba8(image);
-    photon_img.raw_pixels = dynimage.raw_pixels();
+    let dynimage = image::DynamicImage::ImageRgba8(image);
+    photon_img.raw_pixels = dynimage.into_bytes();
 }

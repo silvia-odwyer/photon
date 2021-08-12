@@ -441,3 +441,4 @@ pub mod native;
 pub mod noise;
 mod tests;
 pub mod transform;
+pub mod text;
