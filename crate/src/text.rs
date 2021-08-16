@@ -39,7 +39,7 @@ pub fn draw_text_with_border(
     x: u32,
     y: u32,
 ) {
-    let mut image = helpers::dyn_image_from_raw(&photon_img).to_rgba8();
+    let mut image = helpers::dyn_image_from_raw(photon_img).to_rgba8();
 
     let mut image2: DynamicImage =
         DynamicImage::new_luma8(image.width(), image.height());
@@ -109,7 +109,7 @@ pub fn draw_text_with_border(
 /// ```
 #[wasm_bindgen]
 pub fn draw_text(mut photon_img: &mut PhotonImage, text: &str, x: u32, y: u32) {
-    let mut image = helpers::dyn_image_from_raw(&photon_img).to_rgba8();
+    let mut image = helpers::dyn_image_from_raw(photon_img).to_rgba8();
 
     let mut image2: DynamicImage =
         DynamicImage::new_luma8(image.width(), image.height());

@@ -36,7 +36,7 @@ pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32)
         panic!("Invalid channel index passed. Channel1 must be equal to 0, 1, or 2.");
     }
 
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
     for x in 0..width - 10 {
@@ -171,7 +171,7 @@ pub fn multiple_offsets(
     if channel_index2 > 2 {
         panic!("Invalid channel index passed. Channel2 must be equal to 0, 1, or 2.");
     }
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
     for (x, y) in ImageIterator::new(width, height) {
@@ -197,7 +197,7 @@ pub fn multiple_offsets(
 
 /// Halftoning effect.
 pub fn halftone(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
     for x in (0..width - 4).step_by(2_usize) {
@@ -375,7 +375,7 @@ pub fn primary(img: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn colorize(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     let threshold = 220;
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
@@ -414,7 +414,7 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
 
 // #[wasm_bindgen]
 // pub fn inc_luminosity(mut photon_image: PhotonImage) -> PhotonImage {
-//     let mut img = helpers::dyn_image_from_raw(&photon_image);
+//     let mut img = helpers::dyn_image_from_raw(photon_image);
 //     let (width, height) = img.dimensions();
 //     let mut min_intensity = 255;
 //     let mut max_intensity = 0;
@@ -505,7 +505,7 @@ pub fn solarize(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let mut px = img.get_pixel(x, y);
@@ -582,7 +582,7 @@ pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
 /// ```
 #[wasm_bindgen]
 pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
 
     let clamped_contrast = num::clamp(contrast, -255.0, 255.0);
 
@@ -640,7 +640,7 @@ pub fn tint(
     g_offset: u32,
     b_offset: u32,
 ) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let mut px = img.get_pixel(x, y);
@@ -678,7 +678,7 @@ fn draw_horizontal_strips(
     num_strips: u8,
     color: Rgb,
 ) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
     let total_strips = (num_strips * 2) - 1;
@@ -752,7 +752,7 @@ pub fn color_horizontal_strips(
 }
 
 fn draw_vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8, color: Rgb) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
     let total_strips = (num_strips * 2) - 1;
@@ -850,7 +850,7 @@ struct Intensity {
 ///
 #[wasm_bindgen]
 pub fn oil(mut photon_image: &mut PhotonImage, radius: i32, intensity: f64) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
     let mut target = image::DynamicImage::new_rgba8(width, height);
     let mut pixel_intensity_count: HashMap<usize, Intensity>;
