@@ -39,7 +39,7 @@ pub fn crop(
     x2: u32,
     y2: u32,
 ) -> PhotonImage {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
 
     let mut cropped_img: RgbaImage = ImageBuffer::new(x2 - x1, y2 - y1);
 
@@ -115,7 +115,7 @@ pub fn crop_img_browser(
 /// ```
 #[wasm_bindgen]
 pub fn fliph(photon_image: &mut PhotonImage) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
 
     let width = img.width();
     let height = img.height();
@@ -148,7 +148,7 @@ pub fn fliph(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn flipv(photon_image: &mut PhotonImage) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
 
     let width = img.width();
     let height = img.height();
@@ -200,7 +200,7 @@ pub fn resize_img_browser(
     sampling_filter: SamplingFilter,
 ) -> HtmlCanvasElement {
     let sampling_filter = filter_type_from_sampling_filter(sampling_filter);
-    let dyn_img = helpers::dyn_image_from_raw(&photon_img);
+    let dyn_img = helpers::dyn_image_from_raw(photon_img);
     let resized_img = ImageRgba8(image::imageops::resize(
         &dyn_img,
         width,
@@ -255,7 +255,7 @@ pub fn resize(
 ) -> PhotonImage {
     let sampling_filter = filter_type_from_sampling_filter(sampling_filter);
 
-    let dyn_img = helpers::dyn_image_from_raw(&photon_img);
+    let dyn_img = helpers::dyn_image_from_raw(photon_img);
     let resized_img = ImageRgba8(image::imageops::resize(
         &dyn_img,
         width,

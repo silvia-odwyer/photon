@@ -67,7 +67,7 @@ pub fn add_noise_rand(mut photon_image: PhotonImage) -> PhotonImage {
 /// pink_noise(&mut img);
 /// ```
 pub fn pink_noise(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     let mut rng = rand::thread_rng();
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {

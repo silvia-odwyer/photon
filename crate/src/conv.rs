@@ -8,7 +8,7 @@ use wasm_bindgen::prelude::*;
 type Kernel = [f32; 9];
 
 fn conv(photon_image: &mut PhotonImage, kernel: Kernel) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     img = ImageRgba8(img.to_rgba8());
 
     let mut filtered_img = img.filter3x3(&kernel);
@@ -153,7 +153,7 @@ pub fn box_blur(photon_image: &mut PhotonImage) {
 #[wasm_bindgen]
 pub fn gaussian_blur(photon_image: &mut PhotonImage, radius: i32) {
     // construct pixel data
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
     let mut src = img.to_bytes();
 
     let width = photon_image.get_width();

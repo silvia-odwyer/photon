@@ -403,7 +403,7 @@ pub fn selective_hue_rotate(
     ref_color: Rgb,
     degrees: f32,
 ) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
     let mut img = img.to_rgba8();
@@ -455,7 +455,7 @@ pub fn selective_hue_rotate(
 
 // #[wasm_bindgen]
 // pub fn selective_color_convert(mut photon_image: &mut PhotonImage, ref_color:Rgb, new_color:Rgb, fraction: f32) {
-//     let img = helpers::dyn_image_from_raw(&photon_image);
+//     let img = helpers::dyn_image_from_raw(photon_image);
 //     let (_width, _height) = img.dimensions();
 //     let mut img = img.to_rgba8();
 //     for x in 0.._width {
@@ -610,7 +610,7 @@ fn selective(
     ref_color: Rgb,
     amt: f32,
 ) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
     let mut img = img.to_rgba8();
 

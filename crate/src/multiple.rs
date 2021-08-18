@@ -29,8 +29,8 @@ use wasm_bindgen::prelude::*;
 /// ```
 #[wasm_bindgen]
 pub fn watermark(mut img: &mut PhotonImage, watermark: &PhotonImage, x: u32, y: u32) {
-    let dyn_watermark: DynamicImage = crate::helpers::dyn_image_from_raw(&watermark);
-    let mut dyn_img: DynamicImage = crate::helpers::dyn_image_from_raw(&img);
+    let dyn_watermark: DynamicImage = crate::helpers::dyn_image_from_raw(watermark);
+    let mut dyn_img: DynamicImage = crate::helpers::dyn_image_from_raw(img);
     image::imageops::overlay(&mut dyn_img, &dyn_watermark, x, y);
     img.raw_pixels = dyn_img.to_bytes();
 }
@@ -64,8 +64,8 @@ pub fn blend(
     photon_image2: &PhotonImage,
     blend_mode: &str,
 ) {
-    let img = crate::helpers::dyn_image_from_raw(&photon_image);
-    let img2 = crate::helpers::dyn_image_from_raw(&photon_image2);
+    let img = crate::helpers::dyn_image_from_raw(photon_image);
+    let img2 = crate::helpers::dyn_image_from_raw(photon_image2);
 
     let (width, height) = img.dimensions();
     let (width2, height2) = img2.dimensions();
@@ -177,8 +177,8 @@ pub fn replace_background(
     img2: &PhotonImage,
     background_color: Rgb,
 ) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
-    let img2 = helpers::dyn_image_from_raw(&img2);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
+    let img2 = helpers::dyn_image_from_raw(img2);
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let px = img.get_pixel(x, y);

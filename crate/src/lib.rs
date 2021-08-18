@@ -127,7 +127,7 @@ impl PhotonImage {
 
     /// Convert the PhotonImage to base64.
     pub fn get_base64(&self) -> String {
-        let mut img = helpers::dyn_image_from_raw(&self);
+        let mut img = helpers::dyn_image_from_raw(self);
         img = ImageRgba8(img.to_rgba8());
 
         let mut buffer = vec![];
@@ -440,4 +440,5 @@ pub mod multiple;
 pub mod native;
 pub mod noise;
 mod tests;
+pub mod text;
 pub mod transform;

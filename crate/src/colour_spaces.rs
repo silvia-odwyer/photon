@@ -10,7 +10,7 @@ use wasm_bindgen::prelude::*;
 /// Apply gamma correction.
 // #[wasm_bindgen]
 // pub fn gamma_correction(mut photon_image: &mut PhotonImage, red: f32, green: f32,  blue: f32) {
-//     let img = helpers::dyn_image_from_raw(&photon_image);
+//     let img = helpers::dyn_image_from_raw(photon_image);
 //     let (width, height) = img.dimensions();
 //     let mut img = img.to_rgba8();
 
@@ -74,7 +74,7 @@ use wasm_bindgen::prelude::*;
 /// ```
 #[wasm_bindgen]
 pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
     let mut img = img.to_rgba8();
 
@@ -139,7 +139,7 @@ pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 pub fn hsl(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     // The function logic is kept separate from other colour spaces for now,
     // since other HSL-specific logic may be implemented here, which isn't available in other colour spaces
-    let mut img = helpers::dyn_image_from_raw(&photon_image).to_rgba8();
+    let mut img = helpers::dyn_image_from_raw(photon_image).to_rgba8();
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let px_data = img.get_pixel(x, y).channels();
 
@@ -201,7 +201,7 @@ pub fn hsl(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn hsv(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
     let mut img = img.to_rgba8();
 
@@ -598,7 +598,7 @@ pub fn desaturate_lch(img: &mut PhotonImage, level: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn mix_with_colour(photon_image: &mut PhotonImage, mix_colour: Rgb, opacity: f32) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
     let mut img = img.to_rgba8();
 
