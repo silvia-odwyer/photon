@@ -175,7 +175,7 @@ pub fn blend(
 pub fn replace_background(
     mut photon_image: &mut PhotonImage,
     img2: &PhotonImage,
-    background_color: Rgb,
+    background_color: &Rgb,
 ) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
     let img2 = helpers::dyn_image_from_raw(img2);
