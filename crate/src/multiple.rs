@@ -170,7 +170,7 @@ pub fn blend(
 /// let rgb = Rgb::new(20_u8, 40_u8, 60_u8);
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// let img2 = open_image("img2.jpg").expect("File should open");
-/// replace_background(&mut img, &img2, rgb);
+/// replace_background(&mut img, &img2, &rgb);
 /// ```
 pub fn replace_background(
     mut photon_image: &mut PhotonImage,
