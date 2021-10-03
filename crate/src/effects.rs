@@ -982,6 +982,57 @@ pub fn frosted_glass(photon_image: &mut PhotonImage) {
 
     photon_image.raw_pixels = img_buf;
 }
+
+/// Pixelize an image.
+///
+/// # Arguments
+/// * `photon_image` - A PhotonImage that contains a view into the image.
+/// * `pixel_size` - Targeted pixel size of generated image.
+/// # Example
+///
+/// ```no_run
+/// // For example, to turn an image of type `PhotonImage` into a pixelized image with 50 pixels blocks:
+/// use photon_rs::effects::pixelize;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// pixelize(&mut img, 50);
+/// ```
+///
+#[wasm_bindgen]
+pub fn pixelize(photon_image: &mut PhotonImage, pixel_size: i32) {
+    let step_size = pixel_size.max(0) as usize;
+    if step_size <= 1 {
+        return;
+    }
+
+    let buf = photon_image.raw_pixels.as_mut_slice();
+    let width = photon_image.width as usize;
+    let height = photon_image.height as usize;
+
+    for sy in (0..height).step_by(step_size) {
+        let src_row_index = sy * width;
+
+        for sx in (0..width).step_by(step_size) {
+            let src_index = 4 * (src_row_index + sx);
+            let block_end_y = (sy + step_size).min(height);
+            let block_end_x = (sx + step_size).min(width);
+
+            for dy in sy..block_end_y {
+                let dst_row_index = dy * width;
+
+                for dx in sx..block_end_x {
+                    let dst_index = 4 * (dst_row_index + dx);
+                    buf[dst_index] = buf[src_index];
+                    buf[dst_index + 1] = buf[src_index + 1];
+                    buf[dst_index + 2] = buf[src_index + 2];
+                    buf[dst_index + 3] = buf[src_index + 3];
+                }
+            }
+        }
+    }
+}
+
 // pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
 //     println!("hi");
 //     println!("{}", color_a.get_red());
