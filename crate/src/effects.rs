@@ -1023,7 +1023,7 @@ pub fn pixelize(photon_image: &mut PhotonImage, pixel_size: i32) {
 
                 for dx in sx..block_end_x {
                     let dst_index = 4 * (dst_row_index + dx);
-                    buf[dst_index + 0] = buf[src_index + 0];
+                    buf[dst_index] = buf[src_index];
                     buf[dst_index + 1] = buf[src_index + 1];
                     buf[dst_index + 2] = buf[src_index + 2];
                     buf[dst_index + 3] = buf[src_index + 3];
