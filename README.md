@@ -209,10 +209,8 @@ Photon is always ready for new filters and functions, so if you'd like to contri
 ## To Do
 - Selective colorization
 - Fade
-- Pixelisation
 - Blend images using browser-specific functions for WASM version of library.
 - Vintage images with light leaks, grains, etc.,
-- Normalisation
 - Gamma correction
 - Duotone filtering
 - Tests in a headless web browser for WebAssembly version of library

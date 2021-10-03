@@ -1033,6 +1033,70 @@ pub fn pixelize(photon_image: &mut PhotonImage, pixel_size: i32) {
     }
 }
 
+/// Normalizes an image by remapping its range of pixels values. Only RGB
+/// channels are processed and each channel is stretched to \[0, 255\] range
+/// independently. This process is also known as contrast stretching.
+/// # Arguments
+/// * `photon_image` - A PhotonImage that contains a view into the image.
+/// # Example
+///
+/// ```no_run
+/// // For example, to turn an image of type `PhotonImage` into a normalized image:
+/// use photon_rs::effects::normalize;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// normalize(&mut img);
+/// ```
+///
+#[wasm_bindgen]
+pub fn normalize(photon_image: &mut PhotonImage) {
+    let buf = photon_image.raw_pixels.as_mut_slice();
+    let buf_size = buf.len();
+
+    let mut min_rgb = Rgb::new(255, 255, 255);
+    let mut max_rgb = Rgb::new(0, 0, 0);
+
+    for i in (0..buf_size).step_by(4) {
+        let r = buf[i];
+        let g = buf[i + 1];
+        let b = buf[i + 2];
+
+        min_rgb.r = min_rgb.r.min(r);
+        min_rgb.g = min_rgb.g.min(g);
+        min_rgb.b = min_rgb.b.min(b);
+
+        max_rgb.r = max_rgb.r.max(r);
+        max_rgb.g = max_rgb.g.max(g);
+        max_rgb.b = max_rgb.b.max(b);
+    }
+
+    let min_r = min_rgb.r as i32;
+    let min_g = min_rgb.g as i32;
+    let min_b = min_rgb.b as i32;
+    let delta_r = (max_rgb.r as i32) - min_r;
+    let delta_g = (max_rgb.g as i32) - min_g;
+    let delta_b = (max_rgb.b as i32) - min_b;
+
+    for i in (0..buf_size).step_by(4) {
+        let r = buf[i] as i32;
+        let g = buf[i + 1] as i32;
+        let b = buf[i + 2] as i32;
+
+        if delta_r > 0 {
+            buf[i] = (((r - min_r) * 255) / delta_r) as u8;
+        }
+
+        if delta_b > 0 {
+            buf[i + 1] = (((g - min_g) * 255) / delta_g) as u8;
+        }
+
+        if delta_b > 0 {
+            buf[i + 2] = (((b - min_b) * 255) / delta_b) as u8;
+        }
+    }
+}
+
 // pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
 //     println!("hi");
 //     println!("{}", color_a.get_red());
