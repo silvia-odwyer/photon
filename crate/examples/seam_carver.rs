@@ -18,7 +18,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("after = w: {}, h: {}", w, h);
 
     // Write the contents of this image in JPEG format.
-    photon_rs::native::save_image(res, "output_seam_carver.jpg");
+    photon_rs::native::save_image(res, "output_seam_carver.jpg")?;
     let end = time::Instant::now();
     println!(
         "Took {} seconds to seam carve image.",

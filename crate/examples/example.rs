@@ -21,7 +21,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         photon::colour_spaces::hsl(&mut img, effect, 0.2_f32);
 
         // Write the contents of this image in JPG format.
-        photon::native::save_image(img, &format!("output_{}.jpg", effect)[..]);
+        photon::native::save_image(img, &format!("output_{}.jpg", effect)[..])?;
 
         let end = Instant::now();
         println!(
