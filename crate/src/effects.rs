@@ -584,7 +584,7 @@ pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
 pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
 
-    let clamped_contrast = num::clamp(contrast, -255.0, 255.0);
+    let clamped_contrast = contrast.clamp(-255.0, 255.0);
 
     // Some references:
     // https://math.stackexchange.com/questions/906240/algorithms-to-increase-or-decrease-the-contrast-of-an-image
@@ -596,7 +596,7 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
 
     for (i, table) in lookup_table.iter_mut().enumerate().take(256_usize) {
         let new_val = i as f32 * factor + offset;
-        *table = num::clamp(new_val, 0.0, 255.0) as u8;
+        *table = new_val.clamp(0.0, 255.0) as u8;
     }
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
