@@ -262,5 +262,5 @@ pub fn create_gradient(width: u32, height: u32) -> PhotonImage {
 pub fn apply_gradient(mut image: &mut PhotonImage) {
     let gradient = create_gradient(image.width, image.height);
 
-    blend(&mut image, &gradient, "overlay");
+    blend(image, &gradient, "overlay");
 }

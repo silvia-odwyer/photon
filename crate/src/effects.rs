@@ -720,7 +720,7 @@ pub fn horizontal_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
         g: 255,
         b: 255,
     };
-    draw_horizontal_strips(&mut photon_image, num_strips, color)
+    draw_horizontal_strips(photon_image, num_strips, color)
 }
 
 /// Horizontal strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
@@ -748,7 +748,7 @@ pub fn color_horizontal_strips(
     num_strips: u8,
     color: Rgb,
 ) {
-    draw_horizontal_strips(&mut photon_image, num_strips, color)
+    draw_horizontal_strips(photon_image, num_strips, color)
 }
 
 fn draw_vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8, color: Rgb) {
@@ -794,7 +794,7 @@ pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
         g: 255,
         b: 255,
     };
-    draw_vertical_strips(&mut photon_image, num_strips, color)
+    draw_vertical_strips(photon_image, num_strips, color)
 }
 
 /// Vertical strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
@@ -822,7 +822,7 @@ pub fn color_vertical_strips(
     num_strips: u8,
     color: Rgb,
 ) {
-    draw_vertical_strips(&mut photon_image, num_strips, color)
+    draw_vertical_strips(photon_image, num_strips, color)
 }
 
 struct Intensity {
