@@ -714,7 +714,7 @@ fn draw_horizontal_strips(
 /// ```
 ///
 #[wasm_bindgen]
-pub fn horizontal_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
+pub fn horizontal_strips(photon_image: &mut PhotonImage, num_strips: u8) {
     let color = Rgb {
         r: 255,
         g: 255,
@@ -744,7 +744,7 @@ pub fn horizontal_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 ///
 #[wasm_bindgen]
 pub fn color_horizontal_strips(
-    mut photon_image: &mut PhotonImage,
+    photon_image: &mut PhotonImage,
     num_strips: u8,
     color: Rgb,
 ) {
@@ -788,7 +788,7 @@ fn draw_vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8, colo
 /// ```
 ///
 #[wasm_bindgen]
-pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
+pub fn vertical_strips(photon_image: &mut PhotonImage, num_strips: u8) {
     let color = Rgb {
         r: 255,
         g: 255,
@@ -818,7 +818,7 @@ pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 ///
 #[wasm_bindgen]
 pub fn color_vertical_strips(
-    mut photon_image: &mut PhotonImage,
+    photon_image: &mut PhotonImage,
     num_strips: u8,
     color: Rgb,
 ) {

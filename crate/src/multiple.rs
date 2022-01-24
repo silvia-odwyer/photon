@@ -259,7 +259,7 @@ pub fn create_gradient(width: u32, height: u32) -> PhotonImage {
 
 /// Apply a gradient to an image.
 #[wasm_bindgen]
-pub fn apply_gradient(mut image: &mut PhotonImage) {
+pub fn apply_gradient(image: &mut PhotonImage) {
     let gradient = create_gradient(image.width, image.height);
 
     blend(image, &gradient, "overlay");
