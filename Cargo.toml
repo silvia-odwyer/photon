@@ -1,5 +1,6 @@
 [workspace]
 
 members = [
-    "crate" # photon-rs
+    "crate", # photon-rs
+    "tests"
 ]
