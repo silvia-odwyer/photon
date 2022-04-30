@@ -127,7 +127,7 @@ impl PhotonImage {
 
     /// Convert the PhotonImage to base64.
     pub fn get_base64(&self) -> String {
-        let mut img = helpers::dyn_image_from_raw(&self);
+        let mut img = helpers::dyn_image_from_raw(self);
         img = ImageRgba8(img.to_rgba8());
 
         let mut buffer = vec![];
@@ -144,7 +144,7 @@ impl PhotonImage {
     #[allow(clippy::unnecessary_mut_passed)]
     pub fn get_image_data(&mut self) -> ImageData {
         ImageData::new_with_u8_clamped_array_and_sh(
-            Clamped(&self.raw_pixels),
+            Clamped(&mut self.raw_pixels),
             self.width,
             self.height,
         )
@@ -350,8 +350,9 @@ pub fn putImageData(
     new_image: PhotonImage,
 ) {
     // Convert the raw pixels back to an ImageData object.
+    let mut raw_pixels = new_image.raw_pixels;
     let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(
-        Clamped(&new_image.raw_pixels),
+        Clamped(&mut raw_pixels),
         canvas.width(),
         canvas.height(),
     );
@@ -414,10 +415,10 @@ pub fn base64_to_vec(base64: &str) -> Vec<u8> {
 #[wasm_bindgen]
 #[allow(clippy::unnecessary_mut_passed)]
 pub fn to_image_data(photon_image: PhotonImage) -> ImageData {
-    let raw_pixels = photon_image.raw_pixels;
+    let mut raw_pixels = photon_image.raw_pixels;
     let width = photon_image.width;
     let height = photon_image.height;
-    ImageData::new_with_u8_clamped_array_and_sh(Clamped(&raw_pixels), width, height)
+    ImageData::new_with_u8_clamped_array_and_sh(Clamped(&mut raw_pixels), width, height)
         .unwrap()
 }
 
@@ -440,4 +441,5 @@ pub mod multiple;
 pub mod native;
 pub mod noise;
 mod tests;
+pub mod text;
 pub mod transform;

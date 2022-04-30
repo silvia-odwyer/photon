@@ -54,7 +54,7 @@ pub fn alter_channel(img: &mut PhotonImage, channel: usize, amt: i16) {
 
     for i in (channel..end).step_by(4) {
         let inc_val: i16 = img.raw_pixels[i] as i16 + amt as i16;
-        img.raw_pixels[i] = num::clamp(inc_val, 0, 255) as u8;
+        img.raw_pixels[i] = inc_val.clamp(0, 255) as u8;
     }
 }
 
@@ -166,8 +166,8 @@ pub fn alter_two_channels(
         let inc_val1: i16 = img.raw_pixels[i + channel1] as i16 + amt1 as i16;
         let inc_val2: i16 = img.raw_pixels[i + channel2] as i16 + amt2 as i16;
 
-        img.raw_pixels[i + channel1] = num::clamp(inc_val1, 0, 255) as u8;
-        img.raw_pixels[i + channel2] = num::clamp(inc_val2, 0, 255) as u8;
+        img.raw_pixels[i + channel1] = inc_val1.clamp(0, 255) as u8;
+        img.raw_pixels[i + channel2] = inc_val2.clamp(0, 255) as u8;
     }
 }
 
@@ -208,9 +208,9 @@ pub fn alter_channels(img: &mut PhotonImage, r_amt: i16, g_amt: i16, b_amt: i16)
         let g_val: i16 = img.raw_pixels[i + 1] as i16 + g_amt as i16;
         let b_val: i16 = img.raw_pixels[i + 2] as i16 + b_amt as i16;
 
-        img.raw_pixels[i] = num::clamp(r_val, 0, 255) as u8;
-        img.raw_pixels[i + 1] = num::clamp(g_val, 0, 255) as u8;
-        img.raw_pixels[i + 2] = num::clamp(b_val, 0, 255) as u8;
+        img.raw_pixels[i] = r_val.clamp(0, 255) as u8;
+        img.raw_pixels[i + 1] = g_val.clamp(0, 255) as u8;
+        img.raw_pixels[i + 2] = b_val.clamp(0, 255) as u8;
     }
 }
 
@@ -403,7 +403,7 @@ pub fn selective_hue_rotate(
     ref_color: Rgb,
     degrees: f32,
 ) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
     let mut img = img.to_rgba8();
@@ -455,7 +455,7 @@ pub fn selective_hue_rotate(
 
 // #[wasm_bindgen]
 // pub fn selective_color_convert(mut photon_image: &mut PhotonImage, ref_color:Rgb, new_color:Rgb, fraction: f32) {
-//     let img = helpers::dyn_image_from_raw(&photon_image);
+//     let img = helpers::dyn_image_from_raw(photon_image);
 //     let (_width, _height) = img.dimensions();
 //     let mut img = img.to_rgba8();
 //     for x in 0.._width {
@@ -610,7 +610,7 @@ fn selective(
     ref_color: Rgb,
     amt: f32,
 ) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
     let mut img = img.to_rgba8();
 

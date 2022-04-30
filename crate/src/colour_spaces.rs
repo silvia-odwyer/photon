@@ -7,47 +7,61 @@ use image::Pixel as ImagePixel;
 use palette::{Hsl, Hsv, Hue, Lch, Saturate, Shade, Srgba};
 use wasm_bindgen::prelude::*;
 
-/// Apply gamma correction.
-// #[wasm_bindgen]
-// pub fn gamma_correction(mut photon_image: &mut PhotonImage, red: f32, green: f32,  blue: f32) {
-//     let img = helpers::dyn_image_from_raw(&photon_image);
-//     let (width, height) = img.dimensions();
-//     let mut img = img.to_rgba8();
+/// Applies gamma correction to an image.
+/// # Arguments
+/// * `photon_image` - A PhotonImage that contains a view into the image.
+/// * `red` - Gamma value for red channel.
+/// * `green` - Gamma value for green channel.
+/// * `blue` - Gamma value for blue channel.
+/// # Example
+///
+/// ```no_run
+/// // For example, to turn an image of type `PhotonImage` into a gamma corrected image:
+/// use photon_rs::colour_spaces::gamma_correction;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// gamma_correction(&mut img, 2.2, 2.2, 2.2);
+/// ```
+///
+#[wasm_bindgen]
+pub fn gamma_correction(
+    photon_image: &mut PhotonImage,
+    red: f32,
+    green: f32,
+    blue: f32,
+) {
+    let buf = photon_image.raw_pixels.as_mut_slice();
+    let buf_size = buf.len();
 
-//     // Initialize gamma arrays
-//     let mut gammaR: Vec<u8> = vec![];
-//     let mut gammaG: Vec<u8> = vec![];
-//     let mut gammaB: Vec<u8> = vec![];
+    // Initialize gamma arrays
+    let mut gamma_r: Vec<u8> = vec![0; 256];
+    let mut gamma_g: Vec<u8> = vec![0; 256];
+    let mut gamma_b: Vec<u8> = vec![0; 256];
 
-//     let MAX_VALUE_INT = 255;
-//     let MAX_VALUE_FLT = 255.0;
-//     let REVERSE = 1.0;
+    let inv_red = 1.0 / red;
+    let inv_green = 1.0 / green;
+    let inv_blue = 1.0 / blue;
 
-//     // Set values within gamma arrays
-//     for i in 0..256 {
-//         gammaR[i] = min(MAX_VALUE_INT, ((MAX_VALUE_FLT * ((i as f32 / MAX_VALUE_FLT) as u32).powf(REVERSE / red) + 0.5 ) as u8));
-//         gammaG[i] = min(MAX_VALUE_INT, ((MAX_VALUE_FLT * ((i as f32 / MAX_VALUE_FLT) as u32).powf(REVERSE / green) + 0.5 ) as u8);
-//         gammaB[i] = min(MAX_VALUE_INT, ((MAX_VALUE_FLT * ((i as f32 / MAX_VALUE_FLT) as u32).powf(REVERSE / blue) + 0.5 ) as u8);
+    // Set values within gamma arrays
+    for i in 0..256 {
+        let input = (i as f32) / 255.0;
+        gamma_r[i] = (255.0 * input.powf(inv_red) + 0.5).clamp(0.0, 255.0) as u8;
+        gamma_g[i] = (255.0 * input.powf(inv_green) + 0.5).clamp(0.0, 255.0) as u8;
+        gamma_b[i] = (255.0 * input.powf(inv_blue) + 0.5).clamp(0.0, 255.0) as u8;
+    }
 
-//     }
+    // Apply gamma correction
+    for i in (0..buf_size).step_by(4) {
+        let r = buf[i];
+        let g = buf[i + 1];
+        let b = buf[i + 2];
 
-//     for x in 0..width {
-//         for y in 0..height {
-//             let px_data = img.get_pixel(x, y).data;
-
-//             let r_val = px_data[0];
-//             let g_val = px_data[1];
-//             let b_val = px_data[2];
-
-//             px_data[0] = gammaR[r_val as usize];
-//             px_data[1] = gammaG[g_val as usize];
-//             px_data[2] = gammaB[b_val as usize];
-
-//             img.put_pixel(x, y, px);
-//             }
-//         }
-//     photon_image.raw_pixels = img.to_vec();
-// }
+        buf[i] = gamma_r[r as usize];
+        buf[i + 1] = gamma_g[g as usize];
+        buf[i + 2] = gamma_b[b as usize];
+    }
+}
 
 /// Image manipulation effects in the LCh colour space
 ///
@@ -74,7 +88,7 @@ use wasm_bindgen::prelude::*;
 /// ```
 #[wasm_bindgen]
 pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
     let mut img = img.to_rgba8();
 
@@ -139,7 +153,7 @@ pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 pub fn hsl(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     // The function logic is kept separate from other colour spaces for now,
     // since other HSL-specific logic may be implemented here, which isn't available in other colour spaces
-    let mut img = helpers::dyn_image_from_raw(&photon_image).to_rgba8();
+    let mut img = helpers::dyn_image_from_raw(photon_image).to_rgba8();
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let px_data = img.get_pixel(x, y).channels();
 
@@ -201,7 +215,7 @@ pub fn hsl(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn hsv(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
     let mut img = img.to_rgba8();
 
@@ -598,7 +612,7 @@ pub fn desaturate_lch(img: &mut PhotonImage, level: f32) {
 /// ```
 #[wasm_bindgen]
 pub fn mix_with_colour(photon_image: &mut PhotonImage, mix_colour: Rgb, opacity: f32) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
     let mut img = img.to_rgba8();
 

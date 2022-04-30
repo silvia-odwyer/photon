@@ -8,7 +8,7 @@ use wasm_bindgen::prelude::*;
 type Kernel = [f32; 9];
 
 fn conv(photon_image: &mut PhotonImage, kernel: Kernel) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     img = ImageRgba8(img.to_rgba8());
 
     let mut filtered_img = img.filter3x3(&kernel);
@@ -153,7 +153,7 @@ pub fn box_blur(photon_image: &mut PhotonImage) {
 #[wasm_bindgen]
 pub fn gaussian_blur(photon_image: &mut PhotonImage, radius: i32) {
     // construct pixel data
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
     let mut src = img.to_bytes();
 
     let width = photon_image.get_width();
@@ -253,9 +253,9 @@ fn box_blur_horizontal(
             val_b += src[ri + 2] as i32 - fv_b;
             ri += 4;
 
-            target[ti] = num::clamp(val_r as f32 * iarr, 0.0, 255.0) as u8;
-            target[ti + 1] = num::clamp(val_g as f32 * iarr, 0.0, 255.0) as u8;
-            target[ti + 2] = num::clamp(val_b as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti] = (val_r as f32 * iarr).clamp(0.0, 255.0) as u8;
+            target[ti + 1] = (val_g as f32 * iarr).clamp(0.0, 255.0) as u8;
+            target[ti + 2] = (val_b as f32 * iarr).clamp(0.0, 255.0) as u8;
             ti += 4;
         }
 
@@ -266,9 +266,9 @@ fn box_blur_horizontal(
             ri += 4;
             li += 4;
 
-            target[ti] = num::clamp(val_r as f32 * iarr, 0.0, 255.0) as u8;
-            target[ti + 1] = num::clamp(val_g as f32 * iarr, 0.0, 255.0) as u8;
-            target[ti + 2] = num::clamp(val_b as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti] = (val_r as f32 * iarr).clamp(0.0, 255.0) as u8;
+            target[ti + 1] = (val_g as f32 * iarr).clamp(0.0, 255.0) as u8;
+            target[ti + 2] = (val_b as f32 * iarr).clamp(0.0, 255.0) as u8;
             ti += 4;
         }
 
@@ -278,9 +278,9 @@ fn box_blur_horizontal(
             val_b += lv_b as i32 - src[li + 2] as i32;
             li += 4;
 
-            target[ti] = num::clamp(val_r as f32 * iarr, 0.0, 255.0) as u8;
-            target[ti + 1] = num::clamp(val_g as f32 * iarr, 0.0, 255.0) as u8;
-            target[ti + 2] = num::clamp(val_b as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti] = (val_r as f32 * iarr).clamp(0.0, 255.0) as u8;
+            target[ti + 1] = (val_g as f32 * iarr).clamp(0.0, 255.0) as u8;
+            target[ti + 2] = (val_b as f32 * iarr).clamp(0.0, 255.0) as u8;
             ti += 4;
         }
     }
@@ -324,9 +324,9 @@ fn box_blur_vertical(
             val_b += src[ri + 2] as i32 - fv_b;
             ri += width as usize * 4;
 
-            target[ti] = num::clamp(val_r as f32 * iarr, 0.0, 255.0) as u8;
-            target[ti + 1] = num::clamp(val_g as f32 * iarr, 0.0, 255.0) as u8;
-            target[ti + 2] = num::clamp(val_b as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti] = (val_r as f32 * iarr).clamp(0.0, 255.0) as u8;
+            target[ti + 1] = (val_g as f32 * iarr).clamp(0.0, 255.0) as u8;
+            target[ti + 2] = (val_b as f32 * iarr).clamp(0.0, 255.0) as u8;
             ti += width as usize * 4;
         }
 
@@ -337,9 +337,9 @@ fn box_blur_vertical(
             ri += width as usize * 4;
             li += width as usize * 4;
 
-            target[ti] = num::clamp(val_r as f32 * iarr, 0.0, 255.0) as u8;
-            target[ti + 1] = num::clamp(val_g as f32 * iarr, 0.0, 255.0) as u8;
-            target[ti + 2] = num::clamp(val_b as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti] = (val_r as f32 * iarr).clamp(0.0, 255.0) as u8;
+            target[ti + 1] = (val_g as f32 * iarr).clamp(0.0, 255.0) as u8;
+            target[ti + 2] = (val_b as f32 * iarr).clamp(0.0, 255.0) as u8;
             ti += width as usize * 4;
         }
 
@@ -349,9 +349,9 @@ fn box_blur_vertical(
             val_b += lv_b as i32 - src[li + 2] as i32;
             li += width as usize * 4;
 
-            target[ti] = num::clamp(val_r as f32 * iarr, 0.0, 255.0) as u8;
-            target[ti + 1] = num::clamp(val_g as f32 * iarr, 0.0, 255.0) as u8;
-            target[ti + 2] = num::clamp(val_b as f32 * iarr, 0.0, 255.0) as u8;
+            target[ti] = (val_r as f32 * iarr).clamp(0.0, 255.0) as u8;
+            target[ti + 1] = (val_g as f32 * iarr).clamp(0.0, 255.0) as u8;
+            target[ti + 2] = (val_b as f32 * iarr).clamp(0.0, 255.0) as u8;
             ti += width as usize * 4;
         }
     }

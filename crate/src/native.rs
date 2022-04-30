@@ -2,22 +2,19 @@
 //! Includes functions that open images from the file-system, etc.,
 
 use image::DynamicImage::ImageRgba8;
-use image::{GenericImageView, ImageBuffer, ImageError};
+use image::{GenericImageView, ImageBuffer};
 use std::io;
 // use wasm_bindgen::prelude::*;
 use crate::PhotonImage;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
-#[error(transparent)]
-pub struct OpenError(#[from] ImageError);
-
-#[derive(Debug, Error)]
-pub enum SaveError {
+pub enum Error {
     #[error(transparent)]
-    Io(#[from] io::Error),
-    #[error("Buffer size is not big enough")]
-    BufferSize,
+    ImageError(#[from] image::ImageError),
+
+    #[error(transparent)]
+    IoError(#[from] io::Error),
 }
 
 /// Open an image at a given path from the filesystem.
@@ -34,7 +31,7 @@ pub enum SaveError {
 ///
 /// // ... image editing functionality here ...
 /// ```
-pub fn open_image(img_path: &str) -> Result<PhotonImage, OpenError> {
+pub fn open_image(img_path: &str) -> Result<PhotonImage, Error> {
     let img = image::open(img_path)?;
 
     let (width, height) = img.dimensions();
@@ -62,11 +59,11 @@ pub fn open_image(img_path: &str) -> Result<PhotonImage, OpenError> {
 /// let buffer = std::fs::read("img.jpg").expect("File Should Open");
 ///
 /// // Open the image. A PhotonImage is returned.
-/// let img = open_image_from_bytes(buffer.as_slice()).expect("File should open");
+/// let img = open_image_from_bytes(buffer.as_slice()).expect("Buffer should be valid");
 ///
 /// // ... image editing functionality here ...
 /// ```
-pub fn open_image_from_bytes(buffer: &[u8]) -> Result<PhotonImage, OpenError> {
+pub fn open_image_from_bytes(buffer: &[u8]) -> Result<PhotonImage, Error> {
     let img = image::load_from_memory(buffer)?;
     let (width, height) = img.dimensions();
     let raw_pixels = img.to_rgba8().to_vec();
@@ -88,9 +85,9 @@ pub fn open_image_from_bytes(buffer: &[u8]) -> Result<PhotonImage, OpenError> {
 ///
 /// let img = open_image("img.jpg").expect("File should open");
 /// // Save the image at the given path.
-/// save_image(img,"manipulated_image.jpg");
+/// save_image(img,"manipulated_image.jpg").expect("Save failed");
 /// ```
-pub fn save_image(img: PhotonImage, img_path: &str) {
+pub fn save_image(img: PhotonImage, img_path: &str) -> Result<(), Error> {
     let raw_pixels = img.raw_pixels;
     let width = img.width;
     let height = img.height;
@@ -98,7 +95,8 @@ pub fn save_image(img: PhotonImage, img_path: &str) {
     let img_buffer = ImageBuffer::from_vec(width, height, raw_pixels).unwrap();
     let dynimage = ImageRgba8(img_buffer);
 
-    dynimage.save(img_path).unwrap();
+    dynimage.save(img_path)?;
+    Ok(())
 }
 
 /// Save the image to a vector of bytes

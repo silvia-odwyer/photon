@@ -297,7 +297,7 @@ pub fn decompose_max(img: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn grayscale_shades(mut photon_image: &mut PhotonImage, num_shades: u8) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let px = img.get_pixel(x, y);
@@ -393,7 +393,7 @@ pub fn b_grayscale(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn single_channel_grayscale(mut photon_image: &mut PhotonImage, channel: usize) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let px = img.get_pixel(x, y);

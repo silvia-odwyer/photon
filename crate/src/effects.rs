@@ -37,7 +37,7 @@ pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32)
         panic!("Invalid channel index passed. Channel1 must be equal to 0, 1, or 2.");
     }
 
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
     for x in 0..width - 10 {
@@ -172,7 +172,7 @@ pub fn multiple_offsets(
     if channel_index2 > 2 {
         panic!("Invalid channel index passed. Channel2 must be equal to 0, 1, or 2.");
     }
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
     for (x, y) in ImageIterator::new(width, height) {
@@ -198,7 +198,7 @@ pub fn multiple_offsets(
 
 /// Halftoning effect.
 pub fn halftone(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
     for x in (0..width - 4).step_by(2_usize) {
@@ -376,7 +376,7 @@ pub fn primary(img: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn colorize(mut photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     let threshold = 220;
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
@@ -415,7 +415,7 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
 
 // #[wasm_bindgen]
 // pub fn inc_luminosity(mut photon_image: PhotonImage) -> PhotonImage {
-//     let mut img = helpers::dyn_image_from_raw(&photon_image);
+//     let mut img = helpers::dyn_image_from_raw(photon_image);
 //     let (width, height) = img.dimensions();
 //     let mut min_intensity = 255;
 //     let mut max_intensity = 0;
@@ -506,7 +506,7 @@ pub fn solarize(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let mut px = img.get_pixel(x, y);
@@ -583,9 +583,9 @@ pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
 /// ```
 #[wasm_bindgen]
 pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
 
-    let clamped_contrast = num::clamp(contrast, -255.0, 255.0);
+    let clamped_contrast = contrast.clamp(-255.0, 255.0);
 
     // Some references:
     // https://math.stackexchange.com/questions/906240/algorithms-to-increase-or-decrease-the-contrast-of-an-image
@@ -597,7 +597,7 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
 
     for (i, table) in lookup_table.iter_mut().enumerate().take(256_usize) {
         let new_val = i as f32 * factor + offset;
-        *table = num::clamp(new_val, 0.0, 255.0) as u8;
+        *table = new_val.clamp(0.0, 255.0) as u8;
     }
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
@@ -641,7 +641,7 @@ pub fn tint(
     g_offset: u32,
     b_offset: u32,
 ) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let mut px = img.get_pixel(x, y);
@@ -679,7 +679,7 @@ fn draw_horizontal_strips(
     num_strips: u8,
     color: Rgb,
 ) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
     let total_strips = (num_strips * 2) - 1;
@@ -715,13 +715,13 @@ fn draw_horizontal_strips(
 /// ```
 ///
 #[wasm_bindgen]
-pub fn horizontal_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
+pub fn horizontal_strips(photon_image: &mut PhotonImage, num_strips: u8) {
     let color = Rgb {
         r: 255,
         g: 255,
         b: 255,
     };
-    draw_horizontal_strips(&mut photon_image, num_strips, color)
+    draw_horizontal_strips(photon_image, num_strips, color)
 }
 
 /// Horizontal strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
@@ -745,15 +745,15 @@ pub fn horizontal_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 ///
 #[wasm_bindgen]
 pub fn color_horizontal_strips(
-    mut photon_image: &mut PhotonImage,
+    photon_image: &mut PhotonImage,
     num_strips: u8,
     color: Rgb,
 ) {
-    draw_horizontal_strips(&mut photon_image, num_strips, color)
+    draw_horizontal_strips(photon_image, num_strips, color)
 }
 
 fn draw_vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8, color: Rgb) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
     let total_strips = (num_strips * 2) - 1;
@@ -789,13 +789,13 @@ fn draw_vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8, colo
 /// ```
 ///
 #[wasm_bindgen]
-pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
+pub fn vertical_strips(photon_image: &mut PhotonImage, num_strips: u8) {
     let color = Rgb {
         r: 255,
         g: 255,
         b: 255,
     };
-    draw_vertical_strips(&mut photon_image, num_strips, color)
+    draw_vertical_strips(photon_image, num_strips, color)
 }
 
 /// Vertical strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
@@ -819,11 +819,11 @@ pub fn vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8) {
 ///
 #[wasm_bindgen]
 pub fn color_vertical_strips(
-    mut photon_image: &mut PhotonImage,
+    photon_image: &mut PhotonImage,
     num_strips: u8,
     color: Rgb,
 ) {
-    draw_vertical_strips(&mut photon_image, num_strips, color)
+    draw_vertical_strips(photon_image, num_strips, color)
 }
 
 struct Intensity {
@@ -851,7 +851,7 @@ struct Intensity {
 ///
 #[wasm_bindgen]
 pub fn oil(mut photon_image: &mut PhotonImage, radius: i32, intensity: f64) {
-    let img = helpers::dyn_image_from_raw(&photon_image);
+    let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
     let mut target = image::DynamicImage::new_rgba8(width, height);
     let mut pixel_intensity_count: HashMap<usize, Intensity>;
@@ -983,6 +983,121 @@ pub fn frosted_glass(photon_image: &mut PhotonImage) {
 
     photon_image.raw_pixels = img_buf;
 }
+
+/// Pixelize an image.
+///
+/// # Arguments
+/// * `photon_image` - A PhotonImage that contains a view into the image.
+/// * `pixel_size` - Targeted pixel size of generated image.
+/// # Example
+///
+/// ```no_run
+/// // For example, to turn an image of type `PhotonImage` into a pixelized image with 50 pixels blocks:
+/// use photon_rs::effects::pixelize;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// pixelize(&mut img, 50);
+/// ```
+///
+#[wasm_bindgen]
+pub fn pixelize(photon_image: &mut PhotonImage, pixel_size: i32) {
+    let step_size = pixel_size.max(0) as usize;
+    if step_size <= 1 {
+        return;
+    }
+
+    let buf = photon_image.raw_pixels.as_mut_slice();
+    let width = photon_image.width as usize;
+    let height = photon_image.height as usize;
+
+    for sy in (0..height).step_by(step_size) {
+        let src_row_index = sy * width;
+
+        for sx in (0..width).step_by(step_size) {
+            let src_index = 4 * (src_row_index + sx);
+            let block_end_y = (sy + step_size).min(height);
+            let block_end_x = (sx + step_size).min(width);
+
+            for dy in sy..block_end_y {
+                let dst_row_index = dy * width;
+
+                for dx in sx..block_end_x {
+                    let dst_index = 4 * (dst_row_index + dx);
+                    buf[dst_index] = buf[src_index];
+                    buf[dst_index + 1] = buf[src_index + 1];
+                    buf[dst_index + 2] = buf[src_index + 2];
+                    buf[dst_index + 3] = buf[src_index + 3];
+                }
+            }
+        }
+    }
+}
+
+/// Normalizes an image by remapping its range of pixels values. Only RGB
+/// channels are processed and each channel is stretched to \[0, 255\] range
+/// independently. This process is also known as contrast stretching.
+/// # Arguments
+/// * `photon_image` - A PhotonImage that contains a view into the image.
+/// # Example
+///
+/// ```no_run
+/// // For example, to turn an image of type `PhotonImage` into a normalized image:
+/// use photon_rs::effects::normalize;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// normalize(&mut img);
+/// ```
+///
+#[wasm_bindgen]
+pub fn normalize(photon_image: &mut PhotonImage) {
+    let buf = photon_image.raw_pixels.as_mut_slice();
+    let buf_size = buf.len();
+
+    let mut min_rgb = Rgb::new(255, 255, 255);
+    let mut max_rgb = Rgb::new(0, 0, 0);
+
+    for i in (0..buf_size).step_by(4) {
+        let r = buf[i];
+        let g = buf[i + 1];
+        let b = buf[i + 2];
+
+        min_rgb.r = min_rgb.r.min(r);
+        min_rgb.g = min_rgb.g.min(g);
+        min_rgb.b = min_rgb.b.min(b);
+
+        max_rgb.r = max_rgb.r.max(r);
+        max_rgb.g = max_rgb.g.max(g);
+        max_rgb.b = max_rgb.b.max(b);
+    }
+
+    let min_r = min_rgb.r as i32;
+    let min_g = min_rgb.g as i32;
+    let min_b = min_rgb.b as i32;
+    let delta_r = (max_rgb.r as i32) - min_r;
+    let delta_g = (max_rgb.g as i32) - min_g;
+    let delta_b = (max_rgb.b as i32) - min_b;
+
+    for i in (0..buf_size).step_by(4) {
+        let r = buf[i] as i32;
+        let g = buf[i + 1] as i32;
+        let b = buf[i + 2] as i32;
+
+        if delta_r > 0 {
+            buf[i] = (((r - min_r) * 255) / delta_r) as u8;
+        }
+
+        if delta_b > 0 {
+            buf[i + 1] = (((g - min_g) * 255) / delta_g) as u8;
+        }
+
+        if delta_b > 0 {
+            buf[i + 2] = (((b - min_b) * 255) / delta_b) as u8;
+        }
+    }
+}
+
 // pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
 //     println!("hi");
 //     println!("{}", color_a.get_red());

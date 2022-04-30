@@ -27,7 +27,7 @@ body {
 
 .main {
   margin-left: 40vh;
-  padding: 0px 10px;
+  padding: 0 10px;
   background-color: rgb(34, 34, 34);
 }
 
@@ -111,7 +111,7 @@ h4 {
 }
 
 .content {
-  grid-area: "main_left";
+  grid-area: mainLeft;
   width: 80%;
   
 }
@@ -119,14 +119,14 @@ h4 {
 .benchmarks {
   color: white;
   font-size: 2em;
-  grid-area: "main_right";
+  grid-area: mainRight;
 }
 
 .main_content {
   display: grid;
   grid-template-columns: 75% 25%;
   grid-template-rows: auto;
-  grid-template-areas: "main_left main_right";
+  grid-template-areas: "mainLeft mainRight";
 }
 
 
