@@ -142,7 +142,7 @@ impl PhotonImage {
 
     /// Convert the PhotonImage to raw bytes.
     pub fn get_bytes(&self) -> Vec<u8> {
-        let mut img = helpers::dyn_image_from_raw(&self);
+        let mut img = helpers::dyn_image_from_raw(self);
         img = ImageRgba8(img.to_rgba8());
         img.to_bytes()
     }

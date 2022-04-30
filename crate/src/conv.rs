@@ -218,7 +218,7 @@ fn box_blur_inner(
 
 fn box_blur_horizontal(
     src: &[u8],
-    target: &mut Vec<u8>,
+    target: &mut [u8],
     width: u32,
     height: u32,
     radius: i32,
@@ -288,7 +288,7 @@ fn box_blur_horizontal(
 
 fn box_blur_vertical(
     src: &[u8],
-    target: &mut Vec<u8>,
+    target: &mut [u8],
     width: u32,
     height: u32,
     radius: i32,
