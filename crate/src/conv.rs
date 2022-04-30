@@ -204,8 +204,8 @@ fn boxes_for_gauss(sigma: f32, n: usize) -> Vec<i32> {
 }
 
 fn box_blur_inner(
-    src: &mut Vec<u8>,
-    target: &mut Vec<u8>,
+    src: &mut [u8],
+    target: &mut [u8],
     width: u32,
     height: u32,
     radius: i32,
@@ -218,7 +218,7 @@ fn box_blur_inner(
 
 fn box_blur_horizontal(
     src: &[u8],
-    target: &mut Vec<u8>,
+    target: &mut [u8],
     width: u32,
     height: u32,
     radius: i32,
@@ -288,7 +288,7 @@ fn box_blur_horizontal(
 
 fn box_blur_vertical(
     src: &[u8],
-    target: &mut Vec<u8>,
+    target: &mut [u8],
     width: u32,
     height: u32,
     radius: i32,

@@ -140,6 +140,13 @@ impl PhotonImage {
         res_base64
     }
 
+    /// Convert the PhotonImage to raw bytes.
+    pub fn get_bytes(&self) -> Vec<u8> {
+        let mut img = helpers::dyn_image_from_raw(self);
+        img = ImageRgba8(img.to_rgba8());
+        img.to_bytes()
+    }
+
     /// Convert the PhotonImage's raw pixels to JS-compatible ImageData.
     #[allow(clippy::unnecessary_mut_passed)]
     pub fn get_image_data(&mut self) -> ImageData {
