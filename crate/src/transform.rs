@@ -7,6 +7,8 @@ use image::imageops::FilterType;
 use image::DynamicImage::ImageRgba8;
 use image::RgbaImage;
 use image::{GenericImageView, ImageBuffer};
+use std::cmp::max;
+use std::cmp::min;
 use wasm_bindgen::prelude::*;
 
 #[cfg(target_arch = "wasm32")]
@@ -575,4 +577,142 @@ pub fn padding_bottom(
     }
 
     PhotonImage::new(img_padded_buffer, img_width, height_padded)
+}
+
+/// Rotate the PhotonImage on an arbitrary angle
+/// A rotated PhotonImage is returned.
+/// # NOTE: This is a naive implementation. Paeth rotation should be faster.
+///
+/// # Arguments
+/// * `img` - A PhotonImage. See the PhotonImage struct for details.
+/// * `angle` - Rotation angle in degrees.
+///
+/// # Example
+///
+/// ```no_run
+/// // For example, to rotate a PhotonImage by 30 degrees:
+/// use photon_rs::native::open_image;
+/// use photon_rs::transform::rotate;
+///
+/// let img = open_image("img.jpg").expect("File should open");
+/// let rotated_img = rotate(&img, 30);
+/// ```
+#[wasm_bindgen]
+pub fn rotate(img: &PhotonImage, angle: i32) -> PhotonImage {
+    // 390, 750 and 30 degrees represent the same angle. Trim 360.
+    let full_circle_count = angle / 360;
+    let normalized_angle = angle - full_circle_count * 360;
+    if normalized_angle == 0 {
+        return img.clone();
+    }
+
+    // Count the number of rotations by right angle and apply them via rotate90 if necessary.
+    let right_angle_count = normalized_angle / 90;
+    let mut rgba_img: RgbaImage = ImageBuffer::from_raw(
+        img.get_width(),
+        img.get_height(),
+        img.raw_pixels.to_vec(),
+    )
+    .unwrap();
+    for _ in 0..right_angle_count {
+        rgba_img = image::imageops::rotate90(&rgba_img);
+    }
+
+    let dynimage = ImageRgba8(rgba_img);
+    let raw_pixels = dynimage.to_bytes();
+    let src_width = dynimage.width();
+    let src_height = dynimage.height();
+
+    let angle_deg = normalized_angle - right_angle_count * 90;
+    if angle_deg == 0 {
+        return PhotonImage {
+            raw_pixels,
+            width: src_width,
+            height: src_height,
+        };
+    }
+
+    // Convert degrees to radians and calculate sine and cosine parts.
+    let angle_rad = angle_deg as f64 * std::f64::consts::PI / 180.0;
+    let cosine = angle_rad.cos();
+    let sine = angle_rad.sin();
+
+    // Move (0, 0) point to (w / 2, h / 2) in order to rotate around the centre.
+    let src_centre_x = src_width / 2;
+    let src_centre_y = src_height / 2;
+    let src_centre_x_f64 = src_centre_x as f64;
+    let src_centre_y_f64 = src_centre_y as f64;
+
+    // (-cx, cy) corner will contain the leftmost x after the rotation.
+    let leftmost_pos = -1.0 * src_centre_x_f64 * cosine - src_centre_y_f64 * sine;
+    let leftmost_pos = leftmost_pos.floor() as i32;
+
+    // (cx, -cy) corner will contain the rightmost x after the rotation.
+    let rightmost_pos = src_centre_x_f64 * cosine + src_centre_y_f64 as f64 * sine;
+    let rightmost_pos = rightmost_pos.floor() as i32;
+
+    // (-cx, -cy) corner will contain the least y after the rotation.
+    let bottom_pos = -1.0 * src_centre_x_f64 * sine - src_centre_y_f64 * cosine;
+    let bottom_pos = bottom_pos.floor() as i32;
+
+    // (cx, cy) corner will contain the largest y after the rotation.
+    let top_pos = src_centre_x_f64 * sine + src_centre_y_f64 * cosine;
+    let top_pos = top_pos.floor() as i32;
+
+    // Move (0, 0) point to (w / 2, h / 2) target image as well.
+    let dst_width = rightmost_pos - leftmost_pos;
+    let dst_width = dst_width as u32;
+    let dst_height = top_pos - bottom_pos;
+    let dst_height = dst_height as u32;
+    let dst_centre_x = dst_width / 2;
+    let dst_centre_y = dst_height / 2;
+
+    // Allocate destination buffer.
+    let channel_count = 4;
+    let mut result = Vec::<u8>::new();
+    let total_dst_size = (dst_width * dst_height * channel_count)
+        .try_into()
+        .expect("Failed to calculate destination size");
+    result.resize(total_dst_size, 0);
+
+    // Calculate source and target strides.
+    let stride_chan = 1;
+    let src_stride_col = channel_count * stride_chan;
+    let src_stride_row = src_width * src_stride_col;
+    let dst_stride_col = channel_count * stride_chan;
+    let dst_stride_row = dst_width * dst_stride_col;
+
+    for row in 0..src_height {
+        for col in 0..src_width {
+            // Rows and columns are counted from 0 to width and height.
+            // In order to get coordinates relative to (w / 2, h / 2) subtract centre point.
+            let src_x = (col as i32 - src_centre_x as i32) as f64;
+            let src_y = (row as i32 - src_centre_y as i32) as f64;
+
+            // Rotation.
+            let dst_x = src_x * cosine - src_y * sine + dst_centre_x as f64;
+            let dst_x = dst_x.floor() as u32;
+            let dst_x = max(0, dst_x);
+            let dst_x = min(dst_width - 1, dst_x);
+
+            let dst_y = src_x * sine + src_y * cosine + dst_centre_y as f64;
+            let dst_y = dst_y.floor() as u32;
+            let dst_y = max(0, dst_y);
+            let dst_y = min(dst_height - 1, dst_y);
+
+            // Translate coordinates to the buffer offsets.
+            let src_idx = (row * src_stride_row + col * src_stride_col) as usize;
+            let dst_idx = (dst_y * dst_stride_row + dst_x * dst_stride_col) as usize;
+
+            for chan in 0..channel_count {
+                let chan = chan as usize;
+                result[dst_idx + chan] = raw_pixels[src_idx + chan];
+
+                // FIXME apply proper interpolation
+                result[dst_idx + 4 + chan] = raw_pixels[src_idx + chan];
+            }
+        }
+    }
+
+    PhotonImage::new(result, dst_width, dst_height)
 }
