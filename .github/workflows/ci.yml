@@ -64,18 +64,3 @@ jobs:
         with:
           command: clippy
           args: --all-features -- -D warnings
-  wasm32:
-    name: Wasm32 check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          target: wasm32-unknown-unknown
-          toolchain: stable
-          override: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: check
-          args: --all-features --benches --bins --examples --tests
