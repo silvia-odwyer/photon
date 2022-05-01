@@ -29,6 +29,6 @@ jobs:
       - run: wasm-pack build ./crate
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.3.3
-        env:
+        with:
           branch: compiled-wasm
           folder: crate/pkg
