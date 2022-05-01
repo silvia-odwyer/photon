@@ -28,7 +28,7 @@ jobs:
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
       - run: wasm-pack build ./crate
       - name: Deploy
-        uses: s0/git-publish-subdir-action@develop
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
         env:
           REPO: self
           BRANCH: compiled-wasm
