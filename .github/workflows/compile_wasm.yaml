@@ -30,7 +30,5 @@ jobs:
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         env:
-          REPO: self
-          BRANCH: compiled-wasm
-          FOLDER: crate/pkg
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          branch: compiled-wasm
+          folder: crate/pkg
