@@ -3,6 +3,7 @@
 use crate::helpers;
 use crate::PhotonImage;
 use image::DynamicImage::ImageRgba8;
+use std::cmp::min;
 use wasm_bindgen::prelude::*;
 
 type Kernel = [f32; 9];
@@ -160,6 +161,17 @@ pub fn gaussian_blur(photon_image: &mut PhotonImage, radius: i32) {
     let height = photon_image.get_height();
     let mut target: Vec<u8> = src.clone();
 
+    // Clamp radius value when it exceeds width or height.
+    // Divide by 2 since maximal radius must satisfy these conditions:
+    // rad + ((w - 1) * h) + rad < w * h
+    // rad + ((h - 1) * w) + rad < w * h
+    // After all transformations they become:
+    // rad < h / 2
+    // rad < w / 2
+    // Subtract 1 because the inequalies are strict.
+    let radius = min(width as i32 / 2 - 1, radius);
+    let radius = min(height as i32 / 2 - 1, radius);
+
     let bxs = boxes_for_gauss(radius as f32, 3);
     box_blur_inner(&mut src, &mut target, width, height, (bxs[0] - 1) / 2);
     box_blur_inner(&mut target, &mut src, width, height, (bxs[1] - 1) / 2);
@@ -204,8 +216,8 @@ fn boxes_for_gauss(sigma: f32, n: usize) -> Vec<i32> {
 }
 
 fn box_blur_inner(
-    src: &mut Vec<u8>,
-    target: &mut Vec<u8>,
+    src: &mut [u8],
+    target: &mut [u8],
     width: u32,
     height: u32,
     radius: i32,
@@ -218,7 +230,7 @@ fn box_blur_inner(
 
 fn box_blur_horizontal(
     src: &[u8],
-    target: &mut Vec<u8>,
+    target: &mut [u8],
     width: u32,
     height: u32,
     radius: i32,
@@ -288,7 +300,7 @@ fn box_blur_horizontal(
 
 fn box_blur_vertical(
     src: &[u8],
-    target: &mut Vec<u8>,
+    target: &mut [u8],
     width: u32,
     height: u32,
     radius: i32,
