@@ -140,11 +140,24 @@ impl PhotonImage {
         res_base64
     }
 
-    /// Convert the PhotonImage to raw bytes.
+    /// Convert the PhotonImage to raw bytes. Returns JPEG.
     pub fn get_bytes(&self) -> Vec<u8> {
         let mut img = helpers::dyn_image_from_raw(self);
         img = ImageRgba8(img.to_rgba8());
-        img.to_bytes()
+        let mut buffer = vec![];
+        img.write_to(&mut buffer, image::ImageOutputFormat::Png)
+            .unwrap();
+        buffer
+    }
+
+    /// Convert the PhotonImage to raw bytes. Returns a JPEG.
+    pub fn get_bytes_jpeg(&self, quality: u8) -> Vec<u8> {
+        let mut img = helpers::dyn_image_from_raw(self);
+        img = ImageRgba8(img.to_rgba8());
+        let mut buffer = vec![];
+        let out_format = image::ImageOutputFormat::Jpeg(quality);
+        img.write_to(&mut buffer, out_format).unwrap();
+        buffer
     }
 
     /// Convert the PhotonImage's raw pixels to JS-compatible ImageData.
