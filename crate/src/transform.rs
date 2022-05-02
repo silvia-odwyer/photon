@@ -606,8 +606,15 @@ pub fn rotate(img: &PhotonImage, angle: i32) -> PhotonImage {
         return img.clone();
     }
 
+    // Handle negative angles. -80 describes the same angle as 360 - 80 = 280.
+    let positive_angle = if normalized_angle < 0 {
+        normalized_angle + 360
+    } else {
+        normalized_angle
+    };
+
     // Count the number of rotations by right angle and apply them via rotate90 if necessary.
-    let right_angle_count = normalized_angle / 90;
+    let right_angle_count = positive_angle / 90;
     let mut rgba_img: RgbaImage = ImageBuffer::from_raw(
         img.get_width(),
         img.get_height(),
@@ -623,7 +630,7 @@ pub fn rotate(img: &PhotonImage, angle: i32) -> PhotonImage {
     let src_width = dynimage.width();
     let src_height = dynimage.height();
 
-    let angle_deg = normalized_angle - right_angle_count * 90;
+    let angle_deg = positive_angle - right_angle_count * 90;
     if angle_deg == 0 {
         return PhotonImage {
             raw_pixels,
