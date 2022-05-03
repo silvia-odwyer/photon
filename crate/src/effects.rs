@@ -19,6 +19,7 @@ use wasm_bindgen::prelude::*;
 ///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
+/// * `channel_index`: The index of the channel to increment. 0 for red, 1 for green and 2 for blue.
 /// * `offset` - The offset is added to the pixels in the image.
 /// # Example
 ///
@@ -701,11 +702,11 @@ fn draw_horizontal_strips(
 ///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
-/// * `num_strips` - The numbder of strips
+/// * `num_strips` - The number of strips
 /// # Example
 ///
 /// ```no_run
-/// // For example, to oil an image of type `PhotonImage`:
+/// // For example, to draw horizontal strips on a `PhotonImage`:
 /// use photon_rs::effects::horizontal_strips;
 /// use photon_rs::native::open_image;
 ///
@@ -732,7 +733,7 @@ pub fn horizontal_strips(photon_image: &mut PhotonImage, num_strips: u8) {
 /// # Example
 ///
 /// ```no_run
-/// // For example, to oil an image of type `PhotonImage`:
+/// // For example, to draw blue horizontal strips on a `PhotonImage`:
 /// use photon_rs::effects::color_horizontal_strips;
 /// use photon_rs::native::open_image;
 /// use photon_rs::Rgb;
@@ -779,7 +780,7 @@ fn draw_vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8, colo
 /// # Example
 ///
 /// ```no_run
-/// // For example, to oil an image of type `PhotonImage`:
+/// // For example, to draw vertical strips on a `PhotonImage`:
 /// use photon_rs::effects::vertical_strips;
 /// use photon_rs::native::open_image;
 ///
@@ -806,7 +807,7 @@ pub fn vertical_strips(photon_image: &mut PhotonImage, num_strips: u8) {
 /// # Example
 ///
 /// ```no_run
-/// // For example, to oil an image of type `PhotonImage`:
+/// // For example, to draw red vertical strips on a `PhotonImage`:
 /// use photon_rs::effects::color_vertical_strips;
 /// use photon_rs::native::open_image;
 /// use photon_rs::Rgb;
