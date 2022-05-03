@@ -1,0 +1,37 @@
+on: push
+
+name: Wasm testing and building
+
+jobs:
+  wasm32:
+    name: Wasm32 check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          target: wasm32-unknown-unknown
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: check
+          args: --all-features --benches --bins --examples --tests
+  build_wasm:
+    name: Build Wasm Module
+    runs-on: ubuntu-latest
+    needs: wasm32
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      - run: wasm-pack build --target nodejs --out-name photon-node ./crate
+      - run: rm ./crate/pkg/.gitignore
+      - name: Deploy
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: compiled-wasm
+          FOLDER: crate/pkg
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
