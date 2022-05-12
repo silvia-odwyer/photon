@@ -1098,6 +1098,83 @@ pub fn normalize(photon_image: &mut PhotonImage) {
     }
 }
 
+/// Applies Floyd-Steinberg dithering to an image.
+/// Only RGB channels are processed, alpha remains unchanged.
+/// # Arguments
+/// * `photon_image` - A PhotonImage that contains a view into the image.
+/// * `depth` - bits per channel. Clamped between 1 and 8.
+/// # Example
+///
+/// ```no_run
+/// // For example, to turn an image of type `PhotonImage` into a dithered image:
+/// use photon_rs::effects::dither;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// let depth = 1;
+/// dither(&mut img, depth);
+/// ```
+///
+#[wasm_bindgen]
+pub fn dither(photon_image: &mut PhotonImage, depth: u32) {
+    let width = photon_image.get_width() as usize;
+    let height = photon_image.get_height() as usize;
+    let buf = photon_image.raw_pixels.as_mut_slice();
+    let channels = 4;
+    let chan_stride = 1;
+    let col_stride = chan_stride * channels;
+    let row_stride = col_stride * width;
+
+    // Depth basically specifies the number of colours, e.g. when depth is 1,
+    // than means monochrome values in each channel:
+    // Number of colours = 2 ^ depth = 2 ^ 1 = 2
+    // In order to resample pixel, the original value must be downscaled to [0..colours] range
+    // (divide by the quant rate) and then upscaled back to [0..255] (multiply by the rate).
+    let depth = depth.clamp(1, 8);
+    let num_colours = u16::pow(2, depth);
+    let quant_rate = (256_u16 / num_colours) as u8;
+    let mut lookup_table: Vec<u8> = vec![0; 256];
+    for (tbl_idx, table) in lookup_table.iter_mut().enumerate().take(256_usize) {
+        let downscaled_val = (tbl_idx as u8) / quant_rate;
+        let upscaled_val = downscaled_val * quant_rate;
+        *table = upscaled_val.clamp(0, 255) as u8;
+    }
+
+    for row in 0..height - 1 {
+        for col in 0..width - 1 {
+            for chan in 0..channels - 1 {
+                let buf_idx = row * row_stride + col * col_stride + chan * chan_stride;
+                let old_pixel = buf[buf_idx];
+                let new_pixel = lookup_table[old_pixel as usize];
+
+                buf[buf_idx] = new_pixel;
+
+                let quant_error = (old_pixel as i16) - (new_pixel as i16);
+
+                let buf_idx =
+                    row * row_stride + (col + 1) * col_stride + chan * chan_stride;
+                let new_pixel = (buf[buf_idx] as i16) + (quant_error * 7) / 16;
+                buf[buf_idx] = new_pixel.clamp(0, 255) as u8;
+
+                let buf_idx = (row + 1) * row_stride + col * col_stride - col_stride
+                    + chan * chan_stride;
+                let new_pixel = (buf[buf_idx] as i16) + (quant_error * 3) / 16;
+                buf[buf_idx] = new_pixel.clamp(0, 255) as u8;
+
+                let buf_idx =
+                    (row + 1) * row_stride + col * col_stride + chan * chan_stride;
+                let new_pixel = (buf[buf_idx] as i16) + (quant_error * 5) / 16;
+                buf[buf_idx] = new_pixel.clamp(0, 255) as u8;
+
+                let buf_idx =
+                    (row + 1) * row_stride + (col + 1) * col_stride + chan * chan_stride;
+                let new_pixel = (buf[buf_idx] as i16) + quant_error / 16;
+                buf[buf_idx] = new_pixel.clamp(0, 255) as u8;
+            }
+        }
+    }
+}
+
 // pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
 //     println!("hi");
 //     println!("{}", color_a.get_red());
