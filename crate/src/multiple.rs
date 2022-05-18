@@ -7,6 +7,7 @@ use image::DynamicImage::ImageRgba8;
 use image::Pixel as ImagePixel;
 use image::{DynamicImage, GenericImageView, RgbaImage};
 use palette::{Blend, Gradient, Lab, Lch, LinSrgba, Srgb, Srgba};
+use std::cmp::{max, min};
 use wasm_bindgen::prelude::*;
 
 /// Add a watermark to an image.
@@ -263,4 +264,278 @@ pub fn apply_gradient(image: &mut PhotonImage) {
     let gradient = create_gradient(image.width, image.height);
 
     blend(image, &gradient, "overlay");
+}
+
+/// Build a simple horizontal gradient.
+fn build_horizontal_gradient(
+    width: usize,
+    height: usize,
+    start_x: i32,
+    end_x: i32,
+) -> Vec<f32> {
+    let min_x = min(start_x, end_x);
+    let max_x = max(start_x, end_x);
+    let total_grad_len = max_x - min_x;
+    let total_size = width * height;
+    let mut gradient = std::iter::repeat(0.0).take(total_size).collect::<Vec<_>>();
+    if total_grad_len <= 0 {
+        // Nothing to do. Return a vector filled with zeros.
+        return gradient;
+    }
+
+    // Fill every column from 0 to the leftmost x with zeros.
+    for row in 0..height {
+        for col in 0..min_x {
+            let pos = row * width + col as usize;
+            gradient[pos] = 0.0;
+        }
+    }
+
+    // Fill every column from the rightmost x to image width with ones.
+    // If the rightmost x is less than 0, start with 0.
+    let first_col = max(max_x, 0) as usize;
+    for row in 0..height {
+        for col in first_col..width {
+            let pos = row * width + col;
+            gradient[pos] = 1.0;
+        }
+    }
+
+    // Build gradient between the leftmost and the rightmost x.
+    // Clamp values in such a way that they belong to the visible area.
+    let first_col = max(min_x, 0);
+    let last_col = min(max_x, width as i32);
+    for row in 0..height {
+        for col in first_col..last_col {
+            let pos = row * width + col as usize;
+            let total_len_f32 = total_grad_len as f32;
+            let column_f32 = (col - min_x) as f32;
+            gradient[pos] = (column_f32 / total_len_f32).clamp(0.0, 1.0);
+        }
+    }
+
+    // Inverse values when start_x is on the right.
+    if start_x > end_x {
+        gradient.iter_mut().for_each(|grad| *grad = 1.0 - *grad);
+    }
+
+    gradient
+}
+
+/// Build a simple vertical gradient.
+fn build_vertical_gradient(
+    width: usize,
+    height: usize,
+    start_y: i32,
+    end_y: i32,
+) -> Vec<f32> {
+    let min_y = min(start_y, end_y);
+    let max_y = max(start_y, end_y);
+    let total_grad_len = max_y - min_y;
+    let total_size = width * height;
+    let mut gradient = std::iter::repeat(0.0).take(total_size).collect::<Vec<_>>();
+    if total_grad_len <= 0 {
+        // Nothing to do. Return a vector filled with zeros.
+        return gradient;
+    }
+
+    // Fill every row from 0 to the top y with zeros.
+    for row in 0..min_y {
+        for col in 0..width {
+            let pos = (row as usize) * width + col;
+            gradient[pos] = 0.0;
+        }
+    }
+
+    // Fill every row from the bottom y to image height with ones.
+    // If the bottom y is less than 0, start with 0.
+    let first_row = max(max_y, 0) as usize;
+    for row in first_row..height {
+        for col in 0..width {
+            let pos = row * width + col;
+            gradient[pos] = 1.0;
+        }
+    }
+
+    // Build gradient between the top and the bottom y.
+    // Clamp values in such a way that they belong to the visible area.
+    let first_row = max(min_y, 0);
+    let last_row = min(max_y, height as i32);
+    for row in first_row..last_row {
+        for col in 0..width {
+            let pos = (row as usize) * width + col;
+            let total_len_f32 = total_grad_len as f32;
+            let row_f32 = (row - min_y) as f32;
+            gradient[pos] = (row_f32 / total_len_f32).clamp(0.0, 1.0);
+        }
+    }
+
+    // Inverse values when start_y is at the bottom.
+    if start_y > end_y {
+        gradient.iter_mut().for_each(|grad| *grad = 1.0 - *grad);
+    }
+
+    gradient
+}
+
+/// Build an axial gradient.
+fn build_axial_gradient(
+    width: usize,
+    height: usize,
+    start_x: i32,
+    end_x: i32,
+    start_y: i32,
+    end_y: i32,
+) -> Vec<f32> {
+    let len_x = (end_x - start_x) as f32;
+    let len_y = (end_y - start_y) as f32;
+    let total_grad_len = (len_x * len_x + len_y * len_y).sqrt();
+
+    let total_size = width * height;
+    let mut gradient = std::iter::repeat(0.0).take(total_size).collect::<Vec<_>>();
+    if total_grad_len <= 0.0 {
+        // Nothing to do. Return a vector filled with zeros.
+        return gradient;
+    }
+
+    let min_x = min(start_x, end_x) as f32;
+    let max_x = max(start_x, end_x) as f32;
+    let min_y = min(start_y, end_y) as f32;
+    let max_y = max(start_y, end_y) as f32;
+    let len_x_sq = len_x * len_x;
+    let len_y_sq = len_y * len_y;
+    let start_x_f32 = start_x as f32;
+    let start_y_f32 = start_y as f32;
+
+    // Build gradient between start_x, end_x, start_y and end_y.
+    // The idea is to find the foot of perpendicular from each point to the gradient line.
+    // If the foot belongs to the gradient line, find the distance from (start_x, start_y)
+    // to the foot point and divide it by total gradient length.
+    // If the foot exceeds gradient line bounds, fill it with zeros or ones in accordance with
+    // the direction of gradient vector.
+    for row in 0..height {
+        for col in 0..width {
+            let pos = row * width + col;
+            let col_f32 = col as f32;
+            let row_f32 = row as f32;
+            let foot_x = (start_x_f32 * len_y_sq
+                + col_f32 * len_x_sq
+                + len_x * len_y * (row_f32 - start_y_f32))
+                / (len_y_sq + len_x_sq);
+            let foot_y = (len_x * (col_f32 - foot_x)) / len_y + row_f32;
+
+            // Check that found coordinates do not exceed gradient bounds.
+            if min_x <= foot_x && foot_x <= max_x && min_y <= foot_y && foot_y <= max_y {
+                let norm_x = foot_x - start_x_f32;
+                let norm_y = foot_y - start_y_f32;
+                let grad_dist = (norm_x * norm_x + norm_y * norm_y).sqrt();
+                let total_len_f32 = total_grad_len as f32;
+                gradient[pos] = (grad_dist / total_len_f32).clamp(0.0, 1.0);
+            } else {
+                let fill_bottom_right =
+                    start_x < end_x && start_y < end_y && foot_x > max_x;
+                let fill_bottom_left =
+                    start_x > end_x && start_y < end_y && foot_x < min_x;
+                let fill_top_right =
+                    start_x < end_x && start_y > end_y && foot_y < min_y;
+                let fill_top_left = start_x > end_x && start_y > end_y && foot_y < min_y;
+                if fill_bottom_right
+                    || fill_bottom_left
+                    || fill_top_right
+                    || fill_top_left
+                {
+                    gradient[pos] = 1.0;
+                }
+            }
+        }
+    }
+
+    gradient
+}
+
+/// Fades one image into another.
+///
+/// For horizontal fading, set both `start_y` and `end_y` to the same value.
+/// For vertical fading, set both `start_x` and `end_x` to the same value.
+/// Otherwise, axial fading is applied.
+///
+/// # Arguments
+/// * `img1` - Image to fade from. Must be the same size as img2.
+/// * `img2` - Image to fade to. Must be the same size as img1.
+/// * `start_x` - Column where the fading begins.
+/// * `end_x` - Column where the fading ends.
+/// * `start_y` - Row where the fading begins.
+/// * `end_y` - Row where the fading ends.
+/// # Example
+///
+/// ```no_run
+/// use photon_rs::multiple::fade;
+/// use photon_rs::native::open_image;
+///
+/// let img1 = open_image("img1.jpg").expect("File should open");
+/// let img2 = open_image("img2.jpg").expect("File should open");
+/// let _faded_img = fade(&img1, &img2, 0, 100, 0, 100);
+/// ```
+pub fn fade(
+    img1: &PhotonImage,
+    img2: &PhotonImage,
+    start_x: i32,
+    end_x: i32,
+    start_y: i32,
+    end_y: i32,
+) -> PhotonImage {
+    if img1.width != img2.width || img1.height != img2.height {
+        panic!("Images must have the same size.");
+    }
+
+    let width = img1.width as usize;
+    let height = img1.height as usize;
+
+    let buf_img1 = &img1.raw_pixels;
+    let buf_img2 = &img2.raw_pixels;
+    let mut buf_res = Vec::with_capacity(width * height * 4);
+
+    // Determine, which gradient must be built.
+    let gradient = if end_y == start_y {
+        build_horizontal_gradient(width, height, start_x, end_x)
+    } else if start_x == end_x {
+        build_vertical_gradient(width, height, start_y, end_y)
+    } else {
+        build_axial_gradient(width, height, start_x, end_x, start_y, end_y)
+    };
+
+    for row in 0..height {
+        for col in 0..width {
+            let grad_idx = (row * width + col) as usize;
+            let opacity_img1 = gradient[grad_idx];
+            let opacity_img2 = 1.0 - opacity_img1;
+
+            let buf_idx = (row * width * 4 + col * 4) as usize;
+
+            let img1_r = buf_img1[buf_idx] as f32;
+            let img1_g = buf_img1[buf_idx + 1] as f32;
+            let img1_b = buf_img1[buf_idx + 2] as f32;
+
+            let img2_r = buf_img2[buf_idx] as f32;
+            let img2_g = buf_img2[buf_idx + 1] as f32;
+            let img2_b = buf_img2[buf_idx + 2] as f32;
+
+            let res_r = ((img1_r * opacity_img1) + (img2_r * opacity_img2))
+                .clamp(0.0, 255.0) as u8;
+            let res_g = ((img1_g * opacity_img1) + (img2_g * opacity_img2))
+                .clamp(0.0, 255.0) as u8;
+            let res_b = ((img1_b * opacity_img1) + (img2_b * opacity_img2))
+                .clamp(0.0, 255.0) as u8;
+
+            // Set alpha channel to 100%.
+            let res_a = 255;
+
+            buf_res.push(res_r);
+            buf_res.push(res_g);
+            buf_res.push(res_b);
+            buf_res.push(res_a);
+        }
+    }
+
+    PhotonImage::new(buf_res, img1.width, img1.height)
 }
