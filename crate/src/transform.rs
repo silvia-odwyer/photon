@@ -723,3 +723,124 @@ pub fn rotate(img: &PhotonImage, angle: i32) -> PhotonImage {
 
     PhotonImage::new(result, dst_width, dst_height)
 }
+
+fn greatest_common_divisor(left_val: usize, right_val: usize) -> usize {
+    let mut a = left_val;
+    let mut b = right_val;
+    while b > 0 {
+        let t = b;
+        b = a % b;
+        a = t;
+    }
+    a
+}
+
+fn copy_row(buf: &[u8], row_pos: usize, row_stride: usize) -> Vec<u8> {
+    let mut result = Vec::<u8>::new();
+    for byte_idx in 0..row_stride {
+        let src_idx = (row_pos * row_stride) + byte_idx;
+        result.push(buf[src_idx]);
+    }
+
+    result
+}
+
+/// Resample the PhotonImage.
+///
+/// # Arguments
+/// * `img` - A PhotonImage. See the PhotonImage struct for details.
+/// * `dst_width` - Target width.
+/// * `dst_height` - Target height.
+///
+/// # Example
+///
+/// ```no_run
+/// // For example, to resample a PhotonImage to 1920x1080 size:
+/// use photon_rs::native::open_image;
+/// use photon_rs::transform::resample;
+///
+/// let img = open_image("img.jpg").expect("File should open");
+/// let rotated_img = resample(&img, 1920, 1080);
+/// ```
+#[wasm_bindgen]
+pub fn resample(img: &PhotonImage, dst_width: usize, dst_height: usize) -> PhotonImage {
+    let mut pix_buf = Vec::<u8>::new();
+    if dst_width == 0 || dst_height == 0 {
+        return PhotonImage::new(pix_buf, dst_width as u32, dst_height as u32);
+    }
+
+    let src_width = img.get_width() as usize;
+    let src_height = img.get_height() as usize;
+
+    // The idea is to upsample source width to the greatest commond divisor, then downsample to
+    // target width. For example: resample 240 to 320. The greatest common divisor is 80.
+    // At first, upsample 240 to 960 (960 is 240 * 320 / 80)
+    // Next downsample 960 to 320 (320 is 960 / (240 / 80)).
+    // Thus, upsampling rate is 320 / 80 = 4, downsampling rate is 240 / 80 = 3.
+    let width_gcd = greatest_common_divisor(src_width, dst_width);
+    let height_gcd = greatest_common_divisor(src_height, dst_height);
+    let upsample_x = dst_width / width_gcd;
+    let downsample_x = src_width / width_gcd;
+    let upsample_y = dst_height / height_gcd;
+    let downsample_y = src_height / height_gcd;
+
+    // Upsampling and downsampling are performed in the same loop.
+    // Upsample the image while the size is indivisible by downsampling rate.
+    // Then downsample and clear the buffer.
+    // For example, upsampling rate is 3 and downsampling rate is 4.
+    // After processing 4 pixels, buffer gets 12 pixels (repeats each pixel 3 times).
+    // 12 pixels can be downsampled by 4, so downsampling takes every 4th pixel.
+    // The result contains 3 pixels. That approach is somewhat slower but requires less memory.
+    let img_pixels = &img.raw_pixels;
+    let src_chan = 4;
+
+    // Resample width.
+    let mut resampled_width = Vec::<u8>::new();
+    for row in 0..src_height {
+        // Upsample pixels and put them to temporary buffer.
+        let mut upsampled_width = Vec::<u8>::new();
+        for col in 0..src_width {
+            for _i in 0..upsample_x {
+                for chan in 0..src_chan {
+                    let src_idx = (row * src_width * src_chan) + col * src_chan + chan;
+                    upsampled_width.push(img_pixels[src_idx]);
+                }
+            }
+
+            // When the temporary buffer can be downsampled, downsample and clear it.
+            let upsampled_pix_count = upsampled_width.len() / src_chan;
+            if (upsampled_pix_count % downsample_x) == 0 {
+                for i in 0..upsampled_pix_count / downsample_x {
+                    for chan in 0..src_chan {
+                        let src_idx = (i * downsample_x) * src_chan + chan;
+                        resampled_width.push(upsampled_width[src_idx]);
+                    }
+                }
+                upsampled_width.clear();
+            }
+        }
+    }
+
+    // Resample height.
+    let mut upsampled_height = Vec::<u8>::new();
+    for row in 0..src_height {
+        // Upsample rows and put them to temporary buffer.
+        for _i in 0..upsample_y {
+            let mut row_copy = copy_row(&resampled_width, row, dst_width * src_chan);
+            upsampled_height.append(&mut row_copy);
+        }
+
+        // When the temporary buffer can be downsampled, downsample and clear it.
+        let upsampled_rows_count = upsampled_height.len() / src_chan / dst_width;
+        if (upsampled_rows_count % downsample_y) == 0 {
+            for i in 0..upsampled_rows_count / downsample_y {
+                let mut row_copy =
+                    copy_row(&upsampled_height, i * downsample_y, dst_width * src_chan);
+                pix_buf.append(&mut row_copy);
+            }
+            upsampled_height.clear();
+        }
+    }
+
+    PhotonImage::new(pix_buf, dst_width as u32, dst_height as u32)
+}
