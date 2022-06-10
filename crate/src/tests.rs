@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod test {
     use crate::channels::*;
-    use crate::transform::seam_carve;
+    use crate::transform::{resample, seam_carve};
     use crate::PhotonImage;
 
     #[test]
@@ -199,6 +199,81 @@ mod test {
             let result: PhotonImage = seam_carve(&photon_image, new_w, new_h);
             assert_eq!(result.get_width(), new_w);
             assert_eq!(result.get_height(), new_h);
+            assert_eq!(result.get_raw_pixels(), correct_pix);
+        }
+    }
+
+    #[test]
+    fn test_resample() {
+        let width = 320;
+        let height = 240;
+        let channels = 4;
+        // Create an image from a vec of pixels
+        let total_size = width * height * channels;
+        let raw_pix: Vec<u8> = std::iter::repeat(127)
+            .take(total_size as usize)
+            .collect::<Vec<_>>();
+
+        let photon_image: PhotonImage = PhotonImage::new(raw_pix.clone(), width, height);
+        {
+            // Resample to the same size.
+            // Will return the same image.
+            let result: PhotonImage =
+                resample(&photon_image, width as usize, height as usize);
+            assert_eq!(result.get_width(), width);
+            assert_eq!(result.get_height(), height);
+            assert_eq!(result.get_raw_pixels(), raw_pix);
+        }
+        {
+            // Upsample width and upsample height.
+            let new_w: usize = 640;
+            let new_h: usize = 480;
+            let channels = 4;
+            let new_size = new_w * new_h * channels;
+            let correct_pix: Vec<u8> =
+                std::iter::repeat(127).take(new_size).collect::<Vec<_>>();
+            let result: PhotonImage = resample(&photon_image, new_w, new_h);
+            assert_eq!(result.get_width(), new_w as u32);
+            assert_eq!(result.get_height(), new_h as u32);
+            assert_eq!(result.get_raw_pixels(), correct_pix);
+        }
+        {
+            // Downsample width and downsample height.
+            let new_w: usize = 160;
+            let new_h: usize = 120;
+            let channels = 4;
+            let new_size = new_w * new_h * channels;
+            let correct_pix: Vec<u8> =
+                std::iter::repeat(127).take(new_size).collect::<Vec<_>>();
+            let result: PhotonImage = resample(&photon_image, new_w, new_h);
+            assert_eq!(result.get_width(), new_w as u32);
+            assert_eq!(result.get_height(), new_h as u32);
+            assert_eq!(result.get_raw_pixels(), correct_pix);
+        }
+        {
+            // Downsample width and upsample height.
+            let new_w: usize = 160;
+            let new_h: usize = 320;
+            let channels = 4;
+            let new_size = new_w * new_h * channels;
+            let correct_pix: Vec<u8> =
+                std::iter::repeat(127).take(new_size).collect::<Vec<_>>();
+            let result: PhotonImage = resample(&photon_image, new_w, new_h);
+            assert_eq!(result.get_width(), new_w as u32);
+            assert_eq!(result.get_height(), new_h as u32);
+            assert_eq!(result.get_raw_pixels(), correct_pix);
+        }
+        {
+            // Upsample width and downsample height.
+            let new_w: usize = 320;
+            let new_h: usize = 120;
+            let channels = 4;
+            let new_size = new_w * new_h * channels;
+            let correct_pix: Vec<u8> =
+                std::iter::repeat(127).take(new_size).collect::<Vec<_>>();
+            let result: PhotonImage = resample(&photon_image, new_w, new_h);
+            assert_eq!(result.get_width(), new_w as u32);
+            assert_eq!(result.get_height(), new_h as u32);
             assert_eq!(result.get_raw_pixels(), correct_pix);
         }
     }
