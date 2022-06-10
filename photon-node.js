@@ -705,364 +705,254 @@ module.exports.dither = function(photon_image, depth) {
 };
 
 /**
-* Crop an image.
+* Solarization on the Blue channel.
 *
 * # Arguments
 * * `img` - A PhotonImage.
-*
 * # Example
 *
 * ```no_run
-* // For example, to crop an image at (0, 0) to (500, 800)
-* use photon_rs::native::{open_image};
-* use photon_rs::transform::crop;
-* use photon_rs::PhotonImage;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* let cropped_img: PhotonImage = crop(&mut img, 0_u32, 0_u32, 500_u32, 800_u32);
-* // Write the contents of this image in JPG format.
-* ```
-* @param {PhotonImage} photon_image
-* @param {number} x1
-* @param {number} y1
-* @param {number} x2
-* @param {number} y2
-* @returns {PhotonImage}
-*/
-module.exports.crop = function(photon_image, x1, y1, x2, y2) {
-    _assertClass(photon_image, PhotonImage);
-    var ret = wasm.crop(photon_image.ptr, x1, y1, x2, y2);
-    return PhotonImage.__wrap(ret);
-};
-
-/**
-* @param {HTMLCanvasElement} source_canvas
-* @param {number} width
-* @param {number} height
-* @param {number} left
-* @param {number} top
-* @returns {HTMLCanvasElement}
-*/
-module.exports.crop_img_browser = function(source_canvas, width, height, left, top) {
-    var ret = wasm.crop_img_browser(addHeapObject(source_canvas), width, height, left, top);
-    return takeObject(ret);
-};
-
-/**
-* Flip an image horizontally.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to flip an image horizontally:
+* use photon_rs::filters::neue;
 * use photon_rs::native::open_image;
-* use photon_rs::transform::fliph;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* fliph(&mut img);
+* neue(&mut img);
 * ```
 * @param {PhotonImage} photon_image
 */
-module.exports.fliph = function(photon_image) {
+module.exports.neue = function(photon_image) {
     _assertClass(photon_image, PhotonImage);
-    wasm.fliph(photon_image.ptr);
+    wasm.neue(photon_image.ptr);
 };
 
 /**
-* Flip an image vertically.
+* Solarization on the Red and Green channels.
 *
 * # Arguments
 * * `img` - A PhotonImage.
-*
 * # Example
 *
 * ```no_run
-* // For example, to flip an image vertically:
+* use photon_rs::filters::lix;
 * use photon_rs::native::open_image;
-* use photon_rs::transform::flipv;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* flipv(&mut img);
+* lix(&mut img);
 * ```
 * @param {PhotonImage} photon_image
 */
-module.exports.flipv = function(photon_image) {
+module.exports.lix = function(photon_image) {
     _assertClass(photon_image, PhotonImage);
-    wasm.flipv(photon_image.ptr);
+    wasm.lix(photon_image.ptr);
 };
 
 /**
-* Resize an image on the web.
+* Solarization on the Red and Blue channels.
 *
 * # Arguments
 * * `img` - A PhotonImage.
-* * `width` - New width.
-* * `height` - New height.
-* * `sampling_filter` - Nearest = 1, Triangle = 2, CatmullRom = 3, Gaussian = 4, Lanczos3 = 5
-* @param {PhotonImage} photon_img
-* @param {number} width
-* @param {number} height
-* @param {number} sampling_filter
-* @returns {HTMLCanvasElement}
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::ryo;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* ryo(&mut img);
+* ```
+* @param {PhotonImage} photon_image
 */
-module.exports.resize_img_browser = function(photon_img, width, height, sampling_filter) {
-    _assertClass(photon_img, PhotonImage);
-    var ret = wasm.resize_img_browser(photon_img.ptr, width, height, sampling_filter);
-    return takeObject(ret);
+module.exports.ryo = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.ryo(photon_image.ptr);
 };
 
 /**
-* Resize an image.
+* Apply a filter to an image. Over 20 filters are available.
+* The filters are as follows:
+* * **oceanic**: Add an aquamarine-tinted hue to an image.
+* * **islands**: Aquamarine tint.
+* * **marine**: Add a green/blue mixed hue to an image.
+* * **seagreen**: Dark green hue, with tones of blue.
+* * **flagblue**: Royal blue tint
+* * **liquid**: Blue-inspired tint.
+* * **diamante**: Custom filter with a blue/turquoise tint.
+* * **radio**: Fallout-style radio effect.
+* * **twenties**: Slight-blue tinted historical effect.
+* * **rosetint**: Rose-tinted filter.
+* * **mauve**: Purple-infused filter.
+* * **bluechrome**: Blue monochrome effect.
+* * **vintage**: Vintage filter with a red tint.
+* * **perfume**: Increase the blue channel, with moderate increases in the Red and Green channels.
+* * **serenity**: Custom filter with an increase in the Blue channel's values.
+* # Arguments
+* * `img` - A PhotonImage.
+* * `filter_name` - The filter's name. Choose from the selection above, eg: "oceanic"
+* # Example
+*
+* ```no_run
+* // For example, to add a filter called "vintage" to an image:
+* use photon_rs::filters::filter;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* filter(&mut img, "vintage");
+* ```
+* @param {PhotonImage} img
+* @param {string} filter_name
+*/
+module.exports.filter = function(img, filter_name) {
+    _assertClass(img, PhotonImage);
+    var ptr0 = passStringToWasm0(filter_name, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    var len0 = WASM_VECTOR_LEN;
+    wasm.filter(img.ptr, ptr0, len0);
+};
+
+/**
+* Apply a lofi effect to an image.
 *
 * # Arguments
 * * `img` - A PhotonImage.
-* * `width` - New width.
-* * `height` - New height.
-* * `sampling_filter` - Nearest = 1, Triangle = 2, CatmullRom = 3, Gaussian = 4, Lanczos3 = 5
-* @param {PhotonImage} photon_img
-* @param {number} width
-* @param {number} height
-* @param {number} sampling_filter
-* @returns {PhotonImage}
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::lofi;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* lofi(&mut img);
+* ```
+* @param {PhotonImage} img
 */
-module.exports.resize = function(photon_img, width, height, sampling_filter) {
-    _assertClass(photon_img, PhotonImage);
-    var ret = wasm.resize(photon_img.ptr, width, height, sampling_filter);
-    return PhotonImage.__wrap(ret);
+module.exports.lofi = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.lofi(img.ptr);
 };
 
 /**
-* Resize image using seam carver.
-* Resize only if new dimensions are smaller, than original image.
-* # NOTE: This is still experimental feature, and pretty slow.
+* Apply a rose tint to an image.
 *
 * # Arguments
 * * `img` - A PhotonImage.
-* * `width` - New width.
-* * `height` - New height.
-*
 * # Example
 *
 * ```no_run
-* // For example, resize image using seam carver:
+* use photon_rs::filters::pastel_pink;
 * use photon_rs::native::open_image;
-* use photon_rs::transform::seam_carve;
-* use photon_rs::PhotonImage;
-*
-* let img = open_image("img.jpg").expect("File should open");
-* let result: PhotonImage = seam_carve(&img, 100_u32, 100_u32);
-* ```
-* @param {PhotonImage} img
-* @param {number} width
-* @param {number} height
-* @returns {PhotonImage}
-*/
-module.exports.seam_carve = function(img, width, height) {
-    _assertClass(img, PhotonImage);
-    var ret = wasm.seam_carve(img.ptr, width, height);
-    return PhotonImage.__wrap(ret);
-};
-
-/**
-* Apply uniform padding around the PhotonImage
-* A padded PhotonImage is returned.
-* # Arguments
-* * `img` - A PhotonImage. See the PhotonImage struct for details.
-* * `padding` - The amount of padding to be applied to the PhotonImage.
-* * `padding_rgba` - Tuple containing the RGBA code for padding color.
-*
-* # Example
-*
-* ```no_run
-* // For example, to apply a padding of 10 pixels around a PhotonImage:
-* use photon_rs::transform::padding_uniform;
-* use photon_rs::native::open_image;
-* use photon_rs::Rgba;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
-* padding_uniform(&img, 10_u32, rgba);
+* pastel_pink(&mut img);
 * ```
 * @param {PhotonImage} img
-* @param {number} padding
-* @param {Rgba} padding_rgba
-* @returns {PhotonImage}
 */
-module.exports.padding_uniform = function(img, padding, padding_rgba) {
+module.exports.pastel_pink = function(img) {
     _assertClass(img, PhotonImage);
-    _assertClass(padding_rgba, Rgba);
-    var ptr0 = padding_rgba.ptr;
-    padding_rgba.ptr = 0;
-    var ret = wasm.padding_uniform(img.ptr, padding, ptr0);
-    return PhotonImage.__wrap(ret);
+    wasm.pastel_pink(img.ptr);
 };
 
 /**
-* Apply padding on the left side of the PhotonImage
-* A padded PhotonImage is returned.
-* # Arguments
-* * `img` - A PhotonImage. See the PhotonImage struct for details.
-* * `padding` - The amount of padding to be applied to the PhotonImage.
-* * `padding_rgba` - Tuple containing the RGBA code for padding color.
+* Apply a vintage, golden hue to an image.
 *
+* # Arguments
+* * `img` - A PhotonImage.
 * # Example
 *
 * ```no_run
-* // For example, to apply a padding of 10 pixels on the left side of a PhotonImage:
-* use photon_rs::transform::padding_left;
+* use photon_rs::filters::golden;
 * use photon_rs::native::open_image;
-* use photon_rs::Rgba;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
-* padding_left(&img, 10_u32, rgba);
+* golden(&mut img);
 * ```
 * @param {PhotonImage} img
-* @param {number} padding
-* @param {Rgba} padding_rgba
-* @returns {PhotonImage}
 */
-module.exports.padding_left = function(img, padding, padding_rgba) {
+module.exports.golden = function(img) {
     _assertClass(img, PhotonImage);
-    _assertClass(padding_rgba, Rgba);
-    var ptr0 = padding_rgba.ptr;
-    padding_rgba.ptr = 0;
-    var ret = wasm.padding_left(img.ptr, padding, ptr0);
-    return PhotonImage.__wrap(ret);
+    wasm.golden(img.ptr);
 };
 
 /**
-* Apply padding on the left side of the PhotonImage
-* A padded PhotonImage is returned.
-* # Arguments
-* * `img` - A PhotonImage. See the PhotonImage struct for details.
-* * `padding` - The amount of padding to be applied to the PhotonImage.
-* * `padding_rgba` - Tuple containing the RGBA code for padding color.
+* Increased contrast filter effect.
 *
+* # Arguments
+* * `img` - A PhotonImage.
 * # Example
 *
 * ```no_run
-* // For example, to apply a padding of 10 pixels on the right side of a PhotonImage:
-* use photon_rs::transform::padding_right;
+* use photon_rs::filters::cali;
 * use photon_rs::native::open_image;
-* use photon_rs::Rgba;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
-* padding_right(&img, 10_u32, rgba);
+* cali(&mut img);
 * ```
 * @param {PhotonImage} img
-* @param {number} padding
-* @param {Rgba} padding_rgba
-* @returns {PhotonImage}
 */
-module.exports.padding_right = function(img, padding, padding_rgba) {
+module.exports.cali = function(img) {
     _assertClass(img, PhotonImage);
-    _assertClass(padding_rgba, Rgba);
-    var ptr0 = padding_rgba.ptr;
-    padding_rgba.ptr = 0;
-    var ret = wasm.padding_right(img.ptr, padding, ptr0);
-    return PhotonImage.__wrap(ret);
+    wasm.cali(img.ptr);
 };
 
 /**
-* Apply padding on the left side of the PhotonImage
-* A padded PhotonImage is returned.
-* # Arguments
-* * `img` - A PhotonImage. See the PhotonImage struct for details.
-* * `padding` - The amount of padding to be applied to the PhotonImage.
-* * `padding_rgba` - Tuple containing the RGBA code for padding color.
+* Greyscale effect with increased contrast.
 *
+* # Arguments
+* * `img` - A PhotonImage.
 * # Example
 *
 * ```no_run
-* // For example, to apply a padding of 10 pixels on the top of a PhotonImage:
-* use photon_rs::transform::padding_top;
+* use photon_rs::filters::dramatic;
 * use photon_rs::native::open_image;
-* use photon_rs::Rgba;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
-* padding_top(&img, 10_u32, rgba);
+* dramatic(&mut img);
 * ```
 * @param {PhotonImage} img
-* @param {number} padding
-* @param {Rgba} padding_rgba
-* @returns {PhotonImage}
 */
-module.exports.padding_top = function(img, padding, padding_rgba) {
+module.exports.dramatic = function(img) {
     _assertClass(img, PhotonImage);
-    _assertClass(padding_rgba, Rgba);
-    var ptr0 = padding_rgba.ptr;
-    padding_rgba.ptr = 0;
-    var ret = wasm.padding_top(img.ptr, padding, ptr0);
-    return PhotonImage.__wrap(ret);
+    wasm.dramatic(img.ptr);
 };
 
 /**
-* Apply padding on the left side of the PhotonImage
-* A padded PhotonImage is returned.
-* # Arguments
-* * `img` - A PhotonImage. See the PhotonImage struct for details.
-* * `padding` - The amount of padding to be applied to the PhotonImage.
-* * `padding_rgba` - Tuple containing the RGBA code for padding color.
+* Apply a red hue, with increased contrast and brightness.
 *
+* # Arguments
+* * `img` - A PhotonImage.
 * # Example
 *
 * ```no_run
-* // For example, to apply a padding of 10 pixels on the bottom of a PhotonImage:
-* use photon_rs::transform::padding_bottom;
+* use photon_rs::filters::firenze;
 * use photon_rs::native::open_image;
-* use photon_rs::Rgba;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
-* padding_bottom(&img, 10_u32, rgba);
+* firenze(&mut img);
 * ```
 * @param {PhotonImage} img
-* @param {number} padding
-* @param {Rgba} padding_rgba
-* @returns {PhotonImage}
 */
-module.exports.padding_bottom = function(img, padding, padding_rgba) {
+module.exports.firenze = function(img) {
     _assertClass(img, PhotonImage);
-    _assertClass(padding_rgba, Rgba);
-    var ptr0 = padding_rgba.ptr;
-    padding_rgba.ptr = 0;
-    var ret = wasm.padding_bottom(img.ptr, padding, ptr0);
-    return PhotonImage.__wrap(ret);
+    wasm.firenze(img.ptr);
 };
 
 /**
-* Rotate the PhotonImage on an arbitrary angle
-* A rotated PhotonImage is returned.
-* # NOTE: This is a naive implementation. Paeth rotation should be faster.
+* Apply a greyscale effect with increased contrast.
 *
 * # Arguments
-* * `img` - A PhotonImage. See the PhotonImage struct for details.
-* * `angle` - Rotation angle in degrees.
-*
+* * `img` - A PhotonImage.
 * # Example
 *
 * ```no_run
-* // For example, to rotate a PhotonImage by 30 degrees:
+* use photon_rs::filters::obsidian;
 * use photon_rs::native::open_image;
-* use photon_rs::transform::rotate;
 *
-* let img = open_image("img.jpg").expect("File should open");
-* let rotated_img = rotate(&img, 30);
+* let mut img = open_image("img.jpg").expect("File should open");
+* obsidian(&mut img);
 * ```
 * @param {PhotonImage} img
-* @param {number} angle
-* @returns {PhotonImage}
 */
-module.exports.rotate = function(img, angle) {
+module.exports.obsidian = function(img) {
     _assertClass(img, PhotonImage);
-    var ret = wasm.rotate(img.ptr, angle);
-    return PhotonImage.__wrap(ret);
+    wasm.obsidian(img.ptr);
 };
 
 function passArray8ToWasm0(arg, malloc) {
@@ -3087,254 +2977,393 @@ module.exports.draw_text = function(photon_img, text, x, y) {
 };
 
 /**
-* Solarization on the Blue channel.
+* Crop an image.
 *
 * # Arguments
 * * `img` - A PhotonImage.
+*
 * # Example
 *
 * ```no_run
-* use photon_rs::filters::neue;
-* use photon_rs::native::open_image;
+* // For example, to crop an image at (0, 0) to (500, 800)
+* use photon_rs::native::{open_image};
+* use photon_rs::transform::crop;
+* use photon_rs::PhotonImage;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* neue(&mut img);
+* let cropped_img: PhotonImage = crop(&mut img, 0_u32, 0_u32, 500_u32, 800_u32);
+* // Write the contents of this image in JPG format.
+* ```
+* @param {PhotonImage} photon_image
+* @param {number} x1
+* @param {number} y1
+* @param {number} x2
+* @param {number} y2
+* @returns {PhotonImage}
+*/
+module.exports.crop = function(photon_image, x1, y1, x2, y2) {
+    _assertClass(photon_image, PhotonImage);
+    var ret = wasm.crop(photon_image.ptr, x1, y1, x2, y2);
+    return PhotonImage.__wrap(ret);
+};
+
+/**
+* @param {HTMLCanvasElement} source_canvas
+* @param {number} width
+* @param {number} height
+* @param {number} left
+* @param {number} top
+* @returns {HTMLCanvasElement}
+*/
+module.exports.crop_img_browser = function(source_canvas, width, height, left, top) {
+    var ret = wasm.crop_img_browser(addHeapObject(source_canvas), width, height, left, top);
+    return takeObject(ret);
+};
+
+/**
+* Flip an image horizontally.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to flip an image horizontally:
+* use photon_rs::native::open_image;
+* use photon_rs::transform::fliph;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* fliph(&mut img);
 * ```
 * @param {PhotonImage} photon_image
 */
-module.exports.neue = function(photon_image) {
+module.exports.fliph = function(photon_image) {
     _assertClass(photon_image, PhotonImage);
-    wasm.neue(photon_image.ptr);
+    wasm.fliph(photon_image.ptr);
 };
 
 /**
-* Solarization on the Red and Green channels.
+* Flip an image vertically.
 *
 * # Arguments
 * * `img` - A PhotonImage.
+*
 * # Example
 *
 * ```no_run
-* use photon_rs::filters::lix;
+* // For example, to flip an image vertically:
 * use photon_rs::native::open_image;
+* use photon_rs::transform::flipv;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* lix(&mut img);
+* flipv(&mut img);
 * ```
 * @param {PhotonImage} photon_image
 */
-module.exports.lix = function(photon_image) {
+module.exports.flipv = function(photon_image) {
     _assertClass(photon_image, PhotonImage);
-    wasm.lix(photon_image.ptr);
+    wasm.flipv(photon_image.ptr);
 };
 
 /**
-* Solarization on the Red and Blue channels.
+* Resize an image on the web.
 *
 * # Arguments
 * * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::ryo;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* ryo(&mut img);
-* ```
-* @param {PhotonImage} photon_image
+* * `width` - New width.
+* * `height` - New height.
+* * `sampling_filter` - Nearest = 1, Triangle = 2, CatmullRom = 3, Gaussian = 4, Lanczos3 = 5
+* @param {PhotonImage} photon_img
+* @param {number} width
+* @param {number} height
+* @param {number} sampling_filter
+* @returns {HTMLCanvasElement}
 */
-module.exports.ryo = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.ryo(photon_image.ptr);
+module.exports.resize_img_browser = function(photon_img, width, height, sampling_filter) {
+    _assertClass(photon_img, PhotonImage);
+    var ret = wasm.resize_img_browser(photon_img.ptr, width, height, sampling_filter);
+    return takeObject(ret);
 };
 
 /**
-* Apply a filter to an image. Over 20 filters are available.
-* The filters are as follows:
-* * **oceanic**: Add an aquamarine-tinted hue to an image.
-* * **islands**: Aquamarine tint.
-* * **marine**: Add a green/blue mixed hue to an image.
-* * **seagreen**: Dark green hue, with tones of blue.
-* * **flagblue**: Royal blue tint
-* * **liquid**: Blue-inspired tint.
-* * **diamante**: Custom filter with a blue/turquoise tint.
-* * **radio**: Fallout-style radio effect.
-* * **twenties**: Slight-blue tinted historical effect.
-* * **rosetint**: Rose-tinted filter.
-* * **mauve**: Purple-infused filter.
-* * **bluechrome**: Blue monochrome effect.
-* * **vintage**: Vintage filter with a red tint.
-* * **perfume**: Increase the blue channel, with moderate increases in the Red and Green channels.
-* * **serenity**: Custom filter with an increase in the Blue channel's values.
+* Resize an image.
+*
 * # Arguments
 * * `img` - A PhotonImage.
-* * `filter_name` - The filter's name. Choose from the selection above, eg: "oceanic"
-* # Example
-*
-* ```no_run
-* // For example, to add a filter called "vintage" to an image:
-* use photon_rs::filters::filter;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* filter(&mut img, "vintage");
-* ```
-* @param {PhotonImage} img
-* @param {string} filter_name
+* * `width` - New width.
+* * `height` - New height.
+* * `sampling_filter` - Nearest = 1, Triangle = 2, CatmullRom = 3, Gaussian = 4, Lanczos3 = 5
+* @param {PhotonImage} photon_img
+* @param {number} width
+* @param {number} height
+* @param {number} sampling_filter
+* @returns {PhotonImage}
 */
-module.exports.filter = function(img, filter_name) {
-    _assertClass(img, PhotonImage);
-    var ptr0 = passStringToWasm0(filter_name, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    var len0 = WASM_VECTOR_LEN;
-    wasm.filter(img.ptr, ptr0, len0);
+module.exports.resize = function(photon_img, width, height, sampling_filter) {
+    _assertClass(photon_img, PhotonImage);
+    var ret = wasm.resize(photon_img.ptr, width, height, sampling_filter);
+    return PhotonImage.__wrap(ret);
 };
 
 /**
-* Apply a lofi effect to an image.
+* Resize image using seam carver.
+* Resize only if new dimensions are smaller, than original image.
+* # NOTE: This is still experimental feature, and pretty slow.
 *
 * # Arguments
 * * `img` - A PhotonImage.
+* * `width` - New width.
+* * `height` - New height.
+*
 * # Example
 *
 * ```no_run
-* use photon_rs::filters::lofi;
+* // For example, resize image using seam carver:
 * use photon_rs::native::open_image;
+* use photon_rs::transform::seam_carve;
+* use photon_rs::PhotonImage;
 *
-* let mut img = open_image("img.jpg").expect("File should open");
-* lofi(&mut img);
+* let img = open_image("img.jpg").expect("File should open");
+* let result: PhotonImage = seam_carve(&img, 100_u32, 100_u32);
 * ```
 * @param {PhotonImage} img
+* @param {number} width
+* @param {number} height
+* @returns {PhotonImage}
 */
-module.exports.lofi = function(img) {
+module.exports.seam_carve = function(img, width, height) {
     _assertClass(img, PhotonImage);
-    wasm.lofi(img.ptr);
+    var ret = wasm.seam_carve(img.ptr, width, height);
+    return PhotonImage.__wrap(ret);
 };
 
 /**
-* Apply a rose tint to an image.
-*
+* Apply uniform padding around the PhotonImage
+* A padded PhotonImage is returned.
 * # Arguments
-* * `img` - A PhotonImage.
+* * `img` - A PhotonImage. See the PhotonImage struct for details.
+* * `padding` - The amount of padding to be applied to the PhotonImage.
+* * `padding_rgba` - Tuple containing the RGBA code for padding color.
+*
 * # Example
 *
 * ```no_run
-* use photon_rs::filters::pastel_pink;
+* // For example, to apply a padding of 10 pixels around a PhotonImage:
+* use photon_rs::transform::padding_uniform;
 * use photon_rs::native::open_image;
+* use photon_rs::Rgba;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* pastel_pink(&mut img);
+* let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
+* padding_uniform(&img, 10_u32, rgba);
 * ```
 * @param {PhotonImage} img
+* @param {number} padding
+* @param {Rgba} padding_rgba
+* @returns {PhotonImage}
 */
-module.exports.pastel_pink = function(img) {
+module.exports.padding_uniform = function(img, padding, padding_rgba) {
     _assertClass(img, PhotonImage);
-    wasm.pastel_pink(img.ptr);
+    _assertClass(padding_rgba, Rgba);
+    var ptr0 = padding_rgba.ptr;
+    padding_rgba.ptr = 0;
+    var ret = wasm.padding_uniform(img.ptr, padding, ptr0);
+    return PhotonImage.__wrap(ret);
 };
 
 /**
-* Apply a vintage, golden hue to an image.
-*
+* Apply padding on the left side of the PhotonImage
+* A padded PhotonImage is returned.
 * # Arguments
-* * `img` - A PhotonImage.
+* * `img` - A PhotonImage. See the PhotonImage struct for details.
+* * `padding` - The amount of padding to be applied to the PhotonImage.
+* * `padding_rgba` - Tuple containing the RGBA code for padding color.
+*
 * # Example
 *
 * ```no_run
-* use photon_rs::filters::golden;
+* // For example, to apply a padding of 10 pixels on the left side of a PhotonImage:
+* use photon_rs::transform::padding_left;
 * use photon_rs::native::open_image;
+* use photon_rs::Rgba;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* golden(&mut img);
+* let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
+* padding_left(&img, 10_u32, rgba);
 * ```
 * @param {PhotonImage} img
+* @param {number} padding
+* @param {Rgba} padding_rgba
+* @returns {PhotonImage}
 */
-module.exports.golden = function(img) {
+module.exports.padding_left = function(img, padding, padding_rgba) {
     _assertClass(img, PhotonImage);
-    wasm.golden(img.ptr);
+    _assertClass(padding_rgba, Rgba);
+    var ptr0 = padding_rgba.ptr;
+    padding_rgba.ptr = 0;
+    var ret = wasm.padding_left(img.ptr, padding, ptr0);
+    return PhotonImage.__wrap(ret);
 };
 
 /**
-* Increased contrast filter effect.
-*
+* Apply padding on the left side of the PhotonImage
+* A padded PhotonImage is returned.
 * # Arguments
-* * `img` - A PhotonImage.
+* * `img` - A PhotonImage. See the PhotonImage struct for details.
+* * `padding` - The amount of padding to be applied to the PhotonImage.
+* * `padding_rgba` - Tuple containing the RGBA code for padding color.
+*
 * # Example
 *
 * ```no_run
-* use photon_rs::filters::cali;
+* // For example, to apply a padding of 10 pixels on the right side of a PhotonImage:
+* use photon_rs::transform::padding_right;
 * use photon_rs::native::open_image;
+* use photon_rs::Rgba;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* cali(&mut img);
+* let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
+* padding_right(&img, 10_u32, rgba);
 * ```
 * @param {PhotonImage} img
+* @param {number} padding
+* @param {Rgba} padding_rgba
+* @returns {PhotonImage}
 */
-module.exports.cali = function(img) {
+module.exports.padding_right = function(img, padding, padding_rgba) {
     _assertClass(img, PhotonImage);
-    wasm.cali(img.ptr);
+    _assertClass(padding_rgba, Rgba);
+    var ptr0 = padding_rgba.ptr;
+    padding_rgba.ptr = 0;
+    var ret = wasm.padding_right(img.ptr, padding, ptr0);
+    return PhotonImage.__wrap(ret);
 };
 
 /**
-* Greyscale effect with increased contrast.
-*
+* Apply padding on the left side of the PhotonImage
+* A padded PhotonImage is returned.
 * # Arguments
-* * `img` - A PhotonImage.
+* * `img` - A PhotonImage. See the PhotonImage struct for details.
+* * `padding` - The amount of padding to be applied to the PhotonImage.
+* * `padding_rgba` - Tuple containing the RGBA code for padding color.
+*
 * # Example
 *
 * ```no_run
-* use photon_rs::filters::dramatic;
+* // For example, to apply a padding of 10 pixels on the top of a PhotonImage:
+* use photon_rs::transform::padding_top;
 * use photon_rs::native::open_image;
+* use photon_rs::Rgba;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* dramatic(&mut img);
+* let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
+* padding_top(&img, 10_u32, rgba);
 * ```
 * @param {PhotonImage} img
+* @param {number} padding
+* @param {Rgba} padding_rgba
+* @returns {PhotonImage}
 */
-module.exports.dramatic = function(img) {
+module.exports.padding_top = function(img, padding, padding_rgba) {
     _assertClass(img, PhotonImage);
-    wasm.dramatic(img.ptr);
+    _assertClass(padding_rgba, Rgba);
+    var ptr0 = padding_rgba.ptr;
+    padding_rgba.ptr = 0;
+    var ret = wasm.padding_top(img.ptr, padding, ptr0);
+    return PhotonImage.__wrap(ret);
 };
 
 /**
-* Apply a red hue, with increased contrast and brightness.
-*
+* Apply padding on the left side of the PhotonImage
+* A padded PhotonImage is returned.
 * # Arguments
-* * `img` - A PhotonImage.
+* * `img` - A PhotonImage. See the PhotonImage struct for details.
+* * `padding` - The amount of padding to be applied to the PhotonImage.
+* * `padding_rgba` - Tuple containing the RGBA code for padding color.
+*
 * # Example
 *
 * ```no_run
-* use photon_rs::filters::firenze;
+* // For example, to apply a padding of 10 pixels on the bottom of a PhotonImage:
+* use photon_rs::transform::padding_bottom;
 * use photon_rs::native::open_image;
+* use photon_rs::Rgba;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* firenze(&mut img);
+* let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
+* padding_bottom(&img, 10_u32, rgba);
 * ```
 * @param {PhotonImage} img
+* @param {number} padding
+* @param {Rgba} padding_rgba
+* @returns {PhotonImage}
 */
-module.exports.firenze = function(img) {
+module.exports.padding_bottom = function(img, padding, padding_rgba) {
     _assertClass(img, PhotonImage);
-    wasm.firenze(img.ptr);
+    _assertClass(padding_rgba, Rgba);
+    var ptr0 = padding_rgba.ptr;
+    padding_rgba.ptr = 0;
+    var ret = wasm.padding_bottom(img.ptr, padding, ptr0);
+    return PhotonImage.__wrap(ret);
 };
 
 /**
-* Apply a greyscale effect with increased contrast.
+* Rotate the PhotonImage on an arbitrary angle
+* A rotated PhotonImage is returned.
+* # NOTE: This is a naive implementation. Paeth rotation should be faster.
 *
 * # Arguments
-* * `img` - A PhotonImage.
+* * `img` - A PhotonImage. See the PhotonImage struct for details.
+* * `angle` - Rotation angle in degrees.
+*
 * # Example
 *
 * ```no_run
-* use photon_rs::filters::obsidian;
+* // For example, to rotate a PhotonImage by 30 degrees:
 * use photon_rs::native::open_image;
+* use photon_rs::transform::rotate;
 *
-* let mut img = open_image("img.jpg").expect("File should open");
-* obsidian(&mut img);
+* let img = open_image("img.jpg").expect("File should open");
+* let rotated_img = rotate(&img, 30);
 * ```
 * @param {PhotonImage} img
+* @param {number} angle
+* @returns {PhotonImage}
 */
-module.exports.obsidian = function(img) {
+module.exports.rotate = function(img, angle) {
     _assertClass(img, PhotonImage);
-    wasm.obsidian(img.ptr);
+    var ret = wasm.rotate(img.ptr, angle);
+    return PhotonImage.__wrap(ret);
+};
+
+/**
+* Resample the PhotonImage.
+*
+* # Arguments
+* * `img` - A PhotonImage. See the PhotonImage struct for details.
+* * `dst_width` - Target width.
+* * `dst_height` - Target height.
+*
+* # Example
+*
+* ```no_run
+* // For example, to resample a PhotonImage to 1920x1080 size:
+* use photon_rs::native::open_image;
+* use photon_rs::transform::resample;
+*
+* let img = open_image("img.jpg").expect("File should open");
+* let rotated_img = resample(&img, 1920, 1080);
+* ```
+* @param {PhotonImage} img
+* @param {number} dst_width
+* @param {number} dst_height
+* @returns {PhotonImage}
+*/
+module.exports.resample = function(img, dst_width, dst_height) {
+    _assertClass(img, PhotonImage);
+    var ret = wasm.resample(img.ptr, dst_width, dst_height);
+    return PhotonImage.__wrap(ret);
 };
 
 function isLikeNone(x) {
