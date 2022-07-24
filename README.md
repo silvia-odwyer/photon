@@ -12,11 +12,11 @@
   [![Status](https://img.shields.io/badge/status-active-success.svg?style=for-the-badge&logo=statuspal)]()
   [![GitHub Issues](https://img.shields.io/github/issues/silvia-odwyer/photon.svg?style=for-the-badge&logo=github)](https://github.com/silvia-odwyer/photon/issues)
   [![Gitter Chat](https://img.shields.io/gitter/room/silvia-odwyer/photon?color=cyan&logo=Gitter&style=for-the-badge)](https://gitter.im/photonlibrary/community "Gitter chat")
-  [![NPM Monthly Downloads](https://img.shields.io/npm/dm/@silvia-odwyer/photon?logo=npm&style=for-the-badge&color=pink)]()
-  [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/silvia-odwyer/photon/Continuous%20Integration?logo=github&style=for-the-badge)]()
+  [![NPM Monthly Downloads](https://img.shields.io/npm/dm/@silvia-odwyer/photon?logo=npm&style=for-the-badge&color=pink)](https://www.npmjs.com/package/@silvia-odwyer/photon)
+  [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/silvia-odwyer/photon/Continuous%20Integration?logo=github&style=for-the-badge)](https://github.com/silvia-odwyer/photon/blob/master/.github/workflows/compile_wasm.yaml)
 
   [![Crates.io](https://img.shields.io/crates/v/photon_rs?logo=rust&style=for-the-badge)](https://crates.io/crates/photon_rs)
-  [![License](https://img.shields.io/github/license/silvia-odwyer/photon?style=for-the-badge)]()
+  [![License](https://img.shields.io/github/license/silvia-odwyer/photon?style=for-the-badge)](https://github.com/silvia-odwyer/photon/blob/master/LICENSE.md)
   [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/silvia-odwyer/photon.svg?style=for-the-badge&logo=github-actions)](https://github.com/silvia-odwyer/photon/pulls)
 
 </div>
