@@ -1221,10 +1221,10 @@ module.exports.sobel_vertical = function(photon_image) {
 * ```no_run
 * // For example, to add a watermark to an image at x: 30, y: 40:
 * use photon_rs::multiple::watermark;
-* use photon_rs::native:F:open_image;
+* use photon_rs::native::open_image;
 *
 * let mut img = open_image("img.jpg").expect("File should open");
-* letFne water_mark = open_image("watermark.jpg").expect("File should open");
+* let water_mark = open_image("watermark.jpg").expect("File should open");
 * watermark(&mut img, &water_mark, 30_u32, 40_u32);
 * ```
 * @param {PhotonImage} img
