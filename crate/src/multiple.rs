@@ -9,6 +9,7 @@ use image::{DynamicImage, GenericImageView, RgbaImage};
 use palette::{Blend, Gradient, Lab, Lch, LinSrgba, Srgb, Srgba};
 use std::cmp::{max, min};
 use wasm_bindgen::prelude::*;
+use palette::{FromColor, IntoColor, Pixel};
 
 /// Add a watermark to an image.
 ///
@@ -22,10 +23,10 @@ use wasm_bindgen::prelude::*;
 /// ```no_run
 /// // For example, to add a watermark to an image at x: 30, y: 40:
 /// use photon_rs::multiple::watermark;
-/// use photon_rs::native::open_image;
+/// use photon_rs::native:F:open_image;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// let water_mark = open_image("watermark.jpg").expect("File should open");
+/// letFne water_mark = open_image("watermark.jpg").expect("File should open");
 /// watermark(&mut img, &water_mark, 30_u32, 40_u32);
 /// ```
 #[wasm_bindgen]
@@ -83,28 +84,41 @@ pub fn blend(
 
         let px_data = pixel.channels();
         let px_data2 = pixel_img2.channels();
+
+      
+
         // let rgb_color: Rgba = Rgba::new(px_data[0] as f32, px_data[1] as f32, px_data[2] as f32, 255.0);
         // let color: LinSrgba = LinSrgba::from_color(&rgb_color).into_format();
 
-        let color = Srgb::new(
+        let color = LinSrgba::new(
             px_data[0] as f32 / 255.0,
             px_data[1] as f32 / 255.0,
             px_data[2] as f32 / 255.0,
+            px_data[3] as f32 / 255.0,
+
         )
         .into_linear();
-        let color2 = Srgb::new(
+
+        let color2 = LinSrgba::new(
             px_data2[0] as f32 / 255.0,
             px_data2[1] as f32 / 255.0,
             px_data2[2] as f32 / 255.0,
+            px_data2[3] as f32 / 255.0,
         )
         .into_linear();
+
+        //let buffer = [px_data[0] as f32, px_data[1] as f32, px_data[2] as f32, px_data[3] as f32];
+        //let color = LinSrgba::from_raw(&buffer).into_linear();
+
+        //let buffer2 = [px_data2[0] as f32, px_data2[1] as f32, px_data2[2] as f32, px_data2[3] as f32];
+        //let color2 = LinSrgba::from_raw(&buffer2).into_linear();
 
         // let rgb_color2: Rgba = Rgba::new(px_data2[0] as f32, px_data2[1] as f32, px_data2[2] as f32, 255.0);
         // let color2: LinSrgba = LinSrgba::from_color(&rgb_color2).into_format();
 
         let blended = match blend_mode {
             // Match a single value
-            "overlay" => color2.overlay(color),
+            "overlay" => color.overlay(color2),
             "over" => color2.over(color),
             "atop" => color2.atop(color),
             "xor" => color2.xor(color),
@@ -113,6 +127,7 @@ pub fn blend(
             "burn" => color2.burn(color),
             "difference" => color2.difference(color),
             "soft_light" => color2.soft_light(color),
+            "screen" => color2.screen(color),
             "hard_light" => color2.hard_light(color),
             "dodge" => color2.dodge(color),
             "exclusion" => color2.exclusion(color),
@@ -129,7 +144,7 @@ pub fn blend(
                 (components.0 * 255.0) as u8,
                 (components.1 * 255.0) as u8,
                 (components.2 * 255.0) as u8,
-                255,
+                (components.3 * 255.0) as u8,
             ]),
         );
     }
@@ -190,7 +205,7 @@ pub fn replace_background(
             background_color.g as f32 / 255.0,
             background_color.b as f32 / 255.0,
         )
-        .into();
+        .into_color();
 
         let channels = px.channels();
 
@@ -198,7 +213,7 @@ pub fn replace_background(
         let g_val: f32 = channels[1] as f32 / 255.0;
         let b_val: f32 = channels[2] as f32 / 255.0;
 
-        let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
+        let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into_color();
 
         let sim = color_sim(lab, px_lab);
 
@@ -225,13 +240,13 @@ pub fn create_gradient(width: u32, height: u32) -> PhotonImage {
     ]);
 
     let _grad3 = Gradient::new(vec![
-        Lch::from(LinSrgba::new(1.0, 0.1, 0.1, 1.0)),
-        Lch::from(LinSrgba::new(0.1, 0.1, 1.0, 1.0)),
-        Lch::from(LinSrgba::new(0.1, 1.0, 0.1, 1.0)),
+        Lch::from_color(LinSrgba::new(1.0, 0.1, 0.1, 1.0)),
+        Lch::from_color(LinSrgba::new(0.1, 0.1, 1.0, 1.0)),
+        Lch::from_color(LinSrgba::new(0.1, 1.0, 0.1, 1.0)),
     ]);
 
     for (i, c1) in grad1.take(width as usize).enumerate() {
-        let c1: Srgba = Srgba::from_linear(c1).into_format();
+        let c1: Srgba<f32> = Srgba::from_linear(c1).into_format();
         {
             let mut sub_image = image.sub_image(i as u32, 0, 1, height);
             for (x, y) in ImageIterator::with_dimension(&sub_image.dimensions()) {
@@ -451,6 +466,20 @@ fn build_axial_gradient(
     }
 
     gradient
+}
+
+fn multiply(px_data: Vec<u8>, px_data2: Vec<u8>) {
+    let r1 = px_data[0] as f32;
+    let g1 = px_data[1] as f32;
+    let b1 = px_data[2] as f32;
+
+    let r2 = px_data2[0] as f32;
+    let g2 = px_data2[1] as f32;
+    let b2 = px_data2[2] as f32;
+
+    let r3 = (r1 * r2) /255.0;
+    let g3 = (g1 * g2) /255.0;
+    let b3 = (b1 * b2) / 255.0;
 }
 
 /// Fades one image into another.

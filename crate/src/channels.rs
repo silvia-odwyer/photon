@@ -9,6 +9,7 @@ use crate::iter::ImageIterator;
 use crate::{PhotonImage, Rgb};
 use palette::{Hue, Lab, Lch, Saturate, Shade, Srgb, Srgba};
 use wasm_bindgen::prelude::*;
+use palette::{FromColor, IntoColor};
 
 /// Alter a select channel by incrementing or decrementing its value by a constant.
 ///
@@ -416,24 +417,24 @@ pub fn selective_hue_rotate(
             ref_color.g as f32 / 255.0,
             ref_color.b as f32 / 255.0,
         )
-        .into();
+        .into_color();
         let channels = px.channels();
         // Convert the current pixel's colour to the l*a*b colour space
         let r_val: f32 = channels[0] as f32 / 255.0;
         let g_val: f32 = channels[1] as f32 / 255.0;
         let b_val: f32 = channels[2] as f32 / 255.0;
 
-        let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
+        let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into_color();
 
         let sim = color_sim(lab, px_lab);
         if sim > 0 && sim < 40 {
             let px_data = img.get_pixel(x, y).channels();
             let color =
-                Srgba::new(px_data[0], px_data[1], px_data[2], 255).into_format();
-            let hue_rotated_color = Lch::from(color).shift_hue(degrees);
+                Srgba::new(px_data[0] as f32, px_data[1] as f32, px_data[2] as f32, 255.0);
+            let hue_rotated_color = Lch::from_color(color).shift_hue(degrees);
 
             let final_color: Srgba =
-                Srgba::from_linear(hue_rotated_color.into()).into_format();
+                Srgba::from_linear(hue_rotated_color.into_color()).into_format();
 
             let components = final_color.into_components();
 
@@ -623,14 +624,14 @@ fn selective(
             ref_color.g as f32 / 255.0,
             ref_color.b as f32 / 255.0,
         )
-        .into();
+        .into_color();
         let channels = px.channels();
         // Convert the current pixel's colour to the l*a*b colour space
         let r_val: f32 = channels[0] as f32 / 255.0;
         let g_val: f32 = channels[1] as f32 / 255.0;
         let b_val: f32 = channels[2] as f32 / 255.0;
 
-        let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
+        let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into_color();
 
         let sim = color_sim(lab, px_lab);
         if sim > 0 && sim < 40 {
@@ -638,7 +639,7 @@ fn selective(
             let lch_colour: Lch = Srgb::new(px_data[0], px_data[1], px_data[2])
                 .into_format()
                 .into_linear()
-                .into();
+                .into_color();
 
             let new_color = match mode {
                 // Match a single value
@@ -649,7 +650,8 @@ fn selective(
                 _ => lch_colour.saturate(amt),
             };
 
-            let final_color: Srgba = Srgba::from_linear(new_color.into()).into_format();
+            // let final_color: Srgba = Srgba::from_linear(new_color.into_color());
+            let final_color = Srgba::from_color(new_color);
 
             let components = final_color.into_components();
 
@@ -704,14 +706,14 @@ pub fn selective_greyscale(mut photon_image: PhotonImage, ref_color: Rgb) {
             ref_color.g as f32 / 255.0,
             ref_color.b as f32 / 255.0,
         )
-        .into();
+        .into_color();
         let channels = px.channels();
         // Convert the current pixel's colour to the l*a*b colour space
         let r_val: f32 = channels[0] as f32 / 255.0;
         let g_val: f32 = channels[1] as f32 / 255.0;
         let b_val: f32 = channels[2] as f32 / 255.0;
 
-        let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
+        let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into_color();
 
         let sim = color_sim(lab, px_lab);
         if sim > 30 {
