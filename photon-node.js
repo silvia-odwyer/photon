@@ -704,257 +704,6 @@ module.exports.dither = function(photon_image, depth) {
     wasm.dither(photon_image.ptr, depth);
 };
 
-/**
-* Solarization on the Blue channel.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::neue;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* neue(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.neue = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.neue(photon_image.ptr);
-};
-
-/**
-* Solarization on the Red and Green channels.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::lix;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* lix(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.lix = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.lix(photon_image.ptr);
-};
-
-/**
-* Solarization on the Red and Blue channels.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::ryo;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* ryo(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.ryo = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.ryo(photon_image.ptr);
-};
-
-/**
-* Apply a filter to an image. Over 20 filters are available.
-* The filters are as follows:
-* * **oceanic**: Add an aquamarine-tinted hue to an image.
-* * **islands**: Aquamarine tint.
-* * **marine**: Add a green/blue mixed hue to an image.
-* * **seagreen**: Dark green hue, with tones of blue.
-* * **flagblue**: Royal blue tint
-* * **liquid**: Blue-inspired tint.
-* * **diamante**: Custom filter with a blue/turquoise tint.
-* * **radio**: Fallout-style radio effect.
-* * **twenties**: Slight-blue tinted historical effect.
-* * **rosetint**: Rose-tinted filter.
-* * **mauve**: Purple-infused filter.
-* * **bluechrome**: Blue monochrome effect.
-* * **vintage**: Vintage filter with a red tint.
-* * **perfume**: Increase the blue channel, with moderate increases in the Red and Green channels.
-* * **serenity**: Custom filter with an increase in the Blue channel's values.
-* # Arguments
-* * `img` - A PhotonImage.
-* * `filter_name` - The filter's name. Choose from the selection above, eg: "oceanic"
-* # Example
-*
-* ```no_run
-* // For example, to add a filter called "vintage" to an image:
-* use photon_rs::filters::filter;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* filter(&mut img, "vintage");
-* ```
-* @param {PhotonImage} img
-* @param {string} filter_name
-*/
-module.exports.filter = function(img, filter_name) {
-    _assertClass(img, PhotonImage);
-    var ptr0 = passStringToWasm0(filter_name, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    var len0 = WASM_VECTOR_LEN;
-    wasm.filter(img.ptr, ptr0, len0);
-};
-
-/**
-* Apply a lofi effect to an image.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::lofi;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* lofi(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.lofi = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.lofi(img.ptr);
-};
-
-/**
-* Apply a rose tint to an image.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::pastel_pink;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* pastel_pink(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.pastel_pink = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.pastel_pink(img.ptr);
-};
-
-/**
-* Apply a vintage, golden hue to an image.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::golden;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* golden(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.golden = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.golden(img.ptr);
-};
-
-/**
-* Increased contrast filter effect.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::cali;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* cali(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.cali = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.cali(img.ptr);
-};
-
-/**
-* Greyscale effect with increased contrast.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::dramatic;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* dramatic(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.dramatic = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.dramatic(img.ptr);
-};
-
-/**
-* Apply a red hue, with increased contrast and brightness.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::firenze;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* firenze(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.firenze = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.firenze(img.ptr);
-};
-
-/**
-* Apply a greyscale effect with increased contrast.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::obsidian;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* obsidian(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.obsidian = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.obsidian(img.ptr);
-};
-
 function passArray8ToWasm0(arg, malloc) {
     const ptr = malloc(arg.length * 1);
     getUint8Memory0().set(arg, ptr / 1);
@@ -1085,6 +834,463 @@ module.exports.to_image_data = function(photon_image) {
     photon_image.ptr = 0;
     var ret = wasm.to_image_data(ptr0);
     return takeObject(ret);
+};
+
+/**
+* Noise reduction.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to noise reduct an image:
+* use photon_rs::conv::noise_reduction;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* noise_reduction(&mut img);
+* ```
+* Adds a constant to a select R, G, or B channel's value.
+* @param {PhotonImage} photon_image
+*/
+module.exports.noise_reduction = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.noise_reduction(photon_image.ptr);
+};
+
+/**
+* Sharpen an image.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to sharpen an image:
+* use photon_rs::conv::sharpen;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* sharpen(&mut img);
+* ```
+* Adds a constant to a select R, G, or B channel's value.
+* @param {PhotonImage} photon_image
+*/
+module.exports.sharpen = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.sharpen(photon_image.ptr);
+};
+
+/**
+* Apply edge detection to an image, to create a dark version with its edges highlighted.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to increase the Red channel for all pixels by 10:
+* use photon_rs::conv::edge_detection;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* edge_detection(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.edge_detection = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.edge_detection(photon_image.ptr);
+};
+
+/**
+* Apply an identity kernel convolution to an image.
+*
+* # Arguments
+* * `img` -A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to apply an identity kernel convolution:
+* use photon_rs::conv::identity;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* identity(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.identity = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.identity(photon_image.ptr);
+};
+
+/**
+* Apply a box blur effect.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to apply a box blur effect:
+* use photon_rs::conv::box_blur;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* box_blur(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.box_blur = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.box_blur(photon_image.ptr);
+};
+
+/**
+* Gaussian blur in linear time.
+*
+* Reference: http://blog.ivank.net/fastest-gaussian-blur.html
+*
+* # Arguments
+* * `photon_image` - A PhotonImage
+* * `radius` - blur radius
+* # Example
+*
+* ```no_run
+* use photon_rs::conv::gaussian_blur;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* gaussian_blur(&mut img, 3_i32);
+* ```
+* @param {PhotonImage} photon_image
+* @param {number} radius
+*/
+module.exports.gaussian_blur = function(photon_image, radius) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.gaussian_blur(photon_image.ptr, radius);
+};
+
+/**
+* Detect horizontal lines in an image, and highlight these only.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to display the horizontal lines in an image:
+* use photon_rs::conv::detect_horizontal_lines;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* detect_horizontal_lines(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.detect_horizontal_lines = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.detect_horizontal_lines(photon_image.ptr);
+};
+
+/**
+* Detect vertical lines in an image, and highlight these only.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to display the vertical lines in an image:
+* use photon_rs::conv::detect_vertical_lines;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* detect_vertical_lines(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.detect_vertical_lines = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.detect_vertical_lines(photon_image.ptr);
+};
+
+/**
+* Detect lines at a forty five degree angle in an image, and highlight these only.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to display the lines at a forty five degree angle in an image:
+* use photon_rs::conv::detect_45_deg_lines;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* detect_45_deg_lines(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.detect_45_deg_lines = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.detect_45_deg_lines(photon_image.ptr);
+};
+
+/**
+* Detect lines at a 135 degree angle in an image, and highlight these only.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to display the lines at a 135 degree angle in an image:
+* use photon_rs::conv::detect_135_deg_lines;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* detect_135_deg_lines(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.detect_135_deg_lines = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.detect_135_deg_lines(photon_image.ptr);
+};
+
+/**
+* Apply a standard laplace convolution.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to apply a laplace effect:
+* use photon_rs::conv::laplace;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* laplace(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.laplace = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.laplace(photon_image.ptr);
+};
+
+/**
+* Preset edge effect.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to apply this effect:
+* use photon_rs::conv::edge_one;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* edge_one(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.edge_one = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.edge_one(photon_image.ptr);
+};
+
+/**
+* Apply an emboss effect to an image.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to apply an emboss effect:
+* use photon_rs::conv::emboss;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* emboss(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.emboss = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.emboss(photon_image.ptr);
+};
+
+/**
+* Apply a horizontal Sobel filter to an image.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to apply a horizontal Sobel filter:
+* use photon_rs::conv::sobel_horizontal;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* sobel_horizontal(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.sobel_horizontal = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.sobel_horizontal(photon_image.ptr);
+};
+
+/**
+* Apply a horizontal Prewitt convolution to an image.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to apply a horizontal Prewitt convolution effect:
+* use photon_rs::conv::prewitt_horizontal;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* prewitt_horizontal(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.prewitt_horizontal = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.prewitt_horizontal(photon_image.ptr);
+};
+
+/**
+* Apply a vertical Sobel filter to an image.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+*
+* # Example
+*
+* ```no_run
+* // For example, to apply a vertical Sobel filter:
+* use photon_rs::conv::sobel_vertical;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* sobel_vertical(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.sobel_vertical = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.sobel_vertical(photon_image.ptr);
+};
+
+/**
+* Add a watermark to an image.
+*
+* # Arguments
+* * `img` - A DynamicImage that contains a view into the image.
+* * `watermark` - The watermark to be placed onto the `img` image.
+* * `x` - The x coordinate where the watermark's top corner should be positioned.
+* * `y` - The y coordinate where the watermark's top corner should be positioned.
+* # Example
+*
+* ```no_run
+* // For example, to add a watermark to an image at x: 30, y: 40:
+* use photon_rs::multiple::watermark;
+* use photon_rs::native:F:open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* letFne water_mark = open_image("watermark.jpg").expect("File should open");
+* watermark(&mut img, &water_mark, 30_u32, 40_u32);
+* ```
+* @param {PhotonImage} img
+* @param {PhotonImage} watermark
+* @param {number} x
+* @param {number} y
+*/
+module.exports.watermark = function(img, watermark, x, y) {
+    _assertClass(img, PhotonImage);
+    _assertClass(watermark, PhotonImage);
+    wasm.watermark(img.ptr, watermark.ptr, x, y);
+};
+
+/**
+* Blend two images together.
+*
+* The `blend_mode` (3rd param) determines which blending mode to use; change this for varying effects.
+* The blend modes available include: `overlay`, `over`, `atop`, `xor`, `multiply`, `burn`, `soft_light`, `hard_light`,
+* `difference`, `lighten`, `darken`, `dodge`, `plus`, `exclusion` (more to come)
+* NOTE: The first image must be smaller than the second image passed as params.
+* If the first image were larger than the second, then there would be overflowing pixels which would have no corresponding pixels
+* in the second image.
+* # Arguments
+* * `img` - A DynamicImage that contains a view into the image.
+* * `img2` - The 2nd DynamicImage to be blended with the first.
+* * `blend_mode` - The blending mode to use. See above for complete list of blend modes available.
+* # Example
+*
+* ```no_run
+* // For example, to blend two images with the `multiply` blend mode:
+* use photon_rs::multiple::blend;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* let img2 = open_image("img2.jpg").expect("File should open");
+* blend(&mut img, &img2, "multiply");
+* ```
+* @param {PhotonImage} photon_image
+* @param {PhotonImage} photon_image2
+* @param {string} blend_mode
+*/
+module.exports.blend = function(photon_image, photon_image2, blend_mode) {
+    _assertClass(photon_image, PhotonImage);
+    _assertClass(photon_image2, PhotonImage);
+    var ptr0 = passStringToWasm0(blend_mode, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    var len0 = WASM_VECTOR_LEN;
+    wasm.blend(photon_image.ptr, photon_image2.ptr, ptr0, len0);
+};
+
+/**
+* @param {number} width
+* @param {number} height
+* @returns {PhotonImage}
+*/
+module.exports.create_gradient = function(width, height) {
+    var ret = wasm.create_gradient(width, height);
+    return PhotonImage.__wrap(ret);
+};
+
+/**
+* Apply a gradient to an image.
+* @param {PhotonImage} image
+*/
+module.exports.apply_gradient = function(image) {
+    _assertClass(image, PhotonImage);
+    wasm.apply_gradient(image.ptr);
 };
 
 /**
@@ -1590,463 +1796,6 @@ module.exports.selective_greyscale = function(photon_image, ref_color) {
     var ptr1 = ref_color.ptr;
     ref_color.ptr = 0;
     wasm.selective_greyscale(ptr0, ptr1);
-};
-
-/**
-* Noise reduction.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to noise reduct an image:
-* use photon_rs::conv::noise_reduction;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* noise_reduction(&mut img);
-* ```
-* Adds a constant to a select R, G, or B channel's value.
-* @param {PhotonImage} photon_image
-*/
-module.exports.noise_reduction = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.noise_reduction(photon_image.ptr);
-};
-
-/**
-* Sharpen an image.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to sharpen an image:
-* use photon_rs::conv::sharpen;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* sharpen(&mut img);
-* ```
-* Adds a constant to a select R, G, or B channel's value.
-* @param {PhotonImage} photon_image
-*/
-module.exports.sharpen = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.sharpen(photon_image.ptr);
-};
-
-/**
-* Apply edge detection to an image, to create a dark version with its edges highlighted.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to increase the Red channel for all pixels by 10:
-* use photon_rs::conv::edge_detection;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* edge_detection(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.edge_detection = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.edge_detection(photon_image.ptr);
-};
-
-/**
-* Apply an identity kernel convolution to an image.
-*
-* # Arguments
-* * `img` -A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to apply an identity kernel convolution:
-* use photon_rs::conv::identity;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* identity(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.identity = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.identity(photon_image.ptr);
-};
-
-/**
-* Apply a box blur effect.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to apply a box blur effect:
-* use photon_rs::conv::box_blur;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* box_blur(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.box_blur = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.box_blur(photon_image.ptr);
-};
-
-/**
-* Gaussian blur in linear time.
-*
-* Reference: http://blog.ivank.net/fastest-gaussian-blur.html
-*
-* # Arguments
-* * `photon_image` - A PhotonImage
-* * `radius` - blur radius
-* # Example
-*
-* ```no_run
-* use photon_rs::conv::gaussian_blur;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* gaussian_blur(&mut img, 3_i32);
-* ```
-* @param {PhotonImage} photon_image
-* @param {number} radius
-*/
-module.exports.gaussian_blur = function(photon_image, radius) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.gaussian_blur(photon_image.ptr, radius);
-};
-
-/**
-* Detect horizontal lines in an image, and highlight these only.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to display the horizontal lines in an image:
-* use photon_rs::conv::detect_horizontal_lines;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* detect_horizontal_lines(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.detect_horizontal_lines = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.detect_horizontal_lines(photon_image.ptr);
-};
-
-/**
-* Detect vertical lines in an image, and highlight these only.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to display the vertical lines in an image:
-* use photon_rs::conv::detect_vertical_lines;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* detect_vertical_lines(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.detect_vertical_lines = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.detect_vertical_lines(photon_image.ptr);
-};
-
-/**
-* Detect lines at a forty five degree angle in an image, and highlight these only.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to display the lines at a forty five degree angle in an image:
-* use photon_rs::conv::detect_45_deg_lines;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* detect_45_deg_lines(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.detect_45_deg_lines = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.detect_45_deg_lines(photon_image.ptr);
-};
-
-/**
-* Detect lines at a 135 degree angle in an image, and highlight these only.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to display the lines at a 135 degree angle in an image:
-* use photon_rs::conv::detect_135_deg_lines;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* detect_135_deg_lines(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.detect_135_deg_lines = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.detect_135_deg_lines(photon_image.ptr);
-};
-
-/**
-* Apply a standard laplace convolution.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to apply a laplace effect:
-* use photon_rs::conv::laplace;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* laplace(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.laplace = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.laplace(photon_image.ptr);
-};
-
-/**
-* Preset edge effect.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to apply this effect:
-* use photon_rs::conv::edge_one;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* edge_one(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.edge_one = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.edge_one(photon_image.ptr);
-};
-
-/**
-* Apply an emboss effect to an image.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to apply an emboss effect:
-* use photon_rs::conv::emboss;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* emboss(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.emboss = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.emboss(photon_image.ptr);
-};
-
-/**
-* Apply a horizontal Sobel filter to an image.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to apply a horizontal Sobel filter:
-* use photon_rs::conv::sobel_horizontal;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* sobel_horizontal(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.sobel_horizontal = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.sobel_horizontal(photon_image.ptr);
-};
-
-/**
-* Apply a horizontal Prewitt convolution to an image.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to apply a horizontal Prewitt convolution effect:
-* use photon_rs::conv::prewitt_horizontal;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* prewitt_horizontal(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.prewitt_horizontal = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.prewitt_horizontal(photon_image.ptr);
-};
-
-/**
-* Apply a vertical Sobel filter to an image.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-*
-* # Example
-*
-* ```no_run
-* // For example, to apply a vertical Sobel filter:
-* use photon_rs::conv::sobel_vertical;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* sobel_vertical(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.sobel_vertical = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.sobel_vertical(photon_image.ptr);
-};
-
-/**
-* Add a watermark to an image.
-*
-* # Arguments
-* * `img` - A DynamicImage that contains a view into the image.
-* * `watermark` - The watermark to be placed onto the `img` image.
-* * `x` - The x coordinate where the watermark's top corner should be positioned.
-* * `y` - The y coordinate where the watermark's top corner should be positioned.
-* # Example
-*
-* ```no_run
-* // For example, to add a watermark to an image at x: 30, y: 40:
-* use photon_rs::multiple::watermark;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* let water_mark = open_image("watermark.jpg").expect("File should open");
-* watermark(&mut img, &water_mark, 30_u32, 40_u32);
-* ```
-* @param {PhotonImage} img
-* @param {PhotonImage} watermark
-* @param {number} x
-* @param {number} y
-*/
-module.exports.watermark = function(img, watermark, x, y) {
-    _assertClass(img, PhotonImage);
-    _assertClass(watermark, PhotonImage);
-    wasm.watermark(img.ptr, watermark.ptr, x, y);
-};
-
-/**
-* Blend two images together.
-*
-* The `blend_mode` (3rd param) determines which blending mode to use; change this for varying effects.
-* The blend modes available include: `overlay`, `over`, `atop`, `xor`, `multiply`, `burn`, `soft_light`, `hard_light`,
-* `difference`, `lighten`, `darken`, `dodge`, `plus`, `exclusion` (more to come)
-* NOTE: The first image must be smaller than the second image passed as params.
-* If the first image were larger than the second, then there would be overflowing pixels which would have no corresponding pixels
-* in the second image.
-* # Arguments
-* * `img` - A DynamicImage that contains a view into the image.
-* * `img2` - The 2nd DynamicImage to be blended with the first.
-* * `blend_mode` - The blending mode to use. See above for complete list of blend modes available.
-* # Example
-*
-* ```no_run
-* // For example, to blend two images with the `multiply` blend mode:
-* use photon_rs::multiple::blend;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* let img2 = open_image("img2.jpg").expect("File should open");
-* blend(&mut img, &img2, "multiply");
-* ```
-* @param {PhotonImage} photon_image
-* @param {PhotonImage} photon_image2
-* @param {string} blend_mode
-*/
-module.exports.blend = function(photon_image, photon_image2, blend_mode) {
-    _assertClass(photon_image, PhotonImage);
-    _assertClass(photon_image2, PhotonImage);
-    var ptr0 = passStringToWasm0(blend_mode, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    var len0 = WASM_VECTOR_LEN;
-    wasm.blend(photon_image.ptr, photon_image2.ptr, ptr0, len0);
-};
-
-/**
-* @param {number} width
-* @param {number} height
-* @returns {PhotonImage}
-*/
-module.exports.create_gradient = function(width, height) {
-    var ret = wasm.create_gradient(width, height);
-    return PhotonImage.__wrap(ret);
-};
-
-/**
-* Apply a gradient to an image.
-* @param {PhotonImage} image
-*/
-module.exports.apply_gradient = function(image) {
-    _assertClass(image, PhotonImage);
-    wasm.apply_gradient(image.ptr);
 };
 
 /**
@@ -2909,74 +2658,6 @@ module.exports.threshold = function(img, threshold) {
 };
 
 /**
-* Add bordered-text to an image.
-* The only font available as of now is Roboto.
-* Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
-*
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* * `text` - Text string to be drawn to the image.
-* * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
-* * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
-*
-* # Example
-*
-* ```no_run
-* // For example to draw the string "Welcome to Photon!" at 10, 10:
-* use photon_rs::native::open_image;
-* use photon_rs::text::draw_text_with_border;
-*
-* // Open the image. A PhotonImage is returned.
-* let mut img = open_image("img.jpg").expect("File should open");
-* draw_text_with_border(&mut img, "Welcome to Photon!", 10_u32, 10_u32);
-* ```
-* @param {PhotonImage} photon_img
-* @param {string} text
-* @param {number} x
-* @param {number} y
-*/
-module.exports.draw_text_with_border = function(photon_img, text, x, y) {
-    _assertClass(photon_img, PhotonImage);
-    var ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    var len0 = WASM_VECTOR_LEN;
-    wasm.draw_text_with_border(photon_img.ptr, ptr0, len0, x, y);
-};
-
-/**
-* Add text to an image.
-* The only font available as of now is Roboto.
-* Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
-*
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* * `text` - Text string to be drawn to the image.
-* * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
-* * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
-*
-* # Example
-*
-* ```no_run
-* // For example to draw the string "Welcome to Photon!" at 10, 10:
-* use photon_rs::native::open_image;
-* use photon_rs::text::draw_text;
-*
-* // Open the image. A PhotonImage is returned.
-* let mut img = open_image("img.jpg").expect("File should open");
-* draw_text(&mut img, "Welcome to Photon!", 10_u32, 10_u32);
-* ```
-* @param {PhotonImage} photon_img
-* @param {string} text
-* @param {number} x
-* @param {number} y
-*/
-module.exports.draw_text = function(photon_img, text, x, y) {
-    _assertClass(photon_img, PhotonImage);
-    var ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    var len0 = WASM_VECTOR_LEN;
-    wasm.draw_text(photon_img.ptr, ptr0, len0, x, y);
-};
-
-/**
 * Crop an image.
 *
 * # Arguments
@@ -3364,6 +3045,325 @@ module.exports.resample = function(img, dst_width, dst_height) {
     _assertClass(img, PhotonImage);
     var ret = wasm.resample(img.ptr, dst_width, dst_height);
     return PhotonImage.__wrap(ret);
+};
+
+/**
+* Solarization on the Blue channel.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::neue;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* neue(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.neue = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.neue(photon_image.ptr);
+};
+
+/**
+* Solarization on the Red and Green channels.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::lix;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* lix(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.lix = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.lix(photon_image.ptr);
+};
+
+/**
+* Solarization on the Red and Blue channels.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::ryo;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* ryo(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.ryo = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.ryo(photon_image.ptr);
+};
+
+/**
+* Apply a filter to an image. Over 20 filters are available.
+* The filters are as follows:
+* * **oceanic**: Add an aquamarine-tinted hue to an image.
+* * **islands**: Aquamarine tint.
+* * **marine**: Add a green/blue mixed hue to an image.
+* * **seagreen**: Dark green hue, with tones of blue.
+* * **flagblue**: Royal blue tint
+* * **liquid**: Blue-inspired tint.
+* * **diamante**: Custom filter with a blue/turquoise tint.
+* * **radio**: Fallout-style radio effect.
+* * **twenties**: Slight-blue tinted historical effect.
+* * **rosetint**: Rose-tinted filter.
+* * **mauve**: Purple-infused filter.
+* * **bluechrome**: Blue monochrome effect.
+* * **vintage**: Vintage filter with a red tint.
+* * **perfume**: Increase the blue channel, with moderate increases in the Red and Green channels.
+* * **serenity**: Custom filter with an increase in the Blue channel's values.
+* # Arguments
+* * `img` - A PhotonImage.
+* * `filter_name` - The filter's name. Choose from the selection above, eg: "oceanic"
+* # Example
+*
+* ```no_run
+* // For example, to add a filter called "vintage" to an image:
+* use photon_rs::filters::filter;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* filter(&mut img, "vintage");
+* ```
+* @param {PhotonImage} img
+* @param {string} filter_name
+*/
+module.exports.filter = function(img, filter_name) {
+    _assertClass(img, PhotonImage);
+    var ptr0 = passStringToWasm0(filter_name, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    var len0 = WASM_VECTOR_LEN;
+    wasm.filter(img.ptr, ptr0, len0);
+};
+
+/**
+* Apply a lofi effect to an image.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::lofi;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* lofi(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.lofi = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.lofi(img.ptr);
+};
+
+/**
+* Apply a rose tint to an image.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::pastel_pink;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* pastel_pink(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.pastel_pink = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.pastel_pink(img.ptr);
+};
+
+/**
+* Apply a vintage, golden hue to an image.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::golden;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* golden(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.golden = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.golden(img.ptr);
+};
+
+/**
+* Increased contrast filter effect.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::cali;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* cali(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.cali = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.cali(img.ptr);
+};
+
+/**
+* Greyscale effect with increased contrast.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::dramatic;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* dramatic(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.dramatic = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.dramatic(img.ptr);
+};
+
+/**
+* Apply a red hue, with increased contrast and brightness.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::firenze;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* firenze(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.firenze = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.firenze(img.ptr);
+};
+
+/**
+* Apply a greyscale effect with increased contrast.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::obsidian;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* obsidian(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.obsidian = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.obsidian(img.ptr);
+};
+
+/**
+* Add bordered-text to an image.
+* The only font available as of now is Roboto.
+* Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
+*
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* * `text` - Text string to be drawn to the image.
+* * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
+* * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
+*
+* # Example
+*
+* ```no_run
+* // For example to draw the string "Welcome to Photon!" at 10, 10:
+* use photon_rs::native::open_image;
+* use photon_rs::text::draw_text_with_border;
+*
+* // Open the image. A PhotonImage is returned.
+* let mut img = open_image("img.jpg").expect("File should open");
+* draw_text_with_border(&mut img, "Welcome to Photon!", 10_u32, 10_u32);
+* ```
+* @param {PhotonImage} photon_img
+* @param {string} text
+* @param {number} x
+* @param {number} y
+*/
+module.exports.draw_text_with_border = function(photon_img, text, x, y) {
+    _assertClass(photon_img, PhotonImage);
+    var ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    var len0 = WASM_VECTOR_LEN;
+    wasm.draw_text_with_border(photon_img.ptr, ptr0, len0, x, y);
+};
+
+/**
+* Add text to an image.
+* The only font available as of now is Roboto.
+* Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
+*
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* * `text` - Text string to be drawn to the image.
+* * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
+* * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
+*
+* # Example
+*
+* ```no_run
+* // For example to draw the string "Welcome to Photon!" at 10, 10:
+* use photon_rs::native::open_image;
+* use photon_rs::text::draw_text;
+*
+* // Open the image. A PhotonImage is returned.
+* let mut img = open_image("img.jpg").expect("File should open");
+* draw_text(&mut img, "Welcome to Photon!", 10_u32, 10_u32);
+* ```
+* @param {PhotonImage} photon_img
+* @param {string} text
+* @param {number} x
+* @param {number} y
+*/
+module.exports.draw_text = function(photon_img, text, x, y) {
+    _assertClass(photon_img, PhotonImage);
+    var ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    var len0 = WASM_VECTOR_LEN;
+    wasm.draw_text(photon_img.ptr, ptr0, len0, x, y);
 };
 
 function isLikeNone(x) {
