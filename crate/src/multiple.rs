@@ -9,7 +9,7 @@ use image::{DynamicImage, GenericImageView, RgbaImage};
 use palette::{Blend, Gradient, Lab, Lch, LinSrgba, Srgb, Srgba};
 use std::cmp::{max, min};
 use wasm_bindgen::prelude::*;
-use palette::{FromColor, IntoColor, Pixel};
+use palette::{FromColor, IntoColor};
 
 /// Add a watermark to an image.
 ///
@@ -85,8 +85,6 @@ pub fn blend(
         let px_data = pixel.channels();
         let px_data2 = pixel_img2.channels();
 
-      
-
         // let rgb_color: Rgba = Rgba::new(px_data[0] as f32, px_data[1] as f32, px_data[2] as f32, 255.0);
         // let color: LinSrgba = LinSrgba::from_color(&rgb_color).into_format();
 
@@ -106,15 +104,6 @@ pub fn blend(
             px_data2[3] as f32 / 255.0,
         )
         .into_linear();
-
-        //let buffer = [px_data[0] as f32, px_data[1] as f32, px_data[2] as f32, px_data[3] as f32];
-        //let color = LinSrgba::from_raw(&buffer).into_linear();
-
-        //let buffer2 = [px_data2[0] as f32, px_data2[1] as f32, px_data2[2] as f32, px_data2[3] as f32];
-        //let color2 = LinSrgba::from_raw(&buffer2).into_linear();
-
-        // let rgb_color2: Rgba = Rgba::new(px_data2[0] as f32, px_data2[1] as f32, px_data2[2] as f32, 255.0);
-        // let color2: LinSrgba = LinSrgba::from_color(&rgb_color2).into_format();
 
         let blended = match blend_mode {
             // Match a single value
@@ -466,20 +455,6 @@ fn build_axial_gradient(
     }
 
     gradient
-}
-
-fn multiply(px_data: Vec<u8>, px_data2: Vec<u8>) {
-    let r1 = px_data[0] as f32;
-    let g1 = px_data[1] as f32;
-    let b1 = px_data[2] as f32;
-
-    let r2 = px_data2[0] as f32;
-    let g2 = px_data2[1] as f32;
-    let b2 = px_data2[2] as f32;
-
-    let r3 = (r1 * r2) /255.0;
-    let g3 = (g1 * g2) /255.0;
-    let b3 = (b1 * b2) / 255.0;
 }
 
 /// Fades one image into another.
