@@ -7,9 +7,9 @@ use image::{GenericImage, GenericImageView};
 use crate::helpers;
 use crate::iter::ImageIterator;
 use crate::{PhotonImage, Rgb};
+use palette::{FromColor, IntoColor};
 use palette::{Hue, Lab, Lch, Saturate, Shade, Srgb, Srgba};
 use wasm_bindgen::prelude::*;
-use palette::{FromColor, IntoColor};
 
 /// Alter a select channel by incrementing or decrementing its value by a constant.
 ///
@@ -429,8 +429,12 @@ pub fn selective_hue_rotate(
         let sim = color_sim(lab, px_lab);
         if sim > 0 && sim < 40 {
             let px_data = img.get_pixel(x, y).channels();
-            let color =
-                Srgba::new(px_data[0] as f32, px_data[1] as f32, px_data[2] as f32, 255.0);
+            let color = Srgba::new(
+                px_data[0] as f32,
+                px_data[1] as f32,
+                px_data[2] as f32,
+                255.0,
+            );
             let hue_rotated_color = Lch::from_color(color).shift_hue(degrees);
 
             let final_color: Srgba =

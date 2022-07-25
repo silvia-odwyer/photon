@@ -4,9 +4,9 @@ use crate::iter::ImageIterator;
 use crate::{helpers, PhotonImage, Rgb};
 use image::GenericImageView;
 use image::Pixel as ImagePixel;
+use palette::{FromColor, IntoColor};
 use palette::{Hsl, Hsv, Hue, Lch, Saturate, Shade, Srgba};
 use wasm_bindgen::prelude::*;
-use palette::{FromColor, IntoColor};
 
 /// Applies gamma correction to an image.
 /// # Arguments
@@ -95,9 +95,14 @@ pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 
     for (x, y) in ImageIterator::new(width, height) {
         let px_data = img.get_pixel(x, y).channels();
-        let lch_colour: Lch = Srgba::new(px_data[0] as f32, px_data[1] as f32, px_data[2] as f32, 255.0)
-            .into_linear()
-            .into_color();
+        let lch_colour: Lch = Srgba::new(
+            px_data[0] as f32,
+            px_data[1] as f32,
+            px_data[2] as f32,
+            255.0,
+        )
+        .into_linear()
+        .into_color();
 
         let new_color = match mode {
             // Match a single value
@@ -108,7 +113,8 @@ pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
             "shift_hue" => lch_colour.shift_hue(amt * 360.0),
             _ => lch_colour.saturate(amt),
         };
-        let final_color: Srgba = Srgba::from_linear(new_color.into_color()).into_format();
+        let final_color: Srgba =
+            Srgba::from_linear(new_color.into_color()).into_format();
 
         let components = final_color.into_components();
 
@@ -157,7 +163,12 @@ pub fn hsl(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         let px_data = img.get_pixel(x, y).channels();
 
-        let colour = Srgba::new(px_data[0] as f32, px_data[1] as f32, px_data[2] as f32, 255.0);
+        let colour = Srgba::new(
+            px_data[0] as f32,
+            px_data[1] as f32,
+            px_data[2] as f32,
+            255.0,
+        );
 
         let hsl_colour = Hsl::from_color(colour);
 
@@ -171,7 +182,6 @@ pub fn hsl(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
             _ => hsl_colour.saturate(amt),
         };
         let final_color = Srgba::from_color(new_color);
-
 
         let components = final_color.into_components();
 
@@ -223,7 +233,12 @@ pub fn hsv(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     for (x, y) in ImageIterator::new(width, height) {
         let px_data = img.get_pixel(x, y).channels();
 
-        let color = Srgba::new(px_data[0] as f32, px_data[1] as f32, px_data[2] as f32, 255.0);
+        let color = Srgba::new(
+            px_data[0] as f32,
+            px_data[1] as f32,
+            px_data[2] as f32,
+            255.0,
+        );
 
         let hsv_colour = Hsv::from_color(color);
 

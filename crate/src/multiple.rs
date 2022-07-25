@@ -7,9 +7,9 @@ use image::DynamicImage::ImageRgba8;
 use image::Pixel as ImagePixel;
 use image::{DynamicImage, GenericImageView, RgbaImage};
 use palette::{Blend, Gradient, Lab, Lch, LinSrgba, Srgb, Srgba};
+use palette::{FromColor, IntoColor};
 use std::cmp::{max, min};
 use wasm_bindgen::prelude::*;
-use palette::{FromColor, IntoColor};
 
 /// Add a watermark to an image.
 ///
@@ -93,7 +93,6 @@ pub fn blend(
             px_data[1] as f32 / 255.0,
             px_data[2] as f32 / 255.0,
             px_data[3] as f32 / 255.0,
-
         )
         .into_linear();
 
