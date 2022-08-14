@@ -22,7 +22,7 @@ use wasm_bindgen::prelude::*;
 /// ```
 #[wasm_bindgen]
 pub fn neue(photon_image: &mut PhotonImage) {
-    let end = photon_image.get_raw_pixels().len() - 4;
+    let end = photon_image.get_raw_pixels().len();
 
     for i in (0..end).step_by(4) {
         let b_val = photon_image.raw_pixels[i + 2];
@@ -47,7 +47,7 @@ pub fn neue(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn lix(photon_image: &mut PhotonImage) {
-    let end = photon_image.get_raw_pixels().len() - 4;
+    let end = photon_image.get_raw_pixels().len();
 
     for i in (0..end).step_by(4) {
         let r_val = photon_image.raw_pixels[i];
@@ -73,7 +73,7 @@ pub fn lix(photon_image: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn ryo(photon_image: &mut PhotonImage) {
-    let end = photon_image.get_raw_pixels().len() - 4;
+    let end = photon_image.get_raw_pixels().len();
 
     for i in (0..end).step_by(4) {
         let r_val = photon_image.raw_pixels[i];

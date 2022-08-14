@@ -30,7 +30,7 @@ use wasm_bindgen::prelude::*;
 ///
 #[wasm_bindgen]
 pub fn monochrome(img: &mut PhotonImage, r_offset: u32, g_offset: u32, b_offset: u32) {
-    let end = img.get_raw_pixels().len() - 4;
+    let end = img.get_raw_pixels().len();
 
     for i in (0..end).step_by(4) {
         let r_val = img.raw_pixels[i] as u32;
@@ -79,7 +79,7 @@ pub fn monochrome(img: &mut PhotonImage, r_offset: u32, g_offset: u32, b_offset:
 ///
 #[wasm_bindgen]
 pub fn sepia(img: &mut PhotonImage) {
-    let end = img.get_raw_pixels().len() - 4;
+    let end = img.get_raw_pixels().len();
 
     for i in (0..end).step_by(4) {
         let r_val = img.raw_pixels[i] as f32;
@@ -122,7 +122,7 @@ pub fn sepia(img: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn grayscale(img: &mut PhotonImage) {
-    let end = img.get_raw_pixels().len() - 4;
+    let end = img.get_raw_pixels().len();
 
     for i in (0..end).step_by(4) {
         let r_val = img.raw_pixels[i] as u32;
@@ -156,7 +156,7 @@ pub fn grayscale(img: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn grayscale_human_corrected(img: &mut PhotonImage) {
-    let end = img.get_raw_pixels().len() - 4;
+    let end = img.get_raw_pixels().len();
 
     for i in (0..end).step_by(4) {
         let r_val = img.raw_pixels[i] as f32;
@@ -188,7 +188,7 @@ pub fn grayscale_human_corrected(img: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn desaturate(img: &mut PhotonImage) {
-    let end = img.get_raw_pixels().len() - 4;
+    let end = img.get_raw_pixels().len();
 
     for i in (0..end).step_by(4) {
         let r_val = img.raw_pixels[i] as u32;
@@ -224,7 +224,7 @@ pub fn desaturate(img: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn decompose_min(img: &mut PhotonImage) {
-    let end = img.get_raw_pixels().len() - 4;
+    let end = img.get_raw_pixels().len();
 
     for i in (0..end).step_by(4) {
         let r_val = img.raw_pixels[i] as u32;
@@ -260,7 +260,7 @@ pub fn decompose_min(img: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn decompose_max(img: &mut PhotonImage) {
-    let end = img.get_raw_pixels().len() - 4;
+    let end = img.get_raw_pixels().len();
 
     for i in (0..end).step_by(4) {
         let r_val = img.raw_pixels[i] as u32;
@@ -433,7 +433,7 @@ pub fn single_channel_grayscale(mut photon_image: &mut PhotonImage, channel: usi
 /// ```
 #[wasm_bindgen]
 pub fn threshold(img: &mut PhotonImage, threshold: u32) {
-    let end = img.get_raw_pixels().len() - 4;
+    let end = img.get_raw_pixels().len();
 
     for i in (0..end).step_by(4) {
         let r = img.raw_pixels[i] as f32;

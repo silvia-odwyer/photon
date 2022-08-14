@@ -72,5 +72,4 @@ features = [
 ]
 
 [features]
-default = ["console_error_panic_hook", "rayon"]
-rayon = ["image/jpeg_rayon", "imageproc/rayon"]
+default = ["console_error_panic_hook"]

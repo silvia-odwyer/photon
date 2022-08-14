@@ -51,7 +51,7 @@ pub fn alter_channel(img: &mut PhotonImage, channel: usize, amt: i16) {
     if amt > 255 {
         panic!("Amount to increment/decrement should be between -255 and 255");
     }
-    let end = img.raw_pixels.len() - 4;
+    let end = img.raw_pixels.len();
 
     for i in (channel..end).step_by(4) {
         let inc_val: i16 = img.raw_pixels[i] as i16 + amt as i16;
@@ -161,7 +161,7 @@ pub fn alter_two_channels(
     if amt2 > 255 {
         panic!("Amount to inc/dec channel by should be between -255 and 255");
     }
-    let end = img.raw_pixels.len() - 4;
+    let end = img.raw_pixels.len();
 
     for i in (0..end).step_by(4) {
         let inc_val1: i16 = img.raw_pixels[i + channel1] as i16 + amt1 as i16;
@@ -202,7 +202,7 @@ pub fn alter_channels(img: &mut PhotonImage, r_amt: i16, g_amt: i16, b_amt: i16)
     if b_amt > 255 {
         panic!("Invalid b_amt passed. Amount to inc/dec channel by should be between -255 and 255");
     }
-    let end = img.raw_pixels.len() - 4;
+    let end = img.raw_pixels.len();
 
     for i in (0..end).step_by(4) {
         let r_val: i16 = img.raw_pixels[i] as i16 + r_amt as i16;
@@ -239,7 +239,7 @@ pub fn remove_channel(img: &mut PhotonImage, channel: usize, min_filter: u8) {
     if channel > 2 {
         panic!("Invalid channel index passed. Channel must be equal to 0, 1, or 2.");
     }
-    let end = img.raw_pixels.len() - 4;
+    let end = img.raw_pixels.len();
     for i in (channel..end).step_by(4) {
         if img.raw_pixels[i] < min_filter {
             img.raw_pixels[i] = 0;
@@ -335,7 +335,7 @@ pub fn swap_channels(img: &mut PhotonImage, mut channel1: usize, mut channel2: u
     if channel2 > 2 {
         panic!("Invalid channel index passed. Channel2 must be equal to 0, 1, or 2.");
     }
-    let end = img.raw_pixels.len() - 4;
+    let end = img.raw_pixels.len();
 
     if channel1 > channel2 {
         std::mem::swap(&mut channel1, &mut channel2);
@@ -363,7 +363,7 @@ pub fn swap_channels(img: &mut PhotonImage, mut channel1: usize, mut channel2: u
 /// ```
 #[wasm_bindgen]
 pub fn invert(photon_image: &mut PhotonImage) {
-    let end = photon_image.get_raw_pixels().len() - 4;
+    let end = photon_image.get_raw_pixels().len();
 
     for i in (0..end).step_by(4) {
         let r_val = photon_image.raw_pixels[i];
