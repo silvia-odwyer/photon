@@ -5,7 +5,7 @@ use crate::{helpers, PhotonImage, Rgb};
 use image::GenericImageView;
 use image::Pixel as ImagePixel;
 use palette::{FromColor, IntoColor};
-use palette::{Hsl, Hsv, Hue, Lch, Hsluv, Saturate, Shade, Srgba};
+use palette::{Hsl, Hsluv, Hsv, Hue, Lch, Saturate, Shade, Srgba};
 use wasm_bindgen::prelude::*;
 
 /// Applies gamma correction to an image.
