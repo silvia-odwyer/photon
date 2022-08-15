@@ -1,5 +1,8 @@
 #[cfg(test)]
 mod test {
+
+    use image::ImageBuffer;
+
     use crate::channels::*;
     use crate::colour_spaces::*;
     use crate::transform::{resample, seam_carve};
@@ -174,7 +177,7 @@ mod test {
             125, 144, 120, 255,
         ];
 
-        let correct_pix = vec![
+        let correct_pix: Vec<u8> = vec![
             134, 122, 131, 255, 131, 131, 139, 255, 135, 134, 137, 255, 138, 134, 130,
             255, 126, 125, 119, 255, 131, 134, 129, 255, 137, 134, 132, 255, 130, 126,
             130, 255, 132, 125, 132, 255, 122, 142, 129, 255, 134, 135, 128, 255, 138,
@@ -184,7 +187,12 @@ mod test {
 
         let mut photon_image = PhotonImage::new(raw_pix, width, height);
         hue_rotate_hsluv(&mut photon_image, 0.0);
-        assert_eq!(photon_image.raw_pixels, correct_pix);
+        let photon_result: ImageBuffer<image::Rgba<u8>, Vec<u8>> =
+            ImageBuffer::from_raw(width, height, photon_image.get_raw_pixels())
+                .expect("Test failed");
+        let correct_image: ImageBuffer<image::Rgba<u8>, Vec<u8>> =
+            ImageBuffer::from_raw(width, height, correct_pix).expect("Test failed");
+        imageproc::assert_pixels_eq_within!(photon_result, correct_image, 1);
     }
 
     #[test]
@@ -200,7 +208,7 @@ mod test {
             125, 144, 120, 255,
         ];
 
-        let correct_pix = vec![
+        let correct_pix: Vec<u8> = vec![
             134, 122, 131, 255, 131, 131, 139, 255, 135, 134, 137, 255, 138, 134, 130,
             255, 126, 125, 119, 255, 131, 134, 129, 255, 137, 134, 132, 255, 130, 126,
             130, 255, 132, 125, 132, 255, 122, 142, 129, 255, 134, 135, 128, 255, 138,
@@ -210,7 +218,12 @@ mod test {
 
         let mut photon_image = PhotonImage::new(raw_pix, width, height);
         hue_rotate_hsl(&mut photon_image, 0.0);
-        assert_eq!(photon_image.raw_pixels, correct_pix);
+        let photon_result: ImageBuffer<image::Rgba<u8>, Vec<u8>> =
+            ImageBuffer::from_raw(width, height, photon_image.get_raw_pixels())
+                .expect("Test failed");
+        let correct_image: ImageBuffer<image::Rgba<u8>, Vec<u8>> =
+            ImageBuffer::from_raw(width, height, correct_pix).expect("Test failed");
+        imageproc::assert_pixels_eq_within!(photon_result, correct_image, 1);
     }
 
     #[test]
@@ -226,7 +239,7 @@ mod test {
             125, 144, 120, 255,
         ];
 
-        let correct_pix = vec![
+        let correct_pix: Vec<u8> = vec![
             134, 122, 131, 255, 131, 131, 139, 255, 135, 134, 137, 255, 138, 134, 130,
             255, 126, 125, 119, 255, 131, 134, 129, 255, 137, 134, 132, 255, 130, 126,
             130, 255, 132, 125, 132, 255, 122, 142, 129, 255, 134, 135, 128, 255, 138,
@@ -236,7 +249,12 @@ mod test {
 
         let mut photon_image = PhotonImage::new(raw_pix, width, height);
         hue_rotate_hsv(&mut photon_image, 0.0);
-        assert_eq!(photon_image.raw_pixels, correct_pix);
+        let photon_result: ImageBuffer<image::Rgba<u8>, Vec<u8>> =
+            ImageBuffer::from_raw(width, height, photon_image.get_raw_pixels())
+                .expect("Test failed");
+        let correct_image: ImageBuffer<image::Rgba<u8>, Vec<u8>> =
+            ImageBuffer::from_raw(width, height, correct_pix).expect("Test failed");
+        imageproc::assert_pixels_eq_within!(photon_result, correct_image, 1);
     }
 
     #[test]
@@ -252,7 +270,7 @@ mod test {
             125, 144, 120, 255,
         ];
 
-        let correct_pix = vec![
+        let correct_pix: Vec<u8> = vec![
             134, 122, 131, 255, 131, 131, 139, 255, 135, 134, 137, 255, 138, 134, 130,
             255, 126, 125, 119, 255, 131, 134, 129, 255, 137, 134, 132, 255, 130, 126,
             130, 255, 132, 125, 132, 255, 122, 142, 129, 255, 134, 135, 128, 255, 138,
@@ -262,7 +280,12 @@ mod test {
 
         let mut photon_image = PhotonImage::new(raw_pix, width, height);
         hue_rotate_lch(&mut photon_image, 0.0);
-        assert_eq!(photon_image.raw_pixels, correct_pix);
+        let photon_result: ImageBuffer<image::Rgba<u8>, Vec<u8>> =
+            ImageBuffer::from_raw(width, height, photon_image.get_raw_pixels())
+                .expect("Test failed");
+        let correct_image: ImageBuffer<image::Rgba<u8>, Vec<u8>> =
+            ImageBuffer::from_raw(width, height, correct_pix).expect("Test failed");
+        imageproc::assert_pixels_eq_within!(photon_result, correct_image, 1);
     }
 
     #[test]
