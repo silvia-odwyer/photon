@@ -844,3 +844,23 @@ pub fn resample(img: &PhotonImage, dst_width: usize, dst_height: usize) -> Photo
 
     PhotonImage::new(pix_buf, dst_width as u32, dst_height as u32)
 }
+
+/// Compression
+///
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// * `quality` - The Quality of the returned PhantomImage.
+///
+/// # Example
+///
+/// ```no_run
+/// let image = open_image("img.jpg").expect("File should open");
+///
+/// let compressed_image = compress(&image, 50);
+/// ```
+/// Adds a constant to a select R, G, or B channel's value.
+pub fn compress(img: &PhotonImage, quality: u8) -> PhotonImage {
+    let bytes = img.get_bytes_jpeg(quality);
+
+    PhotonImage::new_from_byteslice(bytes)
+}
