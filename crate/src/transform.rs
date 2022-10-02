@@ -849,11 +849,14 @@ pub fn resample(img: &PhotonImage, dst_width: usize, dst_height: usize) -> Photo
 ///
 /// # Arguments
 /// * `img` - A PhotonImage.
-/// * `quality` - The Quality of the returned PhantomImage.
+/// * `quality` - The Quality of the returned PhotonImage.
 ///
 /// # Example
 ///
 /// ```no_run
+/// use photon_rs::native::open_image;
+/// use photon_rs::transform::compress;
+///
 /// let image = open_image("img.jpg").expect("File should open");
 ///
 /// let compressed_image = compress(&image, 50);
