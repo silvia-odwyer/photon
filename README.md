@@ -204,7 +204,7 @@ or filters; this library provides a complete suite of functions to do so, as wel
 
 ## Contributing
 
-Photon is always ready for new filters and functions, so if you'd like to contribute, we're always ready to accept new Pull Requests or investigate new issues.
+Photon is always accepting accepting new filters and functions. In that vein if you'd like to contribute to Photon please submit a Pull Request or add new issues for investigation. Our community is our lifeblood, and we appreciate all the support we get from individuals like you.
 
 ## To Do
 - Selective colorization
