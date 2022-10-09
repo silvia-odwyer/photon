@@ -140,7 +140,7 @@ wasm-pack build ./crate
 ## Get Started With WebAssembly
 ### Using a Bundler?
 #### Installing Photon
-If you're using Webpack or a bundler to build your project, install Photon via npm:
+If you're using Webpack or a bundler to build your project, install Photon via [npm](https://www.npmjs.com/package/@silvia-odwyer/photon):
 
 ```bash
 npm install @silvia-odwyer/photon
