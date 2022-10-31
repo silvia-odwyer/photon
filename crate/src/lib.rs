@@ -198,7 +198,7 @@ impl From<ImageData> for PhotonImage {
 
 /// RGB color type.
 #[wasm_bindgen]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Rgb {
     r: u8,
     g: u8,
