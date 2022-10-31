@@ -211,7 +211,6 @@ Photon is always accepting new filters and functions. In that vein if you'd like
 - Fade
 - Blend images using browser-specific functions for WASM version of library.
 - Vintage images with light leaks, grains, etc.,
-- Duotone filtering
 - Tests in a headless web browser for WebAssembly version of library
 
 ## Contributors

@@ -1175,59 +1175,38 @@ pub fn dither(photon_image: &mut PhotonImage, depth: u32) {
     }
 }
 
-// pub fn create_gradient_map(color_a : Rgb, color_b: Rgb) -> Vec<Rgb> {
-//     println!("hi");
-//     println!("{}", color_a.get_red());
-//     let mut gradient_map = vec![];
+fn create_gradient_map(color_a: Rgb, color_b: Rgb) -> Vec<Rgb> {
+    let mut gradient_map = vec![Rgb::new(0, 0, 0); 256];
 
-//     let max_val = 255;
-//     let mut r_val = 0;
+    for (px, pos) in gradient_map.iter_mut().zip(0_u32..) {
+        let inv_pos = 256 - pos;
 
-//     let end: i32 = 256 * 4;
+        px.r = (((color_a.r as u32) * inv_pos + (color_b.r as u32) * pos) / 256)
+            .clamp(0, 255) as u8;
+        px.g = (((color_a.g as u32) * inv_pos + (color_b.g as u32) * pos) / 256)
+            .clamp(0, 255) as u8;
+        px.b = (((color_a.b as u32) * inv_pos + (color_b.b as u32) * pos) / 256)
+            .clamp(0, 255) as u8;
+    }
 
-//     for i in (0..end).step_by(4){
-//         let i: u8 = i as u8;
-//         let intensity_b = max_val - i;
+    gradient_map
+}
 
-//         let res1 = (i * color_a.get_red() + intensity_b * color_b.get_red());
-//         let res2 = res1 / max_val;
-//         println!("res 1 {}", res1);
-//         println!("res 2 {}", res2);
+#[wasm_bindgen]
+pub fn duotone(photon_image: &mut PhotonImage, color_a: Rgb, color_b: Rgb) {
+    let gradient_map = create_gradient_map(color_a, color_b);
+    let buf = photon_image.raw_pixels.as_mut_slice();
 
-//         r_val = (i * color_a.get_red() + intensity_b * color_b.get_red()) / max_val;
-//         println!("r_val {}", r_val);
-//         gradient_map.push(Rgb {
-//             r: (256 - (i / 4) * color_a.get_red() + (i / 4) * color_b.r) / 256 ,
-//             g: (i * color_a.get_green() + intensity_b * color_b.get_green()) / max_val ,
-//             b: (i * color_a.get_blue() + intensity_b * color_b.get_blue()) / max_val
-//         });
+    for px in buf.chunks_mut(4) {
+        // Transform RGB (sRGB) to linear luminance (CIE 1931)
+        let luma =
+            (((px[0] as u32) * 2126 + (px[1] as u32) * 7152 + (px[2] as u32) * 722)
+                / 10000)
+                .clamp(0, 255);
 
-//     }
-//     println!("{:?}", gradient_map);
-
-//     gradient_map
-// }
-
-// pub fn duotone(mut img: DynamicImage, color_a : Rgb, color_b : Rgb) -> DynamicImage {
-//     let (width, height) = img.dimensions();
-//     let gradient_map = create_gradient_map(color_a, color_b);
-//     println!("entering for loop");
-
-//     for x in 0..width {
-//         for y in 0..height {
-
-//             let mut px = img.get_pixel(x, y);
-
-//             let r = px.data[0];
-//             let g = px.data[1];
-//             let b = px.data[2];
-
-//             px.data[0] = gradient_map[r as usize].r as u8;
-//             px.data[1] = gradient_map[g as usize].g as u8;
-//             px.data[2] = gradient_map[b as usize].b as u8;
-
-//             img.put_pixel(x, y, px);
-//         }
-//     }
-//     img
-// }
+        let mapped_luma = &gradient_map[luma as usize];
+        px[0] = mapped_luma.r;
+        px[1] = mapped_luma.g;
+        px[2] = mapped_luma.b;
+    }
+}
