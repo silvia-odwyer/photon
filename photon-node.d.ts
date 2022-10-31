@@ -432,6 +432,12 @@ export function normalize(photon_image: PhotonImage): void;
 */
 export function dither(photon_image: PhotonImage, depth: number): void;
 /**
+* @param {PhotonImage} photon_image
+* @param {Rgb} color_a
+* @param {Rgb} color_b
+*/
+export function duotone(photon_image: PhotonImage, color_a: Rgb, color_b: Rgb): void;
+/**
 * Solarization on the Blue channel.
 *
 * # Arguments

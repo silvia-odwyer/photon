@@ -22,6 +22,7 @@ export function frosted_glass(a: number): void;
 export function pixelize(a: number, b: number): void;
 export function normalize(a: number): void;
 export function dither(a: number, b: number): void;
+export function duotone(a: number, b: number, c: number): void;
 export function neue(a: number): void;
 export function lix(a: number): void;
 export function ryo(a: number): void;

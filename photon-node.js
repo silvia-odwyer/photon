@@ -705,6 +705,22 @@ module.exports.dither = function(photon_image, depth) {
 };
 
 /**
+* @param {PhotonImage} photon_image
+* @param {Rgb} color_a
+* @param {Rgb} color_b
+*/
+module.exports.duotone = function(photon_image, color_a, color_b) {
+    _assertClass(photon_image, PhotonImage);
+    _assertClass(color_a, Rgb);
+    var ptr0 = color_a.ptr;
+    color_a.ptr = 0;
+    _assertClass(color_b, Rgb);
+    var ptr1 = color_b.ptr;
+    color_b.ptr = 0;
+    wasm.duotone(photon_image.ptr, ptr0, ptr1);
+};
+
+/**
 * Solarization on the Blue channel.
 *
 * # Arguments
