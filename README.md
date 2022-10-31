@@ -207,7 +207,6 @@ or filters; this library provides a complete suite of functions to do so, as wel
 Photon is always accepting new filters and functions. In that vein if you'd like to contribute to Photon please submit a Pull Request or add new issues for investigation. Our community is our lifeblood, and we appreciate all the support we get from individuals like you.
 
 ## To Do
-- Selective colorization
 - Fade
 - Blend images using browser-specific functions for WASM version of library.
 - Vintage images with light leaks, grains, etc.,

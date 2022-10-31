@@ -458,37 +458,66 @@ pub fn selective_hue_rotate(
     photon_image.raw_pixels = img.to_vec();
 }
 
-// #[wasm_bindgen]
-// pub fn selective_color_convert(mut photon_image: &mut PhotonImage, ref_color:Rgb, new_color:Rgb, fraction: f32) {
-//     let img = helpers::dyn_image_from_raw(photon_image);
-//     let (_width, _height) = img.dimensions();
-//     let mut img = img.to_rgba8();
-//     for x in 0.._width {
-//         for y in 0.._height {
-//             let mut px = img.get_pixel(x, y);
+/// Selectively change pixel colours which are similar to the reference colour provided.
+///
+/// Similarity between two colours is calculated via the CIE76 formula.
+/// Only changes the color of a pixel if its similarity to the reference colour is within the range in the algorithm.
+/// For example, with this function, a user can change the color of all blue pixels by mixing them with red by 10%.
+/// # Arguments
+/// * `photon_image` - A PhotonImage.
+/// * `ref_color` - The `RGB` value of the reference color (to be compared to)
+/// * `new_color` - The `RGB` value of the new color (to be mixed with the matched pixels)
+/// * `fraction` - The amount of mixing the new colour with the matched pixels
+///
+/// # Example
+///
+/// ```no_run
+/// // For example, to only change the color of pixels that are similar to the RGB value RGB{200, 120, 30} by mixing RGB{30, 120, 200} with 25%:
+/// use photon_rs::Rgb;
+/// use photon_rs::channels::selective_color_convert;
+/// use photon_rs::native::open_image;
+///
+/// let ref_color = Rgb::new(200, 120, 30);
+/// let new_color = Rgb::new(30, 120, 200);
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// selective_color_convert(&mut img, ref_color, new_color, 0.25);
+/// ```
+#[wasm_bindgen]
+pub fn selective_color_convert(
+    photon_image: &mut PhotonImage,
+    ref_color: Rgb,
+    new_color: Rgb,
+    fraction: f32,
+) {
+    let buffer = photon_image.raw_pixels.as_mut_slice();
 
-//             // Reference colour to compare the current pixel's colour to
-//             let lab: Lab = Srgb::new(ref_color.r as f32 / 255.0, ref_color.g as f32 / 255.0, ref_color.b as f32 / 255.0).into();
+    // Reference colour to compare the current pixel's colour to
+    let ref_lab: Lab = Srgb::new(
+        ref_color.r as f32 / 255.0,
+        ref_color.g as f32 / 255.0,
+        ref_color.b as f32 / 255.0,
+    )
+    .into_color();
 
-//             // Convert the current pixel's colour to the l*a*b colour space
-//             let r_val: f32 = px.data[0] as f32 / 255.0;
-//             let g_val: f32 = px.data[1] as f32 / 255.0;
-//             let b_val: f32 = px.data[2] as f32 / 255.0;
+    for px in buffer.chunks_mut(4) {
+        let px_lab: Lab = Srgb::new(
+            px[0] as f32 / 255.0,
+            px[1] as f32 / 255.0,
+            px[2] as f32 / 255.0,
+        )
+        .into_color();
+        let sim = color_sim(ref_lab, px_lab);
 
-//             let px_lab: Lab = Srgb::new(r_val, g_val, b_val).into();
-
-//             let sim = color_sim(lab, px_lab);
-//             if sim > 0 && sim < 40 {
-//                 let newr = (((new_color.r - ref_color.r) as f32) * fraction + new_color.r as f32) as u8;
-//                 let newg = (((new_color.g - ref_color.g) as f32) * fraction + new_color.g as f32) as u8;
-//                 let newb = (((new_color.b - ref_color.b) as f32) * fraction + new_color.b as f32) as u8;
-
-//                 img.put_pixel(x, y, image::Rgba([newr, newg, newb, 255]));
-//             }
-//         }
-//     }
-//     photon_image.raw_pixels = img.to_vec();
-// }
+        if sim > 0 && sim < 40 {
+            px[0] = ((px[0] as f32) + fraction * ((new_color.r as f32) - (px[0] as f32)))
+                .clamp(0.0, 255.0) as u8;
+            px[1] = ((px[1] as f32) + fraction * ((new_color.g as f32) - (px[1] as f32)))
+                .clamp(0.0, 255.0) as u8;
+            px[2] = ((px[2] as f32) + fraction * ((new_color.b as f32) - (px[2] as f32)))
+                .clamp(0.0, 255.0) as u8;
+        }
+    }
+}
 
 // pub fn correct(img: &DynamicImage, mode: &'static str, colour_space: &'static str, amt: f32) -> DynamicImage {
 //     let mut img  = img.to_rgb();
