@@ -432,7 +432,7 @@ fn build_axial_gradient(
                 let norm_x = foot_x - start_x_f32;
                 let norm_y = foot_y - start_y_f32;
                 let grad_dist = (norm_x * norm_x + norm_y * norm_y).sqrt();
-                let total_len_f32 = total_grad_len as f32;
+                let total_len_f32 = total_grad_len;
                 gradient[pos] = (grad_dist / total_len_f32).clamp(0.0, 1.0);
             } else {
                 let fill_bottom_right =
@@ -509,11 +509,11 @@ pub fn fade(
 
     for row in 0..height {
         for col in 0..width {
-            let grad_idx = (row * width + col) as usize;
+            let grad_idx = row * width + col;
             let opacity_img1 = gradient[grad_idx];
             let opacity_img2 = 1.0 - opacity_img1;
 
-            let buf_idx = (row * width * 4 + col * 4) as usize;
+            let buf_idx = row * width * 4 + col * 4;
 
             let img1_r = buf_img1[buf_idx] as f32;
             let img1_g = buf_img1[buf_idx + 1] as f32;

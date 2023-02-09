@@ -40,17 +40,17 @@ pub fn monochrome(img: &mut PhotonImage, r_offset: u32, g_offset: u32, b_offset:
         if avg >= 255 {
             avg = 255
         }
-        let new_r = if avg as u32 + r_offset < 255 {
+        let new_r = if avg + r_offset < 255 {
             avg as u8 + r_offset as u8
         } else {
             255
         };
-        let new_g = if avg as u32 + g_offset < 255 {
+        let new_g = if avg + g_offset < 255 {
             avg as u8 + g_offset as u8
         } else {
             255
         };
-        let new_b = if avg as u32 + b_offset < 255 {
+        let new_b = if avg + b_offset < 255 {
             avg as u8 + b_offset as u8
         } else {
             255
@@ -309,7 +309,7 @@ pub fn grayscale_shades(mut photon_image: &mut PhotonImage, num_shades: u8) {
 
         let avg: f32 = (r_val + g_val + b_val) as f32 / 3.0;
 
-        let dividend = avg / conversion as f32;
+        let dividend = avg / conversion;
 
         let gray = ((dividend + 0.5) * conversion) as u8;
 
@@ -404,12 +404,7 @@ pub fn single_channel_grayscale(mut photon_image: &mut PhotonImage, channel: usi
         img.put_pixel(
             x,
             y,
-            image::Rgba([
-                channel_data as u8,
-                channel_data as u8,
-                channel_data as u8,
-                255,
-            ]),
+            image::Rgba([channel_data, channel_data, channel_data, 255]),
         );
     }
     let raw_pixels = img.to_bytes();

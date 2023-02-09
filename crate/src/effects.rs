@@ -649,17 +649,17 @@ pub fn tint(
         let (r_val, g_val, b_val) =
             (channels[0] as u32, channels[1] as u32, channels[2] as u32);
 
-        let new_r_val = if r_val as u32 + r_offset < 255 {
+        let new_r_val = if r_val + r_offset < 255 {
             r_val as u8 + r_offset as u8
         } else {
             255
         };
-        let new_g_val = if g_val as u32 + g_offset < 255 {
+        let new_g_val = if g_val + g_offset < 255 {
             g_val as u8 + g_offset as u8
         } else {
             255
         };
-        let new_b_val = if b_val as u32 + b_offset < 255 {
+        let new_b_val = if b_val + b_offset < 255 {
             b_val as u8 + b_offset as u8
         } else {
             255
@@ -888,7 +888,7 @@ pub fn oil(mut photon_image: &mut PhotonImage, radius: i32, intensity: f64) {
                         let intensity_val = intensity_lut[idx_y][idx_x];
                         let single_pix = img.get_pixel(idx_x as u32, idx_y as u32);
                         let pix = single_pix.channels();
-                        match pixel_intensity_count.get_mut(&(intensity_val as usize)) {
+                        match pixel_intensity_count.get_mut(&(intensity_val)) {
                             Some(val) => {
                                 val.val += 1;
                                 val.r += pix[0] as i32;
@@ -897,7 +897,7 @@ pub fn oil(mut photon_image: &mut PhotonImage, radius: i32, intensity: f64) {
                             }
                             None => {
                                 pixel_intensity_count.insert(
-                                    intensity_val as usize,
+                                    intensity_val,
                                     Intensity {
                                         val: 1,
                                         r: pix[0] as i32,
@@ -972,13 +972,13 @@ pub fn frosted_glass(photon_image: &mut PhotonImage) {
         let y_new = y_new as usize;
 
         let pixel_new = (x_new * width as usize + y_new) * 4;
-        if pixel_new > end as usize {
+        if pixel_new > end {
             continue;
         }
-        img_buf[pixel as usize] = img_orig_buf[pixel_new as usize];
-        img_buf[pixel as usize + 1] = img_orig_buf[pixel_new as usize + 1];
-        img_buf[pixel as usize + 2] = img_orig_buf[pixel_new as usize + 2];
-        img_buf[pixel as usize + 3] = img_orig_buf[pixel_new as usize + 3];
+        img_buf[pixel] = img_orig_buf[pixel_new];
+        img_buf[pixel + 1] = img_orig_buf[pixel_new + 1];
+        img_buf[pixel + 2] = img_orig_buf[pixel_new + 2];
+        img_buf[pixel + 3] = img_orig_buf[pixel_new + 3];
     }
 
     photon_image.raw_pixels = img_buf;
@@ -1137,7 +1137,7 @@ pub fn dither(photon_image: &mut PhotonImage, depth: u32) {
     for (tbl_idx, table) in lookup_table.iter_mut().enumerate().take(256_usize) {
         let downscaled_val = (tbl_idx as u8) / quant_rate;
         let upscaled_val = downscaled_val * quant_rate;
-        *table = upscaled_val.clamp(0, 255) as u8;
+        *table = upscaled_val.clamp(0, 255);
     }
 
     for row in 0..height - 1 {

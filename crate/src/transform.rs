@@ -655,7 +655,7 @@ pub fn rotate(img: &PhotonImage, angle: i32) -> PhotonImage {
     let leftmost_pos = leftmost_pos.floor() as i32;
 
     // (cx, -cy) corner will contain the rightmost x after the rotation.
-    let rightmost_pos = src_centre_x_f64 * cosine + src_centre_y_f64 as f64 * sine;
+    let rightmost_pos = src_centre_x_f64 * cosine + src_centre_y_f64 * sine;
     let rightmost_pos = rightmost_pos.floor() as i32;
 
     // (-cx, -cy) corner will contain the least y after the rotation.
