@@ -58,8 +58,13 @@ View the [official demo of WASM in action](https://silvia-odwyer.github.io/photo
 
 ![Imgur](https://i.imgur.com/PShSZ6k.png)
 
-### Version 0.3.1 Release
-Version 0.3.1 has been released on Crates.io and NPM, including new features such as a frosted glass effect and new filters.
+### Version 0.3.2 Release [2023 Update]
+Version 0.3.2 has been released on Crates.io and NPM, with new features including:
+
+- A duotone filter and preset duotone effects
+- Image rotation
+- Dithering filter
+- Image cropping update (fixed in [PR #100](https://github.com/silvia-odwyer/photon/pull/100))
 
 ### Supported Image Formats
 The following image formats are supported:
@@ -99,7 +104,7 @@ Add the following line to the dependencies section of your Rust project's Cargo.
 ###### Cargo.toml
 ```toml
 [dependencies]
-photon-rs = "0.3.1"
+photon-rs = "0.3.2"
 ```
 
 #### Using Photon Natively
@@ -207,16 +212,23 @@ or filters; this library provides a complete suite of functions to do so, as wel
 Photon is always accepting new filters and functions. In that vein if you'd like to contribute to Photon please submit a Pull Request or add new issues for investigation. Our community is our lifeblood, and we appreciate all the support we get from individuals like you.
 
 ## To Do
-- Fade
 - Blend images using browser-specific functions for WASM version of library.
 - Vintage images with light leaks, grains, etc.,
 - Tests in a headless web browser for WebAssembly version of library
 
 ## Contributors
+This repository continually receives new filters and updates from fellow contributors, for which I'm very grateful for! Thanks to the generous contributions of others, there are even more cool effects available in this library.
 
+I'd like to extend my gratitude to all of you!
+
+Contributors include (be sure to add yourself to the list if you submitted a PR):
 * **Silvia O'Dwyer** - [@silvia-odwyer](https://github.com/silvia-odwyer)
+* **Osman Turan** - [@osman-turan](https://github.com/osman-turan)
 * **Ivan Zvonimir Horvat** - [@Horki](https://github.com/Horki)
-* **Future You(?)** - (See Contributing above ;)
+* **Arnav Jindal** - [@Daggy1234](https://github.com/Daggy1234)
+* **NorbertGarfield** - [@NorbertGarfield](https://github.com/NorbertGarfield)
+* **bboshoven** - [@bboshoven](https://github.com/bboshoven)
+* **Future You(?)** - (See Contributing above)
 
 ## License
 This project is licensed under the Apache 2.0 License - see the [LICENSE.md](LICENSE.md) file for details.
