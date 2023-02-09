@@ -1,8 +1,9 @@
 //! Preset color filters.
 
+use crate::channels::alter_channels;
 use crate::colour_spaces;
 use crate::colour_spaces::mix_with_colour;
-use crate::effects::{adjust_contrast, inc_brightness};
+use crate::effects::{adjust_contrast, duotone, inc_brightness};
 use crate::monochrome;
 use crate::{PhotonImage, Rgb};
 use wasm_bindgen::prelude::*;
@@ -189,8 +190,7 @@ pub fn lofi(img: &mut PhotonImage) {
 /// ```
 #[wasm_bindgen]
 pub fn pastel_pink(img: &mut PhotonImage) {
-    let pastel_pink_rgb = Rgb::new(220, 112, 170);
-    mix_with_colour(img, pastel_pink_rgb, 0.1);
+    alter_channels(img, 80, 12, 20);
     adjust_contrast(img, 30.0);
 }
 
@@ -251,6 +251,132 @@ pub fn cali(img: &mut PhotonImage) {
 pub fn dramatic(img: &mut PhotonImage) {
     monochrome::grayscale(img);
     adjust_contrast(img, 60.0);
+}
+
+/// Monochrome tint effect with increased contrast
+///
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// * `rgb_color` - RGB color
+/// # Example
+///
+/// ```no_run
+/// use photon_rs::filters::monochrome_tint;
+/// use photon_rs::native::open_image;
+/// use photon_rs::Rgb;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// let rgb_color = Rgb::new(12, 12, 10);
+/// monochrome_tint(&mut img, rgb_color);
+/// ```
+#[wasm_bindgen]
+pub fn monochrome_tint(img: &mut PhotonImage, rgb_color: Rgb) {
+    monochrome::grayscale(img);
+    mix_with_colour(img, rgb_color, 0.4);
+    adjust_contrast(img, 60.0);
+}
+
+/// Duotone effect with blue and purple tones.
+///
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// # Example
+///
+/// ```no_run
+/// use photon_rs::filters::duotone_violette;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// duotone_violette(&mut img);
+/// ```
+#[wasm_bindgen]
+pub fn duotone_violette(img: &mut PhotonImage) {
+    let rgb_color = Rgb::new(16, 228, 248);
+    let rgb_color2 = Rgb::new(116, 54, 221);
+    duotone(img, rgb_color, rgb_color2);
+}
+
+/// Duotone effect with purple tones.
+///
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// # Example
+///
+/// ```no_run
+/// use photon_rs::filters::duotone_horizon;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// duotone_horizon(&mut img);
+/// ```
+#[wasm_bindgen]
+pub fn duotone_horizon(img: &mut PhotonImage) {
+    let rgb_color = Rgb::new(169, 167, 132);
+    let rgb_color2 = Rgb::new(150, 24, 149);
+    duotone(img, rgb_color, rgb_color2);
+}
+
+/// A duotone filter with a user-specified color and a gray color
+// to create a monochrome tint effect
+///
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// * `rgb_color` - RGB color
+/// # Example
+///
+/// ```no_run
+/// use photon_rs::filters::duotone_tint;
+/// use photon_rs::native::open_image;
+/// use photon_rs::Rgb;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// let rgb_color = Rgb::new(12, 12, 10);
+/// duotone_tint(&mut img, rgb_color);
+/// ```
+#[wasm_bindgen]
+pub fn duotone_tint(img: &mut PhotonImage, rgb_color: Rgb) {
+    let rgb_color2 = Rgb::new(68, 61, 76);
+    duotone(img, rgb_color, rgb_color2);
+}
+
+/// Duotone effect with a lilac hue
+///
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// # Example
+///
+/// ```no_run
+/// use photon_rs::filters::duotone_lilac;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// duotone_lilac(&mut img);
+/// ```
+#[wasm_bindgen]
+pub fn duotone_lilac(img: &mut PhotonImage) {
+    let rgb_color = Rgb::new(45, 3, 3);
+    let rgb_color2 = Rgb::new(163, 134, 224);
+    duotone(img, rgb_color, rgb_color2);
+}
+
+/// A duotone ochre tint effect
+///
+/// # Arguments
+/// * `img` - A PhotonImage.
+/// # Example
+///
+/// ```no_run
+/// use photon_rs::filters::duotone_ochre;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// duotone_ochre(&mut img);
+/// ```
+#[wasm_bindgen]
+pub fn duotone_ochre(img: &mut PhotonImage) {
+    let rgb_color = Rgb::new(25, 36, 88);
+    let rgb_color2 = Rgb::new(236, 119, 0);
+    duotone(img, rgb_color, rgb_color2);
 }
 
 /// Apply a red hue, with increased contrast and brightness.
