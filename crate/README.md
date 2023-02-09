@@ -115,7 +115,7 @@ fn main() {
 }
 ```
 
-[For more examples, check out the guide on how to get started with Photon natively.]()
+[For more examples, check out the guide on how to get started with Photon natively.](https://silvia-odwyer.github.io/photon/guide/using-photon-natively/)
 
 #### Using Photon On The Web 
 
