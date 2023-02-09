@@ -90,6 +90,7 @@ Functions include:
 - **Resizing**: Resize images both natively and on the web.
 - **Convolutions**: Sobel filters, blurs, Laplace effects, edge detection, etc.,
 - **Channel manipulation**: Increasing/decreasing RGB channel values, swapping channels, removing channels, etc.
+- **Transform**: Resize, crop, rotate and flip images.
 - **Monochrome effects**: Monochrome tints, greyscaling of various forms, thresholding, sepia, averaging RGB values
 - **Colour manipulation**: Work with the image in various colour spaces such as HSL, LCh, and sRGB, and adjust the colours accordingly.
 - **Filters**: Over 30 pre-set filters available, incorporating various effects and transformations.
@@ -171,6 +172,7 @@ Photon contains a series of modules, which include:
 
 - `effects`: Various image effects, including adding offsets, thresholding, duotoning, solarization, etc.,
 - `channels`: Functions related to increasing/decreasing the red, green, and blue channels of the image data.
+- `transform`: Resize, crop, flip, and rotate images.
 - `filters`: Preset filters, which alter the rgb channels of the image. Contains over 20.
 - `conv`: Laplace, Sobel, emboss; image proc functions which require image convolution.
 -  `noise`: Noise generation of varying tints and hues.

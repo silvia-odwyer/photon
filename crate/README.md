@@ -53,7 +53,7 @@ View the [official documentation](https://docs.rs/photon-rs/).
 ![Imgur](https://i.imgur.com/PShSZ6k.png)
 
 ### Functionality
-96 customisable functions are available. 
+96+ customisable functions are available. 
 
 Resize, transform, correct, and filter images: apply as many effects as desired. 
 
@@ -61,9 +61,10 @@ Functions include:
 - **Image correction**: Hue rotation, sharpening, brightness adjustment, adjusting saturation, lightening/darkening all within various colour spaces. 
 - **Convolutions**: Sobel filters, blurs, Laplace effects, edge detection, etc., 
 - **Channel manipulation**: Increasing/decreasing RGB channel values, swapping channels, removing channels, etc.
+- **Transform**: Resize, crop, rotate and flip images.
 - **Monochrome effects**: Duotoning, greyscaling of various forms, thresholding, sepia, averaging RGB values
 - **Colour manipulation**: Work with the image in various colour spaces such as HSL, LCh, and sRGB, and adjust the colours accordingly. 
-- **Filters**: Over 30 pre-set filters available, incorporating various effects and transformations. 
+- **Filters**: Over 30 pre-set filters available, incorporating various effects and transformations.
 - **Text**: Apply text to imagery in artistic ways, or to watermark, etc.,
 - **Watermarking**: Watermark images in multiple formats. 
 - **Blending**: Blend images together using 10 different techniques, change image backgrounds. 
@@ -123,7 +124,8 @@ Photon contains a series of modules, which include:
 
 - `effects`: Various image effects, including adding offsets, thresholding, duotoning, solarization, etc.,
 - `channels`: Functions related to increasing/decreasing the red, green, and blue channels of the image data.
-- `filters`: Preset filters, which alter the rgb channels of the image. Contains over 20. 
+- `transform`: Resize, crop, flip, and rotate images.
+- `filters`: Preset filters, which alter the RGB channels of the image. Contains over 20. 
 - `conv`: Laplace, Sobel, emboss; image proc functions which require image convolution. 
 -  `noise`: Noise generation of varying tints and hues. 
 - `multiple`: A module for dealing with multiple images, such as watermarking images, etc.,
