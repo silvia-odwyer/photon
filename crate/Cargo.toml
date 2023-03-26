@@ -79,6 +79,5 @@ enable_wasm = [
   "web-sys",
   "js-sys",
   "node-sys",
-  "console_error_panic_hook",
-  "wee_alloc"
+  "console_error_panic_hook"
 ]

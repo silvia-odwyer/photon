@@ -167,7 +167,7 @@ impl PhotonImage {
     }
 
     /// Convert the PhotonImage's raw pixels to JS-compatible ImageData.
-    #[cfg(feature = "enable_wasm")]
+    #[cfg(all(feature = "web-sys", feature = "wasm-bindgen"))]
     #[allow(clippy::unnecessary_mut_passed)]
     pub fn get_image_data(&mut self) -> ImageData {
         ImageData::new_with_u8_clamped_array_and_sh(
