@@ -47,15 +47,15 @@ use serde::{Deserialize, Serialize};
 #[cfg(feature = "enable_wasm")]
 use wasm_bindgen::prelude::*;
 
-#[cfg(feature = "enable_wasm")]
+#[cfg(feature = "wasm-bindgen")]
 use wasm_bindgen::Clamped;
 
-#[cfg(feature = "enable_wasm")]
+#[cfg(feature = "web-sys")]
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, ImageData};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
-#[cfg(all(feature = "enable_wasm", feature = "wee_alloc"))]
+#[cfg(feature = "wee_alloc")]
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
@@ -179,7 +179,7 @@ impl PhotonImage {
     }
 
     /// Convert ImageData to raw pixels, and update the PhotonImage's raw pixels to this.
-    #[cfg(feature = "enable_wasm")]
+    #[cfg(feature = "web-sys")]
     pub fn set_imgdata(&mut self, img_data: ImageData) {
         let width = img_data.width();
         let height = img_data.height();
@@ -191,7 +191,7 @@ impl PhotonImage {
 }
 
 /// Create a new PhotonImage from a raw Vec of u8s representing raw image pixels.
-#[cfg(feature = "enable_wasm")]
+#[cfg(feature = "web-sys")]
 impl From<ImageData> for PhotonImage {
     fn from(imgdata: ImageData) -> Self {
         let width = imgdata.width();
@@ -332,7 +332,7 @@ impl From<Vec<u8>> for Rgba {
 
 ///! [temp] Check if WASM is supported.
 #[cfg(feature = "enable_wasm")]
-#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
+#[wasm_bindgen]
 pub fn run() -> Result<(), JsValue> {
     set_panic_hook();
 
@@ -353,7 +353,7 @@ pub fn run() -> Result<(), JsValue> {
 }
 
 /// Get the ImageData from a 2D canvas context
-#[cfg(feature = "enable_wasm")]
+#[cfg(feature = "web-sys")]
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn get_image_data(
     canvas: &HtmlCanvasElement,
@@ -372,7 +372,7 @@ pub fn get_image_data(
 }
 
 /// Place a PhotonImage onto a 2D canvas.
-#[cfg(feature = "enable_wasm")]
+#[cfg(all(feature = "web-sys", feature = "wasm-bindgen"))]
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 #[allow(non_snake_case)]
 #[allow(clippy::unnecessary_mut_passed)]
@@ -398,7 +398,7 @@ pub fn putImageData(
 ///
 /// This converts the ImageData found in the canvas context to a PhotonImage,
 /// which can then have effects or filters applied to it.
-#[cfg(feature = "enable_wasm")]
+#[cfg(feature = "web-sys")]
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 #[no_mangle]
 pub fn open_image(
@@ -415,7 +415,7 @@ pub fn open_image(
 }
 
 /// Convert ImageData to a raw pixel vec of u8s.
-#[cfg(feature = "enable_wasm")]
+#[cfg(feature = "web-sys")]
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn to_raw_pixels(imgdata: ImageData) -> Vec<u8> {
     imgdata.data().to_vec()
@@ -446,7 +446,7 @@ pub fn base64_to_vec(base64: &str) -> Vec<u8> {
 }
 
 /// Convert a PhotonImage to JS-compatible ImageData.
-#[cfg(feature = "enable_wasm")]
+#[cfg(all(feature = "web-sys", feature = "wasm-bindgen"))]
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 #[allow(clippy::unnecessary_mut_passed)]
 pub fn to_image_data(photon_image: PhotonImage) -> ImageData {

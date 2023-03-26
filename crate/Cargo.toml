@@ -70,14 +70,15 @@ features = [
   'CssStyleDeclaration',
   'EventTarget',
 ]
+optional = true
 
 [features]
 default = ["enable_wasm"]
 enable_wasm = [
   "wasm-bindgen",
-  "console_error_panic_hook",
+  "web-sys",
   "js-sys",
   "node-sys",
-  "wasm-bindgen",
+  "console_error_panic_hook",
   "wee_alloc"
 ]
