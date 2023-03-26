@@ -25,11 +25,11 @@ imageproc = { version = "0.22.0", default-features = false }
 rusttype="0.9.2"
 base64="0.13.0"
 time="0.2.23"
-wasm-bindgen = "=0.2.78"
+wasm-bindgen = { version = "=0.2.78", optional = true }
 serde = { version = "1.0", features = ["derive"] }
 thiserror = "1.0"
-js-sys = "0.3.45"
-node-sys = "0.4.2"
+js-sys = { version = "0.3.45", optional = true }
+node-sys = { version = "0.4.2", optional = true }
 perlin2d = "0.2.6"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
@@ -72,4 +72,12 @@ features = [
 ]
 
 [features]
-default = ["console_error_panic_hook"]
+default = ["enable_wasm"]
+enable_wasm = [
+  "wasm-bindgen",
+  "console_error_panic_hook",
+  "js-sys",
+  "node-sys",
+  "wasm-bindgen",
+  "wee_alloc"
+]

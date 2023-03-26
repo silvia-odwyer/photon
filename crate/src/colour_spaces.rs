@@ -6,6 +6,8 @@ use image::GenericImageView;
 use image::Pixel as ImagePixel;
 use palette::{FromColor, IntoColor};
 use palette::{Hsla, Hsluva, Hsva, Hue, Lcha, Saturate, Shade, Srgba};
+
+#[cfg(feature = "enable_wasm")]
 use wasm_bindgen::prelude::*;
 
 /// Applies gamma correction to an image.
@@ -25,7 +27,7 @@ use wasm_bindgen::prelude::*;
 /// gamma_correction(&mut img, 2.2, 2.2, 2.2);
 /// ```
 ///
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn gamma_correction(
     photon_image: &mut PhotonImage,
     red: f32,
@@ -87,7 +89,7 @@ pub fn gamma_correction(
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// hsluv(&mut img, "saturate", 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn hsluv(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
@@ -155,7 +157,7 @@ pub fn hsluv(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// lch(&mut img, "saturate", 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
@@ -223,7 +225,7 @@ pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// hsl(&mut img, "saturate", 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn hsl(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     // The function logic is kept separate from other colour spaces for now,
     // since other HSL-specific logic may be implemented here, which isn't available in other colour spaces
@@ -292,7 +294,7 @@ pub fn hsl(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// hsv(&mut img, "saturate", 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn hsv(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
@@ -354,7 +356,7 @@ pub fn hsv(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// hue_rotate_hsl(&mut img, 120_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn hue_rotate_hsl(img: &mut PhotonImage, degrees: f32) {
     hsl(img, "shift_hue", degrees);
 }
@@ -374,7 +376,7 @@ pub fn hue_rotate_hsl(img: &mut PhotonImage, degrees: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// hue_rotate_hsv(&mut img, 120_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn hue_rotate_hsv(img: &mut PhotonImage, degrees: f32) {
     hsv(img, "shift_hue", degrees);
 }
@@ -394,7 +396,7 @@ pub fn hue_rotate_hsv(img: &mut PhotonImage, degrees: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// hue_rotate_lch(&mut img, 120_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn hue_rotate_lch(img: &mut PhotonImage, degrees: f32) {
     lch(img, "shift_hue", degrees)
 }
@@ -414,7 +416,7 @@ pub fn hue_rotate_lch(img: &mut PhotonImage, degrees: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// hue_rotate_hsluv(&mut img, 120_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn hue_rotate_hsluv(img: &mut PhotonImage, degrees: f32) {
     hsluv(img, "shift_hue", degrees)
 }
@@ -437,7 +439,7 @@ pub fn hue_rotate_hsluv(img: &mut PhotonImage, degrees: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// saturate_hsl(&mut img, 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn saturate_hsl(img: &mut PhotonImage, level: f32) {
     hsl(img, "saturate", level)
 }
@@ -459,7 +461,7 @@ pub fn saturate_hsl(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// saturate_lch(&mut img, 0.4_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn saturate_lch(img: &mut PhotonImage, level: f32) {
     lch(img, "saturate", level)
 }
@@ -481,7 +483,7 @@ pub fn saturate_lch(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// saturate_hsluv(&mut img, 0.4_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn saturate_hsluv(img: &mut PhotonImage, level: f32) {
     hsluv(img, "saturate", level)
 }
@@ -503,7 +505,7 @@ pub fn saturate_hsluv(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// saturate_hsv(&mut img, 0.3_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn saturate_hsv(img: &mut PhotonImage, level: f32) {
     hsv(img, "saturate", level)
 }
@@ -526,7 +528,7 @@ pub fn saturate_hsv(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// lighten_lch(&mut img, 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn lighten_lch(img: &mut PhotonImage, level: f32) {
     lch(img, "lighten", level)
 }
@@ -549,7 +551,7 @@ pub fn lighten_lch(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// lighten_hsluv(&mut img, 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn lighten_hsluv(img: &mut PhotonImage, level: f32) {
     hsluv(img, "lighten", level)
 }
@@ -571,7 +573,7 @@ pub fn lighten_hsluv(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// lighten_hsl(&mut img, 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn lighten_hsl(img: &mut PhotonImage, level: f32) {
     hsl(img, "lighten", level)
 }
@@ -594,7 +596,7 @@ pub fn lighten_hsl(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// lighten_hsv(&mut img, 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn lighten_hsv(img: &mut PhotonImage, level: f32) {
     hsv(img, "lighten", level)
 }
@@ -617,7 +619,7 @@ pub fn lighten_hsv(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// darken_lch(&mut img, 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn darken_lch(img: &mut PhotonImage, level: f32) {
     lch(img, "darken", level)
 }
@@ -640,7 +642,7 @@ pub fn darken_lch(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// darken_hsluv(&mut img, 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn darken_hsluv(img: &mut PhotonImage, level: f32) {
     hsluv(img, "darken", level)
 }
@@ -663,7 +665,7 @@ pub fn darken_hsluv(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// darken_hsl(&mut img, 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn darken_hsl(img: &mut PhotonImage, level: f32) {
     hsl(img, "darken", level)
 }
@@ -686,7 +688,7 @@ pub fn darken_hsl(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// darken_hsv(&mut img, 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn darken_hsv(img: &mut PhotonImage, level: f32) {
     hsv(img, "darken", level)
 }
@@ -709,7 +711,7 @@ pub fn darken_hsv(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// desaturate_hsv(&mut img, 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn desaturate_hsv(img: &mut PhotonImage, level: f32) {
     hsv(img, "desaturate", level)
 }
@@ -732,7 +734,7 @@ pub fn desaturate_hsv(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// desaturate_hsl(&mut img, 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn desaturate_hsl(img: &mut PhotonImage, level: f32) {
     hsl(img, "desaturate", level)
 }
@@ -755,7 +757,7 @@ pub fn desaturate_hsl(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// desaturate_lch(&mut img, 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn desaturate_lch(img: &mut PhotonImage, level: f32) {
     lch(img, "desaturate", level)
 }
@@ -778,7 +780,7 @@ pub fn desaturate_lch(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// desaturate_hsluv(&mut img, 0.1_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn desaturate_hsluv(img: &mut PhotonImage, level: f32) {
     hsluv(img, "desaturate", level)
 }
@@ -806,7 +808,7 @@ pub fn desaturate_hsluv(img: &mut PhotonImage, level: f32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// mix_with_colour(&mut img, mix_colour, 0.4_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn mix_with_colour(photon_image: &mut PhotonImage, mix_colour: Rgb, opacity: f32) {
     let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();

@@ -43,19 +43,25 @@ use base64::{decode, encode};
 use image::DynamicImage::ImageRgba8;
 use image::{GenericImage, GenericImageView};
 use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "enable_wasm")]
 use wasm_bindgen::prelude::*;
+
+#[cfg(feature = "enable_wasm")]
 use wasm_bindgen::Clamped;
+
+#[cfg(feature = "enable_wasm")]
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, ImageData};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
-#[cfg(feature = "wee_alloc")]
+#[cfg(all(feature = "enable_wasm", feature = "wee_alloc"))]
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 /// Provides the image's height, width, and contains the image's raw pixels.
 /// For use when communicating between JS and WASM, and also natively.
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct PhotonImage {
     raw_pixels: Vec<u8>,
@@ -63,9 +69,9 @@ pub struct PhotonImage {
     height: u32,
 }
 
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 impl PhotonImage {
-    #[wasm_bindgen(constructor)]
+    #[cfg_attr(feature = "enable_wasm", wasm_bindgen(constructor))]
     /// Create a new PhotonImage from a Vec of u8s, which represent raw pixels.
     pub fn new(raw_pixels: Vec<u8>, width: u32, height: u32) -> PhotonImage {
         PhotonImage {
@@ -161,6 +167,7 @@ impl PhotonImage {
     }
 
     /// Convert the PhotonImage's raw pixels to JS-compatible ImageData.
+    #[cfg(feature = "enable_wasm")]
     #[allow(clippy::unnecessary_mut_passed)]
     pub fn get_image_data(&mut self) -> ImageData {
         ImageData::new_with_u8_clamped_array_and_sh(
@@ -172,6 +179,7 @@ impl PhotonImage {
     }
 
     /// Convert ImageData to raw pixels, and update the PhotonImage's raw pixels to this.
+    #[cfg(feature = "enable_wasm")]
     pub fn set_imgdata(&mut self, img_data: ImageData) {
         let width = img_data.width();
         let height = img_data.height();
@@ -183,6 +191,7 @@ impl PhotonImage {
 }
 
 /// Create a new PhotonImage from a raw Vec of u8s representing raw image pixels.
+#[cfg(feature = "enable_wasm")]
 impl From<ImageData> for PhotonImage {
     fn from(imgdata: ImageData) -> Self {
         let width = imgdata.width();
@@ -197,7 +206,7 @@ impl From<ImageData> for PhotonImage {
 }
 
 /// RGB color type.
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Rgb {
     r: u8,
@@ -205,9 +214,9 @@ pub struct Rgb {
     b: u8,
 }
 
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 impl Rgb {
-    #[wasm_bindgen(constructor)]
+    #[cfg_attr(feature = "enable_wasm", wasm_bindgen(constructor))]
     /// Create a new RGB struct.
     pub fn new(r: u8, g: u8, b: u8) -> Rgb {
         Rgb { r, g, b }
@@ -254,7 +263,7 @@ impl From<Vec<u8>> for Rgb {
 }
 
 /// RGBA color type.
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Rgba {
     r: u8,
@@ -263,9 +272,9 @@ pub struct Rgba {
     a: u8,
 }
 
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 impl Rgba {
-    #[wasm_bindgen(constructor)]
+    #[cfg_attr(feature = "enable_wasm", wasm_bindgen(constructor))]
     /// Create a new RGBA struct.
     pub fn new(r: u8, g: u8, b: u8, a: u8) -> Rgba {
         Rgba { r, g, b, a }
@@ -322,7 +331,8 @@ impl From<Vec<u8>> for Rgba {
 }
 
 ///! [temp] Check if WASM is supported.
-#[wasm_bindgen]
+#[cfg(feature = "enable_wasm")]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn run() -> Result<(), JsValue> {
     set_panic_hook();
 
@@ -343,7 +353,8 @@ pub fn run() -> Result<(), JsValue> {
 }
 
 /// Get the ImageData from a 2D canvas context
-#[wasm_bindgen]
+#[cfg(feature = "enable_wasm")]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn get_image_data(
     canvas: &HtmlCanvasElement,
     ctx: &CanvasRenderingContext2d,
@@ -361,7 +372,8 @@ pub fn get_image_data(
 }
 
 /// Place a PhotonImage onto a 2D canvas.
-#[wasm_bindgen]
+#[cfg(feature = "enable_wasm")]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 #[allow(non_snake_case)]
 #[allow(clippy::unnecessary_mut_passed)]
 pub fn putImageData(
@@ -386,7 +398,8 @@ pub fn putImageData(
 ///
 /// This converts the ImageData found in the canvas context to a PhotonImage,
 /// which can then have effects or filters applied to it.
-#[wasm_bindgen]
+#[cfg(feature = "enable_wasm")]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 #[no_mangle]
 pub fn open_image(
     canvas: HtmlCanvasElement,
@@ -402,13 +415,14 @@ pub fn open_image(
 }
 
 /// Convert ImageData to a raw pixel vec of u8s.
-#[wasm_bindgen]
+#[cfg(feature = "enable_wasm")]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn to_raw_pixels(imgdata: ImageData) -> Vec<u8> {
     imgdata.data().to_vec()
 }
 
 /// Convert a base64 string to a PhotonImage.
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn base64_to_image(base64: &str) -> PhotonImage {
     let base64_to_vec: Vec<u8> = base64_to_vec(base64);
 
@@ -426,13 +440,14 @@ pub fn base64_to_image(base64: &str) -> PhotonImage {
 }
 
 /// Convert a base64 string to a Vec of u8s.
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn base64_to_vec(base64: &str) -> Vec<u8> {
     decode(base64).unwrap()
 }
 
 /// Convert a PhotonImage to JS-compatible ImageData.
-#[wasm_bindgen]
+#[cfg(feature = "enable_wasm")]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 #[allow(clippy::unnecessary_mut_passed)]
 pub fn to_image_data(photon_image: PhotonImage) -> ImageData {
     let mut raw_pixels = photon_image.raw_pixels;

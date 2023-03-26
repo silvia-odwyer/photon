@@ -11,6 +11,8 @@ use imageproc::rect::Rect;
 use perlin2d::PerlinNoise2D;
 use std::collections::HashMap;
 use std::f64;
+
+#[cfg(feature = "enable_wasm")]
 use wasm_bindgen::prelude::*;
 
 /// Adds an offset to the image by a certain number of pixels.
@@ -31,7 +33,7 @@ use wasm_bindgen::prelude::*;
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// offset(&mut img, 0_usize, 30_u32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32) {
     if channel_index > 2 {
         panic!("Invalid channel index passed. Channel1 must be equal to 0, 1, or 2.");
@@ -99,7 +101,7 @@ pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32)
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// offset_red(&mut img, 30_u32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn offset_red(img: &mut PhotonImage, offset_amt: u32) {
     offset(img, 0, offset_amt)
 }
@@ -119,7 +121,7 @@ pub fn offset_red(img: &mut PhotonImage, offset_amt: u32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// offset_green(&mut img, 30_u32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn offset_green(img: &mut PhotonImage, offset_amt: u32) {
     offset(img, 1, offset_amt)
 }
@@ -139,7 +141,7 @@ pub fn offset_green(img: &mut PhotonImage, offset_amt: u32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// offset_blue(&mut img, 40_u32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn offset_blue(img: &mut PhotonImage, offset_amt: u32) {
     offset(img, 2, offset_amt)
 }
@@ -159,7 +161,7 @@ pub fn offset_blue(img: &mut PhotonImage, offset_amt: u32) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// multiple_offsets(&mut img, 30_u32, 0_usize, 2_usize);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn multiple_offsets(
     mut photon_image: &mut PhotonImage,
     offset: u32,
@@ -327,7 +329,7 @@ pub fn halftone(mut photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// primary(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn primary(img: &mut PhotonImage) {
     let end = img.raw_pixels.len() - 4;
 
@@ -374,7 +376,7 @@ pub fn primary(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// colorize(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn colorize(mut photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
     let threshold = 220;
@@ -413,7 +415,7 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
     photon_image.raw_pixels = raw_pixels;
 }
 
-// #[wasm_bindgen]
+// #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 // pub fn inc_luminosity(mut photon_image: PhotonImage) -> PhotonImage {
 //     let mut img = helpers::dyn_image_from_raw(photon_image);
 //     let (width, height) = img.dimensions();
@@ -476,7 +478,7 @@ pub fn colorize(mut photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// solarize(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn solarize(photon_image: &mut PhotonImage) {
     let end = photon_image.get_raw_pixels().len();
 
@@ -504,7 +506,7 @@ pub fn solarize(photon_image: &mut PhotonImage) {
 /// let img = open_image("img.jpg").expect("File should open");
 /// let result: PhotonImage = solarize_retimg(&img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
     let mut img = helpers::dyn_image_from_raw(photon_image);
 
@@ -539,7 +541,7 @@ pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// inc_brightness(&mut img, 10_u8);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
     let end = photon_image.get_raw_pixels().len() - 4;
     for i in (0..end).step_by(4) {
@@ -581,7 +583,7 @@ pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// adjust_contrast(&mut img, 30_f32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
 
@@ -634,7 +636,7 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
 /// tint(&mut img, 10_u32, 20_u32, 15_u32);
 /// ```
 ///
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn tint(
     mut photon_image: &mut PhotonImage,
     r_offset: u32,
@@ -714,7 +716,7 @@ fn draw_horizontal_strips(
 /// horizontal_strips(&mut img, 8u8);
 /// ```
 ///
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn horizontal_strips(photon_image: &mut PhotonImage, num_strips: u8) {
     let color = Rgb {
         r: 255,
@@ -743,7 +745,7 @@ pub fn horizontal_strips(photon_image: &mut PhotonImage, num_strips: u8) {
 /// color_horizontal_strips(&mut img, 8u8, color);
 /// ```
 ///
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn color_horizontal_strips(
     photon_image: &mut PhotonImage,
     num_strips: u8,
@@ -788,7 +790,7 @@ fn draw_vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8, colo
 /// vertical_strips(&mut img, 8u8);
 /// ```
 ///
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn vertical_strips(photon_image: &mut PhotonImage, num_strips: u8) {
     let color = Rgb {
         r: 255,
@@ -817,7 +819,7 @@ pub fn vertical_strips(photon_image: &mut PhotonImage, num_strips: u8) {
 /// color_vertical_strips(&mut img, 8u8, color);
 /// ```
 ///
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn color_vertical_strips(
     photon_image: &mut PhotonImage,
     num_strips: u8,
@@ -849,7 +851,7 @@ struct Intensity {
 /// oil(&mut img, 4i32, 55.0);
 /// ```
 ///
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn oil(mut photon_image: &mut PhotonImage, radius: i32, intensity: f64) {
     let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
@@ -945,7 +947,7 @@ pub fn oil(mut photon_image: &mut PhotonImage, radius: i32, intensity: f64) {
 /// frosted_glass(&mut img);
 /// ```
 ///
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn frosted_glass(photon_image: &mut PhotonImage) {
     let img_orig_buf = photon_image.get_raw_pixels();
     let width = photon_image.get_width();
@@ -1000,7 +1002,7 @@ pub fn frosted_glass(photon_image: &mut PhotonImage) {
 /// pixelize(&mut img, 50);
 /// ```
 ///
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn pixelize(photon_image: &mut PhotonImage, pixel_size: i32) {
     let step_size = pixel_size.max(0) as usize;
     if step_size <= 1 {
@@ -1050,7 +1052,7 @@ pub fn pixelize(photon_image: &mut PhotonImage, pixel_size: i32) {
 /// normalize(&mut img);
 /// ```
 ///
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn normalize(photon_image: &mut PhotonImage) {
     let buf = photon_image.raw_pixels.as_mut_slice();
     let buf_size = buf.len();
@@ -1115,7 +1117,7 @@ pub fn normalize(photon_image: &mut PhotonImage) {
 /// dither(&mut img, depth);
 /// ```
 ///
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn dither(photon_image: &mut PhotonImage, depth: u32) {
     let width = photon_image.get_width() as usize;
     let height = photon_image.get_height() as usize;
@@ -1192,7 +1194,7 @@ fn create_gradient_map(color_a: Rgb, color_b: Rgb) -> Vec<Rgb> {
     gradient_map
 }
 
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn duotone(photon_image: &mut PhotonImage, color_a: Rgb, color_b: Rgb) {
     let gradient_map = create_gradient_map(color_a, color_b);
     let buf = photon_image.raw_pixels.as_mut_slice();
