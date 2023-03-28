@@ -6,6 +6,8 @@ use crate::colour_spaces::mix_with_colour;
 use crate::effects::{adjust_contrast, duotone, inc_brightness};
 use crate::monochrome;
 use crate::{PhotonImage, Rgb};
+
+#[cfg(feature = "enable_wasm")]
 use wasm_bindgen::prelude::*;
 
 /// Solarization on the Blue channel.
@@ -21,7 +23,7 @@ use wasm_bindgen::prelude::*;
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// neue(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn neue(photon_image: &mut PhotonImage) {
     let end = photon_image.get_raw_pixels().len();
 
@@ -46,7 +48,7 @@ pub fn neue(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// lix(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn lix(photon_image: &mut PhotonImage) {
     let end = photon_image.get_raw_pixels().len();
 
@@ -72,7 +74,7 @@ pub fn lix(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// ryo(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn ryo(photon_image: &mut PhotonImage) {
     let end = photon_image.get_raw_pixels().len();
 
@@ -115,7 +117,7 @@ pub fn ryo(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// filter(&mut img, "vintage");
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn filter(img: &mut PhotonImage, filter_name: &str) {
     let oceanic_rgb = Rgb::new(0, 89, 173);
     let islands_rgb = Rgb::new(0, 24, 95);
@@ -169,7 +171,7 @@ pub fn filter(img: &mut PhotonImage, filter_name: &str) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// lofi(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn lofi(img: &mut PhotonImage) {
     adjust_contrast(img, 30.0);
     colour_spaces::saturate_hsl(img, 0.2);
@@ -188,7 +190,7 @@ pub fn lofi(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// pastel_pink(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn pastel_pink(img: &mut PhotonImage) {
     alter_channels(img, 80, 12, 20);
     adjust_contrast(img, 30.0);
@@ -207,7 +209,7 @@ pub fn pastel_pink(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// golden(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn golden(img: &mut PhotonImage) {
     let vignette_rgb = Rgb::new(235, 145, 50);
     mix_with_colour(img, vignette_rgb, 0.2);
@@ -227,7 +229,7 @@ pub fn golden(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// cali(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn cali(img: &mut PhotonImage) {
     let cali_rgb = Rgb::new(255, 45, 75);
     colour_spaces::mix_with_colour(img, cali_rgb, 0.1);
@@ -247,7 +249,7 @@ pub fn cali(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// dramatic(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn dramatic(img: &mut PhotonImage) {
     monochrome::grayscale(img);
     adjust_contrast(img, 60.0);
@@ -269,7 +271,7 @@ pub fn dramatic(img: &mut PhotonImage) {
 /// let rgb_color = Rgb::new(12, 12, 10);
 /// monochrome_tint(&mut img, rgb_color);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn monochrome_tint(img: &mut PhotonImage, rgb_color: Rgb) {
     monochrome::grayscale(img);
     mix_with_colour(img, rgb_color, 0.4);
@@ -289,7 +291,7 @@ pub fn monochrome_tint(img: &mut PhotonImage, rgb_color: Rgb) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// duotone_violette(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn duotone_violette(img: &mut PhotonImage) {
     let rgb_color = Rgb::new(16, 228, 248);
     let rgb_color2 = Rgb::new(116, 54, 221);
@@ -309,7 +311,7 @@ pub fn duotone_violette(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// duotone_horizon(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn duotone_horizon(img: &mut PhotonImage) {
     let rgb_color = Rgb::new(169, 167, 132);
     let rgb_color2 = Rgb::new(150, 24, 149);
@@ -333,7 +335,7 @@ pub fn duotone_horizon(img: &mut PhotonImage) {
 /// let rgb_color = Rgb::new(12, 12, 10);
 /// duotone_tint(&mut img, rgb_color);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn duotone_tint(img: &mut PhotonImage, rgb_color: Rgb) {
     let rgb_color2 = Rgb::new(68, 61, 76);
     duotone(img, rgb_color, rgb_color2);
@@ -352,7 +354,7 @@ pub fn duotone_tint(img: &mut PhotonImage, rgb_color: Rgb) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// duotone_lilac(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn duotone_lilac(img: &mut PhotonImage) {
     let rgb_color = Rgb::new(45, 3, 3);
     let rgb_color2 = Rgb::new(163, 134, 224);
@@ -372,7 +374,7 @@ pub fn duotone_lilac(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// duotone_ochre(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn duotone_ochre(img: &mut PhotonImage) {
     let rgb_color = Rgb::new(25, 36, 88);
     let rgb_color2 = Rgb::new(236, 119, 0);
@@ -392,7 +394,7 @@ pub fn duotone_ochre(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// firenze(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn firenze(img: &mut PhotonImage) {
     let cali_rgb = Rgb::new(255, 47, 78);
     colour_spaces::mix_with_colour(img, cali_rgb, 0.1);
@@ -414,7 +416,7 @@ pub fn firenze(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// obsidian(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn obsidian(img: &mut PhotonImage) {
     monochrome::grayscale(img);
     adjust_contrast(img, 25.0);

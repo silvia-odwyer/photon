@@ -9,11 +9,12 @@ use image::RgbaImage;
 use image::{GenericImageView, ImageBuffer};
 use std::cmp::max;
 use std::cmp::min;
-use wasm_bindgen::prelude::*;
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(feature = "enable_wasm")]
+use wasm_bindgen::prelude::*;
+#[cfg(all(feature = "enable_wasm", target_arch = "wasm32"))]
 use wasm_bindgen::{Clamped, JsCast};
-#[cfg(target_arch = "wasm32")]
+#[cfg(all(feature = "enable_wasm", target_arch = "wasm32"))]
 use web_sys::{HtmlCanvasElement, ImageData};
 
 /// Crop an image.
@@ -33,7 +34,7 @@ use web_sys::{HtmlCanvasElement, ImageData};
 /// let cropped_img: PhotonImage = crop(&mut img, 0_u32, 0_u32, 500_u32, 800_u32);
 /// // Write the contents of this image in JPG format.
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn crop(
     photon_image: &mut PhotonImage,
     x1: u32,
@@ -59,7 +60,7 @@ pub fn crop(
 }
 
 #[cfg(target_arch = "wasm32")]
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn crop_img_browser(
     source_canvas: HtmlCanvasElement,
     width: f64,
@@ -115,7 +116,7 @@ pub fn crop_img_browser(
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// fliph(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn fliph(photon_image: &mut PhotonImage) {
     let img = helpers::dyn_image_from_raw(photon_image);
 
@@ -148,7 +149,7 @@ pub fn fliph(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// flipv(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn flipv(photon_image: &mut PhotonImage) {
     let img = helpers::dyn_image_from_raw(photon_image);
 
@@ -167,7 +168,7 @@ pub fn flipv(photon_image: &mut PhotonImage) {
     photon_image.raw_pixels = raw_pixels;
 }
 
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub enum SamplingFilter {
     Nearest = 1,
     Triangle = 2,
@@ -194,7 +195,7 @@ fn filter_type_from_sampling_filter(sampling_filter: SamplingFilter) -> FilterTy
 /// * `height` - New height.
 /// * `sampling_filter` - Nearest = 1, Triangle = 2, CatmullRom = 3, Gaussian = 4, Lanczos3 = 5
 #[cfg(target_arch = "wasm32")]
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn resize_img_browser(
     photon_img: &PhotonImage,
     width: u32,
@@ -248,7 +249,7 @@ pub fn resize_img_browser(
 /// * `width` - New width.
 /// * `height` - New height.
 /// * `sampling_filter` - Nearest = 1, Triangle = 2, CatmullRom = 3, Gaussian = 4, Lanczos3 = 5
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn resize(
     photon_img: &PhotonImage,
     width: u32,
@@ -292,7 +293,7 @@ pub fn resize(
 /// let img = open_image("img.jpg").expect("File should open");
 /// let result: PhotonImage = seam_carve(&img, 100_u32, 100_u32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
     let mut img: RgbaImage = ImageBuffer::from_raw(
         img.get_width(),
@@ -344,7 +345,7 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
 /// let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
 /// padding_uniform(&img, 10_u32, rgba);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn padding_uniform(
     img: &PhotonImage,
     padding: u32,
@@ -409,7 +410,7 @@ pub fn padding_uniform(
 /// let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
 /// padding_left(&img, 10_u32, rgba);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn padding_left(img: &PhotonImage, padding: u32, padding_rgba: Rgba) -> PhotonImage {
     let image_buffer = img.get_raw_pixels();
     let img_width = img.get_width();
@@ -455,7 +456,7 @@ pub fn padding_left(img: &PhotonImage, padding: u32, padding_rgba: Rgba) -> Phot
 /// let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
 /// padding_right(&img, 10_u32, rgba);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn padding_right(
     img: &PhotonImage,
     padding: u32,
@@ -504,7 +505,7 @@ pub fn padding_right(
 /// let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
 /// padding_top(&img, 10_u32, rgba);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn padding_top(img: &PhotonImage, padding: u32, padding_rgba: Rgba) -> PhotonImage {
     let image_buffer = img.get_raw_pixels();
     let img_width = img.get_width();
@@ -549,7 +550,7 @@ pub fn padding_top(img: &PhotonImage, padding: u32, padding_rgba: Rgba) -> Photo
 /// let rgba = Rgba::new(200_u8, 100_u8, 150_u8, 255_u8);
 /// padding_bottom(&img, 10_u32, rgba);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn padding_bottom(
     img: &PhotonImage,
     padding: u32,
@@ -597,7 +598,7 @@ pub fn padding_bottom(
 /// let img = open_image("img.jpg").expect("File should open");
 /// let rotated_img = rotate(&img, 30);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn rotate(img: &PhotonImage, angle: i32) -> PhotonImage {
     // 390, 750 and 30 degrees represent the same angle. Trim 360.
     let full_circle_count = angle / 360;
@@ -762,7 +763,7 @@ fn copy_row(buf: &[u8], row_pos: usize, row_stride: usize) -> Vec<u8> {
 /// let img = open_image("img.jpg").expect("File should open");
 /// let rotated_img = resample(&img, 1920, 1080);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn resample(img: &PhotonImage, dst_width: usize, dst_height: usize) -> PhotonImage {
     let mut pix_buf = Vec::<u8>::new();
     if dst_width == 0 || dst_height == 0 {

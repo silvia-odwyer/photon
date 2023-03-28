@@ -4,6 +4,8 @@ use crate::helpers;
 use crate::PhotonImage;
 use image::DynamicImage::ImageRgba8;
 use std::cmp::min;
+
+#[cfg(feature = "enable_wasm")]
 use wasm_bindgen::prelude::*;
 
 type Kernel = [f32; 9];
@@ -34,7 +36,7 @@ fn conv(photon_image: &mut PhotonImage, kernel: Kernel) {
 /// noise_reduction(&mut img);
 /// ```
 /// Adds a constant to a select R, G, or B channel's value.
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn noise_reduction(photon_image: &mut PhotonImage) {
     conv(
         photon_image,
@@ -58,7 +60,7 @@ pub fn noise_reduction(photon_image: &mut PhotonImage) {
 /// sharpen(&mut img);
 /// ```
 /// Adds a constant to a select R, G, or B channel's value.
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn sharpen(photon_image: &mut PhotonImage) {
     conv(
         photon_image,
@@ -81,7 +83,7 @@ pub fn sharpen(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// edge_detection(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn edge_detection(photon_image: &mut PhotonImage) {
     conv(
         photon_image,
@@ -104,7 +106,7 @@ pub fn edge_detection(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// identity(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn identity(photon_image: &mut PhotonImage) {
     conv(
         photon_image,
@@ -127,7 +129,7 @@ pub fn identity(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// box_blur(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn box_blur(photon_image: &mut PhotonImage) {
     conv(
         photon_image,
@@ -151,7 +153,7 @@ pub fn box_blur(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// gaussian_blur(&mut img, 3_i32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn gaussian_blur(photon_image: &mut PhotonImage, radius: i32) {
     // construct pixel data
     let img = helpers::dyn_image_from_raw(photon_image);
@@ -384,7 +386,7 @@ fn box_blur_vertical(
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// detect_horizontal_lines(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn detect_horizontal_lines(photon_image: &mut PhotonImage) {
     conv(
         photon_image,
@@ -407,7 +409,7 @@ pub fn detect_horizontal_lines(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// detect_vertical_lines(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn detect_vertical_lines(photon_image: &mut PhotonImage) {
     conv(
         photon_image,
@@ -430,7 +432,7 @@ pub fn detect_vertical_lines(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// detect_45_deg_lines(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn detect_45_deg_lines(photon_image: &mut PhotonImage) {
     conv(
         photon_image,
@@ -453,7 +455,7 @@ pub fn detect_45_deg_lines(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// detect_135_deg_lines(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn detect_135_deg_lines(photon_image: &mut PhotonImage) {
     conv(
         photon_image,
@@ -476,7 +478,7 @@ pub fn detect_135_deg_lines(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// laplace(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn laplace(photon_image: &mut PhotonImage) {
     conv(
         photon_image,
@@ -499,7 +501,7 @@ pub fn laplace(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// edge_one(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn edge_one(photon_image: &mut PhotonImage) {
     conv(
         photon_image,
@@ -522,7 +524,7 @@ pub fn edge_one(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// emboss(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn emboss(photon_image: &mut PhotonImage) {
     conv(
         photon_image,
@@ -545,7 +547,7 @@ pub fn emboss(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// sobel_horizontal(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn sobel_horizontal(photon_image: &mut PhotonImage) {
     conv(
         photon_image,
@@ -568,7 +570,7 @@ pub fn sobel_horizontal(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// prewitt_horizontal(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn prewitt_horizontal(photon_image: &mut PhotonImage) {
     conv(
         photon_image,
@@ -591,7 +593,7 @@ pub fn prewitt_horizontal(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// sobel_vertical(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn sobel_vertical(photon_image: &mut PhotonImage) {
     conv(
         photon_image,

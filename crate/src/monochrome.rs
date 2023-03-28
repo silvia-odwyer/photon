@@ -5,6 +5,8 @@ use crate::iter::ImageIterator;
 use crate::PhotonImage;
 use image::Pixel;
 use image::{GenericImage, GenericImageView};
+
+#[cfg(feature = "enable_wasm")]
 use wasm_bindgen::prelude::*;
 
 /// Apply a monochrome effect of a certain colour.
@@ -28,7 +30,7 @@ use wasm_bindgen::prelude::*;
 /// monochrome(&mut img, 40_u32, 50_u32, 100_u32);
 /// ```
 ///
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn monochrome(img: &mut PhotonImage, r_offset: u32, g_offset: u32, b_offset: u32) {
     let end = img.get_raw_pixels().len();
 
@@ -77,7 +79,7 @@ pub fn monochrome(img: &mut PhotonImage, r_offset: u32, g_offset: u32, b_offset:
 /// sepia(&mut img);
 /// ```
 ///
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn sepia(img: &mut PhotonImage) {
     let end = img.get_raw_pixels().len();
 
@@ -120,7 +122,7 @@ pub fn sepia(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// grayscale(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn grayscale(img: &mut PhotonImage) {
     let end = img.get_raw_pixels().len();
 
@@ -154,7 +156,7 @@ pub fn grayscale(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// grayscale_human_corrected(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn grayscale_human_corrected(img: &mut PhotonImage) {
     let end = img.get_raw_pixels().len();
 
@@ -186,7 +188,7 @@ pub fn grayscale_human_corrected(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// desaturate(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn desaturate(img: &mut PhotonImage) {
     let end = img.get_raw_pixels().len();
 
@@ -222,7 +224,7 @@ pub fn desaturate(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// decompose_min(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn decompose_min(img: &mut PhotonImage) {
     let end = img.get_raw_pixels().len();
 
@@ -258,7 +260,7 @@ pub fn decompose_min(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// decompose_max(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn decompose_max(img: &mut PhotonImage) {
     let end = img.get_raw_pixels().len();
 
@@ -295,7 +297,7 @@ pub fn decompose_max(img: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// grayscale_shades(&mut img, 4_u8);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn grayscale_shades(mut photon_image: &mut PhotonImage, num_shades: u8) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
 
@@ -333,7 +335,7 @@ pub fn grayscale_shades(mut photon_image: &mut PhotonImage, num_shades: u8) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// r_grayscale(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn r_grayscale(photon_image: &mut PhotonImage) {
     single_channel_grayscale(photon_image, 0)
 }
@@ -352,7 +354,7 @@ pub fn r_grayscale(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// g_grayscale(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn g_grayscale(photon_image: &mut PhotonImage) {
     single_channel_grayscale(photon_image, 1)
 }
@@ -371,7 +373,7 @@ pub fn g_grayscale(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// b_grayscale(&mut img);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn b_grayscale(photon_image: &mut PhotonImage) {
     single_channel_grayscale(photon_image, 2)
 }
@@ -391,7 +393,7 @@ pub fn b_grayscale(photon_image: &mut PhotonImage) {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// single_channel_grayscale(&mut img, 0_usize);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn single_channel_grayscale(mut photon_image: &mut PhotonImage, channel: usize) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
 
@@ -426,7 +428,7 @@ pub fn single_channel_grayscale(mut photon_image: &mut PhotonImage, channel: usi
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// threshold(&mut img, 30_u32);
 /// ```
-#[wasm_bindgen]
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn threshold(img: &mut PhotonImage, threshold: u32) {
     let end = img.get_raw_pixels().len();
 
