@@ -1,8 +1,8 @@
 //! Helper functions for converting between various formats
 
 use crate::{PhotonImage, Rgb};
-use image::{DynamicImage, ImageBuffer};
 use image::DynamicImage::ImageRgba8;
+use image::{DynamicImage, ImageBuffer};
 
 #[cfg(feature = "enable_wasm")]
 extern crate wasm_bindgen;
