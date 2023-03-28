@@ -309,6 +309,58 @@ export function rotate(img: PhotonImage, angle: number): PhotonImage;
 */
 export function resample(img: PhotonImage, dst_width: number, dst_height: number): PhotonImage;
 /**
+*! [temp] Check if WASM is supported.
+*/
+export function run(): void;
+/**
+* Get the ImageData from a 2D canvas context
+* @param {HTMLCanvasElement} canvas
+* @param {CanvasRenderingContext2D} ctx
+* @returns {ImageData}
+*/
+export function get_image_data(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): ImageData;
+/**
+* Place a PhotonImage onto a 2D canvas.
+* @param {HTMLCanvasElement} canvas
+* @param {CanvasRenderingContext2D} ctx
+* @param {PhotonImage} new_image
+*/
+export function putImageData(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, new_image: PhotonImage): void;
+/**
+* Convert a HTML5 Canvas Element to a PhotonImage.
+*
+* This converts the ImageData found in the canvas context to a PhotonImage,
+* which can then have effects or filters applied to it.
+* @param {HTMLCanvasElement} canvas
+* @param {CanvasRenderingContext2D} ctx
+* @returns {PhotonImage}
+*/
+export function open_image(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): PhotonImage;
+/**
+* Convert ImageData to a raw pixel vec of u8s.
+* @param {ImageData} imgdata
+* @returns {Uint8Array}
+*/
+export function to_raw_pixels(imgdata: ImageData): Uint8Array;
+/**
+* Convert a base64 string to a PhotonImage.
+* @param {string} base64
+* @returns {PhotonImage}
+*/
+export function base64_to_image(base64: string): PhotonImage;
+/**
+* Convert a base64 string to a Vec of u8s.
+* @param {string} base64
+* @returns {Uint8Array}
+*/
+export function base64_to_vec(base64: string): Uint8Array;
+/**
+* Convert a PhotonImage to JS-compatible ImageData.
+* @param {PhotonImage} photon_image
+* @returns {ImageData}
+*/
+export function to_image_data(photon_image: PhotonImage): ImageData;
+/**
 * Add bordered-text to an image.
 * The only font available as of now is Roboto.
 * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
@@ -364,58 +416,6 @@ export function draw_text_with_border(photon_img: PhotonImage, text: string, x: 
 * @param {number} y
 */
 export function draw_text(photon_img: PhotonImage, text: string, x: number, y: number): void;
-/**
-*! [temp] Check if WASM is supported.
-*/
-export function run(): void;
-/**
-* Get the ImageData from a 2D canvas context
-* @param {HTMLCanvasElement} canvas
-* @param {CanvasRenderingContext2D} ctx
-* @returns {ImageData}
-*/
-export function get_image_data(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): ImageData;
-/**
-* Place a PhotonImage onto a 2D canvas.
-* @param {HTMLCanvasElement} canvas
-* @param {CanvasRenderingContext2D} ctx
-* @param {PhotonImage} new_image
-*/
-export function putImageData(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, new_image: PhotonImage): void;
-/**
-* Convert a HTML5 Canvas Element to a PhotonImage.
-*
-* This converts the ImageData found in the canvas context to a PhotonImage,
-* which can then have effects or filters applied to it.
-* @param {HTMLCanvasElement} canvas
-* @param {CanvasRenderingContext2D} ctx
-* @returns {PhotonImage}
-*/
-export function open_image(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): PhotonImage;
-/**
-* Convert ImageData to a raw pixel vec of u8s.
-* @param {ImageData} imgdata
-* @returns {Uint8Array}
-*/
-export function to_raw_pixels(imgdata: ImageData): Uint8Array;
-/**
-* Convert a base64 string to a PhotonImage.
-* @param {string} base64
-* @returns {PhotonImage}
-*/
-export function base64_to_image(base64: string): PhotonImage;
-/**
-* Convert a base64 string to a Vec of u8s.
-* @param {string} base64
-* @returns {Uint8Array}
-*/
-export function base64_to_vec(base64: string): Uint8Array;
-/**
-* Convert a PhotonImage to JS-compatible ImageData.
-* @param {PhotonImage} photon_image
-* @returns {ImageData}
-*/
-export function to_image_data(photon_image: PhotonImage): ImageData;
 /**
 * Adds an offset to the image by a certain number of pixels.
 *
@@ -1620,6 +1620,251 @@ export function firenze(img: PhotonImage): void;
 */
 export function obsidian(img: PhotonImage): void;
 /**
+* Apply a monochrome effect of a certain colour.
+*
+* It does so by averaging the R, G, and B values of a pixel, and then adding a
+* separate value to that averaged value for each channel to produce a tint.
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* * `r_offset` - The value to add to the Red channel per pixel.
+* * `g_offset` - The value to add to the Green channel per pixel.
+* * `b_offset` - The value to add to the Blue channel per pixel.
+*
+* # Example
+*
+* ```no_run
+* // For example, to apply a monochrome effect to an image:
+* use photon_rs::monochrome::monochrome;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* monochrome(&mut img, 40_u32, 50_u32, 100_u32);
+* ```
+* @param {PhotonImage} img
+* @param {number} r_offset
+* @param {number} g_offset
+* @param {number} b_offset
+*/
+export function monochrome(img: PhotonImage, r_offset: number, g_offset: number, b_offset: number): void;
+/**
+* Convert an image to sepia.
+*
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* // For example, to sepia an image of type `PhotonImage`:
+* use photon_rs::monochrome::sepia;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* sepia(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+export function sepia(img: PhotonImage): void;
+/**
+* Convert an image to grayscale using the conventional averaging algorithm.
+*
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* // For example, to convert an image of type `PhotonImage` to grayscale:
+* use photon_rs::monochrome::grayscale;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* grayscale(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+export function grayscale(img: PhotonImage): void;
+/**
+* Convert an image to grayscale with a human corrected factor, to account for human vision.
+*
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* // For example, to convert an image of type `PhotonImage` to grayscale with a human corrected factor:
+* use photon_rs::monochrome::grayscale_human_corrected;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* grayscale_human_corrected(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+export function grayscale_human_corrected(img: PhotonImage): void;
+/**
+* Desaturate an image by getting the min/max of each pixel's RGB values.
+*
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* // For example, to desaturate an image:
+* use photon_rs::monochrome::desaturate;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* desaturate(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+export function desaturate(img: PhotonImage): void;
+/**
+* Uses a min. decomposition algorithm to convert an image to greyscale.
+*
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* // For example, to decompose an image with min decomposition:
+* use photon_rs::monochrome::decompose_min;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* decompose_min(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+export function decompose_min(img: PhotonImage): void;
+/**
+* Uses a max. decomposition algorithm to convert an image to greyscale.
+*
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* // For example, to decompose an image with max decomposition:
+* use photon_rs::monochrome::decompose_max;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* decompose_max(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+export function decompose_max(img: PhotonImage): void;
+/**
+* Employ only a limited number of gray shades in an image.
+*
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* * `num_shades` - The number of grayscale shades to be displayed in the image.
+* # Example
+*
+* ```no_run
+* // For example, to limit an image to four shades of gray only:
+* use photon_rs::monochrome::grayscale_shades;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* grayscale_shades(&mut img, 4_u8);
+* ```
+* @param {PhotonImage} photon_image
+* @param {number} num_shades
+*/
+export function grayscale_shades(photon_image: PhotonImage, num_shades: number): void;
+/**
+* Convert an image to grayscale by setting a pixel's 3 RGB values to the Red channel's value.
+*
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::monochrome::r_grayscale;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* r_grayscale(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+export function r_grayscale(photon_image: PhotonImage): void;
+/**
+* Convert an image to grayscale by setting a pixel's 3 RGB values to the Green channel's value.
+*
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::monochrome::g_grayscale;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* g_grayscale(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+export function g_grayscale(photon_image: PhotonImage): void;
+/**
+* Convert an image to grayscale by setting a pixel's 3 RGB values to the Blue channel's value.
+*
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::monochrome::b_grayscale;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* b_grayscale(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+export function b_grayscale(photon_image: PhotonImage): void;
+/**
+* Convert an image to grayscale by setting a pixel's 3 RGB values to a chosen channel's value.
+*
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* * `channel` - A usize representing the channel from 0 to 2. O represents the Red channel, 1 the Green channel, and 2 the Blue channel.
+* # Example
+* To grayscale using only values from the Red channel:
+* ```no_run
+* use photon_rs::monochrome::single_channel_grayscale;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* single_channel_grayscale(&mut img, 0_usize);
+* ```
+* @param {PhotonImage} photon_image
+* @param {number} channel
+*/
+export function single_channel_grayscale(photon_image: PhotonImage, channel: number): void;
+/**
+* Threshold an image using a standard thresholding algorithm.
+*
+* # Arguments
+* * `photon_image` - A PhotonImage.
+* * `threshold` - The amount the image should be thresholded by from 0 to 255.
+* # Example
+*
+* ```no_run
+* // For example, to threshold an image of type `PhotonImage`:
+* use photon_rs::monochrome::threshold;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* threshold(&mut img, 30_u32);
+* ```
+* @param {PhotonImage} img
+* @param {number} threshold
+*/
+export function threshold(img: PhotonImage, threshold: number): void;
+/**
 * Applies gamma correction to an image.
 * # Arguments
 * * `photon_image` - A PhotonImage that contains a view into the image.
@@ -2232,251 +2477,6 @@ export function desaturate_hsluv(img: PhotonImage, level: number): void;
 * @param {number} opacity
 */
 export function mix_with_colour(photon_image: PhotonImage, mix_colour: Rgb, opacity: number): void;
-/**
-* Apply a monochrome effect of a certain colour.
-*
-* It does so by averaging the R, G, and B values of a pixel, and then adding a
-* separate value to that averaged value for each channel to produce a tint.
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* * `r_offset` - The value to add to the Red channel per pixel.
-* * `g_offset` - The value to add to the Green channel per pixel.
-* * `b_offset` - The value to add to the Blue channel per pixel.
-*
-* # Example
-*
-* ```no_run
-* // For example, to apply a monochrome effect to an image:
-* use photon_rs::monochrome::monochrome;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* monochrome(&mut img, 40_u32, 50_u32, 100_u32);
-* ```
-* @param {PhotonImage} img
-* @param {number} r_offset
-* @param {number} g_offset
-* @param {number} b_offset
-*/
-export function monochrome(img: PhotonImage, r_offset: number, g_offset: number, b_offset: number): void;
-/**
-* Convert an image to sepia.
-*
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* // For example, to sepia an image of type `PhotonImage`:
-* use photon_rs::monochrome::sepia;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* sepia(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-export function sepia(img: PhotonImage): void;
-/**
-* Convert an image to grayscale using the conventional averaging algorithm.
-*
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* // For example, to convert an image of type `PhotonImage` to grayscale:
-* use photon_rs::monochrome::grayscale;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* grayscale(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-export function grayscale(img: PhotonImage): void;
-/**
-* Convert an image to grayscale with a human corrected factor, to account for human vision.
-*
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* // For example, to convert an image of type `PhotonImage` to grayscale with a human corrected factor:
-* use photon_rs::monochrome::grayscale_human_corrected;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* grayscale_human_corrected(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-export function grayscale_human_corrected(img: PhotonImage): void;
-/**
-* Desaturate an image by getting the min/max of each pixel's RGB values.
-*
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* // For example, to desaturate an image:
-* use photon_rs::monochrome::desaturate;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* desaturate(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-export function desaturate(img: PhotonImage): void;
-/**
-* Uses a min. decomposition algorithm to convert an image to greyscale.
-*
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* // For example, to decompose an image with min decomposition:
-* use photon_rs::monochrome::decompose_min;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* decompose_min(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-export function decompose_min(img: PhotonImage): void;
-/**
-* Uses a max. decomposition algorithm to convert an image to greyscale.
-*
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* // For example, to decompose an image with max decomposition:
-* use photon_rs::monochrome::decompose_max;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* decompose_max(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-export function decompose_max(img: PhotonImage): void;
-/**
-* Employ only a limited number of gray shades in an image.
-*
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* * `num_shades` - The number of grayscale shades to be displayed in the image.
-* # Example
-*
-* ```no_run
-* // For example, to limit an image to four shades of gray only:
-* use photon_rs::monochrome::grayscale_shades;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* grayscale_shades(&mut img, 4_u8);
-* ```
-* @param {PhotonImage} photon_image
-* @param {number} num_shades
-*/
-export function grayscale_shades(photon_image: PhotonImage, num_shades: number): void;
-/**
-* Convert an image to grayscale by setting a pixel's 3 RGB values to the Red channel's value.
-*
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::monochrome::r_grayscale;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* r_grayscale(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-export function r_grayscale(photon_image: PhotonImage): void;
-/**
-* Convert an image to grayscale by setting a pixel's 3 RGB values to the Green channel's value.
-*
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::monochrome::g_grayscale;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* g_grayscale(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-export function g_grayscale(photon_image: PhotonImage): void;
-/**
-* Convert an image to grayscale by setting a pixel's 3 RGB values to the Blue channel's value.
-*
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::monochrome::b_grayscale;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* b_grayscale(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-export function b_grayscale(photon_image: PhotonImage): void;
-/**
-* Convert an image to grayscale by setting a pixel's 3 RGB values to a chosen channel's value.
-*
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* * `channel` - A usize representing the channel from 0 to 2. O represents the Red channel, 1 the Green channel, and 2 the Blue channel.
-* # Example
-* To grayscale using only values from the Red channel:
-* ```no_run
-* use photon_rs::monochrome::single_channel_grayscale;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* single_channel_grayscale(&mut img, 0_usize);
-* ```
-* @param {PhotonImage} photon_image
-* @param {number} channel
-*/
-export function single_channel_grayscale(photon_image: PhotonImage, channel: number): void;
-/**
-* Threshold an image using a standard thresholding algorithm.
-*
-* # Arguments
-* * `photon_image` - A PhotonImage.
-* * `threshold` - The amount the image should be thresholded by from 0 to 255.
-* # Example
-*
-* ```no_run
-* // For example, to threshold an image of type `PhotonImage`:
-* use photon_rs::monochrome::threshold;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* threshold(&mut img, 30_u32);
-* ```
-* @param {PhotonImage} img
-* @param {number} threshold
-*/
-export function threshold(img: PhotonImage, threshold: number): void;
 /**
 * Add a watermark to an image.
 *
