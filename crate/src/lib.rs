@@ -51,7 +51,9 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::Clamped;
 
 #[cfg(feature = "web-sys")]
-use web_sys::{Blob, CanvasRenderingContext2d, HtmlCanvasElement, ImageData};
+use web_sys::{
+    Blob, CanvasRenderingContext2d, HtmlCanvasElement, HtmlImageElement, ImageData,
+};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -109,6 +111,36 @@ impl PhotonImage {
         let vec = bytes.to_vec();
 
         PhotonImage::new_from_byteslice(vec)
+    }
+
+    /// Create a new PhotonImage from a HTMLImageElement
+    #[cfg(feature = "web-sys")]
+    pub fn new_from_image(image: HtmlImageElement) -> PhotonImage {
+        set_panic_hook();
+
+        let document = web_sys::window().unwrap().document().unwrap();
+
+        let canvas = document
+            .create_element("canvas")
+            .unwrap()
+            .dyn_into::<web_sys::HtmlCanvasElement>()
+            .unwrap();
+
+        canvas.set_width(image.width());
+        canvas.set_height(image.height());
+
+        let context = canvas
+            .get_context("2d")
+            .unwrap()
+            .unwrap()
+            .dyn_into::<CanvasRenderingContext2d>()
+            .unwrap();
+
+        context
+            .draw_image_with_html_image_element(&image, 0.0, 0.0)
+            .unwrap();
+
+        open_image(canvas, context)
     }
 
     // pub fn new_from_buffer(buffer: &Buffer, width: u32, height: u32) -> PhotonImage {
