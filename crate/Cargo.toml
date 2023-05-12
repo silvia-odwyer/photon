@@ -24,11 +24,11 @@ rand="0.7.2"
 imageproc = { version = "0.22.0", default-features = false }
 rusttype="0.9.2"
 base64="0.13.0"
-time="0.2.23"
-wasm-bindgen = { version = "=0.2.78", optional = true }
+time="0.3.21"
+wasm-bindgen = { version = "=0.2.85", optional = true }
 serde = { version = "1.0", features = ["derive"] }
 thiserror = "1.0"
-js-sys = { version = "0.3.45", optional = true }
+js-sys = { version = "0.3.62", optional = true }
 node-sys = { version = "0.4.2", optional = true }
 perlin2d = "0.2.6"
 
@@ -36,7 +36,7 @@ perlin2d = "0.2.6"
 # logging them with `console.error`. This is great for development, but requires
 # all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
 # code size when deploying.
-console_error_panic_hook = { version = "0.1.5", optional = true }
+console_error_panic_hook = { version = "0.1.7", optional = true }
 
 # `wee_alloc` is a tiny allocator for wasm that is only ~1K in code size
 # compared to the default allocator's ~10K. It is slower than the default
@@ -44,7 +44,7 @@ console_error_panic_hook = { version = "0.1.5", optional = true }
 wee_alloc = { version = "0.4.2", optional = true }
 
 [dev-dependencies]
-time="0.2.1"
+time="0.3.21"
 criterion = "0.3"
 
 [[bench]]
@@ -69,6 +69,7 @@ features = [
   "console",
   'CssStyleDeclaration',
   'EventTarget',
+  "Blob"
 ]
 optional = true
 

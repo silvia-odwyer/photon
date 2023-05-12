@@ -51,7 +51,7 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::Clamped;
 
 #[cfg(feature = "web-sys")]
-use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, ImageData};
+use web_sys::{Blob, CanvasRenderingContext2d, HtmlCanvasElement, ImageData};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -99,6 +99,16 @@ impl PhotonImage {
             width: img.width(),
             height: img.height(),
         }
+    }
+
+    /// Create a new PhotonImage from a Blob/File.
+    #[cfg(feature = "web-sys")]
+    pub fn new_from_blob(blob: Blob) -> PhotonImage {
+        let bytes: js_sys::Uint8Array = js_sys::Uint8Array::new(&blob);
+
+        let vec = bytes.to_vec();
+
+        PhotonImage::new_from_byteslice(vec)
     }
 
     // pub fn new_from_buffer(buffer: &Buffer, width: u32, height: u32) -> PhotonImage {
