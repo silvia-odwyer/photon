@@ -7,14 +7,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("file name = {}", file_name);
 
     // // Open the image
-    let mut img = photon_rs::native::open_image(file_name)?;
+    let img = photon_rs::native::open_image(file_name)?;
     let start = time::Instant::now();
     // Seam Carver
     let (w, h) = (img.get_width(), img.get_height());
     println!("original = w: {}, h: {}", w, h);
     let w = w - 60;
     let h = h - 10;
-    let res = photon_rs::transform::seam_carve(&mut img, w, h);
+    let res = photon_rs::transform::seam_carve(&img, w, h);
     println!("after = w: {}, h: {}", w, h);
 
     // Write the contents of this image in JPEG format.
