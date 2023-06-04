@@ -188,7 +188,7 @@ impl PhotonImage {
         res_base64
     }
 
-    /// Convert the PhotonImage to raw bytes. Returns JPEG.
+    /// Convert the PhotonImage to raw bytes. Returns PNG.
     pub fn get_bytes(&self) -> Vec<u8> {
         let mut img = helpers::dyn_image_from_raw(self);
         img = ImageRgba8(img.to_rgba8());
