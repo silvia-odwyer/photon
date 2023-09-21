@@ -90,7 +90,7 @@ pub fn gamma_correction(
 /// hsluv(&mut img, "saturate", 0.1_f32);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn hsluv(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
+pub fn hsluv(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
     let mut img = img.to_rgba8();
@@ -158,7 +158,7 @@ pub fn hsluv(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 /// lch(&mut img, "saturate", 0.1_f32);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
+pub fn lch(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
     let mut img = img.to_rgba8();
@@ -226,7 +226,7 @@ pub fn lch(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
 /// hsl(&mut img, "saturate", 0.1_f32);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn hsl(mut photon_image: &mut PhotonImage, mode: &str, amt: f32) {
+pub fn hsl(photon_image: &mut PhotonImage, mode: &str, amt: f32) {
     // The function logic is kept separate from other colour spaces for now,
     // since other HSL-specific logic may be implemented here, which isn't available in other colour spaces
     let mut img = helpers::dyn_image_from_raw(photon_image).to_rgba8();

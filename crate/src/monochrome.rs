@@ -198,7 +198,7 @@ pub fn desaturate(img: &mut PhotonImage) {
         let b_val = img.raw_pixels[i + 2] as u32;
 
         // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
-        let mut rgb_vals = vec![r_val, g_val, b_val];
+        let mut rgb_vals = [r_val, g_val, b_val];
         rgb_vals.sort_unstable();
 
         let gray: u8 = ((rgb_vals[0] + rgb_vals[2]) / 2) as u8;
@@ -234,7 +234,7 @@ pub fn decompose_min(img: &mut PhotonImage) {
         let b_val = img.raw_pixels[i + 2] as u32;
 
         // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
-        let mut rgb_vals = vec![r_val, g_val, b_val];
+        let mut rgb_vals = [r_val, g_val, b_val];
         rgb_vals.sort_unstable();
 
         let gray: u8 = rgb_vals[0] as u8;
@@ -270,7 +270,7 @@ pub fn decompose_max(img: &mut PhotonImage) {
         let b_val = img.raw_pixels[i + 2] as u32;
 
         // get the max and min vals of a pixel's 3 rgb values by sorting a vec of these
-        let mut rgb_vals = vec![r_val, g_val, b_val];
+        let mut rgb_vals = [r_val, g_val, b_val];
         rgb_vals.sort_unstable();
 
         let gray: u8 = rgb_vals[2] as u8;
@@ -298,7 +298,7 @@ pub fn decompose_max(img: &mut PhotonImage) {
 /// grayscale_shades(&mut img, 4_u8);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn grayscale_shades(mut photon_image: &mut PhotonImage, num_shades: u8) {
+pub fn grayscale_shades(photon_image: &mut PhotonImage, num_shades: u8) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
@@ -394,7 +394,7 @@ pub fn b_grayscale(photon_image: &mut PhotonImage) {
 /// single_channel_grayscale(&mut img, 0_usize);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn single_channel_grayscale(mut photon_image: &mut PhotonImage, channel: usize) {
+pub fn single_channel_grayscale(photon_image: &mut PhotonImage, channel: usize) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {

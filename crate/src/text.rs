@@ -35,12 +35,7 @@ use wasm_bindgen::prelude::*;
 /// draw_text_with_border(&mut img, "Welcome to Photon!", 10_u32, 10_u32);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn draw_text_with_border(
-    mut photon_img: &mut PhotonImage,
-    text: &str,
-    x: u32,
-    y: u32,
-) {
+pub fn draw_text_with_border(photon_img: &mut PhotonImage, text: &str, x: u32, y: u32) {
     let mut image = helpers::dyn_image_from_raw(photon_img).to_rgba8();
 
     let mut image2: DynamicImage =
@@ -110,7 +105,7 @@ pub fn draw_text_with_border(
 /// draw_text(&mut img, "Welcome to Photon!", 10_u32, 10_u32);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn draw_text(mut photon_img: &mut PhotonImage, text: &str, x: u32, y: u32) {
+pub fn draw_text(photon_img: &mut PhotonImage, text: &str, x: u32, y: u32) {
     let mut image = helpers::dyn_image_from_raw(photon_img).to_rgba8();
 
     let mut image2: DynamicImage =

@@ -163,7 +163,7 @@ pub fn offset_blue(img: &mut PhotonImage, offset_amt: u32) {
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn multiple_offsets(
-    mut photon_image: &mut PhotonImage,
+    photon_image: &mut PhotonImage,
     offset: u32,
     channel_index: usize,
     channel_index2: usize,
@@ -199,7 +199,7 @@ pub fn multiple_offsets(
 }
 
 /// Halftoning effect.
-pub fn halftone(mut photon_image: &mut PhotonImage) {
+pub fn halftone(photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
@@ -377,7 +377,7 @@ pub fn primary(img: &mut PhotonImage) {
 /// colorize(&mut img);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn colorize(mut photon_image: &mut PhotonImage) {
+pub fn colorize(photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
     let threshold = 220;
 
@@ -584,7 +584,7 @@ pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
 /// adjust_contrast(&mut img, 30_f32);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
+pub fn adjust_contrast(photon_image: &mut PhotonImage, contrast: f32) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
 
     let clamped_contrast = contrast.clamp(-255.0, 255.0);
@@ -638,7 +638,7 @@ pub fn adjust_contrast(mut photon_image: &mut PhotonImage, contrast: f32) {
 ///
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn tint(
-    mut photon_image: &mut PhotonImage,
+    photon_image: &mut PhotonImage,
     r_offset: u32,
     g_offset: u32,
     b_offset: u32,
@@ -676,11 +676,7 @@ pub fn tint(
     photon_image.raw_pixels = raw_pixels;
 }
 
-fn draw_horizontal_strips(
-    mut photon_image: &mut PhotonImage,
-    num_strips: u8,
-    color: Rgb,
-) {
+fn draw_horizontal_strips(photon_image: &mut PhotonImage, num_strips: u8, color: Rgb) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
@@ -754,7 +750,7 @@ pub fn color_horizontal_strips(
     draw_horizontal_strips(photon_image, num_strips, color)
 }
 
-fn draw_vertical_strips(mut photon_image: &mut PhotonImage, num_strips: u8, color: Rgb) {
+fn draw_vertical_strips(photon_image: &mut PhotonImage, num_strips: u8, color: Rgb) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
 
@@ -852,7 +848,7 @@ struct Intensity {
 /// ```
 ///
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn oil(mut photon_image: &mut PhotonImage, radius: i32, intensity: f64) {
+pub fn oil(photon_image: &mut PhotonImage, radius: i32, intensity: f64) {
     let img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
     let mut target = image::DynamicImage::new_rgba8(width, height);

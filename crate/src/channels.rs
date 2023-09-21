@@ -402,7 +402,7 @@ pub fn invert(photon_image: &mut PhotonImage) {
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn selective_hue_rotate(
-    mut photon_image: &mut PhotonImage,
+    photon_image: &mut PhotonImage,
     ref_color: Rgb,
     degrees: f32,
 ) {
@@ -641,7 +641,7 @@ pub fn selective_saturate(img: &mut PhotonImage, ref_color: Rgb, amt: f32) {
 }
 
 fn selective(
-    mut photon_image: &mut PhotonImage,
+    photon_image: &mut PhotonImage,
     mode: &'static str,
     ref_color: Rgb,
     amt: f32,

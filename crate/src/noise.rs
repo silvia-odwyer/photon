@@ -66,7 +66,7 @@ pub fn add_noise_rand(mut photon_image: PhotonImage) -> PhotonImage {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// pink_noise(&mut img);
 /// ```
-pub fn pink_noise(mut photon_image: &mut PhotonImage) {
+pub fn pink_noise(photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
     let mut rng = rand::thread_rng();
 

@@ -32,7 +32,7 @@ use wasm_bindgen::prelude::*;
 /// watermark(&mut img, &water_mark, 30_u32, 40_u32);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn watermark(mut img: &mut PhotonImage, watermark: &PhotonImage, x: u32, y: u32) {
+pub fn watermark(img: &mut PhotonImage, watermark: &PhotonImage, x: u32, y: u32) {
     let dyn_watermark: DynamicImage = crate::helpers::dyn_image_from_raw(watermark);
     let mut dyn_img: DynamicImage = crate::helpers::dyn_image_from_raw(img);
     image::imageops::overlay(&mut dyn_img, &dyn_watermark, x, y);
@@ -64,7 +64,7 @@ pub fn watermark(mut img: &mut PhotonImage, watermark: &PhotonImage, x: u32, y: 
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn blend(
-    mut photon_image: &mut PhotonImage,
+    photon_image: &mut PhotonImage,
     photon_image2: &PhotonImage,
     blend_mode: &str,
 ) {
@@ -179,7 +179,7 @@ pub fn blend(
 /// replace_background(&mut img, &img2, &rgb);
 /// ```
 pub fn replace_background(
-    mut photon_image: &mut PhotonImage,
+    photon_image: &mut PhotonImage,
     img2: &PhotonImage,
     background_color: &Rgb,
 ) {
