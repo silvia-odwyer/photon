@@ -13,8 +13,7 @@
   "files": [
     "photon-node_bg.wasm",
     "photon-node.js",
-    "photon-node.d.ts",
-    "LICENSE.md"
+    "photon-node.d.ts"
   ],
   "main": "photon-node.js",
   "homepage": "https://silvia-odwyer.github.io/photon/",
