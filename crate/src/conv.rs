@@ -3,6 +3,7 @@
 use crate::helpers;
 use crate::PhotonImage;
 use image::DynamicImage::ImageRgba8;
+use image::{GenericImage, GenericImageView, Pixel};
 use std::cmp::min;
 
 #[cfg(feature = "enable_wasm")]
@@ -16,6 +17,18 @@ fn conv(photon_image: &mut PhotonImage, kernel: Kernel) {
 
     let mut filtered_img = img.filter3x3(&kernel);
     filtered_img = ImageRgba8(filtered_img.to_rgba8());
+
+    if filtered_img.pixels().all(|p| p.2[3] == 0) {
+        for x in 0..GenericImageView::width(&img) - 1 {
+            for y in 0..GenericImageView::height(&img) - 1 {
+                let mut pixel = GenericImageView::get_pixel(&filtered_img, x, y);
+                let original_alpha =
+                    GenericImageView::get_pixel(&img, x, y).channels()[3];
+                pixel.channels_mut()[3] = original_alpha;
+                filtered_img.put_pixel(x, y, pixel);
+            }
+        }
+    }
 
     photon_image.raw_pixels = filtered_img.to_bytes();
 }
