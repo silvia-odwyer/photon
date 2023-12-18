@@ -25,10 +25,10 @@ imageproc = { version = "0.22.0", default-features = false }
 rusttype="0.9.2"
 base64="0.13.0"
 time="0.3.21"
-wasm-bindgen = { version = "=0.2.85", optional = true }
+wasm-bindgen = { version = "=0.2.89", optional = true }
 serde = { version = "1.0", features = ["derive"] }
 thiserror = "1.0"
-js-sys = { version = "0.3.62", optional = true }
+js-sys = { version = "0.3.66", optional = true }
 node-sys = { version = "0.4.2", optional = true }
 perlin2d = "0.2.6"
 
@@ -55,7 +55,7 @@ harness = false
 wasm-opt = ["-O3", "--enable-mutable-globals"]
 
 [dependencies.web-sys]
-version = "0.3"
+version = "0.3.66"
 features = [
   "Document",
   "Element",
