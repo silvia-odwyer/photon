@@ -35,10 +35,9 @@ use rand::Rng;
 /// ```
 pub fn add_noise_rand(mut photon_image: PhotonImage) -> PhotonImage {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
-    
-    #[cfg(not(feature = "web-sys"))]
-    let mut rng = rand::thread_rng();    
 
+    #[cfg(not(feature = "web-sys"))]
+    let mut rng = rand::thread_rng();
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
         #[cfg(not(feature = "web-sys"))]
@@ -86,13 +85,12 @@ pub fn pink_noise(photon_image: &mut PhotonImage) {
     let mut rng = rand::thread_rng();
 
     #[cfg(not(feature = "web-sys"))]
-    let rng_gen() = move || {rng.gen()};
+    let rng_gen() = move || rng.gen();
 
     #[cfg(feature = "web-sys")]
-    let rng_gen = || {random()};
+    let rng_gen = || random();
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
-
         let ran1: f64 = rng_gen(); // generates a float between 0 and 1
         let ran2: f64 = rng_gen();
         let ran3: f64 = rng_gen();

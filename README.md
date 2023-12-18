@@ -230,6 +230,7 @@ Contributors include (be sure to add yourself to the list if you submitted a PR)
 * **Arnav Jindal** - [@Daggy1234](https://github.com/Daggy1234)
 * **NorbertGarfield** - [@NorbertGarfield](https://github.com/NorbertGarfield)
 * **bboshoven** - [@bboshoven](https://github.com/bboshoven)
+* **benliao** - [@benliao](https://github.com/benliao)
 * **Future You(?)** - (See Contributing above)
 
 ## License
