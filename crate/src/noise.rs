@@ -3,15 +3,14 @@
 use image::Pixel;
 use image::{GenericImage, GenericImageView};
 
-// use wasm_bindgen::prelude::*;
 use crate::helpers;
 use crate::iter::ImageIterator;
 use crate::PhotonImage;
 
-#[cfg(feature = "web-sys")]
+#[cfg(target_family = "wasm")]
 use js_sys::Math::random;
 
-#[cfg(not(feature = "web-sys"))]
+#[cfg(not(target_family = "wasm"))]
 use rand::Rng;
 
 /// Add randomized noise to an image.
@@ -36,14 +35,14 @@ use rand::Rng;
 pub fn add_noise_rand(mut photon_image: PhotonImage) -> PhotonImage {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
 
-    #[cfg(not(feature = "web-sys"))]
+    #[cfg(not(target_family = "wasm"))]
     let mut rng = rand::thread_rng();
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
-        #[cfg(not(feature = "web-sys"))]
+        #[cfg(not(target_family = "wasm"))]
         let offset = rng.gen_range(0, 150);
 
-        #[cfg(feature = "web-sys")]
+        #[cfg(target_family = "wasm")]
         let offset = (random() * 150.0) as u8;
 
         let px =
@@ -81,13 +80,13 @@ pub fn add_noise_rand(mut photon_image: PhotonImage) -> PhotonImage {
 /// ```
 pub fn pink_noise(photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
-    #[cfg(not(feature = "web-sys"))]
+    #[cfg(not(target_family = "wasm"))]
     let mut rng = rand::thread_rng();
 
-    #[cfg(not(feature = "web-sys"))]
-    let rng_gen = move || rng.gen();
+    #[cfg(not(target_family = "wasm"))]
+    let mut rng_gen = move || rng.gen();
 
-    #[cfg(feature = "web-sys")]
+    #[cfg(target_family = "wasm")]
     let rng_gen = || random();
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {

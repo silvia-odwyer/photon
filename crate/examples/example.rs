@@ -20,6 +20,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Apply the effect in the HSV colour space
         photon::colour_spaces::hsl(&mut img, effect, 0.2_f32);
 
+        photon::noise::pink_noise(&mut img);
+
         // Write the contents of this image in JPG format.
         photon::native::save_image(img, &format!("output_{}.jpg", effect)[..])?;
 
