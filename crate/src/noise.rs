@@ -85,7 +85,7 @@ pub fn pink_noise(photon_image: &mut PhotonImage) {
     let mut rng = rand::thread_rng();
 
     #[cfg(not(feature = "web-sys"))]
-    let rng_gen() = move || rng.gen();
+    let rng_gen = move || rng.gen();
 
     #[cfg(feature = "web-sys")]
     let rng_gen = || random();
