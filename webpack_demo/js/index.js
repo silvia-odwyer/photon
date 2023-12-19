@@ -51,6 +51,12 @@ import("../../crate/pkg").then(module => {
     button.addEventListener("click", function(){applyEffect(event)}, false);
   }
 
+  let noise_buttons = document.getElementsByClassName("noise");
+  for (let i = 0; i < noise_buttons.length; i++) {
+    let button = noise_buttons[i];
+    button.addEventListener("click", function(){applyEffect(event)}, false);
+  }
+
   let blend_buttons = document.getElementsByClassName("blend");
   for (let i = 0; i < blend_buttons.length; i++) {
     let button = blend_buttons[i];
@@ -174,6 +180,8 @@ import("../../crate/pkg").then(module => {
                       "text": function() {return module.draw_text(rust_image, "welcome to WebAssembly", 10, 20)},
                       "text_border": function() {return module.draw_text_with_border(rust_image, "welcome to the edge", 10, 20)},
                       "test": function() {return module.filter(rust_image, "rosetint")},
+                      "pink_noise": function() {return module.pink_noise(rust_image)},
+                      "add_noise_rand": function() {return module.add_noise_rand(rust_image)},
                     };
 
     // Filter the image, the PhotonImage's raw pixels are modified and
