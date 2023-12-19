@@ -7,6 +7,9 @@ use crate::helpers;
 use crate::iter::ImageIterator;
 use crate::PhotonImage;
 
+#[cfg(feature = "enable_wasm")]
+use wasm_bindgen::prelude::*;
+
 #[cfg(target_family = "wasm")]
 use js_sys::Math::random;
 
@@ -29,10 +32,11 @@ use rand::Rng;
 /// use photon_rs::noise::add_noise_rand;
 /// use photon_rs::PhotonImage;
 ///
-/// let img = open_image("img.jpg").expect("File should open");
-/// let result: PhotonImage = add_noise_rand(img);
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// add_noise_rand(&mut img);
 /// ```
-pub fn add_noise_rand(mut photon_image: PhotonImage) -> PhotonImage {
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
+pub fn add_noise_rand(photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(&photon_image);
 
     #[cfg(not(target_family = "wasm"))]
@@ -58,7 +62,6 @@ pub fn add_noise_rand(mut photon_image: PhotonImage) -> PhotonImage {
         img.put_pixel(x, y, px);
     }
     photon_image.raw_pixels = img.to_bytes();
-    photon_image
 }
 
 /// Add pink-tinted noise to an image.
@@ -78,6 +81,7 @@ pub fn add_noise_rand(mut photon_image: PhotonImage) -> PhotonImage {
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// pink_noise(&mut img);
 /// ```
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn pink_noise(photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
     #[cfg(not(target_family = "wasm"))]
