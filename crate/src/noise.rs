@@ -37,7 +37,7 @@ use rand::Rng;
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn add_noise_rand(photon_image: &mut PhotonImage) {
-    let mut img = helpers::dyn_image_from_raw(&photon_image);
+    let mut img = helpers::dyn_image_from_raw(photon_image);
 
     #[cfg(not(target_family = "wasm"))]
     let mut rng = rand::thread_rng();
