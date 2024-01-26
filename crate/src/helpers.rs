@@ -34,7 +34,7 @@ pub fn save_dyn_image(img: DynamicImage, filtered_img_path: &str) {
 /// Get raw pixels (as a vec of u8s) from a DynamicImage
 pub fn get_pixels(img: DynamicImage) -> Vec<u8> {
     // get an image's raw pixels, and return as a vec of u8s
-    img.to_bytes()
+    img.into_bytes()
 }
 
 /// Convert a PhotonImage to a DynamicImage type (struct used by the `image` crate)

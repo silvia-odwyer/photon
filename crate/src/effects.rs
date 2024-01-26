@@ -82,7 +82,7 @@ pub fn offset(photon_image: &mut PhotonImage, channel_index: usize, offset: u32)
             }
         }
     }
-    let raw_pixels = img.to_bytes();
+    let raw_pixels = img.into_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -194,7 +194,7 @@ pub fn multiple_offsets(
 
         img.put_pixel(x, y, px);
     }
-    let raw_pixels = img.to_bytes();
+    let raw_pixels = img.into_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -311,7 +311,7 @@ pub fn halftone(photon_image: &mut PhotonImage) {
             // img.put_pixel(x, y + 1, px2);
         }
     }
-    let raw_pixels = img.to_bytes();
+    let raw_pixels = img.into_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -411,7 +411,7 @@ pub fn colorize(photon_image: &mut PhotonImage) {
         px = image::Rgba([r as u8, g as u8, b as u8, 255]);
         img.put_pixel(x, y, px);
     }
-    let raw_pixels = img.to_bytes();
+    let raw_pixels = img.into_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -520,10 +520,12 @@ pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
         img.put_pixel(x, y, px);
     }
 
+    let (width, height) = img.dimensions();
+
     PhotonImage {
-        raw_pixels: img.to_bytes(),
-        width: img.width(),
-        height: img.height(),
+        raw_pixels: img.into_bytes(),
+        width,
+        height,
     }
 }
 
@@ -615,7 +617,7 @@ pub fn adjust_contrast(photon_image: &mut PhotonImage, contrast: f32) {
         img.put_pixel(x, y, px);
     }
 
-    photon_image.raw_pixels = img.to_bytes();
+    photon_image.raw_pixels = img.into_bytes();
 }
 
 /// Tint an image by adding an offset to averaged RGB channel values.
@@ -672,7 +674,7 @@ pub fn tint(
         img.put_pixel(x, y, px);
     }
 
-    let raw_pixels = img.to_bytes();
+    let raw_pixels = img.into_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -692,7 +694,7 @@ fn draw_horizontal_strips(photon_image: &mut PhotonImage, num_strips: u8, color:
         y_pos = i as u32 * (height_strip * 2);
     }
 
-    let raw_pixels = img.to_bytes();
+    let raw_pixels = img.into_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -766,7 +768,7 @@ fn draw_vertical_strips(photon_image: &mut PhotonImage, num_strips: u8, color: R
         x_pos = i as u32 * (width_strip * 2);
     }
 
-    let raw_pixels = img.to_bytes();
+    let raw_pixels = img.into_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -925,7 +927,7 @@ pub fn oil(photon_image: &mut PhotonImage, radius: i32, intensity: f64) {
             )
         }
     }
-    let raw_pixels = target.to_bytes();
+    let raw_pixels = target.into_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 /// Turn an image into an frosted glass see through

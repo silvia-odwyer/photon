@@ -118,5 +118,5 @@ pub fn image_to_bytes(img: PhotonImage) -> Vec<u8> {
 
     let img_buffer = ImageBuffer::from_vec(width, height, raw_pixels).unwrap();
     let dynimage = ImageRgba8(img_buffer);
-    dynimage.to_bytes()
+    dynimage.into_bytes()
 }

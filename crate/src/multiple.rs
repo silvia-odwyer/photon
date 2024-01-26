@@ -36,7 +36,7 @@ pub fn watermark(img: &mut PhotonImage, watermark: &PhotonImage, x: i64, y: i64)
     let dyn_watermark: DynamicImage = crate::helpers::dyn_image_from_raw(watermark);
     let mut dyn_img: DynamicImage = crate::helpers::dyn_image_from_raw(img);
     image::imageops::overlay(&mut dyn_img, &dyn_watermark, x, y);
-    img.raw_pixels = dyn_img.to_bytes();
+    img.raw_pixels = dyn_img.into_bytes();
 }
 
 /// Blend two images together.
@@ -139,7 +139,7 @@ pub fn blend(
         );
     }
     let dynimage = ImageRgba8(img);
-    photon_image.raw_pixels = dynimage.to_bytes();
+    photon_image.raw_pixels = dynimage.into_bytes();
 }
 
 // #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
@@ -214,7 +214,7 @@ pub fn replace_background(
             img.put_pixel(x, y, px);
         }
     }
-    let raw_pixels = img.to_bytes();
+    let raw_pixels = img.into_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -255,7 +255,7 @@ pub fn create_gradient(width: u32, height: u32) -> PhotonImage {
         }
     }
     let rgba_img = ImageRgba8(image);
-    let raw_pixels = rgba_img.to_bytes();
+    let raw_pixels = rgba_img.into_bytes();
     PhotonImage {
         raw_pixels,
         width,

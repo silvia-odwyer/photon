@@ -760,7 +760,7 @@ pub fn selective_greyscale(mut photon_image: PhotonImage, ref_color: Rgb) {
         img.put_pixel(x, y, px);
     }
 
-    let raw_pixels = img.to_bytes();
+    let raw_pixels = img.into_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 

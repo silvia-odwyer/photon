@@ -30,7 +30,7 @@ fn conv(photon_image: &mut PhotonImage, kernel: Kernel) {
         }
     }
 
-    photon_image.raw_pixels = filtered_img.to_bytes();
+    photon_image.raw_pixels = filtered_img.into_bytes();
 }
 
 /// Noise reduction.
@@ -170,7 +170,7 @@ pub fn box_blur(photon_image: &mut PhotonImage) {
 pub fn gaussian_blur(photon_image: &mut PhotonImage, radius: i32) {
     // construct pixel data
     let img = helpers::dyn_image_from_raw(photon_image);
-    let mut src = img.to_bytes();
+    let mut src = img.into_bytes();
 
     let width = photon_image.get_width();
     let height = photon_image.get_height();

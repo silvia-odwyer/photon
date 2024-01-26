@@ -41,7 +41,7 @@
 
 use base64::{decode, encode};
 use image::DynamicImage::ImageRgba8;
-use image::{GenericImage, GenericImageView};
+use image::GenericImage;
 use serde::{Deserialize, Serialize};
 use std::io::Cursor;
 
@@ -485,12 +485,16 @@ pub fn base64_to_image(base64: &str) -> PhotonImage {
 
     let mut img = image::load_from_memory(slice).unwrap();
     img = ImageRgba8(img.to_rgba8());
-    let raw_pixels = img.to_bytes();
+
+    let width = img.width();
+    let height = img.height();
+
+    let raw_pixels = img.into_bytes();
 
     PhotonImage {
         raw_pixels,
-        width: img.width(),
-        height: img.height(),
+        width,
+        height,
     }
 }
 
