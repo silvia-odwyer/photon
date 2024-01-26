@@ -210,6 +210,17 @@ impl PhotonImage {
         buffer
     }
 
+    /// Convert the PhotonImage to raw bytes. Returns a WEBP.
+    pub fn get_bytes_webp(&self) -> Vec<u8> {
+        let mut img = helpers::dyn_image_from_raw(self);
+        img = ImageRgba8(img.to_rgba8());
+        let mut buffer = vec![];
+        let out_format = image::ImageOutputFormat::WebP;
+        img.write_to(&mut Cursor::new(&mut buffer), out_format)
+            .unwrap();
+        buffer
+    }
+
     /// Convert the PhotonImage's raw pixels to JS-compatible ImageData.
     #[cfg(all(feature = "web-sys", feature = "wasm-bindgen"))]
     #[allow(clippy::unnecessary_mut_passed)]
