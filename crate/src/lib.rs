@@ -43,6 +43,7 @@ use base64::{decode, encode};
 use image::DynamicImage::ImageRgba8;
 use image::{GenericImage, GenericImageView};
 use serde::{Deserialize, Serialize};
+use std::io::Cursor;
 
 #[cfg(feature = "enable_wasm")]
 use wasm_bindgen::prelude::*;
@@ -179,7 +180,7 @@ impl PhotonImage {
         img = ImageRgba8(img.to_rgba8());
 
         let mut buffer = vec![];
-        img.write_to(&mut buffer, image::ImageOutputFormat::Png)
+        img.write_to(&mut Cursor::new(&mut buffer), image::ImageOutputFormat::Png)
             .unwrap();
         let base64 = encode(&buffer);
 
@@ -193,7 +194,7 @@ impl PhotonImage {
         let mut img = helpers::dyn_image_from_raw(self);
         img = ImageRgba8(img.to_rgba8());
         let mut buffer = vec![];
-        img.write_to(&mut buffer, image::ImageOutputFormat::Png)
+        img.write_to(&mut Cursor::new(&mut buffer), image::ImageOutputFormat::Png)
             .unwrap();
         buffer
     }
@@ -204,7 +205,8 @@ impl PhotonImage {
         img = ImageRgba8(img.to_rgba8());
         let mut buffer = vec![];
         let out_format = image::ImageOutputFormat::Jpeg(quality);
-        img.write_to(&mut buffer, out_format).unwrap();
+        img.write_to(&mut Cursor::new(&mut buffer), out_format)
+            .unwrap();
         buffer
     }
 

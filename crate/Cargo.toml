@@ -8,23 +8,34 @@ readme = "./README.md"
 repository = "https://github.com/silvia-odwyer/photon"
 version = "0.3.2"
 edition = "2021"
-exclude = [
-    "pkg/*",
-    "examples/input_images/*"
-]
+exclude = ["pkg/*", "examples/input_images/*"]
 homepage = "https://silvia-odwyer.github.io/photon/"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-image = { version = "0.23.12", default-features = false, features = ["gif", "jpeg", "ico", "png", "pnm", "tga", "tiff", "webp", "bmp", "hdr", "dxt", "dds", "farbfeld"] }
-palette="0.6.1"
-rand="0.7.2"
-imageproc = { version = "0.22.0", default-features = false }
-rusttype="0.9.2"
-base64="0.13.0"
-time="0.3.21"
+image = { version = "0.24.8", default-features = false, features = [
+  "gif",
+  "jpeg",
+  "ico",
+  "png",
+  "pnm",
+  "tga",
+  "tiff",
+  "webp",
+  "bmp",
+  "hdr",
+  "dxt",
+  "dds",
+  "farbfeld",
+] }
+palette = "0.6.1"
+rand = "0.7.2"
+imageproc = { version = "0.23.0", default-features = false }
+rusttype = "0.9.2"
+base64 = "0.13.0"
+time = "0.3.21"
 wasm-bindgen = { version = "=0.2.85", optional = true }
 serde = { version = "1.0", features = ["derive"] }
 thiserror = "1.0"
@@ -44,7 +55,7 @@ console_error_panic_hook = { version = "0.1.7", optional = true }
 wee_alloc = { version = "0.4.2", optional = true }
 
 [dev-dependencies]
-time="0.3.21"
+time = "0.3.21"
 criterion = "0.3"
 
 [[bench]]
@@ -69,7 +80,7 @@ features = [
   "console",
   'CssStyleDeclaration',
   'EventTarget',
-  "Blob"
+  "Blob",
 ]
 optional = true
 
@@ -80,5 +91,5 @@ enable_wasm = [
   "web-sys",
   "js-sys",
   "node-sys",
-  "console_error_panic_hook"
+  "console_error_panic_hook",
 ]

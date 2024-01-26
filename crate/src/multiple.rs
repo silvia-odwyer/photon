@@ -32,7 +32,7 @@ use wasm_bindgen::prelude::*;
 /// watermark(&mut img, &water_mark, 30_u32, 40_u32);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn watermark(img: &mut PhotonImage, watermark: &PhotonImage, x: u32, y: u32) {
+pub fn watermark(img: &mut PhotonImage, watermark: &PhotonImage, x: i64, y: i64) {
     let dyn_watermark: DynamicImage = crate::helpers::dyn_image_from_raw(watermark);
     let mut dyn_img: DynamicImage = crate::helpers::dyn_image_from_raw(img);
     image::imageops::overlay(&mut dyn_img, &dyn_watermark, x, y);
