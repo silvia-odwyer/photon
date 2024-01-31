@@ -29,7 +29,7 @@ use wasm_bindgen::prelude::*;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
 /// let water_mark = open_image("watermark.jpg").expect("File should open");
-/// watermark(&mut img, &water_mark, 30_u32, 40_u32);
+/// watermark(&mut img, &water_mark, 30_i64, 40_i64);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn watermark(img: &mut PhotonImage, watermark: &PhotonImage, x: i64, y: i64) {
