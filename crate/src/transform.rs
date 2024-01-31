@@ -51,11 +51,15 @@ pub fn crop(
         cropped_img.put_pixel(x, y, px);
     }
     let dynimage = ImageRgba8(cropped_img);
-    let raw_pixels = dynimage.to_bytes();
+
+    let width = dynimage.width();
+    let height = dynimage.height();
+
+    let raw_pixels = dynimage.into_bytes();
     PhotonImage {
         raw_pixels,
-        width: dynimage.width(),
-        height: dynimage.height(),
+        width,
+        height,
     }
 }
 
@@ -130,7 +134,7 @@ pub fn fliph(photon_image: &mut PhotonImage) {
     }
 
     let dynimage = ImageRgba8(flipped_img);
-    let raw_pixels = dynimage.to_bytes();
+    let raw_pixels = dynimage.into_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -164,7 +168,7 @@ pub fn flipv(photon_image: &mut PhotonImage) {
     }
 
     let dynimage = ImageRgba8(flipped_img);
-    let raw_pixels = dynimage.to_bytes();
+    let raw_pixels = dynimage.into_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -219,13 +223,16 @@ pub fn resize_img_browser(
         .dyn_into::<web_sys::HtmlCanvasElement>()
         .unwrap();
 
-    canvas.set_width(resized_img.width());
-    canvas.set_height(resized_img.height());
+    let width = resized_img.width();
+    let height = resized_img.height();
+
+    canvas.set_width(width);
+    canvas.set_height(width);
 
     let new_img_data = ImageData::new_with_u8_clamped_array_and_sh(
-        Clamped(&mut resized_img.to_bytes()),
-        canvas.width(),
-        canvas.height(),
+        Clamped(&mut resized_img.into_bytes()),
+        width,
+        height,
     );
 
     let ctx = canvas
@@ -266,10 +273,13 @@ pub fn resize(
         sampling_filter,
     ));
 
+    let width = resized_img.width();
+    let height = resized_img.height();
+
     PhotonImage {
-        raw_pixels: resized_img.to_bytes(),
-        width: resized_img.width(),
-        height: resized_img.height(),
+        raw_pixels: resized_img.into_bytes(),
+        width,
+        height,
     }
 }
 
@@ -319,10 +329,13 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
 
     let img = ImageRgba8(img);
 
+    let width = img.width();
+    let height = img.height();
+
     PhotonImage {
-        raw_pixels: img.to_bytes(),
-        width: img.width(),
-        height: img.height(),
+        raw_pixels: img.into_bytes(),
+        width,
+        height,
     }
 }
 
@@ -627,9 +640,9 @@ pub fn rotate(img: &PhotonImage, angle: i32) -> PhotonImage {
     }
 
     let dynimage = ImageRgba8(rgba_img);
-    let raw_pixels = dynimage.to_bytes();
     let src_width = dynimage.width();
     let src_height = dynimage.height();
+    let raw_pixels = dynimage.into_bytes();
 
     let angle_deg = positive_angle - right_angle_count * 90;
     if angle_deg == 0 {

@@ -32,10 +32,10 @@ use wasm_bindgen::prelude::*;
 ///
 /// // Open the image. A PhotonImage is returned.
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// draw_text_with_border(&mut img, "Welcome to Photon!", 10_u32, 10_u32);
+/// draw_text_with_border(&mut img, "Welcome to Photon!", 10_i32, 10_i32);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn draw_text_with_border(photon_img: &mut PhotonImage, text: &str, x: u32, y: u32) {
+pub fn draw_text_with_border(photon_img: &mut PhotonImage, text: &str, x: i32, y: i32) {
     let mut image = helpers::dyn_image_from_raw(photon_img).to_rgba8();
 
     let mut image2: DynamicImage =
@@ -102,10 +102,10 @@ pub fn draw_text_with_border(photon_img: &mut PhotonImage, text: &str, x: u32, y
 ///
 /// // Open the image. A PhotonImage is returned.
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// draw_text(&mut img, "Welcome to Photon!", 10_u32, 10_u32);
+/// draw_text(&mut img, "Welcome to Photon!", 10_i32, 10_i32);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn draw_text(photon_img: &mut PhotonImage, text: &str, x: u32, y: u32) {
+pub fn draw_text(photon_img: &mut PhotonImage, text: &str, x: i32, y: i32) {
     let mut image = helpers::dyn_image_from_raw(photon_img).to_rgba8();
 
     let mut image2: DynamicImage =

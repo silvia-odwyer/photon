@@ -41,8 +41,9 @@
 
 use base64::{decode, encode};
 use image::DynamicImage::ImageRgba8;
-use image::{GenericImage, GenericImageView};
+use image::GenericImage;
 use serde::{Deserialize, Serialize};
+use std::io::Cursor;
 
 #[cfg(feature = "enable_wasm")]
 use wasm_bindgen::prelude::*;
@@ -179,7 +180,7 @@ impl PhotonImage {
         img = ImageRgba8(img.to_rgba8());
 
         let mut buffer = vec![];
-        img.write_to(&mut buffer, image::ImageOutputFormat::Png)
+        img.write_to(&mut Cursor::new(&mut buffer), image::ImageOutputFormat::Png)
             .unwrap();
         let base64 = encode(&buffer);
 
@@ -193,7 +194,7 @@ impl PhotonImage {
         let mut img = helpers::dyn_image_from_raw(self);
         img = ImageRgba8(img.to_rgba8());
         let mut buffer = vec![];
-        img.write_to(&mut buffer, image::ImageOutputFormat::Png)
+        img.write_to(&mut Cursor::new(&mut buffer), image::ImageOutputFormat::Png)
             .unwrap();
         buffer
     }
@@ -204,7 +205,19 @@ impl PhotonImage {
         img = ImageRgba8(img.to_rgba8());
         let mut buffer = vec![];
         let out_format = image::ImageOutputFormat::Jpeg(quality);
-        img.write_to(&mut buffer, out_format).unwrap();
+        img.write_to(&mut Cursor::new(&mut buffer), out_format)
+            .unwrap();
+        buffer
+    }
+
+    /// Convert the PhotonImage to raw bytes. Returns a WEBP.
+    pub fn get_bytes_webp(&self) -> Vec<u8> {
+        let mut img = helpers::dyn_image_from_raw(self);
+        img = ImageRgba8(img.to_rgba8());
+        let mut buffer = vec![];
+        let out_format = image::ImageOutputFormat::WebP;
+        img.write_to(&mut Cursor::new(&mut buffer), out_format)
+            .unwrap();
         buffer
     }
 
@@ -472,12 +485,16 @@ pub fn base64_to_image(base64: &str) -> PhotonImage {
 
     let mut img = image::load_from_memory(slice).unwrap();
     img = ImageRgba8(img.to_rgba8());
-    let raw_pixels = img.to_bytes();
+
+    let width = img.width();
+    let height = img.height();
+
+    let raw_pixels = img.into_bytes();
 
     PhotonImage {
         raw_pixels,
-        width: img.width(),
-        height: img.height(),
+        width,
+        height,
     }
 }
 

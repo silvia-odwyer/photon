@@ -317,7 +317,7 @@ pub fn grayscale_shades(photon_image: &mut PhotonImage, num_shades: u8) {
 
         img.put_pixel(x, y, image::Rgba([gray, gray, gray, 255]));
     }
-    let raw_pixels = img.to_bytes();
+    let raw_pixels = img.into_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 
@@ -409,7 +409,7 @@ pub fn single_channel_grayscale(photon_image: &mut PhotonImage, channel: usize) 
             image::Rgba([channel_data, channel_data, channel_data, 255]),
         );
     }
-    let raw_pixels = img.to_bytes();
+    let raw_pixels = img.into_bytes();
     photon_image.raw_pixels = raw_pixels;
 }
 

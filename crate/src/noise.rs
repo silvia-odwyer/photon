@@ -61,7 +61,7 @@ pub fn add_noise_rand(photon_image: &mut PhotonImage) {
             );
         img.put_pixel(x, y, px);
     }
-    photon_image.raw_pixels = img.to_bytes();
+    photon_image.raw_pixels = img.into_bytes();
 }
 
 /// Add pink-tinted noise to an image.
@@ -111,5 +111,5 @@ pub fn pink_noise(photon_image: &mut PhotonImage) {
         px = image::Rgba([new_r_val, new_g_val, new_b_val, 255]);
         img.put_pixel(x, y, px);
     }
-    photon_image.raw_pixels = img.to_bytes();
+    photon_image.raw_pixels = img.into_bytes();
 }

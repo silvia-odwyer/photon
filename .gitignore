@@ -12,3 +12,4 @@ react_app_demo/package-lock.json
 photon-docs/site
 output*.jpg
 output*.png
+.vscode
