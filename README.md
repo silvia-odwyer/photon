@@ -74,6 +74,7 @@ The following image formats are supported:
 - BMP
 - ICO 
 - TIFF
+- WEBP
 
 ### Get Started
 #### Getting Started Guide
