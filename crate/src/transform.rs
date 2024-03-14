@@ -63,7 +63,7 @@ pub fn crop(
     }
 }
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(all(target_arch = "wasm32", not(target_os = "wasi")))]
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn crop_img_browser(
     source_canvas: HtmlCanvasElement,
@@ -198,7 +198,7 @@ fn filter_type_from_sampling_filter(sampling_filter: SamplingFilter) -> FilterTy
 /// * `width` - New width.
 /// * `height` - New height.
 /// * `sampling_filter` - Nearest = 1, Triangle = 2, CatmullRom = 3, Gaussian = 4, Lanczos3 = 5
-#[cfg(target_arch = "wasm32")]
+#[cfg(all(target_arch = "wasm32", not(target_os = "wasi")))]
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn resize_img_browser(
     photon_img: &PhotonImage,

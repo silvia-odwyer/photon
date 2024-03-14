@@ -516,6 +516,7 @@ pub fn to_image_data(photon_image: PhotonImage) -> ImageData {
         .unwrap()
 }
 
+#[cfg(not(target_os = "wasi"))]
 fn set_panic_hook() {
     // When the `console_error_panic_hook` feature is enabled, we can call the
     // `set_panic_hook` function to get better error messages if we ever panic.
