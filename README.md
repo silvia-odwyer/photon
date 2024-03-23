@@ -168,6 +168,13 @@ npm install @silvia-odwyer/photon-node
 <!-- ##### NodeJS Tutorial
 See the [NodeJS tutorial, which shows how to use Photon with NodeJS](). -->
 
+#### Using Cloudflare Workers?
+If you're using Cloudflare Workers, you can install the following library to use Photon with Cloudflare Workers:
+
+```bash
+npm install @cf-wasm/photon
+```
+
 ## Modules
 Photon contains a series of modules, which include:
 
@@ -232,6 +239,7 @@ Contributors include (be sure to add yourself to the list if you submitted a PR)
 * **NorbertGarfield** - [@NorbertGarfield](https://github.com/NorbertGarfield)
 * **bboshoven** - [@bboshoven](https://github.com/bboshoven)
 * **benliao** - [@benliao](https://github.com/benliao)
+* **Fineshop Design** - [@fineshop](https://github.com/fineshop)
 * **Future You(?)** - (See Contributing above)
 
 ## License
