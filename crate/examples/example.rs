@@ -1,7 +1,6 @@
 extern crate image;
 extern crate photon_rs as photon;
-extern crate time;
-use time::Instant;
+use instant::Instant;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Replace the variable file_name with whatever image you would like to apply filters to
@@ -26,7 +25,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let end = Instant::now();
         println!(
             "Took {} seconds to {} image.",
-            (end - start).as_seconds_f64(),
+            (end - start).as_secs_f64(),
             effect
         );
     }

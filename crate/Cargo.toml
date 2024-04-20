@@ -36,12 +36,13 @@ imageproc = { version = "0.23.0", default-features = false }
 rusttype = "0.9.2"
 base64 = "0.13.0"
 time = "0.3.21"
-wasm-bindgen = { version = "=0.2.85", optional = true }
+wasm-bindgen = { version = "0.2.92", optional = true }
 serde = { version = "1.0", features = ["derive"] }
 thiserror = "1.0"
 js-sys = { version = "0.3.62", optional = true }
 node-sys = { version = "0.4.2", optional = true }
 perlin2d = "0.2.6"
+instant = "0.1.12"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires

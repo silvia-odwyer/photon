@@ -1,6 +1,7 @@
 extern crate image;
 extern crate photon_rs;
-extern crate time;
+
+use instant::Instant;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let file_name = "crate/examples/input_images/daisies_fuji.jpg";
@@ -8,7 +9,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // // Open the image
     let img = photon_rs::native::open_image(file_name)?;
-    let start = time::Instant::now();
+    let start = Instant::now();
     // Seam Carver
     let (w, h) = (img.get_width(), img.get_height());
     println!("original = w: {}, h: {}", w, h);
@@ -19,10 +20,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Write the contents of this image in JPEG format.
     photon_rs::native::save_image(res, "output_seam_carver.jpg")?;
-    let end = time::Instant::now();
+    let end = Instant::now();
     println!(
         "Took {} seconds to seam carve image.",
-        (end - start).as_seconds_f64()
+        (end - start).as_secs_f64()
     );
 
     Ok(())

@@ -1,9 +1,9 @@
 extern crate photon_rs;
 extern crate time;
 
+use instant::Instant;
 use photon_rs::channels::alter_red_channel;
 use photon_rs::native::{open_image, save_image};
-use time::Instant;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Open the image (a PhotonImage is returned)
@@ -20,7 +20,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let end = Instant::now();
     println!(
         "Took {} seconds to increment red channel by 40 on image.",
-        (end - start).as_seconds_f64()
+        (end - start).as_secs_f64()
     );
 
     println!(
