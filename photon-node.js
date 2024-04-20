@@ -127,14 +127,14 @@ function passStringToWasm0(arg, malloc, realloc) {
 
     if (realloc === undefined) {
         const buf = cachedTextEncoder.encode(arg);
-        const ptr = malloc(buf.length) >>> 0;
+        const ptr = malloc(buf.length, 1) >>> 0;
         getUint8Memory0().subarray(ptr, ptr + buf.length).set(buf);
         WASM_VECTOR_LEN = buf.length;
         return ptr;
     }
 
     let len = arg.length;
-    let ptr = malloc(len) >>> 0;
+    let ptr = malloc(len, 1) >>> 0;
 
     const mem = getUint8Memory0();
 
@@ -150,11 +150,12 @@ function passStringToWasm0(arg, malloc, realloc) {
         if (offset !== 0) {
             arg = arg.slice(offset);
         }
-        ptr = realloc(ptr, len, len = offset + arg.length * 3) >>> 0;
+        ptr = realloc(ptr, len, len = offset + arg.length * 3, 1) >>> 0;
         const view = getUint8Memory0().subarray(ptr + offset, ptr + len);
         const ret = encodeString(arg, view);
 
         offset += ret.written;
+        ptr = realloc(ptr, len, offset, 1) >>> 0;
     }
 
     WASM_VECTOR_LEN = offset;
@@ -1393,395 +1394,6 @@ module.exports.threshold = function(img, threshold) {
 };
 
 /**
-* Solarization on the Blue channel.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::neue;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* neue(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.neue = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.neue(photon_image.__wbg_ptr);
-};
-
-/**
-* Solarization on the Red and Green channels.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::lix;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* lix(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.lix = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.lix(photon_image.__wbg_ptr);
-};
-
-/**
-* Solarization on the Red and Blue channels.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::ryo;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* ryo(&mut img);
-* ```
-* @param {PhotonImage} photon_image
-*/
-module.exports.ryo = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.ryo(photon_image.__wbg_ptr);
-};
-
-/**
-* Apply a filter to an image. Over 20 filters are available.
-* The filters are as follows:
-* * **oceanic**: Add an aquamarine-tinted hue to an image.
-* * **islands**: Aquamarine tint.
-* * **marine**: Add a green/blue mixed hue to an image.
-* * **seagreen**: Dark green hue, with tones of blue.
-* * **flagblue**: Royal blue tint
-* * **liquid**: Blue-inspired tint.
-* * **diamante**: Custom filter with a blue/turquoise tint.
-* * **radio**: Fallout-style radio effect.
-* * **twenties**: Slight-blue tinted historical effect.
-* * **rosetint**: Rose-tinted filter.
-* * **mauve**: Purple-infused filter.
-* * **bluechrome**: Blue monochrome effect.
-* * **vintage**: Vintage filter with a red tint.
-* * **perfume**: Increase the blue channel, with moderate increases in the Red and Green channels.
-* * **serenity**: Custom filter with an increase in the Blue channel's values.
-* # Arguments
-* * `img` - A PhotonImage.
-* * `filter_name` - The filter's name. Choose from the selection above, eg: "oceanic"
-* # Example
-*
-* ```no_run
-* // For example, to add a filter called "vintage" to an image:
-* use photon_rs::filters::filter;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* filter(&mut img, "vintage");
-* ```
-* @param {PhotonImage} img
-* @param {string} filter_name
-*/
-module.exports.filter = function(img, filter_name) {
-    _assertClass(img, PhotonImage);
-    const ptr0 = passStringToWasm0(filter_name, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    wasm.filter(img.__wbg_ptr, ptr0, len0);
-};
-
-/**
-* Apply a lofi effect to an image.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::lofi;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* lofi(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.lofi = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.lofi(img.__wbg_ptr);
-};
-
-/**
-* Apply a rose tint to an image.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::pastel_pink;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* pastel_pink(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.pastel_pink = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.pastel_pink(img.__wbg_ptr);
-};
-
-/**
-* Apply a vintage, golden hue to an image.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::golden;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* golden(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.golden = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.golden(img.__wbg_ptr);
-};
-
-/**
-* Increased contrast filter effect.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::cali;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* cali(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.cali = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.cali(img.__wbg_ptr);
-};
-
-/**
-* Greyscale effect with increased contrast.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::dramatic;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* dramatic(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.dramatic = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.dramatic(img.__wbg_ptr);
-};
-
-/**
-* Monochrome tint effect with increased contrast
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* * `rgb_color` - RGB color
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::monochrome_tint;
-* use photon_rs::native::open_image;
-* use photon_rs::Rgb;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* let rgb_color = Rgb::new(12, 12, 10);
-* monochrome_tint(&mut img, rgb_color);
-* ```
-* @param {PhotonImage} img
-* @param {Rgb} rgb_color
-*/
-module.exports.monochrome_tint = function(img, rgb_color) {
-    _assertClass(img, PhotonImage);
-    _assertClass(rgb_color, Rgb);
-    var ptr0 = rgb_color.__destroy_into_raw();
-    wasm.monochrome_tint(img.__wbg_ptr, ptr0);
-};
-
-/**
-* Duotone effect with blue and purple tones.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::duotone_violette;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* duotone_violette(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.duotone_violette = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.duotone_violette(img.__wbg_ptr);
-};
-
-/**
-* Duotone effect with purple tones.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::duotone_horizon;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* duotone_horizon(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.duotone_horizon = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.duotone_horizon(img.__wbg_ptr);
-};
-
-/**
-* A duotone filter with a user-specified color and a gray color
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* * `rgb_color` - RGB color
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::duotone_tint;
-* use photon_rs::native::open_image;
-* use photon_rs::Rgb;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* let rgb_color = Rgb::new(12, 12, 10);
-* duotone_tint(&mut img, rgb_color);
-* ```
-* @param {PhotonImage} img
-* @param {Rgb} rgb_color
-*/
-module.exports.duotone_tint = function(img, rgb_color) {
-    _assertClass(img, PhotonImage);
-    _assertClass(rgb_color, Rgb);
-    var ptr0 = rgb_color.__destroy_into_raw();
-    wasm.duotone_tint(img.__wbg_ptr, ptr0);
-};
-
-/**
-* Duotone effect with a lilac hue
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::duotone_lilac;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* duotone_lilac(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.duotone_lilac = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.duotone_lilac(img.__wbg_ptr);
-};
-
-/**
-* A duotone ochre tint effect
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::duotone_ochre;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* duotone_ochre(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.duotone_ochre = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.duotone_ochre(img.__wbg_ptr);
-};
-
-/**
-* Apply a red hue, with increased contrast and brightness.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::firenze;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* firenze(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.firenze = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.firenze(img.__wbg_ptr);
-};
-
-/**
-* Apply a greyscale effect with increased contrast.
-*
-* # Arguments
-* * `img` - A PhotonImage.
-* # Example
-*
-* ```no_run
-* use photon_rs::filters::obsidian;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* obsidian(&mut img);
-* ```
-* @param {PhotonImage} img
-*/
-module.exports.obsidian = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.obsidian(img.__wbg_ptr);
-};
-
-/**
 * Crop an image.
 *
 * # Arguments
@@ -1882,7 +1494,7 @@ module.exports.flipv = function(photon_image) {
 * @param {PhotonImage} photon_img
 * @param {number} width
 * @param {number} height
-* @param {number} sampling_filter
+* @param {SamplingFilter} sampling_filter
 * @returns {HTMLCanvasElement}
 */
 module.exports.resize_img_browser = function(photon_img, width, height, sampling_filter) {
@@ -1902,7 +1514,7 @@ module.exports.resize_img_browser = function(photon_img, width, height, sampling
 * @param {PhotonImage} photon_img
 * @param {number} width
 * @param {number} height
-* @param {number} sampling_filter
+* @param {SamplingFilter} sampling_filter
 * @returns {PhotonImage}
 */
 module.exports.resize = function(photon_img, width, height, sampling_filter) {
@@ -2894,6 +2506,395 @@ module.exports.mix_with_colour = function(photon_image, mix_colour, opacity) {
 };
 
 /**
+* Solarization on the Blue channel.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::neue;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* neue(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.neue = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.neue(photon_image.__wbg_ptr);
+};
+
+/**
+* Solarization on the Red and Green channels.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::lix;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* lix(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.lix = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.lix(photon_image.__wbg_ptr);
+};
+
+/**
+* Solarization on the Red and Blue channels.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::ryo;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* ryo(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.ryo = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.ryo(photon_image.__wbg_ptr);
+};
+
+/**
+* Apply a filter to an image. Over 20 filters are available.
+* The filters are as follows:
+* * **oceanic**: Add an aquamarine-tinted hue to an image.
+* * **islands**: Aquamarine tint.
+* * **marine**: Add a green/blue mixed hue to an image.
+* * **seagreen**: Dark green hue, with tones of blue.
+* * **flagblue**: Royal blue tint
+* * **liquid**: Blue-inspired tint.
+* * **diamante**: Custom filter with a blue/turquoise tint.
+* * **radio**: Fallout-style radio effect.
+* * **twenties**: Slight-blue tinted historical effect.
+* * **rosetint**: Rose-tinted filter.
+* * **mauve**: Purple-infused filter.
+* * **bluechrome**: Blue monochrome effect.
+* * **vintage**: Vintage filter with a red tint.
+* * **perfume**: Increase the blue channel, with moderate increases in the Red and Green channels.
+* * **serenity**: Custom filter with an increase in the Blue channel's values.
+* # Arguments
+* * `img` - A PhotonImage.
+* * `filter_name` - The filter's name. Choose from the selection above, eg: "oceanic"
+* # Example
+*
+* ```no_run
+* // For example, to add a filter called "vintage" to an image:
+* use photon_rs::filters::filter;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* filter(&mut img, "vintage");
+* ```
+* @param {PhotonImage} img
+* @param {string} filter_name
+*/
+module.exports.filter = function(img, filter_name) {
+    _assertClass(img, PhotonImage);
+    const ptr0 = passStringToWasm0(filter_name, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    wasm.filter(img.__wbg_ptr, ptr0, len0);
+};
+
+/**
+* Apply a lofi effect to an image.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::lofi;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* lofi(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.lofi = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.lofi(img.__wbg_ptr);
+};
+
+/**
+* Apply a rose tint to an image.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::pastel_pink;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* pastel_pink(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.pastel_pink = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.pastel_pink(img.__wbg_ptr);
+};
+
+/**
+* Apply a vintage, golden hue to an image.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::golden;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* golden(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.golden = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.golden(img.__wbg_ptr);
+};
+
+/**
+* Increased contrast filter effect.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::cali;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* cali(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.cali = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.cali(img.__wbg_ptr);
+};
+
+/**
+* Greyscale effect with increased contrast.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::dramatic;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* dramatic(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.dramatic = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.dramatic(img.__wbg_ptr);
+};
+
+/**
+* Monochrome tint effect with increased contrast
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* * `rgb_color` - RGB color
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::monochrome_tint;
+* use photon_rs::native::open_image;
+* use photon_rs::Rgb;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* let rgb_color = Rgb::new(12, 12, 10);
+* monochrome_tint(&mut img, rgb_color);
+* ```
+* @param {PhotonImage} img
+* @param {Rgb} rgb_color
+*/
+module.exports.monochrome_tint = function(img, rgb_color) {
+    _assertClass(img, PhotonImage);
+    _assertClass(rgb_color, Rgb);
+    var ptr0 = rgb_color.__destroy_into_raw();
+    wasm.monochrome_tint(img.__wbg_ptr, ptr0);
+};
+
+/**
+* Duotone effect with blue and purple tones.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::duotone_violette;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* duotone_violette(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.duotone_violette = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.duotone_violette(img.__wbg_ptr);
+};
+
+/**
+* Duotone effect with purple tones.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::duotone_horizon;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* duotone_horizon(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.duotone_horizon = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.duotone_horizon(img.__wbg_ptr);
+};
+
+/**
+* A duotone filter with a user-specified color and a gray color
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* * `rgb_color` - RGB color
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::duotone_tint;
+* use photon_rs::native::open_image;
+* use photon_rs::Rgb;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* let rgb_color = Rgb::new(12, 12, 10);
+* duotone_tint(&mut img, rgb_color);
+* ```
+* @param {PhotonImage} img
+* @param {Rgb} rgb_color
+*/
+module.exports.duotone_tint = function(img, rgb_color) {
+    _assertClass(img, PhotonImage);
+    _assertClass(rgb_color, Rgb);
+    var ptr0 = rgb_color.__destroy_into_raw();
+    wasm.duotone_tint(img.__wbg_ptr, ptr0);
+};
+
+/**
+* Duotone effect with a lilac hue
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::duotone_lilac;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* duotone_lilac(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.duotone_lilac = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.duotone_lilac(img.__wbg_ptr);
+};
+
+/**
+* A duotone ochre tint effect
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::duotone_ochre;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* duotone_ochre(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.duotone_ochre = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.duotone_ochre(img.__wbg_ptr);
+};
+
+/**
+* Apply a red hue, with increased contrast and brightness.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::firenze;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* firenze(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.firenze = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.firenze(img.__wbg_ptr);
+};
+
+/**
+* Apply a greyscale effect with increased contrast.
+*
+* # Arguments
+* * `img` - A PhotonImage.
+* # Example
+*
+* ```no_run
+* use photon_rs::filters::obsidian;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* obsidian(&mut img);
+* ```
+* @param {PhotonImage} img
+*/
+module.exports.obsidian = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.obsidian(img.__wbg_ptr);
+};
+
+/**
 * Add bordered-text to an image.
 * The only font available as of now is Roboto.
 * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
@@ -2959,6 +2960,232 @@ module.exports.draw_text = function(photon_img, text, x, y) {
     const ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
     const len0 = WASM_VECTOR_LEN;
     wasm.draw_text(photon_img.__wbg_ptr, ptr0, len0, x, y);
+};
+
+function passArray8ToWasm0(arg, malloc) {
+    const ptr = malloc(arg.length * 1, 1) >>> 0;
+    getUint8Memory0().set(arg, ptr / 1);
+    WASM_VECTOR_LEN = arg.length;
+    return ptr;
+}
+
+function getArrayU8FromWasm0(ptr, len) {
+    ptr = ptr >>> 0;
+    return getUint8Memory0().subarray(ptr / 1, ptr / 1 + len);
+}
+/**
+*! [temp] Check if WASM is supported.
+*/
+module.exports.run = function() {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        wasm.run(retptr);
+        var r0 = getInt32Memory0()[retptr / 4 + 0];
+        var r1 = getInt32Memory0()[retptr / 4 + 1];
+        if (r1) {
+            throw takeObject(r0);
+        }
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+};
+
+let stack_pointer = 128;
+
+function addBorrowedObject(obj) {
+    if (stack_pointer == 1) throw new Error('out of js stack');
+    heap[--stack_pointer] = obj;
+    return stack_pointer;
+}
+/**
+* Get the ImageData from a 2D canvas context
+* @param {HTMLCanvasElement} canvas
+* @param {CanvasRenderingContext2D} ctx
+* @returns {ImageData}
+*/
+module.exports.get_image_data = function(canvas, ctx) {
+    try {
+        const ret = wasm.get_image_data(addBorrowedObject(canvas), addBorrowedObject(ctx));
+        return takeObject(ret);
+    } finally {
+        heap[stack_pointer++] = undefined;
+        heap[stack_pointer++] = undefined;
+    }
+};
+
+/**
+* Place a PhotonImage onto a 2D canvas.
+* @param {HTMLCanvasElement} canvas
+* @param {CanvasRenderingContext2D} ctx
+* @param {PhotonImage} new_image
+*/
+module.exports.putImageData = function(canvas, ctx, new_image) {
+    _assertClass(new_image, PhotonImage);
+    var ptr0 = new_image.__destroy_into_raw();
+    wasm.putImageData(addHeapObject(canvas), addHeapObject(ctx), ptr0);
+};
+
+/**
+* Convert a HTML5 Canvas Element to a PhotonImage.
+*
+* This converts the ImageData found in the canvas context to a PhotonImage,
+* which can then have effects or filters applied to it.
+* @param {HTMLCanvasElement} canvas
+* @param {CanvasRenderingContext2D} ctx
+* @returns {PhotonImage}
+*/
+module.exports.open_image = function(canvas, ctx) {
+    const ret = wasm.open_image(addHeapObject(canvas), addHeapObject(ctx));
+    return PhotonImage.__wrap(ret);
+};
+
+/**
+* Convert ImageData to a raw pixel vec of u8s.
+* @param {ImageData} imgdata
+* @returns {Uint8Array}
+*/
+module.exports.to_raw_pixels = function(imgdata) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        wasm.to_raw_pixels(retptr, addHeapObject(imgdata));
+        var r0 = getInt32Memory0()[retptr / 4 + 0];
+        var r1 = getInt32Memory0()[retptr / 4 + 1];
+        var v1 = getArrayU8FromWasm0(r0, r1).slice();
+        wasm.__wbindgen_free(r0, r1 * 1, 1);
+        return v1;
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+};
+
+/**
+* Convert a base64 string to a PhotonImage.
+* @param {string} base64
+* @returns {PhotonImage}
+*/
+module.exports.base64_to_image = function(base64) {
+    const ptr0 = passStringToWasm0(base64, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.base64_to_image(ptr0, len0);
+    return PhotonImage.__wrap(ret);
+};
+
+/**
+* Convert a base64 string to a Vec of u8s.
+* @param {string} base64
+* @returns {Uint8Array}
+*/
+module.exports.base64_to_vec = function(base64) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        const ptr0 = passStringToWasm0(base64, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.base64_to_vec(retptr, ptr0, len0);
+        var r0 = getInt32Memory0()[retptr / 4 + 0];
+        var r1 = getInt32Memory0()[retptr / 4 + 1];
+        var v2 = getArrayU8FromWasm0(r0, r1).slice();
+        wasm.__wbindgen_free(r0, r1 * 1, 1);
+        return v2;
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+};
+
+/**
+* Convert a PhotonImage to JS-compatible ImageData.
+* @param {PhotonImage} photon_image
+* @returns {ImageData}
+*/
+module.exports.to_image_data = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    var ptr0 = photon_image.__destroy_into_raw();
+    const ret = wasm.to_image_data(ptr0);
+    return takeObject(ret);
+};
+
+/**
+* Add a watermark to an image.
+*
+* # Arguments
+* * `img` - A DynamicImage that contains a view into the image.
+* * `watermark` - The watermark to be placed onto the `img` image.
+* * `x` - The x coordinate where the watermark's top corner should be positioned.
+* * `y` - The y coordinate where the watermark's top corner should be positioned.
+* # Example
+*
+* ```no_run
+* // For example, to add a watermark to an image at x: 30, y: 40:
+* use photon_rs::multiple::watermark;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* let water_mark = open_image("watermark.jpg").expect("File should open");
+* watermark(&mut img, &water_mark, 30_i64, 40_i64);
+* ```
+* @param {PhotonImage} img
+* @param {PhotonImage} watermark
+* @param {bigint} x
+* @param {bigint} y
+*/
+module.exports.watermark = function(img, watermark, x, y) {
+    _assertClass(img, PhotonImage);
+    _assertClass(watermark, PhotonImage);
+    wasm.watermark(img.__wbg_ptr, watermark.__wbg_ptr, x, y);
+};
+
+/**
+* Blend two images together.
+*
+* The `blend_mode` (3rd param) determines which blending mode to use; change this for varying effects.
+* The blend modes available include: `overlay`, `over`, `atop`, `xor`, `multiply`, `burn`, `soft_light`, `hard_light`,
+* `difference`, `lighten`, `darken`, `dodge`, `plus`, `exclusion` (more to come)
+* NOTE: The first image must be smaller than the second image passed as params.
+* If the first image were larger than the second, then there would be overflowing pixels which would have no corresponding pixels
+* in the second image.
+* # Arguments
+* * `img` - A DynamicImage that contains a view into the image.
+* * `img2` - The 2nd DynamicImage to be blended with the first.
+* * `blend_mode` - The blending mode to use. See above for complete list of blend modes available.
+* # Example
+*
+* ```no_run
+* // For example, to blend two images with the `multiply` blend mode:
+* use photon_rs::multiple::blend;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* let img2 = open_image("img2.jpg").expect("File should open");
+* blend(&mut img, &img2, "multiply");
+* ```
+* @param {PhotonImage} photon_image
+* @param {PhotonImage} photon_image2
+* @param {string} blend_mode
+*/
+module.exports.blend = function(photon_image, photon_image2, blend_mode) {
+    _assertClass(photon_image, PhotonImage);
+    _assertClass(photon_image2, PhotonImage);
+    const ptr0 = passStringToWasm0(blend_mode, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    wasm.blend(photon_image.__wbg_ptr, photon_image2.__wbg_ptr, ptr0, len0);
+};
+
+/**
+* @param {number} width
+* @param {number} height
+* @returns {PhotonImage}
+*/
+module.exports.create_gradient = function(width, height) {
+    const ret = wasm.create_gradient(width, height);
+    return PhotonImage.__wrap(ret);
+};
+
+/**
+* Apply a gradient to an image.
+* @param {PhotonImage} image
+*/
+module.exports.apply_gradient = function(image) {
+    _assertClass(image, PhotonImage);
+    wasm.apply_gradient(image.__wbg_ptr);
 };
 
 /**
@@ -3547,232 +3774,6 @@ module.exports.pink_noise = function(photon_image) {
     wasm.pink_noise(photon_image.__wbg_ptr);
 };
 
-function passArray8ToWasm0(arg, malloc) {
-    const ptr = malloc(arg.length * 1) >>> 0;
-    getUint8Memory0().set(arg, ptr / 1);
-    WASM_VECTOR_LEN = arg.length;
-    return ptr;
-}
-
-function getArrayU8FromWasm0(ptr, len) {
-    ptr = ptr >>> 0;
-    return getUint8Memory0().subarray(ptr / 1, ptr / 1 + len);
-}
-/**
-*! [temp] Check if WASM is supported.
-*/
-module.exports.run = function() {
-    try {
-        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        wasm.run(retptr);
-        var r0 = getInt32Memory0()[retptr / 4 + 0];
-        var r1 = getInt32Memory0()[retptr / 4 + 1];
-        if (r1) {
-            throw takeObject(r0);
-        }
-    } finally {
-        wasm.__wbindgen_add_to_stack_pointer(16);
-    }
-};
-
-let stack_pointer = 128;
-
-function addBorrowedObject(obj) {
-    if (stack_pointer == 1) throw new Error('out of js stack');
-    heap[--stack_pointer] = obj;
-    return stack_pointer;
-}
-/**
-* Get the ImageData from a 2D canvas context
-* @param {HTMLCanvasElement} canvas
-* @param {CanvasRenderingContext2D} ctx
-* @returns {ImageData}
-*/
-module.exports.get_image_data = function(canvas, ctx) {
-    try {
-        const ret = wasm.get_image_data(addBorrowedObject(canvas), addBorrowedObject(ctx));
-        return takeObject(ret);
-    } finally {
-        heap[stack_pointer++] = undefined;
-        heap[stack_pointer++] = undefined;
-    }
-};
-
-/**
-* Place a PhotonImage onto a 2D canvas.
-* @param {HTMLCanvasElement} canvas
-* @param {CanvasRenderingContext2D} ctx
-* @param {PhotonImage} new_image
-*/
-module.exports.putImageData = function(canvas, ctx, new_image) {
-    _assertClass(new_image, PhotonImage);
-    var ptr0 = new_image.__destroy_into_raw();
-    wasm.putImageData(addHeapObject(canvas), addHeapObject(ctx), ptr0);
-};
-
-/**
-* Convert a HTML5 Canvas Element to a PhotonImage.
-*
-* This converts the ImageData found in the canvas context to a PhotonImage,
-* which can then have effects or filters applied to it.
-* @param {HTMLCanvasElement} canvas
-* @param {CanvasRenderingContext2D} ctx
-* @returns {PhotonImage}
-*/
-module.exports.open_image = function(canvas, ctx) {
-    const ret = wasm.open_image(addHeapObject(canvas), addHeapObject(ctx));
-    return PhotonImage.__wrap(ret);
-};
-
-/**
-* Convert ImageData to a raw pixel vec of u8s.
-* @param {ImageData} imgdata
-* @returns {Uint8Array}
-*/
-module.exports.to_raw_pixels = function(imgdata) {
-    try {
-        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        wasm.to_raw_pixels(retptr, addHeapObject(imgdata));
-        var r0 = getInt32Memory0()[retptr / 4 + 0];
-        var r1 = getInt32Memory0()[retptr / 4 + 1];
-        var v1 = getArrayU8FromWasm0(r0, r1).slice();
-        wasm.__wbindgen_free(r0, r1 * 1);
-        return v1;
-    } finally {
-        wasm.__wbindgen_add_to_stack_pointer(16);
-    }
-};
-
-/**
-* Convert a base64 string to a PhotonImage.
-* @param {string} base64
-* @returns {PhotonImage}
-*/
-module.exports.base64_to_image = function(base64) {
-    const ptr0 = passStringToWasm0(base64, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.base64_to_image(ptr0, len0);
-    return PhotonImage.__wrap(ret);
-};
-
-/**
-* Convert a base64 string to a Vec of u8s.
-* @param {string} base64
-* @returns {Uint8Array}
-*/
-module.exports.base64_to_vec = function(base64) {
-    try {
-        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        const ptr0 = passStringToWasm0(base64, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-        const len0 = WASM_VECTOR_LEN;
-        wasm.base64_to_vec(retptr, ptr0, len0);
-        var r0 = getInt32Memory0()[retptr / 4 + 0];
-        var r1 = getInt32Memory0()[retptr / 4 + 1];
-        var v2 = getArrayU8FromWasm0(r0, r1).slice();
-        wasm.__wbindgen_free(r0, r1 * 1);
-        return v2;
-    } finally {
-        wasm.__wbindgen_add_to_stack_pointer(16);
-    }
-};
-
-/**
-* Convert a PhotonImage to JS-compatible ImageData.
-* @param {PhotonImage} photon_image
-* @returns {ImageData}
-*/
-module.exports.to_image_data = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    var ptr0 = photon_image.__destroy_into_raw();
-    const ret = wasm.to_image_data(ptr0);
-    return takeObject(ret);
-};
-
-/**
-* Add a watermark to an image.
-*
-* # Arguments
-* * `img` - A DynamicImage that contains a view into the image.
-* * `watermark` - The watermark to be placed onto the `img` image.
-* * `x` - The x coordinate where the watermark's top corner should be positioned.
-* * `y` - The y coordinate where the watermark's top corner should be positioned.
-* # Example
-*
-* ```no_run
-* // For example, to add a watermark to an image at x: 30, y: 40:
-* use photon_rs::multiple::watermark;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* let water_mark = open_image("watermark.jpg").expect("File should open");
-* watermark(&mut img, &water_mark, 30_i64, 40_i64);
-* ```
-* @param {PhotonImage} img
-* @param {PhotonImage} watermark
-* @param {bigint} x
-* @param {bigint} y
-*/
-module.exports.watermark = function(img, watermark, x, y) {
-    _assertClass(img, PhotonImage);
-    _assertClass(watermark, PhotonImage);
-    wasm.watermark(img.__wbg_ptr, watermark.__wbg_ptr, x, y);
-};
-
-/**
-* Blend two images together.
-*
-* The `blend_mode` (3rd param) determines which blending mode to use; change this for varying effects.
-* The blend modes available include: `overlay`, `over`, `atop`, `xor`, `multiply`, `burn`, `soft_light`, `hard_light`,
-* `difference`, `lighten`, `darken`, `dodge`, `plus`, `exclusion` (more to come)
-* NOTE: The first image must be smaller than the second image passed as params.
-* If the first image were larger than the second, then there would be overflowing pixels which would have no corresponding pixels
-* in the second image.
-* # Arguments
-* * `img` - A DynamicImage that contains a view into the image.
-* * `img2` - The 2nd DynamicImage to be blended with the first.
-* * `blend_mode` - The blending mode to use. See above for complete list of blend modes available.
-* # Example
-*
-* ```no_run
-* // For example, to blend two images with the `multiply` blend mode:
-* use photon_rs::multiple::blend;
-* use photon_rs::native::open_image;
-*
-* let mut img = open_image("img.jpg").expect("File should open");
-* let img2 = open_image("img2.jpg").expect("File should open");
-* blend(&mut img, &img2, "multiply");
-* ```
-* @param {PhotonImage} photon_image
-* @param {PhotonImage} photon_image2
-* @param {string} blend_mode
-*/
-module.exports.blend = function(photon_image, photon_image2, blend_mode) {
-    _assertClass(photon_image, PhotonImage);
-    _assertClass(photon_image2, PhotonImage);
-    const ptr0 = passStringToWasm0(blend_mode, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    wasm.blend(photon_image.__wbg_ptr, photon_image2.__wbg_ptr, ptr0, len0);
-};
-
-/**
-* @param {number} width
-* @param {number} height
-* @returns {PhotonImage}
-*/
-module.exports.create_gradient = function(width, height) {
-    const ret = wasm.create_gradient(width, height);
-    return PhotonImage.__wrap(ret);
-};
-
-/**
-* Apply a gradient to an image.
-* @param {PhotonImage} image
-*/
-module.exports.apply_gradient = function(image) {
-    _assertClass(image, PhotonImage);
-    wasm.apply_gradient(image.__wbg_ptr);
-};
-
 function isLikeNone(x) {
     return x === undefined || x === null;
 }
@@ -3801,6 +3802,10 @@ function getClampedArrayU8FromWasm0(ptr, len) {
 /**
 */
 module.exports.SamplingFilter = Object.freeze({ Nearest:1,"1":"Nearest",Triangle:2,"2":"Triangle",CatmullRom:3,"3":"CatmullRom",Gaussian:4,"4":"Gaussian",Lanczos3:5,"5":"Lanczos3", });
+
+const PhotonImageFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_photonimage_free(ptr >>> 0));
 /**
 * Provides the image's height, width, and contains the image's raw pixels.
 * For use when communicating between JS and WASM, and also natively.
@@ -3811,14 +3816,14 @@ class PhotonImage {
         ptr = ptr >>> 0;
         const obj = Object.create(PhotonImage.prototype);
         obj.__wbg_ptr = ptr;
-
+        PhotonImageFinalization.register(obj, obj.__wbg_ptr, obj);
         return obj;
     }
 
     __destroy_into_raw() {
         const ptr = this.__wbg_ptr;
         this.__wbg_ptr = 0;
-
+        PhotonImageFinalization.unregister(this);
         return ptr;
     }
 
@@ -3836,7 +3841,8 @@ class PhotonImage {
         const ptr0 = passArray8ToWasm0(raw_pixels, wasm.__wbindgen_malloc);
         const len0 = WASM_VECTOR_LEN;
         const ret = wasm.photonimage_new(ptr0, len0, width, height);
-        return PhotonImage.__wrap(ret);
+        this.__wbg_ptr = ret >>> 0;
+        return this;
     }
     /**
     * Create a new PhotonImage from a base64 string.
@@ -3897,7 +3903,7 @@ class PhotonImage {
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             var v1 = getArrayU8FromWasm0(r0, r1).slice();
-            wasm.__wbindgen_free(r0, r1 * 1);
+            wasm.__wbindgen_free(r0, r1 * 1, 1);
             return v1;
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
@@ -3928,7 +3934,7 @@ class PhotonImage {
             return getStringFromWasm0(r0, r1);
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
-            wasm.__wbindgen_free(deferred1_0, deferred1_1);
+            wasm.__wbindgen_free(deferred1_0, deferred1_1, 1);
         }
     }
     /**
@@ -3942,7 +3948,7 @@ class PhotonImage {
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             var v1 = getArrayU8FromWasm0(r0, r1).slice();
-            wasm.__wbindgen_free(r0, r1 * 1);
+            wasm.__wbindgen_free(r0, r1 * 1, 1);
             return v1;
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
@@ -3960,7 +3966,7 @@ class PhotonImage {
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             var v1 = getArrayU8FromWasm0(r0, r1).slice();
-            wasm.__wbindgen_free(r0, r1 * 1);
+            wasm.__wbindgen_free(r0, r1 * 1, 1);
             return v1;
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
@@ -3977,7 +3983,7 @@ class PhotonImage {
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             var v1 = getArrayU8FromWasm0(r0, r1).slice();
-            wasm.__wbindgen_free(r0, r1 * 1);
+            wasm.__wbindgen_free(r0, r1 * 1, 1);
             return v1;
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
@@ -4000,23 +4006,19 @@ class PhotonImage {
     }
 }
 module.exports.PhotonImage = PhotonImage;
+
+const RgbFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_rgb_free(ptr >>> 0));
 /**
 * RGB color type.
 */
 class Rgb {
 
-    static __wrap(ptr) {
-        ptr = ptr >>> 0;
-        const obj = Object.create(Rgb.prototype);
-        obj.__wbg_ptr = ptr;
-
-        return obj;
-    }
-
     __destroy_into_raw() {
         const ptr = this.__wbg_ptr;
         this.__wbg_ptr = 0;
-
+        RgbFinalization.unregister(this);
         return ptr;
     }
 
@@ -4032,7 +4034,8 @@ class Rgb {
     */
     constructor(r, g, b) {
         const ret = wasm.rgb_new(r, g, b);
-        return Rgb.__wrap(ret);
+        this.__wbg_ptr = ret >>> 0;
+        return this;
     }
     /**
     * Set the Red value.
@@ -4081,23 +4084,19 @@ class Rgb {
     }
 }
 module.exports.Rgb = Rgb;
+
+const RgbaFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_rgba_free(ptr >>> 0));
 /**
 * RGBA color type.
 */
 class Rgba {
 
-    static __wrap(ptr) {
-        ptr = ptr >>> 0;
-        const obj = Object.create(Rgba.prototype);
-        obj.__wbg_ptr = ptr;
-
-        return obj;
-    }
-
     __destroy_into_raw() {
         const ptr = this.__wbg_ptr;
         this.__wbg_ptr = 0;
-
+        RgbaFinalization.unregister(this);
         return ptr;
     }
 
@@ -4114,7 +4113,8 @@ class Rgba {
     */
     constructor(r, g, b, a) {
         const ret = wasm.rgba_new(r, g, b, a);
-        return Rgba.__wrap(ret);
+        this.__wbg_ptr = ret >>> 0;
+        return this;
     }
     /**
     * Set the Red value.
@@ -4204,75 +4204,75 @@ module.exports.__wbg_error_f851667af71bcfc6 = function(arg0, arg1) {
         deferred0_1 = arg1;
         console.error(getStringFromWasm0(arg0, arg1));
     } finally {
-        wasm.__wbindgen_free(deferred0_0, deferred0_1);
+        wasm.__wbindgen_free(deferred0_0, deferred0_1, 1);
     }
 };
 
-module.exports.__wbg_instanceof_Window_f2bf9e8e91f1be0d = function(arg0) {
+module.exports.__wbg_instanceof_Window_f401953a2cf86220 = function(arg0) {
     let result;
     try {
         result = getObject(arg0) instanceof Window;
-    } catch {
+    } catch (_) {
         result = false;
     }
     const ret = result;
     return ret;
 };
 
-module.exports.__wbg_document_a11e2f345af07033 = function(arg0) {
+module.exports.__wbg_document_5100775d18896c16 = function(arg0) {
     const ret = getObject(arg0).document;
     return isLikeNone(ret) ? 0 : addHeapObject(ret);
 };
 
-module.exports.__wbg_body_483afe07b0958d3b = function(arg0) {
+module.exports.__wbg_body_edb1908d3ceff3a1 = function(arg0) {
     const ret = getObject(arg0).body;
     return isLikeNone(ret) ? 0 : addHeapObject(ret);
 };
 
-module.exports.__wbg_createElement_5281e2aae74efc9d = function() { return handleError(function (arg0, arg1, arg2) {
+module.exports.__wbg_createElement_8bae7856a4bb7411 = function() { return handleError(function (arg0, arg1, arg2) {
     const ret = getObject(arg0).createElement(getStringFromWasm0(arg1, arg2));
     return addHeapObject(ret);
 }, arguments) };
 
-module.exports.__wbg_instanceof_CanvasRenderingContext2d_b4050f3a451ac712 = function(arg0) {
+module.exports.__wbg_instanceof_CanvasRenderingContext2d_20bf99ccc051643b = function(arg0) {
     let result;
     try {
         result = getObject(arg0) instanceof CanvasRenderingContext2D;
-    } catch {
+    } catch (_) {
         result = false;
     }
     const ret = result;
     return ret;
 };
 
-module.exports.__wbg_drawImage_fa7fd856fb164132 = function() { return handleError(function (arg0, arg1, arg2, arg3) {
+module.exports.__wbg_drawImage_54a07ae582270f7c = function() { return handleError(function (arg0, arg1, arg2, arg3) {
     getObject(arg0).drawImage(getObject(arg1), arg2, arg3);
 }, arguments) };
 
-module.exports.__wbg_drawImage_41f8e8a7fc2b0de3 = function() { return handleError(function (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9) {
+module.exports.__wbg_drawImage_5a754349d9fbf4a6 = function() { return handleError(function (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9) {
     getObject(arg0).drawImage(getObject(arg1), arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
 }, arguments) };
 
-module.exports.__wbg_getImageData_956c421f9b7cdfe7 = function() { return handleError(function (arg0, arg1, arg2, arg3, arg4) {
+module.exports.__wbg_getImageData_740186e596b34364 = function() { return handleError(function (arg0, arg1, arg2, arg3, arg4) {
     const ret = getObject(arg0).getImageData(arg1, arg2, arg3, arg4);
     return addHeapObject(ret);
 }, arguments) };
 
-module.exports.__wbg_putImageData_0009acf77045dec6 = function() { return handleError(function (arg0, arg1, arg2, arg3) {
+module.exports.__wbg_putImageData_044c08ad889366e1 = function() { return handleError(function (arg0, arg1, arg2, arg3) {
     getObject(arg0).putImageData(getObject(arg1), arg2, arg3);
 }, arguments) };
 
-module.exports.__wbg_width_020d7bde350571e9 = function(arg0) {
+module.exports.__wbg_width_ddb5e7bb9fbdd107 = function(arg0) {
     const ret = getObject(arg0).width;
     return ret;
 };
 
-module.exports.__wbg_height_d65d28af1b6f26d3 = function(arg0) {
+module.exports.__wbg_height_2c4b892494a113f4 = function(arg0) {
     const ret = getObject(arg0).height;
     return ret;
 };
 
-module.exports.__wbg_data_f319d3380b214a26 = function(arg0, arg1) {
+module.exports.__wbg_data_c02d3aac6da15e9f = function(arg0, arg1) {
     const ret = getObject(arg1).data;
     const ptr1 = passArray8ToWasm0(ret, wasm.__wbindgen_malloc);
     const len1 = WASM_VECTOR_LEN;
@@ -4280,70 +4280,70 @@ module.exports.__wbg_data_f319d3380b214a26 = function(arg0, arg1) {
     getInt32Memory0()[arg0 / 4 + 0] = ptr1;
 };
 
-module.exports.__wbg_newwithu8clampedarrayandsh_c90e0c3609c4ecc2 = function() { return handleError(function (arg0, arg1, arg2, arg3) {
+module.exports.__wbg_newwithu8clampedarrayandsh_7f7f549e397591e0 = function() { return handleError(function (arg0, arg1, arg2, arg3) {
     const ret = new ImageData(getClampedArrayU8FromWasm0(arg0, arg1), arg2 >>> 0, arg3 >>> 0);
     return addHeapObject(ret);
 }, arguments) };
 
-module.exports.__wbg_width_250e8da00ab1c884 = function(arg0) {
-    const ret = getObject(arg0).width;
-    return ret;
-};
-
-module.exports.__wbg_height_e41b71b2f3141e8e = function(arg0) {
-    const ret = getObject(arg0).height;
-    return ret;
-};
-
-module.exports.__wbg_instanceof_HtmlCanvasElement_6e58598b4e8b1586 = function(arg0) {
+module.exports.__wbg_instanceof_HtmlCanvasElement_46bdbf323b0b18d1 = function(arg0) {
     let result;
     try {
         result = getObject(arg0) instanceof HTMLCanvasElement;
-    } catch {
+    } catch (_) {
         result = false;
     }
     const ret = result;
     return ret;
 };
 
-module.exports.__wbg_width_3a395887a577233b = function(arg0) {
+module.exports.__wbg_width_aee8b8809b033b05 = function(arg0) {
     const ret = getObject(arg0).width;
     return ret;
 };
 
-module.exports.__wbg_setwidth_885d5dd3c7f48f41 = function(arg0, arg1) {
+module.exports.__wbg_setwidth_080107476e633963 = function(arg0, arg1) {
     getObject(arg0).width = arg1 >>> 0;
 };
 
-module.exports.__wbg_height_b7046017c4148386 = function(arg0) {
+module.exports.__wbg_height_80053d3c71b338e0 = function(arg0) {
     const ret = getObject(arg0).height;
     return ret;
 };
 
-module.exports.__wbg_setheight_0d2b445bb6a5a3f2 = function(arg0, arg1) {
+module.exports.__wbg_setheight_dc240617639f1f51 = function(arg0, arg1) {
     getObject(arg0).height = arg1 >>> 0;
 };
 
-module.exports.__wbg_getContext_62ccb1aa0e6c8b86 = function() { return handleError(function (arg0, arg1, arg2) {
+module.exports.__wbg_getContext_df50fa48a8876636 = function() { return handleError(function (arg0, arg1, arg2) {
     const ret = getObject(arg0).getContext(getStringFromWasm0(arg1, arg2));
     return isLikeNone(ret) ? 0 : addHeapObject(ret);
 }, arguments) };
 
-module.exports.__wbg_settextContent_ea2ce5e8fc889af7 = function(arg0, arg1, arg2) {
+module.exports.__wbg_width_59e0563d9c871704 = function(arg0) {
+    const ret = getObject(arg0).width;
+    return ret;
+};
+
+module.exports.__wbg_height_1a892edafac94d49 = function(arg0) {
+    const ret = getObject(arg0).height;
+    return ret;
+};
+
+module.exports.__wbg_settextContent_d271bab459cbb1ba = function(arg0, arg1, arg2) {
     getObject(arg0).textContent = arg1 === 0 ? undefined : getStringFromWasm0(arg1, arg2);
 };
 
-module.exports.__wbg_appendChild_173b88a25c048f2b = function() { return handleError(function (arg0, arg1) {
+module.exports.__wbg_appendChild_580ccb11a660db68 = function() { return handleError(function (arg0, arg1) {
     const ret = getObject(arg0).appendChild(getObject(arg1));
     return addHeapObject(ret);
 }, arguments) };
 
-module.exports.__wbg_newnoargs_e643855c6572a4a8 = function(arg0, arg1) {
+module.exports.__wbg_newnoargs_e258087cd0daa0ea = function(arg0, arg1) {
     const ret = new Function(getStringFromWasm0(arg0, arg1));
     return addHeapObject(ret);
 };
 
-module.exports.__wbg_call_f96b398515635514 = function() { return handleError(function (arg0, arg1) {
+module.exports.__wbg_call_27c0f87801dedf93 = function() { return handleError(function (arg0, arg1) {
     const ret = getObject(arg0).call(getObject(arg1));
     return addHeapObject(ret);
 }, arguments) };
@@ -4353,22 +4353,22 @@ module.exports.__wbindgen_object_clone_ref = function(arg0) {
     return addHeapObject(ret);
 };
 
-module.exports.__wbg_self_b9aad7f1c618bfaf = function() { return handleError(function () {
+module.exports.__wbg_self_ce0dbfc45cf2f5be = function() { return handleError(function () {
     const ret = self.self;
     return addHeapObject(ret);
 }, arguments) };
 
-module.exports.__wbg_window_55e469842c98b086 = function() { return handleError(function () {
+module.exports.__wbg_window_c6fb939a7f436783 = function() { return handleError(function () {
     const ret = window.window;
     return addHeapObject(ret);
 }, arguments) };
 
-module.exports.__wbg_globalThis_d0957e302752547e = function() { return handleError(function () {
+module.exports.__wbg_globalThis_d1e6af4856ba331b = function() { return handleError(function () {
     const ret = globalThis.globalThis;
     return addHeapObject(ret);
 }, arguments) };
 
-module.exports.__wbg_global_ae2f87312b8987fb = function() { return handleError(function () {
+module.exports.__wbg_global_207b558942527489 = function() { return handleError(function () {
     const ret = global.global;
     return addHeapObject(ret);
 }, arguments) };
@@ -4378,21 +4378,21 @@ module.exports.__wbindgen_is_undefined = function(arg0) {
     return ret;
 };
 
-module.exports.__wbg_buffer_fcbfb6d88b2732e9 = function(arg0) {
+module.exports.__wbg_buffer_12d079cc21e14bdb = function(arg0) {
     const ret = getObject(arg0).buffer;
     return addHeapObject(ret);
 };
 
-module.exports.__wbg_new_bc5d9aad3f9ac80e = function(arg0) {
+module.exports.__wbg_new_63b92bc8671ed464 = function(arg0) {
     const ret = new Uint8Array(getObject(arg0));
     return addHeapObject(ret);
 };
 
-module.exports.__wbg_set_4b3aa8445ac1e91c = function(arg0, arg1, arg2) {
+module.exports.__wbg_set_a47bac70306a19a7 = function(arg0, arg1, arg2) {
     getObject(arg0).set(getObject(arg1), arg2 >>> 0);
 };
 
-module.exports.__wbg_length_d9c4ded7e708c6a1 = function(arg0) {
+module.exports.__wbg_length_c20a40f15020d68a = function(arg0) {
     const ret = getObject(arg0).length;
     return ret;
 };
