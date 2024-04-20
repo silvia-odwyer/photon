@@ -13,3 +13,6 @@ photon-docs/site
 output*.jpg
 output*.png
 .vscode
+
+# Jetbrains IDE
+.idea/

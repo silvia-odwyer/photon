@@ -42,6 +42,7 @@ thiserror = "1.0"
 js-sys = { version = "0.3.62", optional = true }
 node-sys = { version = "0.4.2", optional = true }
 perlin2d = "0.2.6"
+instant = "0.1.12"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
