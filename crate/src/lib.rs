@@ -243,6 +243,21 @@ impl PhotonImage {
         self.height = height;
         self.raw_pixels = raw_pixels;
     }
+
+    /// Calculates estimated filesize and returns number of bytes
+    pub fn get_estimated_filesize(&self) -> u64 {
+        let base64_data = self.get_base64();
+        let padding_count = if base64_data.ends_with("==") {
+            2
+        } else if base64_data.ends_with('=') {
+            1
+        } else {
+            0
+        };
+
+        // Size of original string(in bytes) = ceil(6n/8) – padding
+        ((base64_data.len() as f64) * 0.75).ceil() as u64 - padding_count
+    }
 }
 
 /// Create a new PhotonImage from a raw Vec of u8s representing raw image pixels.
