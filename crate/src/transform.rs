@@ -6,7 +6,7 @@ use crate::{PhotonImage, Rgba};
 use image::imageops::FilterType;
 use image::DynamicImage::ImageRgba8;
 use image::RgbaImage;
-use image::{GenericImageView, ImageBuffer};
+use image::{GenericImageView, ImageBuffer, Pixel};
 use std::cmp::max;
 use std::cmp::min;
 
@@ -337,6 +337,115 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
         width,
         height,
     }
+}
+
+pub fn shearx(
+    photon_img: &PhotonImage,
+    shear: f32,
+) -> PhotonImage {
+
+    let img = helpers::dyn_image_from_raw(photon_img);
+    let src_width = img.width();
+    let src_height = img.height();
+
+    let maxskew = shear * (src_height as f32);
+    let dst_width = maxskew.floor().abs() as u32 + src_width;
+
+    let mut delta = 0;
+    if shear < 0. {
+        delta = dst_width - src_width;
+    }
+
+    let mut sheared_image: RgbaImage = ImageBuffer::new(dst_width,src_height);
+
+    for old_y in 0..src_height
+        {
+            let skew = shear * (old_y as f32+0.5);
+            let skewi = skew.floor() as i32+delta as i32;
+            let skewf = skew.fract().abs();
+            let mut oleft = image::Rgba([0_u8, 0_u8, 0_u8, 0_u8]);
+            for old_x in (0..src_width).rev() {
+                let mut pixel = img.get_pixel(old_x,old_y).clone();
+                let mut left = pixel.map( |val| { (val as f32*skewf) as u8 });
+                if shear >= 0. {
+                    left = pixel.map2(&left, |val1, val2| { val1-val2 });
+                }
+                pixel = pixel.map2(&left, |val1, val2| { val1-val2 });
+                pixel = pixel.map2(&oleft, |val1, val2| { min(val1 as u16+val2 as u16,255_u16) as u8 });
+                sheared_image.put_pixel(
+                    (old_x as i32+skewi) as u32,
+                    old_y,
+                    pixel);
+                oleft=left;
+            }
+            sheared_image.put_pixel(skewi as u32, old_y, oleft);
+        }
+
+        let dynimage = ImageRgba8(sheared_image);
+        let width = dynimage.width();
+        let height = dynimage.height();
+        let raw_pixels = dynimage.into_bytes();
+
+        PhotonImage::new(
+            raw_pixels,
+            width,
+            height,
+        )
+
+}
+
+pub fn sheary(
+    photon_img: &PhotonImage,
+    shear: f32,
+) -> PhotonImage {
+
+    let img = helpers::dyn_image_from_raw(photon_img);
+    let src_width = img.width();
+    let src_height = img.height();
+
+    let maxskew = shear * (src_width as f32);
+    let dst_height = maxskew.floor().abs() as u32 + src_height;
+
+    let mut delta = 0;
+    if shear < 0. {
+        delta = dst_height - src_height;
+    }
+
+    let mut sheared_image: RgbaImage = ImageBuffer::new(src_width,dst_height);
+
+    for old_x in 0..src_width
+        {
+            let skew = shear * (old_x as f32+0.5);
+            let skewi = skew.floor() as i32+delta as i32;
+            let skewf = skew.fract().abs();
+            let mut oleft = image::Rgba([0_u8, 0_u8, 0_u8, 0_u8]);
+            for old_y in (0..src_height).rev() {
+                let mut pixel = img.get_pixel(old_x,old_y).clone();
+                let mut left = pixel.map( |val| { (val as f32*skewf).floor() as u8 });
+                if shear >= 0. {
+                    left = pixel.map2(&left, |val1, val2| { val1-val2 });
+                }
+                pixel = pixel.map2(&left, |val1, val2| { val1-val2 });
+                pixel = pixel.map2(&oleft, |val1, val2| { min(val1 as u16+val2 as u16,255_u16) as u8 });
+                sheared_image.put_pixel(
+                    old_x,
+                    (old_y as i32+skewi) as u32,
+                    pixel);
+                oleft=left;
+            }
+            sheared_image.put_pixel(old_x, skewi as u32, oleft);
+        }
+
+        let dynimage = ImageRgba8(sheared_image);
+        let width = dynimage.width();
+        let height = dynimage.height();
+        let raw_pixels = dynimage.into_bytes();
+
+        PhotonImage::new(
+            raw_pixels,
+            width,
+            height,
+        )
 }
 
 /// Apply uniform padding around the PhotonImage
