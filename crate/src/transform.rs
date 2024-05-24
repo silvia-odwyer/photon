@@ -704,7 +704,7 @@ pub fn padding_bottom(
 
 /// Rotate the PhotonImage on an arbitrary angle
 /// A rotated PhotonImage is returned.
-/// # NOTE: This is a naive implementation. Paeth rotation should be faster.
+/// # NOTE: This is an experimental implementation. It's less performant than previously, but preserves detail.
 ///
 /// # Arguments
 /// * `img` - A PhotonImage. See the PhotonImage struct for details.
@@ -721,7 +721,72 @@ pub fn padding_bottom(
 /// let rotated_img = rotate(&img, 30);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn rotate(img: &PhotonImage, angle: i32) -> PhotonImage {
+pub fn rotate(
+    photon_img: &PhotonImage, 
+    angle: f32
+) -> PhotonImage {
+    
+    // 390, 750 and 30 degrees represent the same angle. Trim 360.
+    let full_circle_count = angle as i32 / 360;
+    let normalized_angle = angle as i32 - full_circle_count * 360;
+    if normalized_angle == 0 {
+        return photon_img.clone();
+    }
+
+    // Handle negative angles. -80 describes the same angle as 360 - 80 = 280.
+    let positive_angle = if normalized_angle < 0 {
+        normalized_angle + 360
+    } else {
+        normalized_angle
+    };
+
+    let right_angle_count = positive_angle / 90;
+    let mut rgba_img: RgbaImage = ImageBuffer::from_raw(
+        photon_img.get_width(),
+        photon_img.get_height(),
+        photon_img.get_raw_pixels().to_vec(),
+    )
+    .unwrap();
+    for _ in 0..right_angle_count {
+        rgba_img = image::imageops::rotate90(&rgba_img);
+    }
+
+    let dynimage = ImageRgba8(rgba_img);
+    let src_width = dynimage.width();
+    let src_height = dynimage.height();
+    let raw_pixels = dynimage.into_bytes();
+
+    let mut img_out = PhotonImage::new(
+        raw_pixels, src_width, src_height
+    );
+    
+    let theta = ((angle%360.)-(right_angle_count*90) as f32).to_radians();
+    let beta = theta.sin();
+    let alpha = -1. * ((theta/2.).tan());
+
+    img_out = shearx(&img_out, alpha);
+    img_out = sheary(&img_out, beta);
+    img_out = shearx(&img_out, alpha);
+
+    /*
+    let dst_width = img_out.get_width();
+    let dst_height = img_out.get_height();
+
+    let crop_width = (dst_width-photon_img.get_width())/2;
+    let crop_height = (dst_height-photon_img.get_height())/2;
+    img_out = crop(
+        &mut img_out, 
+        crop_width, 
+        crop_height, 
+        dst_width-crop_width, 
+        dst_height-crop_height
+    );
+    */
+
+    img_out
+}
+
+pub fn rotate_old(img: &PhotonImage, angle: i32) -> PhotonImage {
     // 390, 750 and 30 degrees represent the same angle. Trim 360.
     let full_circle_count = angle / 360;
     let normalized_angle = angle - full_circle_count * 360;
