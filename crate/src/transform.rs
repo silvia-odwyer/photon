@@ -339,6 +339,24 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
     }
 }
 
+/// Shear the image along the X axis. 
+/// A sheared PhotonImage is returned.
+///
+/// # Arguments
+/// * `img` - A PhotonImage. See the PhotonImage struct for details.
+/// * `shear` - Amount to shear.
+///
+/// # Example
+///
+/// ```no_run
+/// // For example, to shear a PhotonImage by 0.5:
+/// use photon_rs::native::open_image;
+/// use photon_rs::transform::sheary;
+///
+/// let img = open_image("img.jpg").expect("File should open");
+/// let sheared_img = shearx(&img, 0.5);
+/// ```
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn shearx(
     photon_img: &PhotonImage,
     shear: f32,
@@ -394,6 +412,24 @@ pub fn shearx(
 
 }
 
+/// Shear the image along the Y axis. 
+/// A sheared PhotonImage is returned.
+///
+/// # Arguments
+/// * `img` - A PhotonImage. See the PhotonImage struct for details.
+/// * `shear` - Amount to shear.
+///
+/// # Example
+///
+/// ```no_run
+/// // For example, to shear a PhotonImage by 0.5:
+/// use photon_rs::native::open_image;
+/// use photon_rs::transform::sheary;
+///
+/// let img = open_image("img.jpg").expect("File should open");
+/// let sheared_img = sheary(&img, 0.5);
+/// ```
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn sheary(
     photon_img: &PhotonImage,
     shear: f32,
@@ -704,7 +740,7 @@ pub fn padding_bottom(
 
 /// Rotate the PhotonImage on an arbitrary angle
 /// A rotated PhotonImage is returned.
-/// # NOTE: This is an experimental implementation. It's less performant than previously, but preserves detail.
+/// # NOTE: This is an experimental implementation. 
 ///
 /// # Arguments
 /// * `img` - A PhotonImage. See the PhotonImage struct for details.
