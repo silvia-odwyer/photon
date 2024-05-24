@@ -29,7 +29,7 @@ use web_sys::{HtmlCanvasElement, ImageData};
 /// use photon_rs::PhotonImage;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// let cropped_img: PhotonImage = crop(&mut img, 0_u32, 0_u32, 500_u32, 800_u32);
+/// let cropped_img: PhotonImage = crop(&img, 0_u32, 0_u32, 500_u32, 800_u32);
 /// // Write the contents of this image in JPG format.
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
