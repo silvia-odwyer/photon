@@ -36,7 +36,7 @@ use web_sys::{HtmlCanvasElement, ImageData};
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn crop(
-    photon_image: &mut PhotonImage,
+    photon_image: &PhotonImage,
     x1: u32,
     y1: u32,
     x2: u32,
