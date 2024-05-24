@@ -349,9 +349,9 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
 /// # Example
 ///
 /// ```no_run
-/// // For example, to shear a PhotonImage by 0.5:
+/// // For example, to shear an image by 0.5:
 /// use photon_rs::native::open_image;
-/// use photon_rs::transform::sheary;
+/// use photon_rs::transform::shearx;
 ///
 /// let img = open_image("img.jpg").expect("File should open");
 /// let sheared_img = shearx(&img, 0.5);
@@ -422,7 +422,7 @@ pub fn shearx(
 /// # Example
 ///
 /// ```no_run
-/// // For example, to shear a PhotonImage by 0.5:
+/// // For example, to shear an image by 0.5:
 /// use photon_rs::native::open_image;
 /// use photon_rs::transform::sheary;
 ///
@@ -754,7 +754,7 @@ pub fn padding_bottom(
 /// use photon_rs::transform::rotate;
 ///
 /// let img = open_image("img.jpg").expect("File should open");
-/// let rotated_img = rotate(&img, 30);
+/// let rotated_img = rotate(&img, 30.0);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn rotate(
