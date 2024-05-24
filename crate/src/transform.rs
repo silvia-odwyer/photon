@@ -5,9 +5,7 @@ use crate::iter::ImageIterator;
 use crate::{PhotonImage, Rgba};
 use image::imageops::FilterType;
 use image::DynamicImage::ImageRgba8;
-use image::RgbaImage;
-use image::{GenericImageView, ImageBuffer, Pixel};
-use std::cmp::max;
+use image::{GenericImageView, ImageBuffer, Pixel, RgbaImage};
 use std::cmp::min;
 
 #[cfg(feature = "enable_wasm")]
