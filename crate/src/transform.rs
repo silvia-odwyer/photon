@@ -750,7 +750,6 @@ pub fn padding_bottom(
 
 /// Rotate the PhotonImage on an arbitrary angle
 /// A rotated PhotonImage is returned.
-/// # NOTE: This is an experimental implementation. 
 ///
 /// # Arguments
 /// * `img` - A PhotonImage. See the PhotonImage struct for details.
