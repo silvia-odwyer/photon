@@ -98,7 +98,7 @@ pub fn crop_img_browser(
         width,
         height,
     )
-    .unwrap();
+        .unwrap();
 
     dest_canvas
 }
@@ -207,10 +207,10 @@ pub fn resize_img_browser(
     let sampling_filter = filter_type_from_sampling_filter(sampling_filter);
     let dyn_img = helpers::dyn_image_from_raw(photon_img);
     let resized_img = ImageRgba8(image::imageops::resize(
-        &dyn_img,
-        width,
-        height,
-        sampling_filter,
+            &dyn_img,
+            width,
+            height,
+            sampling_filter,
     ));
 
     // TODO Check if in browser or Node.JS
@@ -265,10 +265,10 @@ pub fn resize(
 
     let dyn_img = helpers::dyn_image_from_raw(photon_img);
     let resized_img = ImageRgba8(image::imageops::resize(
-        &dyn_img,
-        width,
-        height,
-        sampling_filter,
+            &dyn_img,
+            width,
+            height,
+            sampling_filter,
     ));
 
     let width = resized_img.width();
@@ -308,7 +308,7 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
         img.get_height(),
         img.raw_pixels.to_vec(),
     )
-    .unwrap();
+        .unwrap();
     let (w, h) = img.dimensions();
     let (diff_w, diff_h) = (w - w.min(width), h - h.min(height));
 
@@ -373,40 +373,46 @@ pub fn shearx(
     }
 
     let mut sheared_image: RgbaImage = ImageBuffer::new(dst_width,src_height);
+    
+    let mut max_x = 0;
 
     for old_y in 0..src_height
-        {
-            let skew = shear * (old_y as f32+0.5);
-            let skewi = skew.floor() as i32+delta as i32;
-            let skewf = skew.fract().abs();
-            let mut oleft = image::Rgba([0_u8, 0_u8, 0_u8, 0_u8]);
-            for old_x in (0..src_width).rev() {
-                let mut pixel = img.get_pixel(old_x,old_y).clone();
-                let mut left = pixel.map( |val| { (val as f32*skewf) as u8 });
-                if shear >= 0. {
-                    left = pixel.map2(&left, |val1, val2| { val1-val2 });
-                }
-                pixel = pixel.map2(&left, |val1, val2| { val1-val2 });
-                pixel = pixel.map2(&oleft, |val1, val2| { min(val1 as u16+val2 as u16,255_u16) as u8 });
-                sheared_image.put_pixel(
-                    (old_x as i32+skewi) as u32,
-                    old_y,
-                    pixel);
-                oleft=left;
+    {
+        let skew = shear * (old_y as f32+0.5);
+        let skewi = skew.floor() as i32+delta as i32;
+        let skewf = skew.fract().abs();
+        let mut oleft = image::Rgba([0_u8, 0_u8, 0_u8, 0_u8]);
+        for old_x in (0..src_width).rev() {
+            let mut pixel = img.get_pixel(old_x,old_y).clone();
+            let mut left = pixel.map( |val| { (val as f32*skewf) as u8 });
+            if shear >= 0. {
+                left = pixel.map2(&left, |val1, val2| { val1-val2 });
             }
-            sheared_image.put_pixel(skewi as u32, old_y, oleft);
+            pixel = pixel.map2(&left, |val1, val2| { val1-val2 });
+            pixel = pixel.map2(&oleft, |val1, val2| { min(val1 as u16+val2 as u16,255_u16) as u8 });
+            let new_x = (old_x as i32+skewi) as u32;
+            if pixel[3]!=0 && max_x < new_x {max_x = new_x;}
+            sheared_image.put_pixel(
+                new_x,
+                old_y,
+                pixel);
+            oleft=left;
         }
+        sheared_image.put_pixel(skewi as u32, old_y, oleft);
+    }
 
-        let dynimage = ImageRgba8(sheared_image);
-        let width = dynimage.width();
-        let height = dynimage.height();
-        let raw_pixels = dynimage.into_bytes();
+    let dynimage = ImageRgba8(sheared_image);
+    let width = dynimage.width();
+    let height = dynimage.height();
+    let raw_pixels = dynimage.into_bytes();
 
-        PhotonImage::new(
-            raw_pixels,
-            width,
-            height,
-        )
+    let img_out = PhotonImage::new(
+        raw_pixels,
+        width,
+        height,
+    );
+
+    crop(&img_out, width-max_x-1, 0, max_x+1, height)
 
 }
 
@@ -447,39 +453,45 @@ pub fn sheary(
 
     let mut sheared_image: RgbaImage = ImageBuffer::new(src_width,dst_height);
 
+    let mut max_y = 0;
+
     for old_x in 0..src_width
-        {
-            let skew = shear * (old_x as f32+0.5);
-            let skewi = skew.floor() as i32+delta as i32;
-            let skewf = skew.fract().abs();
-            let mut oleft = image::Rgba([0_u8, 0_u8, 0_u8, 0_u8]);
-            for old_y in (0..src_height).rev() {
-                let mut pixel = img.get_pixel(old_x,old_y).clone();
-                let mut left = pixel.map( |val| { (val as f32*skewf).floor() as u8 });
-                if shear >= 0. {
-                    left = pixel.map2(&left, |val1, val2| { val1-val2 });
-                }
-                pixel = pixel.map2(&left, |val1, val2| { val1-val2 });
-                pixel = pixel.map2(&oleft, |val1, val2| { min(val1 as u16+val2 as u16,255_u16) as u8 });
-                sheared_image.put_pixel(
-                    old_x,
-                    (old_y as i32+skewi) as u32,
-                    pixel);
-                oleft=left;
+    {
+        let skew = shear * (old_x as f32+0.5);
+        let skewi = skew.floor() as i32+delta as i32;
+        let skewf = skew.fract().abs();
+        let mut oleft = image::Rgba([0_u8, 0_u8, 0_u8, 0_u8]);
+        for old_y in (0..src_height).rev() {
+            let mut pixel = img.get_pixel(old_x,old_y).clone();
+            let mut left = pixel.map( |val| { (val as f32*skewf).floor() as u8 });
+            if shear >= 0. {
+                left = pixel.map2(&left, |val1, val2| { val1-val2 });
             }
-            sheared_image.put_pixel(old_x, skewi as u32, oleft);
+            pixel = pixel.map2(&left, |val1, val2| { val1-val2 });
+            pixel = pixel.map2(&oleft, |val1, val2| { min(val1 as u16+val2 as u16,255_u16) as u8 });
+            let new_y = (old_y as i32+skewi) as u32;
+            if pixel[3]!=0 && max_y < new_y {max_y = new_y;}
+            sheared_image.put_pixel(
+                old_x,
+                new_y,
+                pixel);
+            oleft=left;
         }
+        sheared_image.put_pixel(old_x, skewi as u32, oleft);
+    }
 
-        let dynimage = ImageRgba8(sheared_image);
-        let width = dynimage.width();
-        let height = dynimage.height();
-        let raw_pixels = dynimage.into_bytes();
+    let dynimage = ImageRgba8(sheared_image);
+    let width = dynimage.width();
+    let height = dynimage.height();
+    let raw_pixels = dynimage.into_bytes();
 
-        PhotonImage::new(
-            raw_pixels,
-            width,
-            height,
-        )
+    let img_out = PhotonImage::new(
+        raw_pixels,
+        width,
+        height,
+    );
+
+    crop(&img_out, 0, height-max_y-1, width, max_y+1)
 }
 
 /// Apply uniform padding around the PhotonImage
@@ -759,7 +771,7 @@ pub fn rotate(
     photon_img: &PhotonImage, 
     angle: f32
 ) -> PhotonImage {
-    
+
     // 390, 750 and 30 degrees represent the same angle. Trim 360.
     let full_circle_count = angle as i32 / 360;
     let normalized_angle = angle as i32 - full_circle_count * 360;
@@ -780,7 +792,7 @@ pub fn rotate(
         photon_img.get_height(),
         photon_img.get_raw_pixels().to_vec(),
     )
-    .unwrap();
+        .unwrap();
     for _ in 0..right_angle_count {
         rgba_img = image::imageops::rotate90(&rgba_img);
     }
@@ -793,7 +805,7 @@ pub fn rotate(
     let mut img_out = PhotonImage::new(
         raw_pixels, src_width, src_height
     );
-    
+
     let theta = ((angle%360.)-(right_angle_count*90) as f32).to_radians();
     let beta = theta.sin();
     let alpha = -1. * ((theta/2.).tan());
@@ -801,21 +813,6 @@ pub fn rotate(
     img_out = shearx(&img_out, alpha);
     img_out = sheary(&img_out, beta);
     img_out = shearx(&img_out, alpha);
-
-    /*
-    let dst_width = img_out.get_width();
-    let dst_height = img_out.get_height();
-
-    let crop_width = (dst_width-photon_img.get_width())/2;
-    let crop_height = (dst_height-photon_img.get_height())/2;
-    img_out = crop(
-        &mut img_out, 
-        crop_width, 
-        crop_height, 
-        dst_width-crop_width, 
-        dst_height-crop_height
-    );
-    */
 
     img_out
 }
