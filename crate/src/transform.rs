@@ -373,8 +373,6 @@ pub fn shearx(
     }
 
     let mut sheared_image: RgbaImage = ImageBuffer::new(dst_width,src_height);
-    
-    let mut max_x = 0;
 
     for old_y in 0..src_height
     {
@@ -391,7 +389,6 @@ pub fn shearx(
             pixel = pixel.map2(&left, |val1, val2| { val1-val2 });
             pixel = pixel.map2(&oleft, |val1, val2| { min(val1 as u16+val2 as u16,255_u16) as u8 });
             let new_x = (old_x as i32+skewi) as u32;
-            if pixel[3]!=0 && max_x < new_x {max_x = new_x;}
             sheared_image.put_pixel(
                 new_x,
                 old_y,
@@ -406,14 +403,11 @@ pub fn shearx(
     let height = dynimage.height();
     let raw_pixels = dynimage.into_bytes();
 
-    let img_out = PhotonImage::new(
+    PhotonImage::new(
         raw_pixels,
         width,
         height,
-    );
-
-    crop(&img_out, width-max_x-1, 0, max_x+1, height)
-
+    )
 }
 
 /// Shear the image along the Y axis. 
@@ -453,8 +447,6 @@ pub fn sheary(
 
     let mut sheared_image: RgbaImage = ImageBuffer::new(src_width,dst_height);
 
-    let mut max_y = 0;
-
     for old_x in 0..src_width
     {
         let skew = shear * (old_x as f32+0.5);
@@ -470,7 +462,6 @@ pub fn sheary(
             pixel = pixel.map2(&left, |val1, val2| { val1-val2 });
             pixel = pixel.map2(&oleft, |val1, val2| { min(val1 as u16+val2 as u16,255_u16) as u8 });
             let new_y = (old_y as i32+skewi) as u32;
-            if pixel[3]!=0 && max_y < new_y {max_y = new_y;}
             sheared_image.put_pixel(
                 old_x,
                 new_y,
@@ -485,13 +476,11 @@ pub fn sheary(
     let height = dynimage.height();
     let raw_pixels = dynimage.into_bytes();
 
-    let img_out = PhotonImage::new(
+    PhotonImage::new(
         raw_pixels,
         width,
         height,
-    );
-
-    crop(&img_out, 0, height-max_y-1, width, max_y+1)
+    )
 }
 
 /// Apply uniform padding around the PhotonImage
