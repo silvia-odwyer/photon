@@ -42,8 +42,8 @@ pub fn watermark(img: &mut PhotonImage, watermark: &PhotonImage, x: i64, y: i64)
 /// Blend two images together.
 ///
 /// The `blend_mode` (3rd param) determines which blending mode to use; change this for varying effects.
-/// The blend modes available include: `overlay`, `over`, `atop`, `xor`, `multiply`, `burn`, `soft_light`, `hard_light`,
-/// `difference`, `lighten`, `darken`, `dodge`, `plus`, `exclusion` (more to come)
+/// The blend modes available include: `overlay`, `over`, `atop`, `xor`, `plus`, `multiply`, `burn`,
+/// `difference`, `soft_light`, `screen`, `hard_light`, `dodge`, `exclusion`, `lighten`, `darken` (more to come)
 /// NOTE: The first image must be smaller than the second image passed as params.
 /// If the first image were larger than the second, then there would be overflowing pixels which would have no corresponding pixels
 /// in the second image.
@@ -106,7 +106,7 @@ pub fn blend(
         )
         .into_linear();
 
-        let blended = match blend_mode {
+        let blended = match blend_mode.to_lowercase().as_str() {
             // Match a single value
             "overlay" => color.overlay(color2),
             "over" => color2.over(color),
@@ -116,9 +116,9 @@ pub fn blend(
             "multiply" => color2.multiply(color),
             "burn" => color2.burn(color),
             "difference" => color2.difference(color),
-            "soft_light" => color2.soft_light(color),
+            "soft_light" | "soft light" | "softlight" => color2.soft_light(color),
             "screen" => color2.screen(color),
-            "hard_light" => color2.hard_light(color),
+            "hard_light" | "hard light" | "hardlight" => color2.hard_light(color),
             "dodge" => color2.dodge(color),
             "exclusion" => color2.exclusion(color),
             "lighten" => color2.lighten(color),
