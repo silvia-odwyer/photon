@@ -381,7 +381,7 @@ pub fn shearx(
         let skewf = skew.fract().abs();
         let mut oleft = image::Rgba([0_u8, 0_u8, 0_u8, 0_u8]);
         for old_x in (0..src_width).rev() {
-            let mut pixel = img.get_pixel(old_x,old_y).clone();
+            let mut pixel = img.get_pixel(old_x,old_y);
             let mut left = pixel.map( |val| { (val as f32*skewf) as u8 });
             if shear >= 0. {
                 left = pixel.map2(&left, |val1, val2| { val1-val2 });
@@ -454,7 +454,7 @@ pub fn sheary(
         let skewf = skew.fract().abs();
         let mut oleft = image::Rgba([0_u8, 0_u8, 0_u8, 0_u8]);
         for old_y in (0..src_height).rev() {
-            let mut pixel = img.get_pixel(old_x,old_y).clone();
+            let mut pixel = img.get_pixel(old_x,old_y);
             let mut left = pixel.map( |val| { (val as f32*skewf).floor() as u8 });
             if shear >= 0. {
                 left = pixel.map2(&left, |val1, val2| { val1-val2 });
