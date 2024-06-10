@@ -98,7 +98,7 @@ pub fn crop_img_browser(
         width,
         height,
     )
-        .unwrap();
+    .unwrap();
 
     dest_canvas
 }
@@ -207,10 +207,10 @@ pub fn resize_img_browser(
     let sampling_filter = filter_type_from_sampling_filter(sampling_filter);
     let dyn_img = helpers::dyn_image_from_raw(photon_img);
     let resized_img = ImageRgba8(image::imageops::resize(
-            &dyn_img,
-            width,
-            height,
-            sampling_filter,
+        &dyn_img,
+        width,
+        height,
+        sampling_filter,
     ));
 
     // TODO Check if in browser or Node.JS
@@ -265,10 +265,10 @@ pub fn resize(
 
     let dyn_img = helpers::dyn_image_from_raw(photon_img);
     let resized_img = ImageRgba8(image::imageops::resize(
-            &dyn_img,
-            width,
-            height,
-            sampling_filter,
+        &dyn_img,
+        width,
+        height,
+        sampling_filter,
     ));
 
     let width = resized_img.width();
@@ -308,7 +308,7 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
         img.get_height(),
         img.raw_pixels.to_vec(),
     )
-        .unwrap();
+    .unwrap();
     let (w, h) = img.dimensions();
     let (diff_w, diff_h) = (w - w.min(width), h - h.min(height));
 
@@ -337,7 +337,7 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
     }
 }
 
-/// Shear the image along the X axis. 
+/// Shear the image along the X axis.
 /// A sheared PhotonImage is returned.
 ///
 /// # Arguments
@@ -355,11 +355,7 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
 /// let sheared_img = shearx(&img, 0.5);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn shearx(
-    photon_img: &PhotonImage,
-    shear: f32,
-) -> PhotonImage {
-
+pub fn shearx(photon_img: &PhotonImage, shear: f32) -> PhotonImage {
     let img = helpers::dyn_image_from_raw(photon_img);
     let src_width = img.width();
     let src_height = img.height();
@@ -372,28 +368,26 @@ pub fn shearx(
         delta = dst_width - src_width;
     }
 
-    let mut sheared_image: RgbaImage = ImageBuffer::new(dst_width,src_height);
+    let mut sheared_image: RgbaImage = ImageBuffer::new(dst_width, src_height);
 
-    for old_y in 0..src_height
-    {
-        let skew = shear * (old_y as f32+0.5);
-        let skewi = skew.floor() as i32+delta as i32;
+    for old_y in 0..src_height {
+        let skew = shear * (old_y as f32 + 0.5);
+        let skewi = skew.floor() as i32 + delta as i32;
         let skewf = skew.fract().abs();
         let mut oleft = image::Rgba([0_u8, 0_u8, 0_u8, 0_u8]);
         for old_x in (0..src_width).rev() {
-            let mut pixel = img.get_pixel(old_x,old_y);
-            let mut left = pixel.map( |val| { (val as f32*skewf) as u8 });
+            let mut pixel = img.get_pixel(old_x, old_y);
+            let mut left = pixel.map(|val| (val as f32 * skewf) as u8);
             if shear >= 0. {
-                left = pixel.map2(&left, |val1, val2| { val1-val2 });
+                left = pixel.map2(&left, |val1, val2| val1 - val2);
             }
-            pixel = pixel.map2(&left, |val1, val2| { val1-val2 });
-            pixel = pixel.map2(&oleft, |val1, val2| { min(val1 as u16+val2 as u16,255_u16) as u8 });
-            let new_x = (old_x as i32+skewi) as u32;
-            sheared_image.put_pixel(
-                new_x,
-                old_y,
-                pixel);
-            oleft=left;
+            pixel = pixel.map2(&left, |val1, val2| val1 - val2);
+            pixel = pixel.map2(&oleft, |val1, val2| {
+                min(val1 as u16 + val2 as u16, 255_u16) as u8
+            });
+            let new_x = (old_x as i32 + skewi) as u32;
+            sheared_image.put_pixel(new_x, old_y, pixel);
+            oleft = left;
         }
         sheared_image.put_pixel(skewi as u32, old_y, oleft);
     }
@@ -403,14 +397,10 @@ pub fn shearx(
     let height = dynimage.height();
     let raw_pixels = dynimage.into_bytes();
 
-    PhotonImage::new(
-        raw_pixels,
-        width,
-        height,
-    )
+    PhotonImage::new(raw_pixels, width, height)
 }
 
-/// Shear the image along the Y axis. 
+/// Shear the image along the Y axis.
 /// A sheared PhotonImage is returned.
 ///
 /// # Arguments
@@ -428,11 +418,7 @@ pub fn shearx(
 /// let sheared_img = sheary(&img, 0.5);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn sheary(
-    photon_img: &PhotonImage,
-    shear: f32,
-) -> PhotonImage {
-
+pub fn sheary(photon_img: &PhotonImage, shear: f32) -> PhotonImage {
     let img = helpers::dyn_image_from_raw(photon_img);
     let src_width = img.width();
     let src_height = img.height();
@@ -445,28 +431,26 @@ pub fn sheary(
         delta = dst_height - src_height;
     }
 
-    let mut sheared_image: RgbaImage = ImageBuffer::new(src_width,dst_height);
+    let mut sheared_image: RgbaImage = ImageBuffer::new(src_width, dst_height);
 
-    for old_x in 0..src_width
-    {
-        let skew = shear * (old_x as f32+0.5);
-        let skewi = skew.floor() as i32+delta as i32;
+    for old_x in 0..src_width {
+        let skew = shear * (old_x as f32 + 0.5);
+        let skewi = skew.floor() as i32 + delta as i32;
         let skewf = skew.fract().abs();
         let mut oleft = image::Rgba([0_u8, 0_u8, 0_u8, 0_u8]);
         for old_y in (0..src_height).rev() {
-            let mut pixel = img.get_pixel(old_x,old_y);
-            let mut left = pixel.map( |val| { (val as f32*skewf).floor() as u8 });
+            let mut pixel = img.get_pixel(old_x, old_y);
+            let mut left = pixel.map(|val| (val as f32 * skewf).floor() as u8);
             if shear >= 0. {
-                left = pixel.map2(&left, |val1, val2| { val1-val2 });
+                left = pixel.map2(&left, |val1, val2| val1 - val2);
             }
-            pixel = pixel.map2(&left, |val1, val2| { val1-val2 });
-            pixel = pixel.map2(&oleft, |val1, val2| { min(val1 as u16+val2 as u16,255_u16) as u8 });
-            let new_y = (old_y as i32+skewi) as u32;
-            sheared_image.put_pixel(
-                old_x,
-                new_y,
-                pixel);
-            oleft=left;
+            pixel = pixel.map2(&left, |val1, val2| val1 - val2);
+            pixel = pixel.map2(&oleft, |val1, val2| {
+                min(val1 as u16 + val2 as u16, 255_u16) as u8
+            });
+            let new_y = (old_y as i32 + skewi) as u32;
+            sheared_image.put_pixel(old_x, new_y, pixel);
+            oleft = left;
         }
         sheared_image.put_pixel(old_x, skewi as u32, oleft);
     }
@@ -476,11 +460,7 @@ pub fn sheary(
     let height = dynimage.height();
     let raw_pixels = dynimage.into_bytes();
 
-    PhotonImage::new(
-        raw_pixels,
-        width,
-        height,
-    )
+    PhotonImage::new(raw_pixels, width, height)
 }
 
 /// Apply uniform padding around the PhotonImage
@@ -755,11 +735,7 @@ pub fn padding_bottom(
 /// let rotated_img = rotate(&img, 30.0);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn rotate(
-    photon_img: &PhotonImage, 
-    angle: f32
-) -> PhotonImage {
-
+pub fn rotate(photon_img: &PhotonImage, angle: f32) -> PhotonImage {
     // 390, 750 and 30 degrees represent the same angle. Trim 360.
     let full_circle_count = angle as i32 / 360;
     let normalized_angle = angle as i32 - full_circle_count * 360;
@@ -780,7 +756,7 @@ pub fn rotate(
         photon_img.get_height(),
         photon_img.get_raw_pixels().to_vec(),
     )
-        .unwrap();
+    .unwrap();
     for _ in 0..right_angle_count {
         rgba_img = image::imageops::rotate90(&rgba_img);
     }
@@ -790,13 +766,11 @@ pub fn rotate(
     let src_height = dynimage.height();
     let raw_pixels = dynimage.into_bytes();
 
-    let mut img_out = PhotonImage::new(
-        raw_pixels, src_width, src_height
-    );
+    let mut img_out = PhotonImage::new(raw_pixels, src_width, src_height);
 
-    let theta = ((angle%360.)-(right_angle_count*90) as f32).to_radians();
+    let theta = ((angle % 360.) - (right_angle_count * 90) as f32).to_radians();
     let beta = theta.sin();
-    let alpha = -1. * ((theta/2.).tan());
+    let alpha = -1. * ((theta / 2.).tan());
 
     img_out = shearx(&img_out, alpha);
     img_out = sheary(&img_out, beta);

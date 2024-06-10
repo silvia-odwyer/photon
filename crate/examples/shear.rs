@@ -16,9 +16,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let shear = 1.;
 
     let res1 = photon_rs::transform::shearx(&img, shear);
-    println!("after shearx({}) = w: {}, h: {}", shear, res1.get_width(), res1.get_height());
+    println!(
+        "after shearx({}) = w: {}, h: {}",
+        shear,
+        res1.get_width(),
+        res1.get_height()
+    );
     let res2 = photon_rs::transform::sheary(&img, shear);
-    println!("after sheary({}) = w: {}, h: {}", shear, res2.get_width(), res2.get_height());
+    println!(
+        "after sheary({}) = w: {}, h: {}",
+        shear,
+        res2.get_width(),
+        res2.get_height()
+    );
 
     // Write both outputs in JPEG format.
     photon_rs::native::save_image(res1, "output_shearx.jpg")?;

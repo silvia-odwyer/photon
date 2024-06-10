@@ -17,20 +17,28 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         60.0,  //   60.0 = q1:60.0
         135.0, //  135.0 = q2:45.0
         562.5, //  517.5 = q3:22.5
-        -30.0  //  -30.0 = q4:60.0
+        -30.0, //  -30.0 = q4:60.0
     ];
     let operations = angles.len();
     let mut results = Vec::new();
     for i in 0..operations {
         let angle = angles[i];
         let result = photon_rs::transform::rotate(&img, angles[i]);
-        println!("after rotate({}) = w: {}, h: {}", angle, result.get_width(), result.get_height());
+        println!(
+            "after rotate({}) = w: {}, h: {}",
+            angle,
+            result.get_width(),
+            result.get_height()
+        );
         results.push(result);
     }
 
     // Write all outputs in JPEG format.
     for i in (0..operations).rev() {
-        photon_rs::native::save_image(results.remove(i), &format!("output_rotate_{}.jpg",i+1))?;
+        photon_rs::native::save_image(
+            results.remove(i),
+            &format!("output_rotate_{}.jpg", i + 1),
+        )?;
     }
     let end = Instant::now();
     println!(
