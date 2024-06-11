@@ -240,6 +240,7 @@ Contributors include (be sure to add yourself to the list if you submitted a PR)
 * **bboshoven** - [@bboshoven](https://github.com/bboshoven)
 * **benliao** - [@benliao](https://github.com/benliao)
 * **Fineshop Design** - [@fineshop](https://github.com/fineshop)
+* **volbot** - [@volbot](https://github.com/volbot)
 * **Future You(?)** - (See Contributing above)
 
 ## License

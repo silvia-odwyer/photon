@@ -5,9 +5,7 @@ use crate::iter::ImageIterator;
 use crate::{PhotonImage, Rgba};
 use image::imageops::FilterType;
 use image::DynamicImage::ImageRgba8;
-use image::RgbaImage;
-use image::{GenericImageView, ImageBuffer};
-use std::cmp::max;
+use image::{GenericImageView, ImageBuffer, Pixel, RgbaImage};
 use std::cmp::min;
 
 #[cfg(feature = "enable_wasm")]
@@ -31,12 +29,12 @@ use web_sys::{HtmlCanvasElement, ImageData};
 /// use photon_rs::PhotonImage;
 ///
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// let cropped_img: PhotonImage = crop(&mut img, 0_u32, 0_u32, 500_u32, 800_u32);
+/// let cropped_img: PhotonImage = crop(&img, 0_u32, 0_u32, 500_u32, 800_u32);
 /// // Write the contents of this image in JPG format.
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn crop(
-    photon_image: &mut PhotonImage,
+    photon_image: &PhotonImage,
     x1: u32,
     y1: u32,
     x2: u32,
@@ -339,6 +337,132 @@ pub fn seam_carve(img: &PhotonImage, width: u32, height: u32) -> PhotonImage {
     }
 }
 
+/// Shear the image along the X axis.
+/// A sheared PhotonImage is returned.
+///
+/// # Arguments
+/// * `img` - A PhotonImage. See the PhotonImage struct for details.
+/// * `shear` - Amount to shear.
+///
+/// # Example
+///
+/// ```no_run
+/// // For example, to shear an image by 0.5:
+/// use photon_rs::native::open_image;
+/// use photon_rs::transform::shearx;
+///
+/// let img = open_image("img.jpg").expect("File should open");
+/// let sheared_img = shearx(&img, 0.5);
+/// ```
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
+pub fn shearx(photon_img: &PhotonImage, shear: f32) -> PhotonImage {
+    let img = helpers::dyn_image_from_raw(photon_img);
+    let src_width = img.width();
+    let src_height = img.height();
+
+    let maxskew = shear * (src_height as f32);
+    let dst_width = maxskew.floor().abs() as u32 + src_width;
+
+    let mut delta = 0;
+    if shear < 0. {
+        delta = dst_width - src_width;
+    }
+
+    let mut sheared_image: RgbaImage = ImageBuffer::new(dst_width, src_height);
+
+    for old_y in 0..src_height {
+        let skew = shear * (old_y as f32 + 0.5);
+        let skewi = skew.floor() as i32 + delta as i32;
+        let skewf = skew.fract().abs();
+        let mut oleft = image::Rgba([0_u8, 0_u8, 0_u8, 0_u8]);
+        for old_x in (0..src_width).rev() {
+            let mut pixel = img.get_pixel(old_x, old_y);
+            let mut left = pixel.map(|val| (val as f32 * skewf) as u8);
+            if shear >= 0. {
+                left = pixel.map2(&left, |val1, val2| val1 - val2);
+            }
+            pixel = pixel.map2(&left, |val1, val2| val1 - val2);
+            pixel = pixel.map2(&oleft, |val1, val2| {
+                min(val1 as u16 + val2 as u16, 255_u16) as u8
+            });
+            let new_x = (old_x as i32 + skewi) as u32;
+            sheared_image.put_pixel(new_x, old_y, pixel);
+            oleft = left;
+        }
+        sheared_image.put_pixel(skewi as u32, old_y, oleft);
+    }
+
+    let dynimage = ImageRgba8(sheared_image);
+    let width = dynimage.width();
+    let height = dynimage.height();
+    let raw_pixels = dynimage.into_bytes();
+
+    PhotonImage::new(raw_pixels, width, height)
+}
+
+/// Shear the image along the Y axis.
+/// A sheared PhotonImage is returned.
+///
+/// # Arguments
+/// * `img` - A PhotonImage. See the PhotonImage struct for details.
+/// * `shear` - Amount to shear.
+///
+/// # Example
+///
+/// ```no_run
+/// // For example, to shear an image by 0.5:
+/// use photon_rs::native::open_image;
+/// use photon_rs::transform::sheary;
+///
+/// let img = open_image("img.jpg").expect("File should open");
+/// let sheared_img = sheary(&img, 0.5);
+/// ```
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
+pub fn sheary(photon_img: &PhotonImage, shear: f32) -> PhotonImage {
+    let img = helpers::dyn_image_from_raw(photon_img);
+    let src_width = img.width();
+    let src_height = img.height();
+
+    let maxskew = shear * (src_width as f32);
+    let dst_height = maxskew.floor().abs() as u32 + src_height;
+
+    let mut delta = 0;
+    if shear < 0. {
+        delta = dst_height - src_height;
+    }
+
+    let mut sheared_image: RgbaImage = ImageBuffer::new(src_width, dst_height);
+
+    for old_x in 0..src_width {
+        let skew = shear * (old_x as f32 + 0.5);
+        let skewi = skew.floor() as i32 + delta as i32;
+        let skewf = skew.fract().abs();
+        let mut oleft = image::Rgba([0_u8, 0_u8, 0_u8, 0_u8]);
+        for old_y in (0..src_height).rev() {
+            let mut pixel = img.get_pixel(old_x, old_y);
+            let mut left = pixel.map(|val| (val as f32 * skewf).floor() as u8);
+            if shear >= 0. {
+                left = pixel.map2(&left, |val1, val2| val1 - val2);
+            }
+            pixel = pixel.map2(&left, |val1, val2| val1 - val2);
+            pixel = pixel.map2(&oleft, |val1, val2| {
+                min(val1 as u16 + val2 as u16, 255_u16) as u8
+            });
+            let new_y = (old_y as i32 + skewi) as u32;
+            sheared_image.put_pixel(old_x, new_y, pixel);
+            oleft = left;
+        }
+        sheared_image.put_pixel(old_x, skewi as u32, oleft);
+    }
+
+    let dynimage = ImageRgba8(sheared_image);
+    let width = dynimage.width();
+    let height = dynimage.height();
+    let raw_pixels = dynimage.into_bytes();
+
+    PhotonImage::new(raw_pixels, width, height)
+}
+
 /// Apply uniform padding around the PhotonImage
 /// A padded PhotonImage is returned.
 /// # Arguments
@@ -595,7 +719,6 @@ pub fn padding_bottom(
 
 /// Rotate the PhotonImage on an arbitrary angle
 /// A rotated PhotonImage is returned.
-/// # NOTE: This is a naive implementation. Paeth rotation should be faster.
 ///
 /// # Arguments
 /// * `img` - A PhotonImage. See the PhotonImage struct for details.
@@ -609,15 +732,15 @@ pub fn padding_bottom(
 /// use photon_rs::transform::rotate;
 ///
 /// let img = open_image("img.jpg").expect("File should open");
-/// let rotated_img = rotate(&img, 30);
+/// let rotated_img = rotate(&img, 30.0);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
-pub fn rotate(img: &PhotonImage, angle: i32) -> PhotonImage {
+pub fn rotate(photon_img: &PhotonImage, angle: f32) -> PhotonImage {
     // 390, 750 and 30 degrees represent the same angle. Trim 360.
-    let full_circle_count = angle / 360;
-    let normalized_angle = angle - full_circle_count * 360;
+    let full_circle_count = angle as i32 / 360;
+    let normalized_angle = angle as i32 - full_circle_count * 360;
     if normalized_angle == 0 {
-        return img.clone();
+        return photon_img.clone();
     }
 
     // Handle negative angles. -80 describes the same angle as 360 - 80 = 280.
@@ -627,12 +750,11 @@ pub fn rotate(img: &PhotonImage, angle: i32) -> PhotonImage {
         normalized_angle
     };
 
-    // Count the number of rotations by right angle and apply them via rotate90 if necessary.
     let right_angle_count = positive_angle / 90;
     let mut rgba_img: RgbaImage = ImageBuffer::from_raw(
-        img.get_width(),
-        img.get_height(),
-        img.raw_pixels.to_vec(),
+        photon_img.get_width(),
+        photon_img.get_height(),
+        photon_img.get_raw_pixels().to_vec(),
     )
     .unwrap();
     for _ in 0..right_angle_count {
@@ -644,98 +766,17 @@ pub fn rotate(img: &PhotonImage, angle: i32) -> PhotonImage {
     let src_height = dynimage.height();
     let raw_pixels = dynimage.into_bytes();
 
-    let angle_deg = positive_angle - right_angle_count * 90;
-    if angle_deg == 0 {
-        return PhotonImage {
-            raw_pixels,
-            width: src_width,
-            height: src_height,
-        };
-    }
+    let mut img_out = PhotonImage::new(raw_pixels, src_width, src_height);
 
-    // Convert degrees to radians and calculate sine and cosine parts.
-    let angle_rad = angle_deg as f64 * std::f64::consts::PI / 180.0;
-    let cosine = angle_rad.cos();
-    let sine = angle_rad.sin();
+    let theta = ((angle % 360.) - (right_angle_count * 90) as f32).to_radians();
+    let beta = theta.sin();
+    let alpha = -1. * ((theta / 2.).tan());
 
-    // Move (0, 0) point to (w / 2, h / 2) in order to rotate around the centre.
-    let src_centre_x = src_width / 2;
-    let src_centre_y = src_height / 2;
-    let src_centre_x_f64 = src_centre_x as f64;
-    let src_centre_y_f64 = src_centre_y as f64;
+    img_out = shearx(&img_out, alpha);
+    img_out = sheary(&img_out, beta);
+    img_out = shearx(&img_out, alpha);
 
-    // (-cx, cy) corner will contain the leftmost x after the rotation.
-    let leftmost_pos = -1.0 * src_centre_x_f64 * cosine - src_centre_y_f64 * sine;
-    let leftmost_pos = leftmost_pos.floor() as i32;
-
-    // (cx, -cy) corner will contain the rightmost x after the rotation.
-    let rightmost_pos = src_centre_x_f64 * cosine + src_centre_y_f64 * sine;
-    let rightmost_pos = rightmost_pos.floor() as i32;
-
-    // (-cx, -cy) corner will contain the least y after the rotation.
-    let bottom_pos = -1.0 * src_centre_x_f64 * sine - src_centre_y_f64 * cosine;
-    let bottom_pos = bottom_pos.floor() as i32;
-
-    // (cx, cy) corner will contain the largest y after the rotation.
-    let top_pos = src_centre_x_f64 * sine + src_centre_y_f64 * cosine;
-    let top_pos = top_pos.floor() as i32;
-
-    // Move (0, 0) point to (w / 2, h / 2) target image as well.
-    let dst_width = rightmost_pos - leftmost_pos;
-    let dst_width = dst_width as u32;
-    let dst_height = top_pos - bottom_pos;
-    let dst_height = dst_height as u32;
-    let dst_centre_x = dst_width / 2;
-    let dst_centre_y = dst_height / 2;
-
-    // Allocate destination buffer.
-    let channel_count = 4;
-    let mut result = Vec::<u8>::new();
-    let total_dst_size = (dst_width * dst_height * channel_count)
-        .try_into()
-        .expect("Failed to calculate destination size");
-    result.resize(total_dst_size, 0);
-
-    // Calculate source and target strides.
-    let stride_chan = 1;
-    let src_stride_col = channel_count * stride_chan;
-    let src_stride_row = src_width * src_stride_col;
-    let dst_stride_col = channel_count * stride_chan;
-    let dst_stride_row = dst_width * dst_stride_col;
-
-    for row in 0..src_height {
-        for col in 0..src_width {
-            // Rows and columns are counted from 0 to width and height.
-            // In order to get coordinates relative to (w / 2, h / 2) subtract centre point.
-            let src_x = (col as i32 - src_centre_x as i32) as f64;
-            let src_y = (row as i32 - src_centre_y as i32) as f64;
-
-            // Rotation.
-            let dst_x = src_x * cosine - src_y * sine + dst_centre_x as f64;
-            let dst_x = dst_x.floor() as u32;
-            let dst_x = max(0, dst_x);
-            let dst_x = min(dst_width - 1, dst_x);
-
-            let dst_y = src_x * sine + src_y * cosine + dst_centre_y as f64;
-            let dst_y = dst_y.floor() as u32;
-            let dst_y = max(0, dst_y);
-            let dst_y = min(dst_height - 1, dst_y);
-
-            // Translate coordinates to the buffer offsets.
-            let src_idx = (row * src_stride_row + col * src_stride_col) as usize;
-            let dst_idx = (dst_y * dst_stride_row + dst_x * dst_stride_col) as usize;
-
-            for chan in 0..channel_count {
-                let chan = chan as usize;
-                result[dst_idx + chan] = raw_pixels[src_idx + chan];
-
-                // FIXME apply proper interpolation
-                result[dst_idx + 4 + chan] = raw_pixels[src_idx + chan];
-            }
-        }
-    }
-
-    PhotonImage::new(result, dst_width, dst_height)
+    img_out
 }
 
 fn greatest_common_divisor(left_val: usize, right_val: usize) -> usize {
