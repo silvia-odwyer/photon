@@ -199,6 +199,20 @@ pub fn multiple_offsets(
 }
 
 /// Halftoning effect.
+///
+/// # Arguments
+/// * `img` - A PhotonImage that contains a view into the image.
+/// # Example
+///
+/// ```no_run
+/// // For example:
+/// use photon_rs::effects::halftone;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// halftone(&mut img);
+/// ```
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn halftone(photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
     let (width, height) = img.dimensions();
