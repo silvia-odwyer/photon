@@ -89,6 +89,7 @@ export function offset_red(a: number, b: number): void;
 export function offset_green(a: number, b: number): void;
 export function offset_blue(a: number, b: number): void;
 export function multiple_offsets(a: number, b: number, c: number, d: number): void;
+export function halftone(a: number): void;
 export function primary(a: number): void;
 export function colorize(a: number): void;
 export function solarize(a: number): void;

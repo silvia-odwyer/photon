@@ -2476,6 +2476,28 @@ module.exports.multiple_offsets = function(photon_image, offset, channel_index, 
 };
 
 /**
+* Halftoning effect.
+*
+* # Arguments
+* * `img` - A PhotonImage that contains a view into the image.
+* # Example
+*
+* ```no_run
+* // For example:
+* use photon_rs::effects::halftone;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* halftone(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+module.exports.halftone = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.halftone(photon_image.__wbg_ptr);
+};
+
+/**
 * Reduces an image to the primary colours.
 *
 * # Arguments

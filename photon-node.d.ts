@@ -1903,6 +1903,24 @@ export function offset_blue(img: PhotonImage, offset_amt: number): void;
 */
 export function multiple_offsets(photon_image: PhotonImage, offset: number, channel_index: number, channel_index2: number): void;
 /**
+* Halftoning effect.
+*
+* # Arguments
+* * `img` - A PhotonImage that contains a view into the image.
+* # Example
+*
+* ```no_run
+* // For example:
+* use photon_rs::effects::halftone;
+* use photon_rs::native::open_image;
+*
+* let mut img = open_image("img.jpg").expect("File should open");
+* halftone(&mut img);
+* ```
+* @param {PhotonImage} photon_image
+*/
+export function halftone(photon_image: PhotonImage): void;
+/**
 * Reduces an image to the primary colours.
 *
 * # Arguments
