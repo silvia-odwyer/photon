@@ -60,7 +60,7 @@ pub fn monochrome(img: &mut PhotonImage, r_offset: u32, g_offset: u32, b_offset:
 
         img.raw_pixels[i] = new_r;
         img.raw_pixels[i + 1] = new_g;
-        img.raw_pixels[i + 1] = new_b;
+        img.raw_pixels[i + 2] = new_b;
     }
 }
 
