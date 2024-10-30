@@ -613,3 +613,44 @@ pub fn sobel_vertical(photon_image: &mut PhotonImage) {
         [-1.0_f32, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0],
     );
 }
+
+/// Apply a global Sobel filter to an image
+///
+/// Each pixel is calculated as the magnitude of the horizontal and vertical components of the Sobel filter,
+/// ie if X is the horizontal sobel and Y is the vertical, for each pixel, we calculate sqrt(X^2 + Y^2)
+///
+/// # Arguments
+/// * `img` - A PhotonImage.
+///
+/// # Example
+///
+/// ```no_run
+/// // For example, to apply a global Sobel filter:
+/// use photon_rs::conv::sobel_global;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// sobel_global(&mut img);
+/// ```
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
+pub fn sobel_global(photon_image: &mut PhotonImage) {
+    let mut sobel_x = photon_image.clone();
+    let sobel_y = photon_image;
+
+    sobel_horizontal(&mut sobel_x);
+    sobel_vertical(sobel_y);
+
+    let sob_x_values = sobel_x.get_raw_pixels();
+    let sob_y_values = sobel_y.get_raw_pixels();
+
+    let mut sob_xy_values = vec![];
+
+    for i in 0..(sob_x_values.len()) {
+        let kx = (sob_x_values[i]) as u32;
+        let ky = (sob_y_values[i]) as u32; // this could panic if for some reason the sobel_y doesn't have the same size as the sobel_x
+        let kxy_2 = kx * kx + ky * ky; // u8 * u8 is u16 and we sum two so we need u32
+        sob_xy_values.push((kxy_2 as f64).sqrt() as u8); // f64::max is bigger than u32::max so no problem with conversion
+    }
+
+    sobel_y.raw_pixels = sob_xy_values;
+}
