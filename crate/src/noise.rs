@@ -13,7 +13,7 @@ use wasm_bindgen::prelude::*;
 #[cfg(all(target_family = "wasm", not(target_os = "wasi")))]
 use js_sys::Math::random;
 
-#[cfg(not(all(target_arch = "wasm", not(target_os = "wasi"))))]
+#[cfg(not(all(target_arch = "wasm64", not(target_os = "wasi"))))]
 use rand::Rng;
 
 /// Add randomized noise to an image.
@@ -43,10 +43,10 @@ pub fn add_noise_rand(photon_image: &mut PhotonImage) {
     let mut rng = rand::thread_rng();
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
-        #[cfg(not(all(target_arch = "wasm", not(target_os = "wasi"))))]
+        #[cfg(not(all(target_arch = "wasm64", not(target_os = "wasi"))))]
         let offset = rng.gen_range(0, 150);
 
-        #[cfg(all(target_arch = "wasm", not(target_os = "wasi")))]
+        #[cfg(all(target_arch = "wasm64", not(target_os = "wasi")))]
         let offset = (random() * 150.0) as u8;
 
         let px =
@@ -84,13 +84,13 @@ pub fn add_noise_rand(photon_image: &mut PhotonImage) {
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn pink_noise(photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
-    #[cfg(not(all(target_arch = "wasm", not(target_os = "wasi"))))]
+    #[cfg(not(all(target_arch = "wasm64", not(target_os = "wasi"))))]
     let mut rng = rand::thread_rng();
 
-    #[cfg(not(all(target_arch = "wasm", not(target_os = "wasi"))))]
+    #[cfg(not(all(target_arch = "wasm64", not(target_os = "wasi"))))]
     let mut rng_gen = move || rng.gen();
 
-    #[cfg(all(target_arch = "wasm", not(target_os = "wasi")))]
+    #[cfg(all(target_arch = "wasm64", not(target_os = "wasi")))]
     let rng_gen = || random();
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
