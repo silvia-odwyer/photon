@@ -10,7 +10,7 @@ use crate::PhotonImage;
 #[cfg(feature = "enable_wasm")]
 use wasm_bindgen::prelude::*;
 
-#[cfg(all(target_family = "wasm", not(target_os = "wasi")))]
+#[cfg(all(target_family = "wasm64", not(target_os = "wasi")))]
 use js_sys::Math::random;
 
 #[cfg(not(all(target_arch = "wasm64", not(target_os = "wasi"))))]
@@ -39,7 +39,7 @@ use rand::Rng;
 pub fn add_noise_rand(photon_image: &mut PhotonImage) {
     let mut img = helpers::dyn_image_from_raw(photon_image);
 
-    #[cfg(not(all(target_arch = "wasm", not(target_os = "wasi"))))]
+    #[cfg(not(all(target_arch = "wasm64", not(target_os = "wasi"))))]
     let mut rng = rand::thread_rng();
 
     for (x, y) in ImageIterator::with_dimension(&img.dimensions()) {
