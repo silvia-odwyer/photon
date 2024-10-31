@@ -10,7 +10,7 @@ use crate::PhotonImage;
 #[cfg(feature = "enable_wasm")]
 use wasm_bindgen::prelude::*;
 
-#[cfg(all(target_family = "wasm64", not(target_os = "wasi")))]
+#[cfg(all(target_family = "wasm", not(target_os = "wasi")))]
 use js_sys::Math::random;
 
 #[cfg(not(all(target_arch = "wasm64", not(target_os = "wasi"))))]
