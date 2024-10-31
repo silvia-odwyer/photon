@@ -1178,7 +1178,9 @@ module.exports.solarize_retimg = function(photon_image) {
  *
  * # Arguments
  * * `img` - A PhotonImage that contains a view into the image.
- * * `brightness` - A u8 to add/subtract to the brightness.
+ * * `brightness` - A u8 to add or subtract to the brightness. To increase
+ * the brightness, pass a positive number (up to 255). To decrease the brightness,
+ * pass a negative number instead.
  * # Example
  *
  * ```no_run
@@ -1186,7 +1188,7 @@ module.exports.solarize_retimg = function(photon_image) {
  * use photon_rs::native::open_image;
  *
  * let mut img = open_image("img.jpg").expect("File should open");
- * adjust_brightness(&mut img, 10_u8);
+ * adjust_brightness(&mut img, 10_i16);
  * ```
  * @param {PhotonImage} photon_image
  * @param {number} brightness
