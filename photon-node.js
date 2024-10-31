@@ -188,6 +188,1356 @@ function _assertClass(instance, klass) {
     return instance.ptr;
 }
 /**
+ * Alter a select channel by incrementing or decrementing its value by a constant.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `channel` - The channel you wish to alter, it should be either 0, 1 or 2,
+ * representing R, G, or B respectively. (O=Red, 1=Green, 2=Blue)
+ * * `amount` - The amount to increment/decrement the channel's value by for that pixel.
+ * A positive value will increment/decrement the channel's value, a negative value will decrement the channel's value.
+ *
+ * ## Example
+ *
+ * ```no_run
+ * // For example, to increase the Red channel for all pixels by 10:
+ * use photon_rs::channels::alter_channel;
+ * use photon_rs::native::{open_image};
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * alter_channel(&mut img, 0_usize, 10_i16);
+ * ```
+ *
+ * Adds a constant to a select R, G, or B channel's value.
+ *
+ * ### Decrease a channel's value
+ * // For example, to decrease the Green channel for all pixels by 20:
+ * ```no_run
+ * use photon_rs::channels::alter_channel;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * alter_channel(&mut img, 1_usize, -20_i16);
+ * ```
+ * **Note**: Note the use of a minus symbol when decreasing the channel.
+ * @param {PhotonImage} img
+ * @param {number} channel
+ * @param {number} amt
+ */
+module.exports.alter_channel = function(img, channel, amt) {
+    _assertClass(img, PhotonImage);
+    wasm.alter_channel(img.__wbg_ptr, channel, amt);
+};
+
+/**
+ * Increment or decrement every pixel's Red channel by a constant.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage. See the PhotonImage struct for details.
+ * * `amt` - The amount to increment or decrement the channel's value by for that pixel.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to increase the Red channel for all pixels by 10:
+ * use photon_rs::channels::alter_red_channel;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * alter_red_channel(&mut img, 10_i16);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} amt
+ */
+module.exports.alter_red_channel = function(photon_image, amt) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.alter_red_channel(photon_image.__wbg_ptr, amt);
+};
+
+/**
+ * Increment or decrement every pixel's Green channel by a constant.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `amt` - The amount to increment/decrement the channel's value by for that pixel.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to increase the Green channel for all pixels by 20:
+ * use photon_rs::channels::alter_green_channel;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * alter_green_channel(&mut img, 20_i16);
+ * ```
+ * @param {PhotonImage} img
+ * @param {number} amt
+ */
+module.exports.alter_green_channel = function(img, amt) {
+    _assertClass(img, PhotonImage);
+    wasm.alter_green_channel(img.__wbg_ptr, amt);
+};
+
+/**
+ * Increment or decrement every pixel's Blue channel by a constant.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `amt` - The amount to increment or decrement the channel's value by for that pixel.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to increase the Blue channel for all pixels by 10:
+ * use photon_rs::channels::alter_blue_channel;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * alter_blue_channel(&mut img, 10_i16);
+ * ```
+ * @param {PhotonImage} img
+ * @param {number} amt
+ */
+module.exports.alter_blue_channel = function(img, amt) {
+    _assertClass(img, PhotonImage);
+    wasm.alter_blue_channel(img.__wbg_ptr, amt);
+};
+
+/**
+ * Increment/decrement two channels' values simultaneously by adding an amt to each channel per pixel.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `channel1` - A usize from 0 to 2 that represents either the R, G or B channels.
+ * * `amt1` - The amount to increment/decrement the channel's value by for that pixel.
+ * * `channel2` -A usize from 0 to 2 that represents either the R, G or B channels.
+ * * `amt2` - The amount to increment/decrement the channel's value by for that pixel.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to increase the values of the Red and Blue channels per pixel:
+ * use photon_rs::channels::alter_two_channels;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * alter_two_channels(&mut img, 0_usize, 10_i16, 2_usize, 20_i16);
+ * ```
+ * @param {PhotonImage} img
+ * @param {number} channel1
+ * @param {number} amt1
+ * @param {number} channel2
+ * @param {number} amt2
+ */
+module.exports.alter_two_channels = function(img, channel1, amt1, channel2, amt2) {
+    _assertClass(img, PhotonImage);
+    wasm.alter_two_channels(img.__wbg_ptr, channel1, amt1, channel2, amt2);
+};
+
+/**
+ * Increment all 3 channels' values by adding an amt to each channel per pixel.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `r_amt` - The amount to increment/decrement the Red channel by.
+ * * `g_amt` - The amount to increment/decrement the Green channel by.
+ * * `b_amt` - The amount to increment/decrement the Blue channel by.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to increase the values of the Red channel by 10, the Green channel by 20,
+ * // and the Blue channel by 50:
+ * use photon_rs::channels::alter_channels;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * alter_channels(&mut img, 10_i16, 20_i16, 50_i16);
+ * ```
+ * @param {PhotonImage} img
+ * @param {number} r_amt
+ * @param {number} g_amt
+ * @param {number} b_amt
+ */
+module.exports.alter_channels = function(img, r_amt, g_amt, b_amt) {
+    _assertClass(img, PhotonImage);
+    wasm.alter_channels(img.__wbg_ptr, r_amt, g_amt, b_amt);
+};
+
+/**
+ * Set a certain channel to zero, thus removing the channel's influence in the pixels' final rendered colour.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `channel` - The channel to be removed; must be a usize from 0 to 2, with 0 representing Red, 1 representing Green, and 2 representing Blue.
+ * * `min_filter` - Minimum filter. Value between 0 and 255. Only remove the channel if the current pixel's channel value is less than this minimum filter. To completely
+ * remove the channel, set this value to 255, to leave the channel as is, set to 0, and to set a channel to zero for a pixel whose red value is greater than 50,
+ * then channel would be 0 and min_filter would be 50.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to remove the Red channel with a min_filter of 100:
+ * use photon_rs::channels::remove_channel;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * remove_channel(&mut img, 0_usize, 100_u8);
+ * ```
+ * @param {PhotonImage} img
+ * @param {number} channel
+ * @param {number} min_filter
+ */
+module.exports.remove_channel = function(img, channel, min_filter) {
+    _assertClass(img, PhotonImage);
+    wasm.remove_channel(img.__wbg_ptr, channel, min_filter);
+};
+
+/**
+ * Remove the Red channel's influence in an image.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `min_filter` - Only remove the channel if the current pixel's channel value is less than this minimum filter.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to remove the red channel for red channel pixel values less than 50:
+ * use photon_rs::channels::remove_red_channel;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * remove_red_channel(&mut img, 50_u8);
+ * ```
+ * @param {PhotonImage} img
+ * @param {number} min_filter
+ */
+module.exports.remove_red_channel = function(img, min_filter) {
+    _assertClass(img, PhotonImage);
+    wasm.remove_red_channel(img.__wbg_ptr, min_filter);
+};
+
+/**
+ * Remove the Green channel's influence in an image.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `min_filter` - Only remove the channel if the current pixel's channel value is less than this minimum filter.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to remove the green channel for green channel pixel values less than 50:
+ * use photon_rs::channels::remove_green_channel;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * remove_green_channel(&mut img, 50_u8);
+ * ```
+ * @param {PhotonImage} img
+ * @param {number} min_filter
+ */
+module.exports.remove_green_channel = function(img, min_filter) {
+    _assertClass(img, PhotonImage);
+    wasm.remove_green_channel(img.__wbg_ptr, min_filter);
+};
+
+/**
+ * Remove the Blue channel's influence in an image.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `min_filter` - Only remove the channel if the current pixel's channel value is less than this minimum filter.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to remove the blue channel for blue channel pixel values less than 50:
+ * use photon_rs::channels::remove_blue_channel;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * remove_blue_channel(&mut img, 50_u8);
+ * ```
+ * @param {PhotonImage} img
+ * @param {number} min_filter
+ */
+module.exports.remove_blue_channel = function(img, min_filter) {
+    _assertClass(img, PhotonImage);
+    wasm.remove_blue_channel(img.__wbg_ptr, min_filter);
+};
+
+/**
+ * Swap two channels.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `channel1` - An index from 0 to 2, representing the Red, Green or Blue channels respectively. Red would be represented by 0, Green by 1, and Blue by 2.
+ * * `channel2` - An index from 0 to 2, representing the Red, Green or Blue channels respectively. Same as above.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to swap the values of the Red channel with the values of the Blue channel:
+ * use photon_rs::channels::swap_channels;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * swap_channels(&mut img, 0_usize, 2_usize);
+ * ```
+ * @param {PhotonImage} img
+ * @param {number} channel1
+ * @param {number} channel2
+ */
+module.exports.swap_channels = function(img, channel1, channel2) {
+    _assertClass(img, PhotonImage);
+    wasm.swap_channels(img.__wbg_ptr, channel1, channel2);
+};
+
+/**
+ * Invert RGB value of an image.
+ *
+ * # Arguments
+ * * `photon_image` - A DynamicImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::channels::invert;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * invert(&mut img);
+ * ```
+ * @param {PhotonImage} photon_image
+ */
+module.exports.invert = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.invert(photon_image.__wbg_ptr);
+};
+
+/**
+ * Selective hue rotation.
+ *
+ * Only rotate the hue of a pixel if its RGB values are within a specified range.
+ * This function only rotates a pixel's hue to another  if it is visually similar to the colour specified.
+ * For example, if a user wishes all pixels that are blue to be changed to red, they can selectively specify  only the blue pixels to be changed.
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `ref_color` - The `RGB` value of the reference color (to be compared to)
+ * * `degrees` - The amount of degrees to hue rotate by.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to only rotate the pixels that are of RGB value RGB{20, 40, 60}:
+ * use photon_rs::Rgb;
+ * use photon_rs::channels::selective_hue_rotate;
+ * use photon_rs::native::open_image;
+ *
+ * let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * selective_hue_rotate(&mut img, ref_color, 180_f32);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {Rgb} ref_color
+ * @param {number} degrees
+ */
+module.exports.selective_hue_rotate = function(photon_image, ref_color, degrees) {
+    _assertClass(photon_image, PhotonImage);
+    _assertClass(ref_color, Rgb);
+    var ptr0 = ref_color.__destroy_into_raw();
+    wasm.selective_hue_rotate(photon_image.__wbg_ptr, ptr0, degrees);
+};
+
+/**
+ * Selectively change pixel colours which are similar to the reference colour provided.
+ *
+ * Similarity between two colours is calculated via the CIE76 formula.
+ * Only changes the color of a pixel if its similarity to the reference colour is within the range in the algorithm.
+ * For example, with this function, a user can change the color of all blue pixels by mixing them with red by 10%.
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * * `ref_color` - The `RGB` value of the reference color (to be compared to)
+ * * `new_color` - The `RGB` value of the new color (to be mixed with the matched pixels)
+ * * `fraction` - The amount of mixing the new colour with the matched pixels
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to only change the color of pixels that are similar to the RGB value RGB{200, 120, 30} by mixing RGB{30, 120, 200} with 25%:
+ * use photon_rs::Rgb;
+ * use photon_rs::channels::selective_color_convert;
+ * use photon_rs::native::open_image;
+ *
+ * let ref_color = Rgb::new(200, 120, 30);
+ * let new_color = Rgb::new(30, 120, 200);
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * selective_color_convert(&mut img, ref_color, new_color, 0.25);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {Rgb} ref_color
+ * @param {Rgb} new_color
+ * @param {number} fraction
+ */
+module.exports.selective_color_convert = function(photon_image, ref_color, new_color, fraction) {
+    _assertClass(photon_image, PhotonImage);
+    _assertClass(ref_color, Rgb);
+    var ptr0 = ref_color.__destroy_into_raw();
+    _assertClass(new_color, Rgb);
+    var ptr1 = new_color.__destroy_into_raw();
+    wasm.selective_color_convert(photon_image.__wbg_ptr, ptr0, ptr1, fraction);
+};
+
+/**
+ * Selectively lighten an image.
+ *
+ * Only lighten the hue of a pixel if its colour matches or is similar to the RGB colour specified.
+ * For example, if a user wishes all pixels that are blue to be lightened, they can selectively specify  only the blue pixels to be changed.
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `ref_color` - The `RGB` value of the reference color (to be compared to)
+ * * `amt` - The level from 0 to 1 to lighten the hue by. Increasing by 10% would have an `amt` of 0.1
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to only lighten the pixels that are of or similar to RGB value RGB{20, 40, 60}:
+ * use photon_rs::Rgb;
+ * use photon_rs::channels::selective_lighten;
+ * use photon_rs::native::open_image;
+ *
+ * let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * selective_lighten(&mut img, ref_color, 0.2_f32);
+ * ```
+ * @param {PhotonImage} img
+ * @param {Rgb} ref_color
+ * @param {number} amt
+ */
+module.exports.selective_lighten = function(img, ref_color, amt) {
+    _assertClass(img, PhotonImage);
+    _assertClass(ref_color, Rgb);
+    var ptr0 = ref_color.__destroy_into_raw();
+    wasm.selective_lighten(img.__wbg_ptr, ptr0, amt);
+};
+
+/**
+ * Selectively desaturate pixel colours which are similar to the reference colour provided.
+ *
+ * Similarity between two colours is calculated via the CIE76 formula.
+ * Only desaturates the hue of a pixel if its similarity to the reference colour is within the range in the algorithm.
+ * For example, if a user wishes all pixels that are blue to be desaturated by 0.1, they can selectively specify  only the blue pixels to be changed.
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `ref_color` - The `RGB` value of the reference color (to be compared to)
+ * * `amt` - The amount of desaturate the colour by.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to only desaturate the pixels that are similar to the RGB value RGB{20, 40, 60}:
+ * use photon_rs::Rgb;
+ * use photon_rs::channels::selective_desaturate;
+ * use photon_rs::native::open_image;
+ *
+ * let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * selective_desaturate(&mut img, ref_color, 0.1_f32);
+ * ```
+ * @param {PhotonImage} img
+ * @param {Rgb} ref_color
+ * @param {number} amt
+ */
+module.exports.selective_desaturate = function(img, ref_color, amt) {
+    _assertClass(img, PhotonImage);
+    _assertClass(ref_color, Rgb);
+    var ptr0 = ref_color.__destroy_into_raw();
+    wasm.selective_desaturate(img.__wbg_ptr, ptr0, amt);
+};
+
+/**
+ * Selectively saturate pixel colours which are similar to the reference colour provided.
+ *
+ * Similarity between two colours is calculated via the CIE76 formula.
+ * Only saturates the hue of a pixel if its similarity to the reference colour is within the range in the algorithm.
+ * For example, if a user wishes all pixels that are blue to have an increase in saturation by 10%, they can selectively specify only the blue pixels to be changed.
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `ref_color` - The `RGB` value of the reference color (to be compared to)
+ * * `amt` - The amount of saturate the colour by.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to only increase the saturation of pixels that are similar to the RGB value RGB{20, 40, 60}:
+ * use photon_rs::Rgb;
+ * use photon_rs::channels::selective_saturate;
+ * use photon_rs::native::open_image;
+ *
+ * let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * selective_saturate(&mut img, ref_color, 0.1_f32);
+ * ```
+ * @param {PhotonImage} img
+ * @param {Rgb} ref_color
+ * @param {number} amt
+ */
+module.exports.selective_saturate = function(img, ref_color, amt) {
+    _assertClass(img, PhotonImage);
+    _assertClass(ref_color, Rgb);
+    var ptr0 = ref_color.__destroy_into_raw();
+    wasm.selective_saturate(img.__wbg_ptr, ptr0, amt);
+};
+
+/**
+ * Selectively changes a pixel to greyscale if it is *not* visually similar or close to the colour specified.
+ * Only changes the colour of a pixel if its RGB values are within a specified range.
+ *
+ * (Similarity between two colours is calculated via the CIE76 formula.)
+ * For example, if a user wishes all pixels that are *NOT* blue to be displayed in greyscale, they can selectively specify only the blue pixels to be
+ * kept in the photo.
+ * # Arguments
+ * * `img` - A PhotonImage.
+ * * `ref_color` - The `RGB` value of the reference color (to be compared to)
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to greyscale all pixels that are *not* visually similar to the RGB colour RGB{20, 40, 60}:
+ * use photon_rs::Rgb;
+ * use photon_rs::channels::selective_greyscale;
+ * use photon_rs::native::open_image;
+ *
+ * let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * selective_greyscale(img, ref_color);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {Rgb} ref_color
+ */
+module.exports.selective_greyscale = function(photon_image, ref_color) {
+    _assertClass(photon_image, PhotonImage);
+    var ptr0 = photon_image.__destroy_into_raw();
+    _assertClass(ref_color, Rgb);
+    var ptr1 = ref_color.__destroy_into_raw();
+    wasm.selective_greyscale(ptr0, ptr1);
+};
+
+/**
+ * Add bordered-text to an image.
+ * The only font available as of now is Roboto.
+ * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * * `text` - Text string to be drawn to the image.
+ * * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
+ * * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example to draw the string "Welcome to Photon!" at 10, 10:
+ * use photon_rs::native::open_image;
+ * use photon_rs::text::draw_text_with_border;
+ *
+ * // Open the image. A PhotonImage is returned.
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * draw_text_with_border(&mut img, "Welcome to Photon!", 10_i32, 10_i32);
+ * ```
+ * @param {PhotonImage} photon_img
+ * @param {string} text
+ * @param {number} x
+ * @param {number} y
+ */
+module.exports.draw_text_with_border = function(photon_img, text, x, y) {
+    _assertClass(photon_img, PhotonImage);
+    const ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    wasm.draw_text_with_border(photon_img.__wbg_ptr, ptr0, len0, x, y);
+};
+
+/**
+ * Add text to an image.
+ * The only font available as of now is Roboto.
+ * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * * `text` - Text string to be drawn to the image.
+ * * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
+ * * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example to draw the string "Welcome to Photon!" at 10, 10:
+ * use photon_rs::native::open_image;
+ * use photon_rs::text::draw_text;
+ *
+ * // Open the image. A PhotonImage is returned.
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * draw_text(&mut img, "Welcome to Photon!", 10_i32, 10_i32);
+ * ```
+ * @param {PhotonImage} photon_img
+ * @param {string} text
+ * @param {number} x
+ * @param {number} y
+ */
+module.exports.draw_text = function(photon_img, text, x, y) {
+    _assertClass(photon_img, PhotonImage);
+    const ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    wasm.draw_text(photon_img.__wbg_ptr, ptr0, len0, x, y);
+};
+
+function passArray8ToWasm0(arg, malloc) {
+    const ptr = malloc(arg.length * 1, 1) >>> 0;
+    getUint8ArrayMemory0().set(arg, ptr / 1);
+    WASM_VECTOR_LEN = arg.length;
+    return ptr;
+}
+
+function getArrayU8FromWasm0(ptr, len) {
+    ptr = ptr >>> 0;
+    return getUint8ArrayMemory0().subarray(ptr / 1, ptr / 1 + len);
+}
+/**
+ *! [temp] Check if WASM is supported.
+ */
+module.exports.run = function() {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        wasm.run(retptr);
+        var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+        var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+        if (r1) {
+            throw takeObject(r0);
+        }
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+};
+
+let stack_pointer = 128;
+
+function addBorrowedObject(obj) {
+    if (stack_pointer == 1) throw new Error('out of js stack');
+    heap[--stack_pointer] = obj;
+    return stack_pointer;
+}
+/**
+ * Get the ImageData from a 2D canvas context
+ * @param {HTMLCanvasElement} canvas
+ * @param {CanvasRenderingContext2D} ctx
+ * @returns {ImageData}
+ */
+module.exports.get_image_data = function(canvas, ctx) {
+    try {
+        const ret = wasm.get_image_data(addBorrowedObject(canvas), addBorrowedObject(ctx));
+        return takeObject(ret);
+    } finally {
+        heap[stack_pointer++] = undefined;
+        heap[stack_pointer++] = undefined;
+    }
+};
+
+/**
+ * Place a PhotonImage onto a 2D canvas.
+ * @param {HTMLCanvasElement} canvas
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {PhotonImage} new_image
+ */
+module.exports.putImageData = function(canvas, ctx, new_image) {
+    _assertClass(new_image, PhotonImage);
+    var ptr0 = new_image.__destroy_into_raw();
+    wasm.putImageData(addHeapObject(canvas), addHeapObject(ctx), ptr0);
+};
+
+/**
+ * Convert a HTML5 Canvas Element to a PhotonImage.
+ *
+ * This converts the ImageData found in the canvas context to a PhotonImage,
+ * which can then have effects or filters applied to it.
+ * @param {HTMLCanvasElement} canvas
+ * @param {CanvasRenderingContext2D} ctx
+ * @returns {PhotonImage}
+ */
+module.exports.open_image = function(canvas, ctx) {
+    const ret = wasm.open_image(addHeapObject(canvas), addHeapObject(ctx));
+    return PhotonImage.__wrap(ret);
+};
+
+/**
+ * Convert ImageData to a raw pixel vec of u8s.
+ * @param {ImageData} imgdata
+ * @returns {Uint8Array}
+ */
+module.exports.to_raw_pixels = function(imgdata) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        wasm.to_raw_pixels(retptr, addHeapObject(imgdata));
+        var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+        var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+        var v1 = getArrayU8FromWasm0(r0, r1).slice();
+        wasm.__wbindgen_free(r0, r1 * 1, 1);
+        return v1;
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+};
+
+/**
+ * Convert a base64 string to a PhotonImage.
+ * @param {string} base64
+ * @returns {PhotonImage}
+ */
+module.exports.base64_to_image = function(base64) {
+    const ptr0 = passStringToWasm0(base64, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.base64_to_image(ptr0, len0);
+    return PhotonImage.__wrap(ret);
+};
+
+/**
+ * Convert a base64 string to a Vec of u8s.
+ * @param {string} base64
+ * @returns {Uint8Array}
+ */
+module.exports.base64_to_vec = function(base64) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        const ptr0 = passStringToWasm0(base64, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.base64_to_vec(retptr, ptr0, len0);
+        var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+        var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+        var v2 = getArrayU8FromWasm0(r0, r1).slice();
+        wasm.__wbindgen_free(r0, r1 * 1, 1);
+        return v2;
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+};
+
+/**
+ * Convert a PhotonImage to JS-compatible ImageData.
+ * @param {PhotonImage} photon_image
+ * @returns {ImageData}
+ */
+module.exports.to_image_data = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    var ptr0 = photon_image.__destroy_into_raw();
+    const ret = wasm.to_image_data(ptr0);
+    return takeObject(ret);
+};
+
+/**
+ * Adds an offset to the image by a certain number of pixels.
+ *
+ * This creates an RGB shift effect.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `channel_index`: The index of the channel to increment. 0 for red, 1 for green and 2 for blue.
+ * * `offset` - The offset is added to the pixels in the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to offset pixels by 30 pixels on the red channel:
+ * use photon_rs::effects::offset;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * offset(&mut img, 0_usize, 30_u32);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} channel_index
+ * @param {number} offset
+ */
+module.exports.offset = function(photon_image, channel_index, offset) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.offset(photon_image.__wbg_ptr, channel_index, offset);
+};
+
+/**
+ * Adds an offset to the red channel by a certain number of pixels.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `offset` - The offset you want to move the red channel by.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to add an offset to the red channel by 30 pixels.
+ * use photon_rs::effects::offset_red;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * offset_red(&mut img, 30_u32);
+ * ```
+ * @param {PhotonImage} img
+ * @param {number} offset_amt
+ */
+module.exports.offset_red = function(img, offset_amt) {
+    _assertClass(img, PhotonImage);
+    wasm.offset_red(img.__wbg_ptr, offset_amt);
+};
+
+/**
+ * Adds an offset to the green channel by a certain number of pixels.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `offset` - The offset you want to move the green channel by.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to add an offset to the green channel by 30 pixels.
+ * use photon_rs::effects::offset_green;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * offset_green(&mut img, 30_u32);
+ * ```
+ * @param {PhotonImage} img
+ * @param {number} offset_amt
+ */
+module.exports.offset_green = function(img, offset_amt) {
+    _assertClass(img, PhotonImage);
+    wasm.offset_green(img.__wbg_ptr, offset_amt);
+};
+
+/**
+ * Adds an offset to the blue channel by a certain number of pixels.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `offset_amt` - The offset you want to move the blue channel by.
+ * # Example
+ * // For example, to add an offset to the green channel by 40 pixels.
+ *
+ * ```no_run
+ * use photon_rs::effects::offset_blue;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * offset_blue(&mut img, 40_u32);
+ * ```
+ * @param {PhotonImage} img
+ * @param {number} offset_amt
+ */
+module.exports.offset_blue = function(img, offset_amt) {
+    _assertClass(img, PhotonImage);
+    wasm.offset_blue(img.__wbg_ptr, offset_amt);
+};
+
+/**
+ * Adds multiple offsets to the image by a certain number of pixels (on two channels).
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `offset` - The offset is added to the pixels in the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to add a 30-pixel offset to both the red and blue channels:
+ * use photon_rs::effects::multiple_offsets;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * multiple_offsets(&mut img, 30_u32, 0_usize, 2_usize);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} offset
+ * @param {number} channel_index
+ * @param {number} channel_index2
+ */
+module.exports.multiple_offsets = function(photon_image, offset, channel_index, channel_index2) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.multiple_offsets(photon_image.__wbg_ptr, offset, channel_index, channel_index2);
+};
+
+/**
+ * Halftoning effect.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example:
+ * use photon_rs::effects::halftone;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * halftone(&mut img);
+ * ```
+ * @param {PhotonImage} photon_image
+ */
+module.exports.halftone = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.halftone(photon_image.__wbg_ptr);
+};
+
+/**
+ * Reduces an image to the primary colours.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to add a primary colour effect to an image of type `DynamicImage`:
+ * use photon_rs::effects::primary;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * primary(&mut img);
+ * ```
+ * @param {PhotonImage} img
+ */
+module.exports.primary = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.primary(img.__wbg_ptr);
+};
+
+/**
+ * Colorizes the green channels of the image.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to colorize an image of type `PhotonImage`:
+ * use photon_rs::effects::colorize;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * colorize(&mut img);
+ * ```
+ * @param {PhotonImage} photon_image
+ */
+module.exports.colorize = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.colorize(photon_image.__wbg_ptr);
+};
+
+/**
+ * Applies a solarizing effect to an image.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to colorize an image of type `PhotonImage`:
+ * use photon_rs::effects::solarize;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * solarize(&mut img);
+ * ```
+ * @param {PhotonImage} photon_image
+ */
+module.exports.solarize = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.solarize(photon_image.__wbg_ptr);
+};
+
+/**
+ * Applies a solarizing effect to an image and returns the resulting PhotonImage.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to solarize "retimg" an image of type `PhotonImage`:
+ * use photon_rs::effects::solarize_retimg;
+ * use photon_rs::native::open_image;
+ * use photon_rs::PhotonImage;
+ *
+ * let img = open_image("img.jpg").expect("File should open");
+ * let result: PhotonImage = solarize_retimg(&img);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @returns {PhotonImage}
+ */
+module.exports.solarize_retimg = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    const ret = wasm.solarize_retimg(photon_image.__wbg_ptr);
+    return PhotonImage.__wrap(ret);
+};
+
+/**
+ * Adjust the brightness of an image by a factor.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `brightness` - A u8 to add/subtract to the brightness.
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::effects::adjust_brightness;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * adjust_brightness(&mut img, 10_u8);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} brightness
+ */
+module.exports.adjust_brightness = function(photon_image, brightness) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.adjust_brightness(photon_image.__wbg_ptr, brightness);
+};
+
+/**
+ * Increase the brightness of an image by a constant.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `brightness` - A u8 to add to the brightness.
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::effects::inc_brightness;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * inc_brightness(&mut img, 10_u8);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} brightness
+ */
+module.exports.inc_brightness = function(photon_image, brightness) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.inc_brightness(photon_image.__wbg_ptr, brightness);
+};
+
+/**
+ * Decrease the brightness of an image by a constant.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `brightness` - A u8 to subtract from the brightness. It should be a positive number,
+ * and this value will then be subtracted from the brightness.
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::effects::dec_brightness;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * dec_brightness(&mut img, 10_u8);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} brightness
+ */
+module.exports.dec_brightness = function(photon_image, brightness) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.dec_brightness(photon_image.__wbg_ptr, brightness);
+};
+
+/**
+ * Adjust the contrast of an image by a factor.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage that contains a view into the image.
+ * * `contrast` - An f32 factor used to adjust contrast. Between [-255.0, 255.0]. The algorithm will
+ * clamp results if passed factor is out of range.
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::effects::adjust_contrast;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * adjust_contrast(&mut img, 30_f32);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} contrast
+ */
+module.exports.adjust_contrast = function(photon_image, contrast) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.adjust_contrast(photon_image.__wbg_ptr, contrast);
+};
+
+/**
+ * Tint an image by adding an offset to averaged RGB channel values.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `r_offset` - The amount the R channel should be incremented by.
+ * * `g_offset` - The amount the G channel should be incremented by.
+ * * `b_offset` - The amount the B channel should be incremented by.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to tint an image of type `PhotonImage`:
+ * use photon_rs::effects::tint;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * tint(&mut img, 10_u32, 20_u32, 15_u32);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} r_offset
+ * @param {number} g_offset
+ * @param {number} b_offset
+ */
+module.exports.tint = function(photon_image, r_offset, g_offset, b_offset) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.tint(photon_image.__wbg_ptr, r_offset, g_offset, b_offset);
+};
+
+/**
+ * Horizontal strips. Divide an image into a series of equal-height strips, for an artistic effect.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `num_strips` - The number of strips
+ * # Example
+ *
+ * ```no_run
+ * // For example, to draw horizontal strips on a `PhotonImage`:
+ * use photon_rs::effects::horizontal_strips;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * horizontal_strips(&mut img, 8u8);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} num_strips
+ */
+module.exports.horizontal_strips = function(photon_image, num_strips) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.horizontal_strips(photon_image.__wbg_ptr, num_strips);
+};
+
+/**
+ * Horizontal strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `num_strips` - The numbder of strips
+ * * `color` - Color of strips.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to draw blue horizontal strips on a `PhotonImage`:
+ * use photon_rs::effects::color_horizontal_strips;
+ * use photon_rs::native::open_image;
+ * use photon_rs::Rgb;
+ *
+ * let color = Rgb::new(255u8, 0u8, 0u8);
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * color_horizontal_strips(&mut img, 8u8, color);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} num_strips
+ * @param {Rgb} color
+ */
+module.exports.color_horizontal_strips = function(photon_image, num_strips, color) {
+    _assertClass(photon_image, PhotonImage);
+    _assertClass(color, Rgb);
+    var ptr0 = color.__destroy_into_raw();
+    wasm.color_horizontal_strips(photon_image.__wbg_ptr, num_strips, ptr0);
+};
+
+/**
+ * Vertical strips. Divide an image into a series of equal-width strips, for an artistic effect.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `num_strips` - The numbder of strips
+ * # Example
+ *
+ * ```no_run
+ * // For example, to draw vertical strips on a `PhotonImage`:
+ * use photon_rs::effects::vertical_strips;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * vertical_strips(&mut img, 8u8);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} num_strips
+ */
+module.exports.vertical_strips = function(photon_image, num_strips) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.vertical_strips(photon_image.__wbg_ptr, num_strips);
+};
+
+/**
+ * Vertical strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `num_strips` - The numbder of strips
+ * * `color` - Color of strips.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to draw red vertical strips on a `PhotonImage`:
+ * use photon_rs::effects::color_vertical_strips;
+ * use photon_rs::native::open_image;
+ * use photon_rs::Rgb;
+ *
+ * let color = Rgb::new(255u8, 0u8, 0u8);
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * color_vertical_strips(&mut img, 8u8, color);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} num_strips
+ * @param {Rgb} color
+ */
+module.exports.color_vertical_strips = function(photon_image, num_strips, color) {
+    _assertClass(photon_image, PhotonImage);
+    _assertClass(color, Rgb);
+    var ptr0 = color.__destroy_into_raw();
+    wasm.color_vertical_strips(photon_image.__wbg_ptr, num_strips, ptr0);
+};
+
+/**
+ * Turn an image into an oil painting
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `radius` - Radius of each paint particle
+ * * `intesnity` - How artsy an Image should be
+ * # Example
+ *
+ * ```no_run
+ * // For example, to oil an image of type `PhotonImage`:
+ * use photon_rs::effects::oil;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * oil(&mut img, 4i32, 55.0);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} radius
+ * @param {number} intensity
+ */
+module.exports.oil = function(photon_image, radius, intensity) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.oil(photon_image.__wbg_ptr, radius, intensity);
+};
+
+/**
+ * Turn an image into an frosted glass see through
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to turn an image of type `PhotonImage` into frosted glass see through:
+ * use photon_rs::effects::frosted_glass;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * frosted_glass(&mut img);
+ * ```
+ * @param {PhotonImage} photon_image
+ */
+module.exports.frosted_glass = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.frosted_glass(photon_image.__wbg_ptr);
+};
+
+/**
+ * Pixelize an image.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage that contains a view into the image.
+ * * `pixel_size` - Targeted pixel size of generated image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to turn an image of type `PhotonImage` into a pixelized image with 50 pixels blocks:
+ * use photon_rs::effects::pixelize;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * pixelize(&mut img, 50);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} pixel_size
+ */
+module.exports.pixelize = function(photon_image, pixel_size) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.pixelize(photon_image.__wbg_ptr, pixel_size);
+};
+
+/**
+ * Normalizes an image by remapping its range of pixels values. Only RGB
+ * channels are processed and each channel is stretched to \[0, 255\] range
+ * independently. This process is also known as contrast stretching.
+ * # Arguments
+ * * `photon_image` - A PhotonImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to turn an image of type `PhotonImage` into a normalized image:
+ * use photon_rs::effects::normalize;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * normalize(&mut img);
+ * ```
+ * @param {PhotonImage} photon_image
+ */
+module.exports.normalize = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.normalize(photon_image.__wbg_ptr);
+};
+
+/**
+ * Applies Floyd-Steinberg dithering to an image.
+ * Only RGB channels are processed, alpha remains unchanged.
+ * # Arguments
+ * * `photon_image` - A PhotonImage that contains a view into the image.
+ * * `depth` - bits per channel. Clamped between 1 and 8.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to turn an image of type `PhotonImage` into a dithered image:
+ * use photon_rs::effects::dither;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * let depth = 1;
+ * dither(&mut img, depth);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} depth
+ */
+module.exports.dither = function(photon_image, depth) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.dither(photon_image.__wbg_ptr, depth);
+};
+
+/**
+ * @param {PhotonImage} photon_image
+ * @param {Rgb} color_a
+ * @param {Rgb} color_b
+ */
+module.exports.duotone = function(photon_image, color_a, color_b) {
+    _assertClass(photon_image, PhotonImage);
+    _assertClass(color_a, Rgb);
+    var ptr0 = color_a.__destroy_into_raw();
+    _assertClass(color_b, Rgb);
+    var ptr1 = color_b.__destroy_into_raw();
+    wasm.duotone(photon_image.__wbg_ptr, ptr0, ptr1);
+};
+
+/**
  * Applies gamma correction to an image.
  * # Arguments
  * * `photon_image` - A PhotonImage that contains a view into the image.
@@ -1212,753 +2562,6 @@ module.exports.threshold = function(img, threshold) {
 };
 
 /**
- * Alter a select channel by incrementing or decrementing its value by a constant.
- *
- * # Arguments
- * * `img` - A PhotonImage.
- * * `channel` - The channel you wish to alter, it should be either 0, 1 or 2,
- * representing R, G, or B respectively. (O=Red, 1=Green, 2=Blue)
- * * `amount` - The amount to increment/decrement the channel's value by for that pixel.
- * A positive value will increment/decrement the channel's value, a negative value will decrement the channel's value.
- *
- * ## Example
- *
- * ```no_run
- * // For example, to increase the Red channel for all pixels by 10:
- * use photon_rs::channels::alter_channel;
- * use photon_rs::native::{open_image};
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * alter_channel(&mut img, 0_usize, 10_i16);
- * ```
- *
- * Adds a constant to a select R, G, or B channel's value.
- *
- * ### Decrease a channel's value
- * // For example, to decrease the Green channel for all pixels by 20:
- * ```no_run
- * use photon_rs::channels::alter_channel;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * alter_channel(&mut img, 1_usize, -20_i16);
- * ```
- * **Note**: Note the use of a minus symbol when decreasing the channel.
- * @param {PhotonImage} img
- * @param {number} channel
- * @param {number} amt
- */
-module.exports.alter_channel = function(img, channel, amt) {
-    _assertClass(img, PhotonImage);
-    wasm.alter_channel(img.__wbg_ptr, channel, amt);
-};
-
-/**
- * Increment or decrement every pixel's Red channel by a constant.
- *
- * # Arguments
- * * `img` - A PhotonImage. See the PhotonImage struct for details.
- * * `amt` - The amount to increment or decrement the channel's value by for that pixel.
- *
- * # Example
- *
- * ```no_run
- * // For example, to increase the Red channel for all pixels by 10:
- * use photon_rs::channels::alter_red_channel;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * alter_red_channel(&mut img, 10_i16);
- * ```
- * @param {PhotonImage} photon_image
- * @param {number} amt
- */
-module.exports.alter_red_channel = function(photon_image, amt) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.alter_red_channel(photon_image.__wbg_ptr, amt);
-};
-
-/**
- * Increment or decrement every pixel's Green channel by a constant.
- *
- * # Arguments
- * * `img` - A PhotonImage.
- * * `amt` - The amount to increment/decrement the channel's value by for that pixel.
- *
- * # Example
- *
- * ```no_run
- * // For example, to increase the Green channel for all pixels by 20:
- * use photon_rs::channels::alter_green_channel;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * alter_green_channel(&mut img, 20_i16);
- * ```
- * @param {PhotonImage} img
- * @param {number} amt
- */
-module.exports.alter_green_channel = function(img, amt) {
-    _assertClass(img, PhotonImage);
-    wasm.alter_green_channel(img.__wbg_ptr, amt);
-};
-
-/**
- * Increment or decrement every pixel's Blue channel by a constant.
- *
- * # Arguments
- * * `img` - A PhotonImage.
- * * `amt` - The amount to increment or decrement the channel's value by for that pixel.
- *
- * # Example
- *
- * ```no_run
- * // For example, to increase the Blue channel for all pixels by 10:
- * use photon_rs::channels::alter_blue_channel;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * alter_blue_channel(&mut img, 10_i16);
- * ```
- * @param {PhotonImage} img
- * @param {number} amt
- */
-module.exports.alter_blue_channel = function(img, amt) {
-    _assertClass(img, PhotonImage);
-    wasm.alter_blue_channel(img.__wbg_ptr, amt);
-};
-
-/**
- * Increment/decrement two channels' values simultaneously by adding an amt to each channel per pixel.
- *
- * # Arguments
- * * `img` - A PhotonImage.
- * * `channel1` - A usize from 0 to 2 that represents either the R, G or B channels.
- * * `amt1` - The amount to increment/decrement the channel's value by for that pixel.
- * * `channel2` -A usize from 0 to 2 that represents either the R, G or B channels.
- * * `amt2` - The amount to increment/decrement the channel's value by for that pixel.
- *
- * # Example
- *
- * ```no_run
- * // For example, to increase the values of the Red and Blue channels per pixel:
- * use photon_rs::channels::alter_two_channels;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * alter_two_channels(&mut img, 0_usize, 10_i16, 2_usize, 20_i16);
- * ```
- * @param {PhotonImage} img
- * @param {number} channel1
- * @param {number} amt1
- * @param {number} channel2
- * @param {number} amt2
- */
-module.exports.alter_two_channels = function(img, channel1, amt1, channel2, amt2) {
-    _assertClass(img, PhotonImage);
-    wasm.alter_two_channels(img.__wbg_ptr, channel1, amt1, channel2, amt2);
-};
-
-/**
- * Increment all 3 channels' values by adding an amt to each channel per pixel.
- *
- * # Arguments
- * * `img` - A PhotonImage.
- * * `r_amt` - The amount to increment/decrement the Red channel by.
- * * `g_amt` - The amount to increment/decrement the Green channel by.
- * * `b_amt` - The amount to increment/decrement the Blue channel by.
- *
- * # Example
- *
- * ```no_run
- * // For example, to increase the values of the Red channel by 10, the Green channel by 20,
- * // and the Blue channel by 50:
- * use photon_rs::channels::alter_channels;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * alter_channels(&mut img, 10_i16, 20_i16, 50_i16);
- * ```
- * @param {PhotonImage} img
- * @param {number} r_amt
- * @param {number} g_amt
- * @param {number} b_amt
- */
-module.exports.alter_channels = function(img, r_amt, g_amt, b_amt) {
-    _assertClass(img, PhotonImage);
-    wasm.alter_channels(img.__wbg_ptr, r_amt, g_amt, b_amt);
-};
-
-/**
- * Set a certain channel to zero, thus removing the channel's influence in the pixels' final rendered colour.
- *
- * # Arguments
- * * `img` - A PhotonImage.
- * * `channel` - The channel to be removed; must be a usize from 0 to 2, with 0 representing Red, 1 representing Green, and 2 representing Blue.
- * * `min_filter` - Minimum filter. Value between 0 and 255. Only remove the channel if the current pixel's channel value is less than this minimum filter. To completely
- * remove the channel, set this value to 255, to leave the channel as is, set to 0, and to set a channel to zero for a pixel whose red value is greater than 50,
- * then channel would be 0 and min_filter would be 50.
- *
- * # Example
- *
- * ```no_run
- * // For example, to remove the Red channel with a min_filter of 100:
- * use photon_rs::channels::remove_channel;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * remove_channel(&mut img, 0_usize, 100_u8);
- * ```
- * @param {PhotonImage} img
- * @param {number} channel
- * @param {number} min_filter
- */
-module.exports.remove_channel = function(img, channel, min_filter) {
-    _assertClass(img, PhotonImage);
-    wasm.remove_channel(img.__wbg_ptr, channel, min_filter);
-};
-
-/**
- * Remove the Red channel's influence in an image.
- *
- * # Arguments
- * * `img` - A PhotonImage.
- * * `min_filter` - Only remove the channel if the current pixel's channel value is less than this minimum filter.
- *
- * # Example
- *
- * ```no_run
- * // For example, to remove the red channel for red channel pixel values less than 50:
- * use photon_rs::channels::remove_red_channel;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * remove_red_channel(&mut img, 50_u8);
- * ```
- * @param {PhotonImage} img
- * @param {number} min_filter
- */
-module.exports.remove_red_channel = function(img, min_filter) {
-    _assertClass(img, PhotonImage);
-    wasm.remove_red_channel(img.__wbg_ptr, min_filter);
-};
-
-/**
- * Remove the Green channel's influence in an image.
- *
- * # Arguments
- * * `img` - A PhotonImage.
- * * `min_filter` - Only remove the channel if the current pixel's channel value is less than this minimum filter.
- *
- * # Example
- *
- * ```no_run
- * // For example, to remove the green channel for green channel pixel values less than 50:
- * use photon_rs::channels::remove_green_channel;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * remove_green_channel(&mut img, 50_u8);
- * ```
- * @param {PhotonImage} img
- * @param {number} min_filter
- */
-module.exports.remove_green_channel = function(img, min_filter) {
-    _assertClass(img, PhotonImage);
-    wasm.remove_green_channel(img.__wbg_ptr, min_filter);
-};
-
-/**
- * Remove the Blue channel's influence in an image.
- *
- * # Arguments
- * * `img` - A PhotonImage.
- * * `min_filter` - Only remove the channel if the current pixel's channel value is less than this minimum filter.
- *
- * # Example
- *
- * ```no_run
- * // For example, to remove the blue channel for blue channel pixel values less than 50:
- * use photon_rs::channels::remove_blue_channel;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * remove_blue_channel(&mut img, 50_u8);
- * ```
- * @param {PhotonImage} img
- * @param {number} min_filter
- */
-module.exports.remove_blue_channel = function(img, min_filter) {
-    _assertClass(img, PhotonImage);
-    wasm.remove_blue_channel(img.__wbg_ptr, min_filter);
-};
-
-/**
- * Swap two channels.
- *
- * # Arguments
- * * `img` - A PhotonImage.
- * * `channel1` - An index from 0 to 2, representing the Red, Green or Blue channels respectively. Red would be represented by 0, Green by 1, and Blue by 2.
- * * `channel2` - An index from 0 to 2, representing the Red, Green or Blue channels respectively. Same as above.
- *
- * # Example
- *
- * ```no_run
- * // For example, to swap the values of the Red channel with the values of the Blue channel:
- * use photon_rs::channels::swap_channels;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * swap_channels(&mut img, 0_usize, 2_usize);
- * ```
- * @param {PhotonImage} img
- * @param {number} channel1
- * @param {number} channel2
- */
-module.exports.swap_channels = function(img, channel1, channel2) {
-    _assertClass(img, PhotonImage);
-    wasm.swap_channels(img.__wbg_ptr, channel1, channel2);
-};
-
-/**
- * Invert RGB value of an image.
- *
- * # Arguments
- * * `photon_image` - A DynamicImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * use photon_rs::channels::invert;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * invert(&mut img);
- * ```
- * @param {PhotonImage} photon_image
- */
-module.exports.invert = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.invert(photon_image.__wbg_ptr);
-};
-
-/**
- * Selective hue rotation.
- *
- * Only rotate the hue of a pixel if its RGB values are within a specified range.
- * This function only rotates a pixel's hue to another  if it is visually similar to the colour specified.
- * For example, if a user wishes all pixels that are blue to be changed to red, they can selectively specify  only the blue pixels to be changed.
- * # Arguments
- * * `img` - A PhotonImage.
- * * `ref_color` - The `RGB` value of the reference color (to be compared to)
- * * `degrees` - The amount of degrees to hue rotate by.
- *
- * # Example
- *
- * ```no_run
- * // For example, to only rotate the pixels that are of RGB value RGB{20, 40, 60}:
- * use photon_rs::Rgb;
- * use photon_rs::channels::selective_hue_rotate;
- * use photon_rs::native::open_image;
- *
- * let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
- * let mut img = open_image("img.jpg").expect("File should open");
- * selective_hue_rotate(&mut img, ref_color, 180_f32);
- * ```
- * @param {PhotonImage} photon_image
- * @param {Rgb} ref_color
- * @param {number} degrees
- */
-module.exports.selective_hue_rotate = function(photon_image, ref_color, degrees) {
-    _assertClass(photon_image, PhotonImage);
-    _assertClass(ref_color, Rgb);
-    var ptr0 = ref_color.__destroy_into_raw();
-    wasm.selective_hue_rotate(photon_image.__wbg_ptr, ptr0, degrees);
-};
-
-/**
- * Selectively change pixel colours which are similar to the reference colour provided.
- *
- * Similarity between two colours is calculated via the CIE76 formula.
- * Only changes the color of a pixel if its similarity to the reference colour is within the range in the algorithm.
- * For example, with this function, a user can change the color of all blue pixels by mixing them with red by 10%.
- * # Arguments
- * * `photon_image` - A PhotonImage.
- * * `ref_color` - The `RGB` value of the reference color (to be compared to)
- * * `new_color` - The `RGB` value of the new color (to be mixed with the matched pixels)
- * * `fraction` - The amount of mixing the new colour with the matched pixels
- *
- * # Example
- *
- * ```no_run
- * // For example, to only change the color of pixels that are similar to the RGB value RGB{200, 120, 30} by mixing RGB{30, 120, 200} with 25%:
- * use photon_rs::Rgb;
- * use photon_rs::channels::selective_color_convert;
- * use photon_rs::native::open_image;
- *
- * let ref_color = Rgb::new(200, 120, 30);
- * let new_color = Rgb::new(30, 120, 200);
- * let mut img = open_image("img.jpg").expect("File should open");
- * selective_color_convert(&mut img, ref_color, new_color, 0.25);
- * ```
- * @param {PhotonImage} photon_image
- * @param {Rgb} ref_color
- * @param {Rgb} new_color
- * @param {number} fraction
- */
-module.exports.selective_color_convert = function(photon_image, ref_color, new_color, fraction) {
-    _assertClass(photon_image, PhotonImage);
-    _assertClass(ref_color, Rgb);
-    var ptr0 = ref_color.__destroy_into_raw();
-    _assertClass(new_color, Rgb);
-    var ptr1 = new_color.__destroy_into_raw();
-    wasm.selective_color_convert(photon_image.__wbg_ptr, ptr0, ptr1, fraction);
-};
-
-/**
- * Selectively lighten an image.
- *
- * Only lighten the hue of a pixel if its colour matches or is similar to the RGB colour specified.
- * For example, if a user wishes all pixels that are blue to be lightened, they can selectively specify  only the blue pixels to be changed.
- * # Arguments
- * * `img` - A PhotonImage.
- * * `ref_color` - The `RGB` value of the reference color (to be compared to)
- * * `amt` - The level from 0 to 1 to lighten the hue by. Increasing by 10% would have an `amt` of 0.1
- *
- * # Example
- *
- * ```no_run
- * // For example, to only lighten the pixels that are of or similar to RGB value RGB{20, 40, 60}:
- * use photon_rs::Rgb;
- * use photon_rs::channels::selective_lighten;
- * use photon_rs::native::open_image;
- *
- * let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
- * let mut img = open_image("img.jpg").expect("File should open");
- * selective_lighten(&mut img, ref_color, 0.2_f32);
- * ```
- * @param {PhotonImage} img
- * @param {Rgb} ref_color
- * @param {number} amt
- */
-module.exports.selective_lighten = function(img, ref_color, amt) {
-    _assertClass(img, PhotonImage);
-    _assertClass(ref_color, Rgb);
-    var ptr0 = ref_color.__destroy_into_raw();
-    wasm.selective_lighten(img.__wbg_ptr, ptr0, amt);
-};
-
-/**
- * Selectively desaturate pixel colours which are similar to the reference colour provided.
- *
- * Similarity between two colours is calculated via the CIE76 formula.
- * Only desaturates the hue of a pixel if its similarity to the reference colour is within the range in the algorithm.
- * For example, if a user wishes all pixels that are blue to be desaturated by 0.1, they can selectively specify  only the blue pixels to be changed.
- * # Arguments
- * * `img` - A PhotonImage.
- * * `ref_color` - The `RGB` value of the reference color (to be compared to)
- * * `amt` - The amount of desaturate the colour by.
- *
- * # Example
- *
- * ```no_run
- * // For example, to only desaturate the pixels that are similar to the RGB value RGB{20, 40, 60}:
- * use photon_rs::Rgb;
- * use photon_rs::channels::selective_desaturate;
- * use photon_rs::native::open_image;
- *
- * let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
- * let mut img = open_image("img.jpg").expect("File should open");
- * selective_desaturate(&mut img, ref_color, 0.1_f32);
- * ```
- * @param {PhotonImage} img
- * @param {Rgb} ref_color
- * @param {number} amt
- */
-module.exports.selective_desaturate = function(img, ref_color, amt) {
-    _assertClass(img, PhotonImage);
-    _assertClass(ref_color, Rgb);
-    var ptr0 = ref_color.__destroy_into_raw();
-    wasm.selective_desaturate(img.__wbg_ptr, ptr0, amt);
-};
-
-/**
- * Selectively saturate pixel colours which are similar to the reference colour provided.
- *
- * Similarity between two colours is calculated via the CIE76 formula.
- * Only saturates the hue of a pixel if its similarity to the reference colour is within the range in the algorithm.
- * For example, if a user wishes all pixels that are blue to have an increase in saturation by 10%, they can selectively specify only the blue pixels to be changed.
- * # Arguments
- * * `img` - A PhotonImage.
- * * `ref_color` - The `RGB` value of the reference color (to be compared to)
- * * `amt` - The amount of saturate the colour by.
- *
- * # Example
- *
- * ```no_run
- * // For example, to only increase the saturation of pixels that are similar to the RGB value RGB{20, 40, 60}:
- * use photon_rs::Rgb;
- * use photon_rs::channels::selective_saturate;
- * use photon_rs::native::open_image;
- *
- * let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
- * let mut img = open_image("img.jpg").expect("File should open");
- * selective_saturate(&mut img, ref_color, 0.1_f32);
- * ```
- * @param {PhotonImage} img
- * @param {Rgb} ref_color
- * @param {number} amt
- */
-module.exports.selective_saturate = function(img, ref_color, amt) {
-    _assertClass(img, PhotonImage);
-    _assertClass(ref_color, Rgb);
-    var ptr0 = ref_color.__destroy_into_raw();
-    wasm.selective_saturate(img.__wbg_ptr, ptr0, amt);
-};
-
-/**
- * Selectively changes a pixel to greyscale if it is *not* visually similar or close to the colour specified.
- * Only changes the colour of a pixel if its RGB values are within a specified range.
- *
- * (Similarity between two colours is calculated via the CIE76 formula.)
- * For example, if a user wishes all pixels that are *NOT* blue to be displayed in greyscale, they can selectively specify only the blue pixels to be
- * kept in the photo.
- * # Arguments
- * * `img` - A PhotonImage.
- * * `ref_color` - The `RGB` value of the reference color (to be compared to)
- *
- * # Example
- *
- * ```no_run
- * // For example, to greyscale all pixels that are *not* visually similar to the RGB colour RGB{20, 40, 60}:
- * use photon_rs::Rgb;
- * use photon_rs::channels::selective_greyscale;
- * use photon_rs::native::open_image;
- *
- * let ref_color = Rgb::new(20_u8, 40_u8, 60_u8);
- * let mut img = open_image("img.jpg").expect("File should open");
- * selective_greyscale(img, ref_color);
- * ```
- * @param {PhotonImage} photon_image
- * @param {Rgb} ref_color
- */
-module.exports.selective_greyscale = function(photon_image, ref_color) {
-    _assertClass(photon_image, PhotonImage);
-    var ptr0 = photon_image.__destroy_into_raw();
-    _assertClass(ref_color, Rgb);
-    var ptr1 = ref_color.__destroy_into_raw();
-    wasm.selective_greyscale(ptr0, ptr1);
-};
-
-/**
- * Add bordered-text to an image.
- * The only font available as of now is Roboto.
- * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- * * `text` - Text string to be drawn to the image.
- * * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
- * * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
- *
- * # Example
- *
- * ```no_run
- * // For example to draw the string "Welcome to Photon!" at 10, 10:
- * use photon_rs::native::open_image;
- * use photon_rs::text::draw_text_with_border;
- *
- * // Open the image. A PhotonImage is returned.
- * let mut img = open_image("img.jpg").expect("File should open");
- * draw_text_with_border(&mut img, "Welcome to Photon!", 10_i32, 10_i32);
- * ```
- * @param {PhotonImage} photon_img
- * @param {string} text
- * @param {number} x
- * @param {number} y
- */
-module.exports.draw_text_with_border = function(photon_img, text, x, y) {
-    _assertClass(photon_img, PhotonImage);
-    const ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    wasm.draw_text_with_border(photon_img.__wbg_ptr, ptr0, len0, x, y);
-};
-
-/**
- * Add text to an image.
- * The only font available as of now is Roboto.
- * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- * * `text` - Text string to be drawn to the image.
- * * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
- * * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
- *
- * # Example
- *
- * ```no_run
- * // For example to draw the string "Welcome to Photon!" at 10, 10:
- * use photon_rs::native::open_image;
- * use photon_rs::text::draw_text;
- *
- * // Open the image. A PhotonImage is returned.
- * let mut img = open_image("img.jpg").expect("File should open");
- * draw_text(&mut img, "Welcome to Photon!", 10_i32, 10_i32);
- * ```
- * @param {PhotonImage} photon_img
- * @param {string} text
- * @param {number} x
- * @param {number} y
- */
-module.exports.draw_text = function(photon_img, text, x, y) {
-    _assertClass(photon_img, PhotonImage);
-    const ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    wasm.draw_text(photon_img.__wbg_ptr, ptr0, len0, x, y);
-};
-
-function passArray8ToWasm0(arg, malloc) {
-    const ptr = malloc(arg.length * 1, 1) >>> 0;
-    getUint8ArrayMemory0().set(arg, ptr / 1);
-    WASM_VECTOR_LEN = arg.length;
-    return ptr;
-}
-
-function getArrayU8FromWasm0(ptr, len) {
-    ptr = ptr >>> 0;
-    return getUint8ArrayMemory0().subarray(ptr / 1, ptr / 1 + len);
-}
-/**
- *! [temp] Check if WASM is supported.
- */
-module.exports.run = function() {
-    try {
-        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        wasm.run(retptr);
-        var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
-        var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
-        if (r1) {
-            throw takeObject(r0);
-        }
-    } finally {
-        wasm.__wbindgen_add_to_stack_pointer(16);
-    }
-};
-
-let stack_pointer = 128;
-
-function addBorrowedObject(obj) {
-    if (stack_pointer == 1) throw new Error('out of js stack');
-    heap[--stack_pointer] = obj;
-    return stack_pointer;
-}
-/**
- * Get the ImageData from a 2D canvas context
- * @param {HTMLCanvasElement} canvas
- * @param {CanvasRenderingContext2D} ctx
- * @returns {ImageData}
- */
-module.exports.get_image_data = function(canvas, ctx) {
-    try {
-        const ret = wasm.get_image_data(addBorrowedObject(canvas), addBorrowedObject(ctx));
-        return takeObject(ret);
-    } finally {
-        heap[stack_pointer++] = undefined;
-        heap[stack_pointer++] = undefined;
-    }
-};
-
-/**
- * Place a PhotonImage onto a 2D canvas.
- * @param {HTMLCanvasElement} canvas
- * @param {CanvasRenderingContext2D} ctx
- * @param {PhotonImage} new_image
- */
-module.exports.putImageData = function(canvas, ctx, new_image) {
-    _assertClass(new_image, PhotonImage);
-    var ptr0 = new_image.__destroy_into_raw();
-    wasm.putImageData(addHeapObject(canvas), addHeapObject(ctx), ptr0);
-};
-
-/**
- * Convert a HTML5 Canvas Element to a PhotonImage.
- *
- * This converts the ImageData found in the canvas context to a PhotonImage,
- * which can then have effects or filters applied to it.
- * @param {HTMLCanvasElement} canvas
- * @param {CanvasRenderingContext2D} ctx
- * @returns {PhotonImage}
- */
-module.exports.open_image = function(canvas, ctx) {
-    const ret = wasm.open_image(addHeapObject(canvas), addHeapObject(ctx));
-    return PhotonImage.__wrap(ret);
-};
-
-/**
- * Convert ImageData to a raw pixel vec of u8s.
- * @param {ImageData} imgdata
- * @returns {Uint8Array}
- */
-module.exports.to_raw_pixels = function(imgdata) {
-    try {
-        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        wasm.to_raw_pixels(retptr, addHeapObject(imgdata));
-        var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
-        var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
-        var v1 = getArrayU8FromWasm0(r0, r1).slice();
-        wasm.__wbindgen_free(r0, r1 * 1, 1);
-        return v1;
-    } finally {
-        wasm.__wbindgen_add_to_stack_pointer(16);
-    }
-};
-
-/**
- * Convert a base64 string to a PhotonImage.
- * @param {string} base64
- * @returns {PhotonImage}
- */
-module.exports.base64_to_image = function(base64) {
-    const ptr0 = passStringToWasm0(base64, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.base64_to_image(ptr0, len0);
-    return PhotonImage.__wrap(ret);
-};
-
-/**
- * Convert a base64 string to a Vec of u8s.
- * @param {string} base64
- * @returns {Uint8Array}
- */
-module.exports.base64_to_vec = function(base64) {
-    try {
-        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        const ptr0 = passStringToWasm0(base64, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-        const len0 = WASM_VECTOR_LEN;
-        wasm.base64_to_vec(retptr, ptr0, len0);
-        var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
-        var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
-        var v2 = getArrayU8FromWasm0(r0, r1).slice();
-        wasm.__wbindgen_free(r0, r1 * 1, 1);
-        return v2;
-    } finally {
-        wasm.__wbindgen_add_to_stack_pointer(16);
-    }
-};
-
-/**
- * Convert a PhotonImage to JS-compatible ImageData.
- * @param {PhotonImage} photon_image
- * @returns {ImageData}
- */
-module.exports.to_image_data = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    var ptr0 = photon_image.__destroy_into_raw();
-    const ret = wasm.to_image_data(ptr0);
-    return takeObject(ret);
-};
-
-/**
  * Solarization on the Blue channel.
  *
  * # Arguments
@@ -2788,559 +3391,88 @@ module.exports.resample = function(img, dst_width, dst_height) {
 };
 
 /**
- * Adds an offset to the image by a certain number of pixels.
- *
- * This creates an RGB shift effect.
+ * Add a watermark to an image.
  *
  * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `channel_index`: The index of the channel to increment. 0 for red, 1 for green and 2 for blue.
- * * `offset` - The offset is added to the pixels in the image.
+ * * `img` - A DynamicImage that contains a view into the image.
+ * * `watermark` - The watermark to be placed onto the `img` image.
+ * * `x` - The x coordinate where the watermark's top corner should be positioned.
+ * * `y` - The y coordinate where the watermark's top corner should be positioned.
  * # Example
  *
  * ```no_run
- * // For example, to offset pixels by 30 pixels on the red channel:
- * use photon_rs::effects::offset;
+ * // For example, to add a watermark to an image at x: 30, y: 40:
+ * use photon_rs::multiple::watermark;
  * use photon_rs::native::open_image;
  *
  * let mut img = open_image("img.jpg").expect("File should open");
- * offset(&mut img, 0_usize, 30_u32);
- * ```
- * @param {PhotonImage} photon_image
- * @param {number} channel_index
- * @param {number} offset
- */
-module.exports.offset = function(photon_image, channel_index, offset) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.offset(photon_image.__wbg_ptr, channel_index, offset);
-};
-
-/**
- * Adds an offset to the red channel by a certain number of pixels.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `offset` - The offset you want to move the red channel by.
- * # Example
- *
- * ```no_run
- * // For example, to add an offset to the red channel by 30 pixels.
- * use photon_rs::effects::offset_red;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * offset_red(&mut img, 30_u32);
+ * let water_mark = open_image("watermark.jpg").expect("File should open");
+ * watermark(&mut img, &water_mark, 30_i64, 40_i64);
  * ```
  * @param {PhotonImage} img
- * @param {number} offset_amt
+ * @param {PhotonImage} watermark
+ * @param {bigint} x
+ * @param {bigint} y
  */
-module.exports.offset_red = function(img, offset_amt) {
+module.exports.watermark = function(img, watermark, x, y) {
     _assertClass(img, PhotonImage);
-    wasm.offset_red(img.__wbg_ptr, offset_amt);
+    _assertClass(watermark, PhotonImage);
+    wasm.watermark(img.__wbg_ptr, watermark.__wbg_ptr, x, y);
 };
 
 /**
- * Adds an offset to the green channel by a certain number of pixels.
+ * Blend two images together.
  *
+ * The `blend_mode` (3rd param) determines which blending mode to use; change this for varying effects.
+ * The blend modes available include: `overlay`, `over`, `atop`, `xor`, `plus`, `multiply`, `burn`,
+ * `difference`, `soft_light`, `screen`, `hard_light`, `dodge`, `exclusion`, `lighten`, `darken` (more to come)
+ * NOTE: The first image must be smaller than the second image passed as params.
+ * If the first image were larger than the second, then there would be overflowing pixels which would have no corresponding pixels
+ * in the second image.
  * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `offset` - The offset you want to move the green channel by.
+ * * `img` - A DynamicImage that contains a view into the image.
+ * * `img2` - The 2nd DynamicImage to be blended with the first.
+ * * `blend_mode` - The blending mode to use. See above for complete list of blend modes available.
  * # Example
  *
  * ```no_run
- * // For example, to add an offset to the green channel by 30 pixels.
- * use photon_rs::effects::offset_green;
+ * // For example, to blend two images with the `multiply` blend mode:
+ * use photon_rs::multiple::blend;
  * use photon_rs::native::open_image;
  *
  * let mut img = open_image("img.jpg").expect("File should open");
- * offset_green(&mut img, 30_u32);
- * ```
- * @param {PhotonImage} img
- * @param {number} offset_amt
- */
-module.exports.offset_green = function(img, offset_amt) {
-    _assertClass(img, PhotonImage);
-    wasm.offset_green(img.__wbg_ptr, offset_amt);
-};
-
-/**
- * Adds an offset to the blue channel by a certain number of pixels.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `offset_amt` - The offset you want to move the blue channel by.
- * # Example
- * // For example, to add an offset to the green channel by 40 pixels.
- *
- * ```no_run
- * use photon_rs::effects::offset_blue;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * offset_blue(&mut img, 40_u32);
- * ```
- * @param {PhotonImage} img
- * @param {number} offset_amt
- */
-module.exports.offset_blue = function(img, offset_amt) {
-    _assertClass(img, PhotonImage);
-    wasm.offset_blue(img.__wbg_ptr, offset_amt);
-};
-
-/**
- * Adds multiple offsets to the image by a certain number of pixels (on two channels).
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `offset` - The offset is added to the pixels in the image.
- * # Example
- *
- * ```no_run
- * // For example, to add a 30-pixel offset to both the red and blue channels:
- * use photon_rs::effects::multiple_offsets;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * multiple_offsets(&mut img, 30_u32, 0_usize, 2_usize);
+ * let img2 = open_image("img2.jpg").expect("File should open");
+ * blend(&mut img, &img2, "multiply");
  * ```
  * @param {PhotonImage} photon_image
- * @param {number} offset
- * @param {number} channel_index
- * @param {number} channel_index2
+ * @param {PhotonImage} photon_image2
+ * @param {string} blend_mode
  */
-module.exports.multiple_offsets = function(photon_image, offset, channel_index, channel_index2) {
+module.exports.blend = function(photon_image, photon_image2, blend_mode) {
     _assertClass(photon_image, PhotonImage);
-    wasm.multiple_offsets(photon_image.__wbg_ptr, offset, channel_index, channel_index2);
+    _assertClass(photon_image2, PhotonImage);
+    const ptr0 = passStringToWasm0(blend_mode, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    wasm.blend(photon_image.__wbg_ptr, photon_image2.__wbg_ptr, ptr0, len0);
 };
 
 /**
- * Halftoning effect.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * // For example:
- * use photon_rs::effects::halftone;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * halftone(&mut img);
- * ```
- * @param {PhotonImage} photon_image
- */
-module.exports.halftone = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.halftone(photon_image.__wbg_ptr);
-};
-
-/**
- * Reduces an image to the primary colours.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * // For example, to add a primary colour effect to an image of type `DynamicImage`:
- * use photon_rs::effects::primary;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * primary(&mut img);
- * ```
- * @param {PhotonImage} img
- */
-module.exports.primary = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.primary(img.__wbg_ptr);
-};
-
-/**
- * Colorizes the green channels of the image.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * // For example, to colorize an image of type `PhotonImage`:
- * use photon_rs::effects::colorize;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * colorize(&mut img);
- * ```
- * @param {PhotonImage} photon_image
- */
-module.exports.colorize = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.colorize(photon_image.__wbg_ptr);
-};
-
-/**
- * Applies a solarizing effect to an image.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * // For example, to colorize an image of type `PhotonImage`:
- * use photon_rs::effects::solarize;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * solarize(&mut img);
- * ```
- * @param {PhotonImage} photon_image
- */
-module.exports.solarize = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.solarize(photon_image.__wbg_ptr);
-};
-
-/**
- * Applies a solarizing effect to an image and returns the resulting PhotonImage.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * // For example, to solarize "retimg" an image of type `PhotonImage`:
- * use photon_rs::effects::solarize_retimg;
- * use photon_rs::native::open_image;
- * use photon_rs::PhotonImage;
- *
- * let img = open_image("img.jpg").expect("File should open");
- * let result: PhotonImage = solarize_retimg(&img);
- * ```
- * @param {PhotonImage} photon_image
+ * @param {number} width
+ * @param {number} height
  * @returns {PhotonImage}
  */
-module.exports.solarize_retimg = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    const ret = wasm.solarize_retimg(photon_image.__wbg_ptr);
+module.exports.create_gradient = function(width, height) {
+    const ret = wasm.create_gradient(width, height);
     return PhotonImage.__wrap(ret);
 };
 
 /**
- * Increase the brightness of an image by a factor.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `brightness` - A u8 to add to the brightness.
- * # Example
- *
- * ```no_run
- * use photon_rs::effects::inc_brightness;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * inc_brightness(&mut img, 10_u8);
- * ```
- * @param {PhotonImage} photon_image
- * @param {number} brightness
+ * Apply a gradient to an image.
+ * @param {PhotonImage} image
  */
-module.exports.inc_brightness = function(photon_image, brightness) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.inc_brightness(photon_image.__wbg_ptr, brightness);
-};
-
-/**
- * Adjust the contrast of an image by a factor.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage that contains a view into the image.
- * * `contrast` - An f32 factor used to adjust contrast. Between [-255.0, 255.0]. The algorithm will
- * clamp results if passed factor is out of range.
- * # Example
- *
- * ```no_run
- * use photon_rs::effects::adjust_contrast;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * adjust_contrast(&mut img, 30_f32);
- * ```
- * @param {PhotonImage} photon_image
- * @param {number} contrast
- */
-module.exports.adjust_contrast = function(photon_image, contrast) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.adjust_contrast(photon_image.__wbg_ptr, contrast);
-};
-
-/**
- * Tint an image by adding an offset to averaged RGB channel values.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `r_offset` - The amount the R channel should be incremented by.
- * * `g_offset` - The amount the G channel should be incremented by.
- * * `b_offset` - The amount the B channel should be incremented by.
- * # Example
- *
- * ```no_run
- * // For example, to tint an image of type `PhotonImage`:
- * use photon_rs::effects::tint;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * tint(&mut img, 10_u32, 20_u32, 15_u32);
- * ```
- * @param {PhotonImage} photon_image
- * @param {number} r_offset
- * @param {number} g_offset
- * @param {number} b_offset
- */
-module.exports.tint = function(photon_image, r_offset, g_offset, b_offset) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.tint(photon_image.__wbg_ptr, r_offset, g_offset, b_offset);
-};
-
-/**
- * Horizontal strips. Divide an image into a series of equal-height strips, for an artistic effect.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `num_strips` - The number of strips
- * # Example
- *
- * ```no_run
- * // For example, to draw horizontal strips on a `PhotonImage`:
- * use photon_rs::effects::horizontal_strips;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * horizontal_strips(&mut img, 8u8);
- * ```
- * @param {PhotonImage} photon_image
- * @param {number} num_strips
- */
-module.exports.horizontal_strips = function(photon_image, num_strips) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.horizontal_strips(photon_image.__wbg_ptr, num_strips);
-};
-
-/**
- * Horizontal strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `num_strips` - The numbder of strips
- * * `color` - Color of strips.
- * # Example
- *
- * ```no_run
- * // For example, to draw blue horizontal strips on a `PhotonImage`:
- * use photon_rs::effects::color_horizontal_strips;
- * use photon_rs::native::open_image;
- * use photon_rs::Rgb;
- *
- * let color = Rgb::new(255u8, 0u8, 0u8);
- * let mut img = open_image("img.jpg").expect("File should open");
- * color_horizontal_strips(&mut img, 8u8, color);
- * ```
- * @param {PhotonImage} photon_image
- * @param {number} num_strips
- * @param {Rgb} color
- */
-module.exports.color_horizontal_strips = function(photon_image, num_strips, color) {
-    _assertClass(photon_image, PhotonImage);
-    _assertClass(color, Rgb);
-    var ptr0 = color.__destroy_into_raw();
-    wasm.color_horizontal_strips(photon_image.__wbg_ptr, num_strips, ptr0);
-};
-
-/**
- * Vertical strips. Divide an image into a series of equal-width strips, for an artistic effect.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `num_strips` - The numbder of strips
- * # Example
- *
- * ```no_run
- * // For example, to draw vertical strips on a `PhotonImage`:
- * use photon_rs::effects::vertical_strips;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * vertical_strips(&mut img, 8u8);
- * ```
- * @param {PhotonImage} photon_image
- * @param {number} num_strips
- */
-module.exports.vertical_strips = function(photon_image, num_strips) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.vertical_strips(photon_image.__wbg_ptr, num_strips);
-};
-
-/**
- * Vertical strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `num_strips` - The numbder of strips
- * * `color` - Color of strips.
- * # Example
- *
- * ```no_run
- * // For example, to draw red vertical strips on a `PhotonImage`:
- * use photon_rs::effects::color_vertical_strips;
- * use photon_rs::native::open_image;
- * use photon_rs::Rgb;
- *
- * let color = Rgb::new(255u8, 0u8, 0u8);
- * let mut img = open_image("img.jpg").expect("File should open");
- * color_vertical_strips(&mut img, 8u8, color);
- * ```
- * @param {PhotonImage} photon_image
- * @param {number} num_strips
- * @param {Rgb} color
- */
-module.exports.color_vertical_strips = function(photon_image, num_strips, color) {
-    _assertClass(photon_image, PhotonImage);
-    _assertClass(color, Rgb);
-    var ptr0 = color.__destroy_into_raw();
-    wasm.color_vertical_strips(photon_image.__wbg_ptr, num_strips, ptr0);
-};
-
-/**
- * Turn an image into an oil painting
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `radius` - Radius of each paint particle
- * * `intesnity` - How artsy an Image should be
- * # Example
- *
- * ```no_run
- * // For example, to oil an image of type `PhotonImage`:
- * use photon_rs::effects::oil;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * oil(&mut img, 4i32, 55.0);
- * ```
- * @param {PhotonImage} photon_image
- * @param {number} radius
- * @param {number} intensity
- */
-module.exports.oil = function(photon_image, radius, intensity) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.oil(photon_image.__wbg_ptr, radius, intensity);
-};
-
-/**
- * Turn an image into an frosted glass see through
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * // For example, to turn an image of type `PhotonImage` into frosted glass see through:
- * use photon_rs::effects::frosted_glass;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * frosted_glass(&mut img);
- * ```
- * @param {PhotonImage} photon_image
- */
-module.exports.frosted_glass = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.frosted_glass(photon_image.__wbg_ptr);
-};
-
-/**
- * Pixelize an image.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage that contains a view into the image.
- * * `pixel_size` - Targeted pixel size of generated image.
- * # Example
- *
- * ```no_run
- * // For example, to turn an image of type `PhotonImage` into a pixelized image with 50 pixels blocks:
- * use photon_rs::effects::pixelize;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * pixelize(&mut img, 50);
- * ```
- * @param {PhotonImage} photon_image
- * @param {number} pixel_size
- */
-module.exports.pixelize = function(photon_image, pixel_size) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.pixelize(photon_image.__wbg_ptr, pixel_size);
-};
-
-/**
- * Normalizes an image by remapping its range of pixels values. Only RGB
- * channels are processed and each channel is stretched to \[0, 255\] range
- * independently. This process is also known as contrast stretching.
- * # Arguments
- * * `photon_image` - A PhotonImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * // For example, to turn an image of type `PhotonImage` into a normalized image:
- * use photon_rs::effects::normalize;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * normalize(&mut img);
- * ```
- * @param {PhotonImage} photon_image
- */
-module.exports.normalize = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.normalize(photon_image.__wbg_ptr);
-};
-
-/**
- * Applies Floyd-Steinberg dithering to an image.
- * Only RGB channels are processed, alpha remains unchanged.
- * # Arguments
- * * `photon_image` - A PhotonImage that contains a view into the image.
- * * `depth` - bits per channel. Clamped between 1 and 8.
- * # Example
- *
- * ```no_run
- * // For example, to turn an image of type `PhotonImage` into a dithered image:
- * use photon_rs::effects::dither;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * let depth = 1;
- * dither(&mut img, depth);
- * ```
- * @param {PhotonImage} photon_image
- * @param {number} depth
- */
-module.exports.dither = function(photon_image, depth) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.dither(photon_image.__wbg_ptr, depth);
-};
-
-/**
- * @param {PhotonImage} photon_image
- * @param {Rgb} color_a
- * @param {Rgb} color_b
- */
-module.exports.duotone = function(photon_image, color_a, color_b) {
-    _assertClass(photon_image, PhotonImage);
-    _assertClass(color_a, Rgb);
-    var ptr0 = color_a.__destroy_into_raw();
-    _assertClass(color_b, Rgb);
-    var ptr1 = color_b.__destroy_into_raw();
-    wasm.duotone(photon_image.__wbg_ptr, ptr0, ptr1);
+module.exports.apply_gradient = function(image) {
+    _assertClass(image, PhotonImage);
+    wasm.apply_gradient(image.__wbg_ptr);
 };
 
 /**
@@ -3791,91 +3923,6 @@ module.exports.add_noise_rand = function(photon_image) {
 module.exports.pink_noise = function(photon_image) {
     _assertClass(photon_image, PhotonImage);
     wasm.pink_noise(photon_image.__wbg_ptr);
-};
-
-/**
- * Add a watermark to an image.
- *
- * # Arguments
- * * `img` - A DynamicImage that contains a view into the image.
- * * `watermark` - The watermark to be placed onto the `img` image.
- * * `x` - The x coordinate where the watermark's top corner should be positioned.
- * * `y` - The y coordinate where the watermark's top corner should be positioned.
- * # Example
- *
- * ```no_run
- * // For example, to add a watermark to an image at x: 30, y: 40:
- * use photon_rs::multiple::watermark;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * let water_mark = open_image("watermark.jpg").expect("File should open");
- * watermark(&mut img, &water_mark, 30_i64, 40_i64);
- * ```
- * @param {PhotonImage} img
- * @param {PhotonImage} watermark
- * @param {bigint} x
- * @param {bigint} y
- */
-module.exports.watermark = function(img, watermark, x, y) {
-    _assertClass(img, PhotonImage);
-    _assertClass(watermark, PhotonImage);
-    wasm.watermark(img.__wbg_ptr, watermark.__wbg_ptr, x, y);
-};
-
-/**
- * Blend two images together.
- *
- * The `blend_mode` (3rd param) determines which blending mode to use; change this for varying effects.
- * The blend modes available include: `overlay`, `over`, `atop`, `xor`, `plus`, `multiply`, `burn`,
- * `difference`, `soft_light`, `screen`, `hard_light`, `dodge`, `exclusion`, `lighten`, `darken` (more to come)
- * NOTE: The first image must be smaller than the second image passed as params.
- * If the first image were larger than the second, then there would be overflowing pixels which would have no corresponding pixels
- * in the second image.
- * # Arguments
- * * `img` - A DynamicImage that contains a view into the image.
- * * `img2` - The 2nd DynamicImage to be blended with the first.
- * * `blend_mode` - The blending mode to use. See above for complete list of blend modes available.
- * # Example
- *
- * ```no_run
- * // For example, to blend two images with the `multiply` blend mode:
- * use photon_rs::multiple::blend;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * let img2 = open_image("img2.jpg").expect("File should open");
- * blend(&mut img, &img2, "multiply");
- * ```
- * @param {PhotonImage} photon_image
- * @param {PhotonImage} photon_image2
- * @param {string} blend_mode
- */
-module.exports.blend = function(photon_image, photon_image2, blend_mode) {
-    _assertClass(photon_image, PhotonImage);
-    _assertClass(photon_image2, PhotonImage);
-    const ptr0 = passStringToWasm0(blend_mode, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    wasm.blend(photon_image.__wbg_ptr, photon_image2.__wbg_ptr, ptr0, len0);
-};
-
-/**
- * @param {number} width
- * @param {number} height
- * @returns {PhotonImage}
- */
-module.exports.create_gradient = function(width, height) {
-    const ret = wasm.create_gradient(width, height);
-    return PhotonImage.__wrap(ret);
-};
-
-/**
- * Apply a gradient to an image.
- * @param {PhotonImage} image
- */
-module.exports.apply_gradient = function(image) {
-    _assertClass(image, PhotonImage);
-    wasm.apply_gradient(image.__wbg_ptr);
 };
 
 function isLikeNone(x) {
