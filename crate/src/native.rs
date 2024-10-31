@@ -4,6 +4,7 @@
 use image::DynamicImage::ImageRgba8;
 use image::{GenericImageView, ImageBuffer};
 use std::io;
+use std::path::Path;
 // use wasm_bindgen::prelude::*;
 use crate::PhotonImage;
 use thiserror::Error;
@@ -31,7 +32,10 @@ pub enum Error {
 ///
 /// // ... image editing functionality here ...
 /// ```
-pub fn open_image(img_path: &str) -> Result<PhotonImage, Error> {
+pub fn open_image<P>(img_path: P) -> Result<PhotonImage, Error>
+where
+    P: AsRef<Path>,
+{
     let img = image::open(img_path)?;
 
     let (width, height) = img.dimensions();
@@ -87,7 +91,10 @@ pub fn open_image_from_bytes(buffer: &[u8]) -> Result<PhotonImage, Error> {
 /// // Save the image at the given path.
 /// save_image(img,"manipulated_image.jpg").expect("Save failed");
 /// ```
-pub fn save_image(img: PhotonImage, img_path: &str) -> Result<(), Error> {
+pub fn save_image<P>(img: PhotonImage, img_path: P) -> Result<(), Error>
+where
+    P: AsRef<Path>,
+{
     let raw_pixels = img.raw_pixels;
     let width = img.width;
     let height = img.height;
