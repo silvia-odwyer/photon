@@ -543,7 +543,37 @@ pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
     }
 }
 
-/// Increase the brightness of an image by a factor.
+
+
+
+
+/// Adjust the brightness of an image by a factor.
+///
+/// # Arguments
+/// * `img` - A PhotonImage that contains a view into the image.
+/// * `brightness` - A u8 to add/subtract to the brightness.
+/// # Example
+///
+/// ```no_run
+/// use photon_rs::effects::adjust_brightness;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// adjust_brightness(&mut img, 10_u8);
+/// ```
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
+pub fn adjust_brightness(photon_image: &mut PhotonImage, brightness: i16) {
+
+    if brightness > 0 {
+        inc_brightness(photon_image, brightness as u8)
+    }
+    else {
+        dec_brightness(photon_image, brightness.unsigned_abs() as u8)
+    }
+
+}
+
+/// Increase the brightness of an image by a constant.
 ///
 /// # Arguments
 /// * `img` - A PhotonImage that contains a view into the image.
@@ -560,6 +590,7 @@ pub fn solarize_retimg(photon_image: &PhotonImage) -> PhotonImage {
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
     let end = photon_image.get_raw_pixels().len() - 4;
+
     for i in (0..end).step_by(4) {
         let r_val = photon_image.raw_pixels[i];
         let g_val = photon_image.raw_pixels[i + 1];
@@ -573,7 +604,7 @@ pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
         if g_val <= 255 - brightness {
             photon_image.raw_pixels[i + 1] += brightness;
         } else {
-            photon_image.raw_pixels[1] = 255
+            photon_image.raw_pixels[i + 1] = 255
         }
 
         if b_val <= 255 - brightness {
@@ -583,6 +614,36 @@ pub fn inc_brightness(photon_image: &mut PhotonImage, brightness: u8) {
         }
     }
 }
+
+/// Decrease the brightness of an image by a constant.
+///
+/// # Arguments
+/// * `img` - A PhotonImage that contains a view into the image.
+/// * `brightness` - A u8 to subtract from the brightness. It should be a positive number,
+/// and this value will then be subtracted from the brightness.
+/// # Example
+///
+/// ```no_run
+/// use photon_rs::effects::dec_brightness;
+/// use photon_rs::native::open_image;
+///
+/// let mut img = open_image("img.jpg").expect("File should open");
+/// dec_brightness(&mut img, 10_u8);
+/// ```
+#[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
+pub fn dec_brightness(photon_image: &mut PhotonImage, brightness: u8) {
+    // println!("{} is brightness", brightness);
+
+    let end = photon_image.get_raw_pixels().len() - 4;
+
+    for i in (0..end).step_by(4) {
+        photon_image.raw_pixels[i] = photon_image.raw_pixels[i].saturating_sub(brightness);
+        photon_image.raw_pixels[i + 1] = photon_image.raw_pixels[i + 1].saturating_sub(brightness);
+        photon_image.raw_pixels[i + 2] = photon_image.raw_pixels[i + 2].saturating_sub(brightness);
+  
+    }
+}
+
 
 /// Adjust the contrast of an image by a factor.
 ///
