@@ -1257,6 +1257,7 @@ module.exports.desaturate = function(img) {
  *
  * # Arguments
  * * `photon_image` - A PhotonImage.
+ *
  * # Example
  *
  * ```no_run
@@ -1279,6 +1280,7 @@ module.exports.decompose_min = function(img) {
  *
  * # Arguments
  * * `photon_image` - A PhotonImage.
+ *
  * # Example
  *
  * ```no_run
@@ -1302,6 +1304,7 @@ module.exports.decompose_max = function(img) {
  * # Arguments
  * * `photon_image` - A PhotonImage.
  * * `num_shades` - The number of grayscale shades to be displayed in the image.
+ *
  * # Example
  *
  * ```no_run
@@ -1325,6 +1328,7 @@ module.exports.grayscale_shades = function(photon_image, num_shades) {
  *
  * # Arguments
  * * `photon_image` - A PhotonImage.
+ *
  * # Example
  *
  * ```no_run
@@ -1346,6 +1350,7 @@ module.exports.r_grayscale = function(photon_image) {
  *
  * # Arguments
  * * `photon_image` - A PhotonImage.
+ *
  * # Example
  *
  * ```no_run
@@ -1367,6 +1372,7 @@ module.exports.g_grayscale = function(photon_image) {
  *
  * # Arguments
  * * `photon_image` - A PhotonImage.
+ *
  * # Example
  *
  * ```no_run
@@ -1389,6 +1395,7 @@ module.exports.b_grayscale = function(photon_image) {
  * # Arguments
  * * `photon_image` - A PhotonImage.
  * * `channel` - A usize representing the channel from 0 to 2. O represents the Red channel, 1 the Green channel, and 2 the Blue channel.
+ *
  * # Example
  * To grayscale using only values from the Red channel:
  * ```no_run

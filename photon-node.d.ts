@@ -810,6 +810,7 @@ export function desaturate(img: PhotonImage): void;
  *
  * # Arguments
  * * `photon_image` - A PhotonImage.
+ *
  * # Example
  *
  * ```no_run
@@ -827,6 +828,7 @@ export function decompose_min(img: PhotonImage): void;
  *
  * # Arguments
  * * `photon_image` - A PhotonImage.
+ * 
  * # Example
  *
  * ```no_run
@@ -845,6 +847,7 @@ export function decompose_max(img: PhotonImage): void;
  * # Arguments
  * * `photon_image` - A PhotonImage.
  * * `num_shades` - The number of grayscale shades to be displayed in the image.
+ *
  * # Example
  *
  * ```no_run
@@ -862,6 +865,7 @@ export function grayscale_shades(photon_image: PhotonImage, num_shades: number):
  *
  * # Arguments
  * * `photon_image` - A PhotonImage.
+ *
  * # Example
  *
  * ```no_run
@@ -878,6 +882,7 @@ export function r_grayscale(photon_image: PhotonImage): void;
  *
  * # Arguments
  * * `photon_image` - A PhotonImage.
+ *
  * # Example
  *
  * ```no_run
@@ -894,6 +899,7 @@ export function g_grayscale(photon_image: PhotonImage): void;
  *
  * # Arguments
  * * `photon_image` - A PhotonImage.
+ *
  * # Example
  *
  * ```no_run
@@ -911,6 +917,7 @@ export function b_grayscale(photon_image: PhotonImage): void;
  * # Arguments
  * * `photon_image` - A PhotonImage.
  * * `channel` - A usize representing the channel from 0 to 2. O represents the Red channel, 1 the Green channel, and 2 the Blue channel.
+ *
  * # Example
  * To grayscale using only values from the Red channel:
  * ```no_run
