@@ -828,7 +828,7 @@ export function decompose_min(img: PhotonImage): void;
  *
  * # Arguments
  * * `photon_image` - A PhotonImage.
- * 
+ *
  * # Example
  *
  * ```no_run
