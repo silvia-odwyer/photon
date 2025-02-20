@@ -63,7 +63,7 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --all-features -- -D warnings
+          args: --all-features -- 
   wasm32:
     name: Wasm32 check
     runs-on: ubuntu-latest

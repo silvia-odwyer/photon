@@ -10,7 +10,7 @@ theme:
   features:
     - tabs
   icon:
-    logo:  material/cloud
+    logo: material/library
 
 markdown_extensions:
   - admonition
@@ -30,9 +30,11 @@ nav:
   - Using Photon Natively: using-photon-natively.md
   - Using Photon on The Web: using-photon-web.md
   - Using Photon with Node: using-photon-node.md
+  - Using Photon with Cloudflare Workers: photon-cloudflare-workers.md
   - All Functions: all-effects.md
   - Web Tutorial: web-tutorial.md
   - Native Tutorial: native-tutorial.md
   - Serialize to JSON: serialize-to-json.md
+  - Get A Docs Site Like This: isotope-agents.md
   - Contributing: contributing.md
   - Contact: contact-developer.md

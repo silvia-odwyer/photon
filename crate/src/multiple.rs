@@ -147,12 +147,12 @@ pub fn blend(
 //     source_canvas: HtmlCanvasElement,
 //     overlay_img: HtmlImageElement,
 //     blend_mode: &str) {
-
+//
 //     let ctx = source_canvas
 //     .get_context("2d").unwrap()
 //     .unwrap()
 //     .dyn_into::<web_sys::CanvasRenderingContext2d>().unwrap();
-
+//
 //     ctx.draw_image_with_html_image_element(&overlay_img, 0.0, 0.0);
 //     ctx.set_global_composite_operation(blend_mode);
 //     ctx.set_global_alpha(1.0);

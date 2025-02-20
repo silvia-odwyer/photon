@@ -111,7 +111,6 @@ pub fn sepia(img: &mut PhotonImage) {
 ///
 /// # Arguments
 /// * `photon_image` - A PhotonImage.
-
 /// # Example
 ///
 /// ```no_run
@@ -145,7 +144,6 @@ pub fn grayscale(img: &mut PhotonImage) {
 ///
 /// # Arguments
 /// * `photon_image` - A PhotonImage.
-
 /// # Example
 ///
 /// ```no_run
@@ -177,7 +175,6 @@ pub fn grayscale_human_corrected(img: &mut PhotonImage) {
 ///
 /// # Arguments
 /// * `photon_image` - A PhotonImage.
-
 /// # Example
 ///
 /// ```no_run
@@ -213,7 +210,7 @@ pub fn desaturate(img: &mut PhotonImage) {
 ///
 /// # Arguments
 /// * `photon_image` - A PhotonImage.
-
+///
 /// # Example
 ///
 /// ```no_run
@@ -249,7 +246,7 @@ pub fn decompose_min(img: &mut PhotonImage) {
 ///
 /// # Arguments
 /// * `photon_image` - A PhotonImage.
-
+/// 
 /// # Example
 ///
 /// ```no_run
@@ -286,7 +283,7 @@ pub fn decompose_max(img: &mut PhotonImage) {
 /// # Arguments
 /// * `photon_image` - A PhotonImage.
 /// * `num_shades` - The number of grayscale shades to be displayed in the image.
-
+///
 /// # Example
 ///
 /// ```no_run
@@ -325,7 +322,7 @@ pub fn grayscale_shades(photon_image: &mut PhotonImage, num_shades: u8) {
 ///
 /// # Arguments
 /// * `photon_image` - A PhotonImage.
-
+///
 /// # Example
 ///
 /// ```no_run
@@ -344,7 +341,7 @@ pub fn r_grayscale(photon_image: &mut PhotonImage) {
 ///
 /// # Arguments
 /// * `photon_image` - A PhotonImage.
-
+///
 /// # Example
 ///
 /// ```no_run
@@ -363,7 +360,7 @@ pub fn g_grayscale(photon_image: &mut PhotonImage) {
 ///
 /// # Arguments
 /// * `photon_image` - A PhotonImage.
-
+///
 /// # Example
 ///
 /// ```no_run
@@ -383,7 +380,7 @@ pub fn b_grayscale(photon_image: &mut PhotonImage) {
 /// # Arguments
 /// * `photon_image` - A PhotonImage.
 /// * `channel` - A usize representing the channel from 0 to 2. O represents the Red channel, 1 the Green channel, and 2 the Blue channel.
-
+///
 /// # Example
 /// To grayscale using only values from the Red channel:
 /// ```no_run
