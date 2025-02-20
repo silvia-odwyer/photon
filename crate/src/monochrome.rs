@@ -246,7 +246,7 @@ pub fn decompose_min(img: &mut PhotonImage) {
 ///
 /// # Arguments
 /// * `photon_image` - A PhotonImage.
-/// 
+///
 /// # Example
 ///
 /// ```no_run
