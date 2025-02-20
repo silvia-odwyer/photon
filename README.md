@@ -17,7 +17,7 @@
 
   [![Crates.io](https://img.shields.io/crates/v/photon_rs?logo=rust)](https://crates.io/crates/photon_rs)
   [![License](https://img.shields.io/github/license/silvia-odwyer/photon)](https://github.com/silvia-odwyer/photon/blob/master/LICENSE.md)
-  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/silvia-odwyer/photon.svg?logo=github-actions)](https://github.com/silvia-odwyer/photon/pulls) ![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/silvia_923)
+  [![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/silvia_923)](https://twitter.com/silvia_923 "Follow on X/Twitter")
 </div>
 
 ---
@@ -163,8 +163,7 @@ If you're intending to use Photon with NodeJS, you can install the NodeJS versio
 npm install @silvia-odwyer/photon-node
 ```
 
-<!-- ##### NodeJS Tutorial
-See the [NodeJS tutorial, which shows how to use Photon with NodeJS](). -->
+See the [NodeJS tutorial, which shows how to use Photon with NodeJS](https://silvia-odwyer.github.io/photon/guide/using-photon-node/).
 
 #### Using Cloudflare Workers?
 If you're using Cloudflare Workers, you can install the following library to use Photon with Cloudflare Workers:
@@ -173,7 +172,7 @@ If you're using Cloudflare Workers, you can install the following library to use
 npm install @cf-wasm/photon
 ```
 
-The full usage steps are porivded [here](https://www.npmjs.com/package/@cf-wasm/photon).
+The full usage steps are provided [here](https://www.npmjs.com/package/@cf-wasm/photon).
 
 ## Modules
 Photon contains a series of modules, which include:
@@ -208,7 +207,7 @@ Compare the original image with the outputted image, and you'll see the desired 
 - [Next Image Processing API](https://github.com/yoeven/next-image-processing-api)
 - [Hypetrigger](https://crates.io/crates/hypetrigger)
 
-If you've built a project with Photon, be sure to submit a PR to be considered for inclusion on the list!
+If you've built a project with Photon and would like to be included in the list, just submit a PR.
 
 
 ## Got Questions?
