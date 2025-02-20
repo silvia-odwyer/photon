@@ -9,16 +9,15 @@
 
 <div align="center">
     
-  [![Status](https://img.shields.io/badge/status-active-success.svg?style=for-the-badge&logo=statuspal)]()
-  [![GitHub Issues](https://img.shields.io/github/issues/silvia-odwyer/photon.svg?style=for-the-badge&logo=github)](https://github.com/silvia-odwyer/photon/issues)
-  [![Gitter Chat](https://img.shields.io/gitter/room/silvia-odwyer/photon?color=cyan&logo=Gitter&style=for-the-badge)](https://gitter.im/photonlibrary/community "Gitter chat")
-  [![NPM Monthly Downloads](https://img.shields.io/npm/dm/@silvia-odwyer/photon?logo=npm&style=for-the-badge&color=pink)](https://www.npmjs.com/package/@silvia-odwyer/photon)
-  [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/silvia-odwyer/photon/ci.yml?branch=master&logo=github&style=for-the-badge)](https://github.com/silvia-odwyer/photon/blob/master/.github/workflows/compile_wasm.yaml)
+  [![Status](https://img.shields.io/badge/status-active-success.svg?logo=statuspal)]()
+  [![GitHub Issues](https://img.shields.io/github/issues/silvia-odwyer/photon.svg?logo=github)](https://github.com/silvia-odwyer/photon/issues)
+  [![Gitter Chat](https://img.shields.io/gitter/room/silvia-odwyer/photon?color=cyan&logo=Gitter)](https://gitter.im/photonlibrary/community "Gitter chat")
+  [![NPM Monthly Downloads](https://img.shields.io/npm/dm/@silvia-odwyer/photon?logo=npm&color=pink)](https://www.npmjs.com/package/@silvia-odwyer/photon)
+  [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/silvia-odwyer/photon/ci.yml?branch=master&logo=github&)](https://github.com/silvia-odwyer/photon/blob/master/.github/workflows/compile_wasm.yaml)
 
-  [![Crates.io](https://img.shields.io/crates/v/photon_rs?logo=rust&style=for-the-badge)](https://crates.io/crates/photon_rs)
-  [![License](https://img.shields.io/github/license/silvia-odwyer/photon?style=for-the-badge)](https://github.com/silvia-odwyer/photon/blob/master/LICENSE.md)
-  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/silvia-odwyer/photon.svg?style=for-the-badge&logo=github-actions)](https://github.com/silvia-odwyer/photon/pulls)
-
+  [![Crates.io](https://img.shields.io/crates/v/photon_rs?logo=rust)](https://crates.io/crates/photon_rs)
+  [![License](https://img.shields.io/github/license/silvia-odwyer/photon)](https://github.com/silvia-odwyer/photon/blob/master/LICENSE.md)
+  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/silvia-odwyer/photon.svg?logo=github-actions)](https://github.com/silvia-odwyer/photon/pulls) ![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/silvia_923)
 </div>
 
 ---
@@ -45,8 +44,7 @@ You can run Photon:
 
 ### Features
 - **Fast:** On the web, Photon's high-performance allows it to run at near-native speed. Benchmarks can be found [here](https://github.com/silvia-odwyer/photon/wiki/Benchmarks).
-- **Call with JS:** Want to use Photon on the web or with Node? Using a simple npm package, you're good to go. Get all the benefits of WebAssembly
-with zero-cost abstraction.
+- **Call with JS:** Want to use Photon on the web or with Node? Using a simple npm package, you're good to go. Get all the benefits of WebAssembly with zero-cost abstraction.
 - **Use Natively:** For command-line apps, native photo editing apps, and so forth, Photon's core codebase is in Rust, allowing for cross-platform
 development.
 - **Pure Rust** - Unlike other libraries, 100% of the library's codebase is written in Rust, so security and safety is guaranteed.
@@ -58,7 +56,7 @@ View the [official demo of WASM in action](https://silvia-odwyer.github.io/photo
 
 ![Imgur](https://i.imgur.com/PShSZ6k.png)
 
-### Version 0.3.2 Release [2023 Update]
+### Version 0.3.2 Release
 Version 0.3.2 has been released on Crates.io and NPM, with new features including:
 
 - A duotone filter and preset duotone effects
@@ -175,6 +173,8 @@ If you're using Cloudflare Workers, you can install the following library to use
 npm install @cf-wasm/photon
 ```
 
+The full usage steps are porivded [here](https://www.npmjs.com/package/@cf-wasm/photon).
+
 ## Modules
 Photon contains a series of modules, which include:
 
@@ -199,6 +199,17 @@ cargo run --release
 ```
 
 Compare the original image with the outputted image, and you'll see the desired effect has been applied.
+
+## Latest Updates
+- Halftoning effect for WASM - Added in [PR #184](https://github.com/silvia-odwyer/photon/pull/184)
+- WebP Encoding Support - Added in [PR #164](https://github.com/silvia-odwyer/photon/pull/164)
+
+## Cool Projects Using Photon
+- [Next Image Processing API](https://github.com/yoeven/next-image-processing-api)
+- [Hypetrigger](https://crates.io/crates/hypetrigger)
+
+If you've built a project with Photon, be sure to submit a PR to be considered for inclusion on the list!
+
 
 ## Got Questions?
 If you have further questions about this library, you can ask them on [Gitter](https://gitter.im/photonlibrary/community) or [Spectrum](https://spectrum.chat/photonlibrary), and I'll get back to you!
