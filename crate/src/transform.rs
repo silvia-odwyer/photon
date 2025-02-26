@@ -735,6 +735,7 @@ pub fn padding_bottom(
 /// let rotated_img = rotate(&img, 30.0);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
+#[must_use]
 pub fn rotate(photon_img: &PhotonImage, angle: f32) -> PhotonImage {
     // 390, 750 and 30 degrees represent the same angle. Trim 360.
     let full_circle_count = angle as i32 / 360;
