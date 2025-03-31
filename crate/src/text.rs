@@ -22,6 +22,7 @@ use wasm_bindgen::prelude::*;
 /// * `text` - Text string to be drawn to the image.
 /// * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
 /// * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
+/// * `font_size` - Font size in pixels of the text to be drawn.
 ///
 /// # Example
 ///
@@ -32,7 +33,7 @@ use wasm_bindgen::prelude::*;
 ///
 /// // Open the image. A PhotonImage is returned.
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// draw_text_with_border(&mut img, "Welcome to Photon!", 10_i32, 10_i32);
+/// draw_text_with_border(&mut img, "Welcome to Photon!", 10_i32, 10_i32, 90_f32);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn draw_text_with_border(photon_img: &mut PhotonImage, text: &str, x: i32, y: i32, font_size: f32) {
@@ -91,6 +92,7 @@ pub fn draw_text_with_border(photon_img: &mut PhotonImage, text: &str, x: i32, y
 /// * `text` - Text string to be drawn to the image.
 /// * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
 /// * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
+/// * `font_size` - Font size in pixels of the text to be drawn.
 ///
 /// # Example
 ///
@@ -101,7 +103,7 @@ pub fn draw_text_with_border(photon_img: &mut PhotonImage, text: &str, x: i32, y
 ///
 /// // Open the image. A PhotonImage is returned.
 /// let mut img = open_image("img.jpg").expect("File should open");
-/// draw_text(&mut img, "Welcome to Photon!", 10_i32, 10_i32);
+/// draw_text(&mut img, "Welcome to Photon!", 10_i32, 10_i32, 90_f32);
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn draw_text(photon_img: &mut PhotonImage, text: &str, x: i32, y: i32, font_size: f32) {
