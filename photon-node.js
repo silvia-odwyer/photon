@@ -192,118 +192,11 @@ function debugString(val) {
     return className;
 }
 
-function getArrayU8FromWasm0(ptr, len) {
-    ptr = ptr >>> 0;
-    return getUint8ArrayMemory0().subarray(ptr / 1, ptr / 1 + len);
-}
-
-function takeFromExternrefTable0(idx) {
-    const value = wasm.__wbindgen_export_2.get(idx);
-    wasm.__externref_table_dealloc(idx);
-    return value;
-}
-/**
- * ! [temp] Check if WASM is supported.
- */
-module.exports.run = function() {
-    const ret = wasm.run();
-    if (ret[1]) {
-        throw takeFromExternrefTable0(ret[0]);
-    }
-};
-
-/**
- * Get the ImageData from a 2D canvas context
- * @param {HTMLCanvasElement} canvas
- * @param {CanvasRenderingContext2D} ctx
- * @returns {ImageData}
- */
-module.exports.get_image_data = function(canvas, ctx) {
-    const ret = wasm.get_image_data(canvas, ctx);
-    return ret;
-};
-
 function _assertClass(instance, klass) {
     if (!(instance instanceof klass)) {
         throw new Error(`expected instance of ${klass.name}`);
     }
 }
-/**
- * Place a PhotonImage onto a 2D canvas.
- * @param {HTMLCanvasElement} canvas
- * @param {CanvasRenderingContext2D} ctx
- * @param {PhotonImage} new_image
- */
-module.exports.putImageData = function(canvas, ctx, new_image) {
-    _assertClass(new_image, PhotonImage);
-    var ptr0 = new_image.__destroy_into_raw();
-    wasm.putImageData(canvas, ctx, ptr0);
-};
-
-/**
- * Convert a HTML5 Canvas Element to a PhotonImage.
- *
- * This converts the ImageData found in the canvas context to a PhotonImage,
- * which can then have effects or filters applied to it.
- * @param {HTMLCanvasElement} canvas
- * @param {CanvasRenderingContext2D} ctx
- * @returns {PhotonImage}
- */
-module.exports.open_image = function(canvas, ctx) {
-    const ret = wasm.open_image(canvas, ctx);
-    return PhotonImage.__wrap(ret);
-};
-
-/**
- * Convert ImageData to a raw pixel vec of u8s.
- * @param {ImageData} imgdata
- * @returns {Uint8Array}
- */
-module.exports.to_raw_pixels = function(imgdata) {
-    const ret = wasm.to_raw_pixels(imgdata);
-    var v1 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
-    wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
-    return v1;
-};
-
-/**
- * Convert a base64 string to a PhotonImage.
- * @param {string} base64
- * @returns {PhotonImage}
- */
-module.exports.base64_to_image = function(base64) {
-    const ptr0 = passStringToWasm0(base64, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.base64_to_image(ptr0, len0);
-    return PhotonImage.__wrap(ret);
-};
-
-/**
- * Convert a base64 string to a Vec of u8s.
- * @param {string} base64
- * @returns {Uint8Array}
- */
-module.exports.base64_to_vec = function(base64) {
-    const ptr0 = passStringToWasm0(base64, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.base64_to_vec(ptr0, len0);
-    var v2 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
-    wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
-    return v2;
-};
-
-/**
- * Convert a PhotonImage to JS-compatible ImageData.
- * @param {PhotonImage} photon_image
- * @returns {ImageData}
- */
-module.exports.to_image_data = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    var ptr0 = photon_image.__destroy_into_raw();
-    const ret = wasm.to_image_data(ptr0);
-    return ret;
-};
-
 /**
  * Alter a select channel by incrementing or decrementing its value by a constant.
  *
@@ -840,6 +733,310 @@ module.exports.selective_greyscale = function(photon_image, ref_color) {
     _assertClass(ref_color, Rgb);
     var ptr1 = ref_color.__destroy_into_raw();
     wasm.selective_greyscale(ptr0, ptr1);
+};
+
+/**
+ * Apply a monochrome effect of a certain colour.
+ *
+ * It does so by averaging the R, G, and B values of a pixel, and then adding a
+ * separate value to that averaged value for each channel to produce a tint.
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * * `r_offset` - The value to add to the Red channel per pixel.
+ * * `g_offset` - The value to add to the Green channel per pixel.
+ * * `b_offset` - The value to add to the Blue channel per pixel.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to apply a monochrome effect to an image:
+ * use photon_rs::monochrome::monochrome;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * monochrome(&mut img, 40_u32, 50_u32, 100_u32);
+ * ```
+ * @param {PhotonImage} img
+ * @param {number} r_offset
+ * @param {number} g_offset
+ * @param {number} b_offset
+ */
+module.exports.monochrome = function(img, r_offset, g_offset, b_offset) {
+    _assertClass(img, PhotonImage);
+    wasm.monochrome(img.__wbg_ptr, r_offset, g_offset, b_offset);
+};
+
+/**
+ * Convert an image to sepia.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to sepia an image of type `PhotonImage`:
+ * use photon_rs::monochrome::sepia;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * sepia(&mut img);
+ * ```
+ * @param {PhotonImage} img
+ */
+module.exports.sepia = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.sepia(img.__wbg_ptr);
+};
+
+/**
+ * Convert an image to grayscale using the conventional averaging algorithm.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to convert an image of type `PhotonImage` to grayscale:
+ * use photon_rs::monochrome::grayscale;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * grayscale(&mut img);
+ * ```
+ * @param {PhotonImage} img
+ */
+module.exports.grayscale = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.grayscale(img.__wbg_ptr);
+};
+
+/**
+ * Convert an image to grayscale with a human corrected factor, to account for human vision.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to convert an image of type `PhotonImage` to grayscale with a human corrected factor:
+ * use photon_rs::monochrome::grayscale_human_corrected;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * grayscale_human_corrected(&mut img);
+ * ```
+ * @param {PhotonImage} img
+ */
+module.exports.grayscale_human_corrected = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.grayscale_human_corrected(img.__wbg_ptr);
+};
+
+/**
+ * Desaturate an image by getting the min/max of each pixel's RGB values.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to desaturate an image:
+ * use photon_rs::monochrome::desaturate;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * desaturate(&mut img);
+ * ```
+ * @param {PhotonImage} img
+ */
+module.exports.desaturate = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.desaturate(img.__wbg_ptr);
+};
+
+/**
+ * Uses a min. decomposition algorithm to convert an image to greyscale.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to decompose an image with min decomposition:
+ * use photon_rs::monochrome::decompose_min;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * decompose_min(&mut img);
+ * ```
+ * @param {PhotonImage} img
+ */
+module.exports.decompose_min = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.decompose_min(img.__wbg_ptr);
+};
+
+/**
+ * Uses a max. decomposition algorithm to convert an image to greyscale.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to decompose an image with max decomposition:
+ * use photon_rs::monochrome::decompose_max;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * decompose_max(&mut img);
+ * ```
+ * @param {PhotonImage} img
+ */
+module.exports.decompose_max = function(img) {
+    _assertClass(img, PhotonImage);
+    wasm.decompose_max(img.__wbg_ptr);
+};
+
+/**
+ * Employ only a limited number of gray shades in an image.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * * `num_shades` - The number of grayscale shades to be displayed in the image.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example, to limit an image to four shades of gray only:
+ * use photon_rs::monochrome::grayscale_shades;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * grayscale_shades(&mut img, 4_u8);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} num_shades
+ */
+module.exports.grayscale_shades = function(photon_image, num_shades) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.grayscale_shades(photon_image.__wbg_ptr, num_shades);
+};
+
+/**
+ * Convert an image to grayscale by setting a pixel's 3 RGB values to the Red channel's value.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ *
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::monochrome::r_grayscale;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * r_grayscale(&mut img);
+ * ```
+ * @param {PhotonImage} photon_image
+ */
+module.exports.r_grayscale = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.r_grayscale(photon_image.__wbg_ptr);
+};
+
+/**
+ * Convert an image to grayscale by setting a pixel's 3 RGB values to the Green channel's value.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ *
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::monochrome::g_grayscale;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * g_grayscale(&mut img);
+ * ```
+ * @param {PhotonImage} photon_image
+ */
+module.exports.g_grayscale = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.g_grayscale(photon_image.__wbg_ptr);
+};
+
+/**
+ * Convert an image to grayscale by setting a pixel's 3 RGB values to the Blue channel's value.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ *
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::monochrome::b_grayscale;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * b_grayscale(&mut img);
+ * ```
+ * @param {PhotonImage} photon_image
+ */
+module.exports.b_grayscale = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.b_grayscale(photon_image.__wbg_ptr);
+};
+
+/**
+ * Convert an image to grayscale by setting a pixel's 3 RGB values to a chosen channel's value.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * * `channel` - A usize representing the channel from 0 to 2. O represents the Red channel, 1 the Green channel, and 2 the Blue channel.
+ *
+ * # Example
+ * To grayscale using only values from the Red channel:
+ * ```no_run
+ * use photon_rs::monochrome::single_channel_grayscale;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * single_channel_grayscale(&mut img, 0_usize);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} channel
+ */
+module.exports.single_channel_grayscale = function(photon_image, channel) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.single_channel_grayscale(photon_image.__wbg_ptr, channel);
+};
+
+/**
+ * Threshold an image using a standard thresholding algorithm.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * * `threshold` - The amount the image should be thresholded by from 0 to 255.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to threshold an image of type `PhotonImage`:
+ * use photon_rs::monochrome::threshold;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * threshold(&mut img, 30_u32);
+ * ```
+ * @param {PhotonImage} img
+ * @param {number} threshold
+ */
+module.exports.threshold = function(img, threshold) {
+    _assertClass(img, PhotonImage);
+    wasm.threshold(img.__wbg_ptr, threshold);
 };
 
 /**
@@ -1570,74 +1767,6 @@ module.exports.mix_with_colour = function(photon_image, mix_colour, opacity) {
 };
 
 /**
- * Add bordered-text to an image.
- * The only font available as of now is Roboto.
- * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- * * `text` - Text string to be drawn to the image.
- * * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
- * * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
- *
- * # Example
- *
- * ```no_run
- * // For example to draw the string "Welcome to Photon!" at 10, 10:
- * use photon_rs::native::open_image;
- * use photon_rs::text::draw_text_with_border;
- *
- * // Open the image. A PhotonImage is returned.
- * let mut img = open_image("img.jpg").expect("File should open");
- * draw_text_with_border(&mut img, "Welcome to Photon!", 10_i32, 10_i32);
- * ```
- * @param {PhotonImage} photon_img
- * @param {string} text
- * @param {number} x
- * @param {number} y
- */
-module.exports.draw_text_with_border = function(photon_img, text, x, y) {
-    _assertClass(photon_img, PhotonImage);
-    const ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    wasm.draw_text_with_border(photon_img.__wbg_ptr, ptr0, len0, x, y);
-};
-
-/**
- * Add text to an image.
- * The only font available as of now is Roboto.
- * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- * * `text` - Text string to be drawn to the image.
- * * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
- * * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
- *
- * # Example
- *
- * ```no_run
- * // For example to draw the string "Welcome to Photon!" at 10, 10:
- * use photon_rs::native::open_image;
- * use photon_rs::text::draw_text;
- *
- * // Open the image. A PhotonImage is returned.
- * let mut img = open_image("img.jpg").expect("File should open");
- * draw_text(&mut img, "Welcome to Photon!", 10_i32, 10_i32);
- * ```
- * @param {PhotonImage} photon_img
- * @param {string} text
- * @param {number} x
- * @param {number} y
- */
-module.exports.draw_text = function(photon_img, text, x, y) {
-    _assertClass(photon_img, PhotonImage);
-    const ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    wasm.draw_text(photon_img.__wbg_ptr, ptr0, len0, x, y);
-};
-
-/**
  * Noise reduction.
  *
  * # Arguments
@@ -2033,310 +2162,6 @@ module.exports.sobel_vertical = function(photon_image) {
 module.exports.sobel_global = function(photon_image) {
     _assertClass(photon_image, PhotonImage);
     wasm.sobel_global(photon_image.__wbg_ptr);
-};
-
-/**
- * Apply a monochrome effect of a certain colour.
- *
- * It does so by averaging the R, G, and B values of a pixel, and then adding a
- * separate value to that averaged value for each channel to produce a tint.
- * # Arguments
- * * `photon_image` - A PhotonImage.
- * * `r_offset` - The value to add to the Red channel per pixel.
- * * `g_offset` - The value to add to the Green channel per pixel.
- * * `b_offset` - The value to add to the Blue channel per pixel.
- *
- * # Example
- *
- * ```no_run
- * // For example, to apply a monochrome effect to an image:
- * use photon_rs::monochrome::monochrome;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * monochrome(&mut img, 40_u32, 50_u32, 100_u32);
- * ```
- * @param {PhotonImage} img
- * @param {number} r_offset
- * @param {number} g_offset
- * @param {number} b_offset
- */
-module.exports.monochrome = function(img, r_offset, g_offset, b_offset) {
-    _assertClass(img, PhotonImage);
-    wasm.monochrome(img.__wbg_ptr, r_offset, g_offset, b_offset);
-};
-
-/**
- * Convert an image to sepia.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- * # Example
- *
- * ```no_run
- * // For example, to sepia an image of type `PhotonImage`:
- * use photon_rs::monochrome::sepia;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * sepia(&mut img);
- * ```
- * @param {PhotonImage} img
- */
-module.exports.sepia = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.sepia(img.__wbg_ptr);
-};
-
-/**
- * Convert an image to grayscale using the conventional averaging algorithm.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- * # Example
- *
- * ```no_run
- * // For example, to convert an image of type `PhotonImage` to grayscale:
- * use photon_rs::monochrome::grayscale;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * grayscale(&mut img);
- * ```
- * @param {PhotonImage} img
- */
-module.exports.grayscale = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.grayscale(img.__wbg_ptr);
-};
-
-/**
- * Convert an image to grayscale with a human corrected factor, to account for human vision.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- * # Example
- *
- * ```no_run
- * // For example, to convert an image of type `PhotonImage` to grayscale with a human corrected factor:
- * use photon_rs::monochrome::grayscale_human_corrected;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * grayscale_human_corrected(&mut img);
- * ```
- * @param {PhotonImage} img
- */
-module.exports.grayscale_human_corrected = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.grayscale_human_corrected(img.__wbg_ptr);
-};
-
-/**
- * Desaturate an image by getting the min/max of each pixel's RGB values.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- * # Example
- *
- * ```no_run
- * // For example, to desaturate an image:
- * use photon_rs::monochrome::desaturate;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * desaturate(&mut img);
- * ```
- * @param {PhotonImage} img
- */
-module.exports.desaturate = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.desaturate(img.__wbg_ptr);
-};
-
-/**
- * Uses a min. decomposition algorithm to convert an image to greyscale.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- *
- * # Example
- *
- * ```no_run
- * // For example, to decompose an image with min decomposition:
- * use photon_rs::monochrome::decompose_min;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * decompose_min(&mut img);
- * ```
- * @param {PhotonImage} img
- */
-module.exports.decompose_min = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.decompose_min(img.__wbg_ptr);
-};
-
-/**
- * Uses a max. decomposition algorithm to convert an image to greyscale.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- *
- * # Example
- *
- * ```no_run
- * // For example, to decompose an image with max decomposition:
- * use photon_rs::monochrome::decompose_max;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * decompose_max(&mut img);
- * ```
- * @param {PhotonImage} img
- */
-module.exports.decompose_max = function(img) {
-    _assertClass(img, PhotonImage);
-    wasm.decompose_max(img.__wbg_ptr);
-};
-
-/**
- * Employ only a limited number of gray shades in an image.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- * * `num_shades` - The number of grayscale shades to be displayed in the image.
- *
- * # Example
- *
- * ```no_run
- * // For example, to limit an image to four shades of gray only:
- * use photon_rs::monochrome::grayscale_shades;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * grayscale_shades(&mut img, 4_u8);
- * ```
- * @param {PhotonImage} photon_image
- * @param {number} num_shades
- */
-module.exports.grayscale_shades = function(photon_image, num_shades) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.grayscale_shades(photon_image.__wbg_ptr, num_shades);
-};
-
-/**
- * Convert an image to grayscale by setting a pixel's 3 RGB values to the Red channel's value.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- *
- * # Example
- *
- * ```no_run
- * use photon_rs::monochrome::r_grayscale;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * r_grayscale(&mut img);
- * ```
- * @param {PhotonImage} photon_image
- */
-module.exports.r_grayscale = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.r_grayscale(photon_image.__wbg_ptr);
-};
-
-/**
- * Convert an image to grayscale by setting a pixel's 3 RGB values to the Green channel's value.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- *
- * # Example
- *
- * ```no_run
- * use photon_rs::monochrome::g_grayscale;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * g_grayscale(&mut img);
- * ```
- * @param {PhotonImage} photon_image
- */
-module.exports.g_grayscale = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.g_grayscale(photon_image.__wbg_ptr);
-};
-
-/**
- * Convert an image to grayscale by setting a pixel's 3 RGB values to the Blue channel's value.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- *
- * # Example
- *
- * ```no_run
- * use photon_rs::monochrome::b_grayscale;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * b_grayscale(&mut img);
- * ```
- * @param {PhotonImage} photon_image
- */
-module.exports.b_grayscale = function(photon_image) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.b_grayscale(photon_image.__wbg_ptr);
-};
-
-/**
- * Convert an image to grayscale by setting a pixel's 3 RGB values to a chosen channel's value.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- * * `channel` - A usize representing the channel from 0 to 2. O represents the Red channel, 1 the Green channel, and 2 the Blue channel.
- *
- * # Example
- * To grayscale using only values from the Red channel:
- * ```no_run
- * use photon_rs::monochrome::single_channel_grayscale;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * single_channel_grayscale(&mut img, 0_usize);
- * ```
- * @param {PhotonImage} photon_image
- * @param {number} channel
- */
-module.exports.single_channel_grayscale = function(photon_image, channel) {
-    _assertClass(photon_image, PhotonImage);
-    wasm.single_channel_grayscale(photon_image.__wbg_ptr, channel);
-};
-
-/**
- * Threshold an image using a standard thresholding algorithm.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage.
- * * `threshold` - The amount the image should be thresholded by from 0 to 255.
- * # Example
- *
- * ```no_run
- * // For example, to threshold an image of type `PhotonImage`:
- * use photon_rs::monochrome::threshold;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * threshold(&mut img, 30_u32);
- * ```
- * @param {PhotonImage} img
- * @param {number} threshold
- */
-module.exports.threshold = function(img, threshold) {
-    _assertClass(img, PhotonImage);
-    wasm.threshold(img.__wbg_ptr, threshold);
 };
 
 /**
@@ -2994,6 +2819,113 @@ module.exports.duotone = function(photon_image, color_a, color_b) {
     _assertClass(color_b, Rgb);
     var ptr1 = color_b.__destroy_into_raw();
     wasm.duotone(photon_image.__wbg_ptr, ptr0, ptr1);
+};
+
+function getArrayU8FromWasm0(ptr, len) {
+    ptr = ptr >>> 0;
+    return getUint8ArrayMemory0().subarray(ptr / 1, ptr / 1 + len);
+}
+
+function takeFromExternrefTable0(idx) {
+    const value = wasm.__wbindgen_export_2.get(idx);
+    wasm.__externref_table_dealloc(idx);
+    return value;
+}
+/**
+ * ! [temp] Check if WASM is supported.
+ */
+module.exports.run = function() {
+    const ret = wasm.run();
+    if (ret[1]) {
+        throw takeFromExternrefTable0(ret[0]);
+    }
+};
+
+/**
+ * Get the ImageData from a 2D canvas context
+ * @param {HTMLCanvasElement} canvas
+ * @param {CanvasRenderingContext2D} ctx
+ * @returns {ImageData}
+ */
+module.exports.get_image_data = function(canvas, ctx) {
+    const ret = wasm.get_image_data(canvas, ctx);
+    return ret;
+};
+
+/**
+ * Place a PhotonImage onto a 2D canvas.
+ * @param {HTMLCanvasElement} canvas
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {PhotonImage} new_image
+ */
+module.exports.putImageData = function(canvas, ctx, new_image) {
+    _assertClass(new_image, PhotonImage);
+    var ptr0 = new_image.__destroy_into_raw();
+    wasm.putImageData(canvas, ctx, ptr0);
+};
+
+/**
+ * Convert a HTML5 Canvas Element to a PhotonImage.
+ *
+ * This converts the ImageData found in the canvas context to a PhotonImage,
+ * which can then have effects or filters applied to it.
+ * @param {HTMLCanvasElement} canvas
+ * @param {CanvasRenderingContext2D} ctx
+ * @returns {PhotonImage}
+ */
+module.exports.open_image = function(canvas, ctx) {
+    const ret = wasm.open_image(canvas, ctx);
+    return PhotonImage.__wrap(ret);
+};
+
+/**
+ * Convert ImageData to a raw pixel vec of u8s.
+ * @param {ImageData} imgdata
+ * @returns {Uint8Array}
+ */
+module.exports.to_raw_pixels = function(imgdata) {
+    const ret = wasm.to_raw_pixels(imgdata);
+    var v1 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
+    wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+    return v1;
+};
+
+/**
+ * Convert a base64 string to a PhotonImage.
+ * @param {string} base64
+ * @returns {PhotonImage}
+ */
+module.exports.base64_to_image = function(base64) {
+    const ptr0 = passStringToWasm0(base64, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.base64_to_image(ptr0, len0);
+    return PhotonImage.__wrap(ret);
+};
+
+/**
+ * Convert a base64 string to a Vec of u8s.
+ * @param {string} base64
+ * @returns {Uint8Array}
+ */
+module.exports.base64_to_vec = function(base64) {
+    const ptr0 = passStringToWasm0(base64, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.base64_to_vec(ptr0, len0);
+    var v2 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
+    wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+    return v2;
+};
+
+/**
+ * Convert a PhotonImage to JS-compatible ImageData.
+ * @param {PhotonImage} photon_image
+ * @returns {ImageData}
+ */
+module.exports.to_image_data = function(photon_image) {
+    _assertClass(photon_image, PhotonImage);
+    var ptr0 = photon_image.__destroy_into_raw();
+    const ret = wasm.to_image_data(ptr0);
+    return ret;
 };
 
 /**
@@ -3908,6 +3840,78 @@ module.exports.resample = function(img, dst_width, dst_height) {
     _assertClass(img, PhotonImage);
     const ret = wasm.resample(img.__wbg_ptr, dst_width, dst_height);
     return PhotonImage.__wrap(ret);
+};
+
+/**
+ * Add bordered-text to an image.
+ * The only font available as of now is Roboto.
+ * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * * `text` - Text string to be drawn to the image.
+ * * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
+ * * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
+ * * `font_size` - Font size in pixels of the text to be drawn.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example to draw the string "Welcome to Photon!" at 10, 10:
+ * use photon_rs::native::open_image;
+ * use photon_rs::text::draw_text_with_border;
+ *
+ * // Open the image. A PhotonImage is returned.
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * draw_text_with_border(&mut img, "Welcome to Photon!", 10_i32, 10_i32, 90_f32);
+ * ```
+ * @param {PhotonImage} photon_img
+ * @param {string} text
+ * @param {number} x
+ * @param {number} y
+ * @param {number} font_size
+ */
+module.exports.draw_text_with_border = function(photon_img, text, x, y, font_size) {
+    _assertClass(photon_img, PhotonImage);
+    const ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    wasm.draw_text_with_border(photon_img.__wbg_ptr, ptr0, len0, x, y, font_size);
+};
+
+/**
+ * Add text to an image.
+ * The only font available as of now is Roboto.
+ * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * * `text` - Text string to be drawn to the image.
+ * * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
+ * * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
+ * * `font_size` - Font size in pixels of the text to be drawn.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example to draw the string "Welcome to Photon!" at 10, 10:
+ * use photon_rs::native::open_image;
+ * use photon_rs::text::draw_text;
+ *
+ * // Open the image. A PhotonImage is returned.
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * draw_text(&mut img, "Welcome to Photon!", 10_i32, 10_i32, 90_f32);
+ * ```
+ * @param {PhotonImage} photon_img
+ * @param {string} text
+ * @param {number} x
+ * @param {number} y
+ * @param {number} font_size
+ */
+module.exports.draw_text = function(photon_img, text, x, y, font_size) {
+    _assertClass(photon_img, PhotonImage);
+    const ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    wasm.draw_text(photon_img.__wbg_ptr, ptr0, len0, x, y, font_size);
 };
 
 /**
