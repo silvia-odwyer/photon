@@ -1544,447 +1544,6 @@ export function add_noise_rand(photon_image: PhotonImage): void;
  */
 export function pink_noise(photon_image: PhotonImage): void;
 /**
- * Adds an offset to the image by a certain number of pixels.
- *
- * This creates an RGB shift effect.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `channel_index`: The index of the channel to increment. 0 for red, 1 for green and 2 for blue.
- * * `offset` - The offset is added to the pixels in the image.
- * # Example
- *
- * ```no_run
- * // For example, to offset pixels by 30 pixels on the red channel:
- * use photon_rs::effects::offset;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * offset(&mut img, 0_usize, 30_u32);
- * ```
- */
-export function offset(photon_image: PhotonImage, channel_index: number, offset: number): void;
-/**
- * Adds an offset to the red channel by a certain number of pixels.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `offset` - The offset you want to move the red channel by.
- * # Example
- *
- * ```no_run
- * // For example, to add an offset to the red channel by 30 pixels.
- * use photon_rs::effects::offset_red;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * offset_red(&mut img, 30_u32);
- * ```
- */
-export function offset_red(img: PhotonImage, offset_amt: number): void;
-/**
- * Adds an offset to the green channel by a certain number of pixels.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `offset` - The offset you want to move the green channel by.
- * # Example
- *
- * ```no_run
- * // For example, to add an offset to the green channel by 30 pixels.
- * use photon_rs::effects::offset_green;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * offset_green(&mut img, 30_u32);
- * ```
- */
-export function offset_green(img: PhotonImage, offset_amt: number): void;
-/**
- * Adds an offset to the blue channel by a certain number of pixels.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `offset_amt` - The offset you want to move the blue channel by.
- * # Example
- * // For example, to add an offset to the green channel by 40 pixels.
- *
- * ```no_run
- * use photon_rs::effects::offset_blue;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * offset_blue(&mut img, 40_u32);
- * ```
- */
-export function offset_blue(img: PhotonImage, offset_amt: number): void;
-/**
- * Adds multiple offsets to the image by a certain number of pixels (on two channels).
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `offset` - The offset is added to the pixels in the image.
- * # Example
- *
- * ```no_run
- * // For example, to add a 30-pixel offset to both the red and blue channels:
- * use photon_rs::effects::multiple_offsets;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * multiple_offsets(&mut img, 30_u32, 0_usize, 2_usize);
- * ```
- */
-export function multiple_offsets(photon_image: PhotonImage, offset: number, channel_index: number, channel_index2: number): void;
-/**
- * Halftoning effect.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * // For example:
- * use photon_rs::effects::halftone;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * halftone(&mut img);
- * ```
- */
-export function halftone(photon_image: PhotonImage): void;
-/**
- * Reduces an image to the primary colours.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * // For example, to add a primary colour effect to an image of type `DynamicImage`:
- * use photon_rs::effects::primary;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * primary(&mut img);
- * ```
- */
-export function primary(img: PhotonImage): void;
-/**
- * Colorizes the green channels of the image.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * // For example, to colorize an image of type `PhotonImage`:
- * use photon_rs::effects::colorize;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * colorize(&mut img);
- * ```
- */
-export function colorize(photon_image: PhotonImage): void;
-/**
- * Applies a solarizing effect to an image.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * // For example, to colorize an image of type `PhotonImage`:
- * use photon_rs::effects::solarize;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * solarize(&mut img);
- * ```
- */
-export function solarize(photon_image: PhotonImage): void;
-/**
- * Applies a solarizing effect to an image and returns the resulting PhotonImage.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * // For example, to solarize "retimg" an image of type `PhotonImage`:
- * use photon_rs::effects::solarize_retimg;
- * use photon_rs::native::open_image;
- * use photon_rs::PhotonImage;
- *
- * let img = open_image("img.jpg").expect("File should open");
- * let result: PhotonImage = solarize_retimg(&img);
- * ```
- */
-export function solarize_retimg(photon_image: PhotonImage): PhotonImage;
-/**
- * Adjust the brightness of an image by a factor.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `brightness` - A u8 to add or subtract to the brightness. To increase
- * the brightness, pass a positive number (up to 255). To decrease the brightness,
- * pass a negative number instead.
- * # Example
- *
- * ```no_run
- * use photon_rs::effects::adjust_brightness;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * adjust_brightness(&mut img, 10_i16);
- * ```
- */
-export function adjust_brightness(photon_image: PhotonImage, brightness: number): void;
-/**
- * Increase the brightness of an image by a constant.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `brightness` - A u8 to add to the brightness.
- * # Example
- *
- * ```no_run
- * use photon_rs::effects::inc_brightness;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * inc_brightness(&mut img, 10_u8);
- * ```
- */
-export function inc_brightness(photon_image: PhotonImage, brightness: number): void;
-/**
- * Decrease the brightness of an image by a constant.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `brightness` - A u8 to subtract from the brightness. It should be a positive number,
- * and this value will then be subtracted from the brightness.
- * # Example
- *
- * ```no_run
- * use photon_rs::effects::dec_brightness;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * dec_brightness(&mut img, 10_u8);
- * ```
- */
-export function dec_brightness(photon_image: PhotonImage, brightness: number): void;
-/**
- * Adjust the contrast of an image by a factor.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage that contains a view into the image.
- * * `contrast` - An f32 factor used to adjust contrast. Between [-255.0, 255.0]. The algorithm will
- * clamp results if passed factor is out of range.
- * # Example
- *
- * ```no_run
- * use photon_rs::effects::adjust_contrast;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * adjust_contrast(&mut img, 30_f32);
- * ```
- */
-export function adjust_contrast(photon_image: PhotonImage, contrast: number): void;
-/**
- * Tint an image by adding an offset to averaged RGB channel values.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `r_offset` - The amount the R channel should be incremented by.
- * * `g_offset` - The amount the G channel should be incremented by.
- * * `b_offset` - The amount the B channel should be incremented by.
- * # Example
- *
- * ```no_run
- * // For example, to tint an image of type `PhotonImage`:
- * use photon_rs::effects::tint;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * tint(&mut img, 10_u32, 20_u32, 15_u32);
- * ```
- */
-export function tint(photon_image: PhotonImage, r_offset: number, g_offset: number, b_offset: number): void;
-/**
- * Horizontal strips. Divide an image into a series of equal-height strips, for an artistic effect.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `num_strips` - The number of strips
- * # Example
- *
- * ```no_run
- * // For example, to draw horizontal strips on a `PhotonImage`:
- * use photon_rs::effects::horizontal_strips;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * horizontal_strips(&mut img, 8u8);
- * ```
- */
-export function horizontal_strips(photon_image: PhotonImage, num_strips: number): void;
-/**
- * Horizontal strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `num_strips` - The numbder of strips
- * * `color` - Color of strips.
- * # Example
- *
- * ```no_run
- * // For example, to draw blue horizontal strips on a `PhotonImage`:
- * use photon_rs::effects::color_horizontal_strips;
- * use photon_rs::native::open_image;
- * use photon_rs::Rgb;
- *
- * let color = Rgb::new(255u8, 0u8, 0u8);
- * let mut img = open_image("img.jpg").expect("File should open");
- * color_horizontal_strips(&mut img, 8u8, color);
- * ```
- */
-export function color_horizontal_strips(photon_image: PhotonImage, num_strips: number, color: Rgb): void;
-/**
- * Vertical strips. Divide an image into a series of equal-width strips, for an artistic effect.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `num_strips` - The numbder of strips
- * # Example
- *
- * ```no_run
- * // For example, to draw vertical strips on a `PhotonImage`:
- * use photon_rs::effects::vertical_strips;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * vertical_strips(&mut img, 8u8);
- * ```
- */
-export function vertical_strips(photon_image: PhotonImage, num_strips: number): void;
-/**
- * Vertical strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `num_strips` - The numbder of strips
- * * `color` - Color of strips.
- * # Example
- *
- * ```no_run
- * // For example, to draw red vertical strips on a `PhotonImage`:
- * use photon_rs::effects::color_vertical_strips;
- * use photon_rs::native::open_image;
- * use photon_rs::Rgb;
- *
- * let color = Rgb::new(255u8, 0u8, 0u8);
- * let mut img = open_image("img.jpg").expect("File should open");
- * color_vertical_strips(&mut img, 8u8, color);
- * ```
- */
-export function color_vertical_strips(photon_image: PhotonImage, num_strips: number, color: Rgb): void;
-/**
- * Turn an image into an oil painting
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * * `radius` - Radius of each paint particle
- * * `intesnity` - How artsy an Image should be
- * # Example
- *
- * ```no_run
- * // For example, to oil an image of type `PhotonImage`:
- * use photon_rs::effects::oil;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * oil(&mut img, 4i32, 55.0);
- * ```
- */
-export function oil(photon_image: PhotonImage, radius: number, intensity: number): void;
-/**
- * Turn an image into an frosted glass see through
- *
- * # Arguments
- * * `img` - A PhotonImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * // For example, to turn an image of type `PhotonImage` into frosted glass see through:
- * use photon_rs::effects::frosted_glass;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * frosted_glass(&mut img);
- * ```
- */
-export function frosted_glass(photon_image: PhotonImage): void;
-/**
- * Pixelize an image.
- *
- * # Arguments
- * * `photon_image` - A PhotonImage that contains a view into the image.
- * * `pixel_size` - Targeted pixel size of generated image.
- * # Example
- *
- * ```no_run
- * // For example, to turn an image of type `PhotonImage` into a pixelized image with 50 pixels blocks:
- * use photon_rs::effects::pixelize;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * pixelize(&mut img, 50);
- * ```
- */
-export function pixelize(photon_image: PhotonImage, pixel_size: number): void;
-/**
- * Normalizes an image by remapping its range of pixels values. Only RGB
- * channels are processed and each channel is stretched to \[0, 255\] range
- * independently. This process is also known as contrast stretching.
- * # Arguments
- * * `photon_image` - A PhotonImage that contains a view into the image.
- * # Example
- *
- * ```no_run
- * // For example, to turn an image of type `PhotonImage` into a normalized image:
- * use photon_rs::effects::normalize;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * normalize(&mut img);
- * ```
- */
-export function normalize(photon_image: PhotonImage): void;
-/**
- * Applies Floyd-Steinberg dithering to an image.
- * Only RGB channels are processed, alpha remains unchanged.
- * # Arguments
- * * `photon_image` - A PhotonImage that contains a view into the image.
- * * `depth` - bits per channel. Clamped between 1 and 8.
- * # Example
- *
- * ```no_run
- * // For example, to turn an image of type `PhotonImage` into a dithered image:
- * use photon_rs::effects::dither;
- * use photon_rs::native::open_image;
- *
- * let mut img = open_image("img.jpg").expect("File should open");
- * let depth = 1;
- * dither(&mut img, depth);
- * ```
- */
-export function dither(photon_image: PhotonImage, depth: number): void;
-export function duotone(photon_image: PhotonImage, color_a: Rgb, color_b: Rgb): void;
-/**
  * ! [temp] Check if WASM is supported.
  */
 export function run(): void;
@@ -2019,6 +1578,56 @@ export function base64_to_vec(base64: string): Uint8Array;
  * Convert a PhotonImage to JS-compatible ImageData.
  */
 export function to_image_data(photon_image: PhotonImage): ImageData;
+/**
+ * Add bordered-text to an image.
+ * The only font available as of now is Roboto.
+ * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * * `text` - Text string to be drawn to the image.
+ * * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
+ * * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
+ * * `font_size` - Font size in pixels of the text to be drawn.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example to draw the string "Welcome to Photon!" at 10, 10:
+ * use photon_rs::native::open_image;
+ * use photon_rs::text::draw_text_with_border;
+ *
+ * // Open the image. A PhotonImage is returned.
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * draw_text_with_border(&mut img, "Welcome to Photon!", 10_i32, 10_i32, 90_f32);
+ * ```
+ */
+export function draw_text_with_border(photon_img: PhotonImage, text: string, x: number, y: number, font_size: number): void;
+/**
+ * Add text to an image.
+ * The only font available as of now is Roboto.
+ * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * * `text` - Text string to be drawn to the image.
+ * * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
+ * * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
+ * * `font_size` - Font size in pixels of the text to be drawn.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example to draw the string "Welcome to Photon!" at 10, 10:
+ * use photon_rs::native::open_image;
+ * use photon_rs::text::draw_text;
+ *
+ * // Open the image. A PhotonImage is returned.
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * draw_text(&mut img, "Welcome to Photon!", 10_i32, 10_i32, 90_f32);
+ * ```
+ */
+export function draw_text(photon_img: PhotonImage, text: string, x: number, y: number, font_size: number): void;
 /**
  * Add a watermark to an image.
  *
@@ -2657,55 +2266,446 @@ export function rotate(photon_img: PhotonImage, angle: number): PhotonImage;
  */
 export function resample(img: PhotonImage, dst_width: number, dst_height: number): PhotonImage;
 /**
- * Add bordered-text to an image.
- * The only font available as of now is Roboto.
- * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
+ * Adds an offset to the image by a certain number of pixels.
+ *
+ * This creates an RGB shift effect.
  *
  * # Arguments
- * * `photon_image` - A PhotonImage.
- * * `text` - Text string to be drawn to the image.
- * * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
- * * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
- * * `font_size` - Font size in pixels of the text to be drawn.
- *
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `channel_index`: The index of the channel to increment. 0 for red, 1 for green and 2 for blue.
+ * * `offset` - The offset is added to the pixels in the image.
  * # Example
  *
  * ```no_run
- * // For example to draw the string "Welcome to Photon!" at 10, 10:
+ * // For example, to offset pixels by 30 pixels on the red channel:
+ * use photon_rs::effects::offset;
  * use photon_rs::native::open_image;
- * use photon_rs::text::draw_text_with_border;
  *
- * // Open the image. A PhotonImage is returned.
  * let mut img = open_image("img.jpg").expect("File should open");
- * draw_text_with_border(&mut img, "Welcome to Photon!", 10_i32, 10_i32, 90_f32);
+ * offset(&mut img, 0_usize, 30_u32);
  * ```
  */
-export function draw_text_with_border(photon_img: PhotonImage, text: string, x: number, y: number, font_size: number): void;
+export function offset(photon_image: PhotonImage, channel_index: number, offset: number): void;
 /**
- * Add text to an image.
- * The only font available as of now is Roboto.
- * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
+ * Adds an offset to the red channel by a certain number of pixels.
  *
  * # Arguments
- * * `photon_image` - A PhotonImage.
- * * `text` - Text string to be drawn to the image.
- * * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
- * * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
- * * `font_size` - Font size in pixels of the text to be drawn.
- *
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `offset` - The offset you want to move the red channel by.
  * # Example
  *
  * ```no_run
- * // For example to draw the string "Welcome to Photon!" at 10, 10:
+ * // For example, to add an offset to the red channel by 30 pixels.
+ * use photon_rs::effects::offset_red;
  * use photon_rs::native::open_image;
- * use photon_rs::text::draw_text;
  *
- * // Open the image. A PhotonImage is returned.
  * let mut img = open_image("img.jpg").expect("File should open");
- * draw_text(&mut img, "Welcome to Photon!", 10_i32, 10_i32, 90_f32);
+ * offset_red(&mut img, 30_u32);
  * ```
  */
-export function draw_text(photon_img: PhotonImage, text: string, x: number, y: number, font_size: number): void;
+export function offset_red(img: PhotonImage, offset_amt: number): void;
+/**
+ * Adds an offset to the green channel by a certain number of pixels.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `offset` - The offset you want to move the green channel by.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to add an offset to the green channel by 30 pixels.
+ * use photon_rs::effects::offset_green;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * offset_green(&mut img, 30_u32);
+ * ```
+ */
+export function offset_green(img: PhotonImage, offset_amt: number): void;
+/**
+ * Adds an offset to the blue channel by a certain number of pixels.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `offset_amt` - The offset you want to move the blue channel by.
+ * # Example
+ * // For example, to add an offset to the green channel by 40 pixels.
+ *
+ * ```no_run
+ * use photon_rs::effects::offset_blue;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * offset_blue(&mut img, 40_u32);
+ * ```
+ */
+export function offset_blue(img: PhotonImage, offset_amt: number): void;
+/**
+ * Adds multiple offsets to the image by a certain number of pixels (on two channels).
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `offset` - The offset is added to the pixels in the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to add a 30-pixel offset to both the red and blue channels:
+ * use photon_rs::effects::multiple_offsets;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * multiple_offsets(&mut img, 30_u32, 0_usize, 2_usize);
+ * ```
+ */
+export function multiple_offsets(photon_image: PhotonImage, offset: number, channel_index: number, channel_index2: number): void;
+/**
+ * Halftoning effect.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example:
+ * use photon_rs::effects::halftone;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * halftone(&mut img);
+ * ```
+ */
+export function halftone(photon_image: PhotonImage): void;
+/**
+ * Reduces an image to the primary colours.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to add a primary colour effect to an image of type `DynamicImage`:
+ * use photon_rs::effects::primary;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * primary(&mut img);
+ * ```
+ */
+export function primary(img: PhotonImage): void;
+/**
+ * Colorizes the green channels of the image.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to colorize an image of type `PhotonImage`:
+ * use photon_rs::effects::colorize;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * colorize(&mut img);
+ * ```
+ */
+export function colorize(photon_image: PhotonImage): void;
+/**
+ * Applies a solarizing effect to an image.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to colorize an image of type `PhotonImage`:
+ * use photon_rs::effects::solarize;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * solarize(&mut img);
+ * ```
+ */
+export function solarize(photon_image: PhotonImage): void;
+/**
+ * Applies a solarizing effect to an image and returns the resulting PhotonImage.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to solarize "retimg" an image of type `PhotonImage`:
+ * use photon_rs::effects::solarize_retimg;
+ * use photon_rs::native::open_image;
+ * use photon_rs::PhotonImage;
+ *
+ * let img = open_image("img.jpg").expect("File should open");
+ * let result: PhotonImage = solarize_retimg(&img);
+ * ```
+ */
+export function solarize_retimg(photon_image: PhotonImage): PhotonImage;
+/**
+ * Adjust the brightness of an image by a factor.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `brightness` - A u8 to add or subtract to the brightness. To increase
+ * the brightness, pass a positive number (up to 255). To decrease the brightness,
+ * pass a negative number instead.
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::effects::adjust_brightness;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * adjust_brightness(&mut img, 10_i16);
+ * ```
+ */
+export function adjust_brightness(photon_image: PhotonImage, brightness: number): void;
+/**
+ * Increase the brightness of an image by a constant.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `brightness` - A u8 to add to the brightness.
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::effects::inc_brightness;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * inc_brightness(&mut img, 10_u8);
+ * ```
+ */
+export function inc_brightness(photon_image: PhotonImage, brightness: number): void;
+/**
+ * Decrease the brightness of an image by a constant.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `brightness` - A u8 to subtract from the brightness. It should be a positive number,
+ * and this value will then be subtracted from the brightness.
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::effects::dec_brightness;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * dec_brightness(&mut img, 10_u8);
+ * ```
+ */
+export function dec_brightness(photon_image: PhotonImage, brightness: number): void;
+/**
+ * Adjust the contrast of an image by a factor.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage that contains a view into the image.
+ * * `contrast` - An f32 factor used to adjust contrast. Between [-255.0, 255.0]. The algorithm will
+ * clamp results if passed factor is out of range.
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::effects::adjust_contrast;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * adjust_contrast(&mut img, 30_f32);
+ * ```
+ */
+export function adjust_contrast(photon_image: PhotonImage, contrast: number): void;
+/**
+ * Tint an image by adding an offset to averaged RGB channel values.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `r_offset` - The amount the R channel should be incremented by.
+ * * `g_offset` - The amount the G channel should be incremented by.
+ * * `b_offset` - The amount the B channel should be incremented by.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to tint an image of type `PhotonImage`:
+ * use photon_rs::effects::tint;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * tint(&mut img, 10_u32, 20_u32, 15_u32);
+ * ```
+ */
+export function tint(photon_image: PhotonImage, r_offset: number, g_offset: number, b_offset: number): void;
+/**
+ * Horizontal strips. Divide an image into a series of equal-height strips, for an artistic effect.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `num_strips` - The number of strips
+ * # Example
+ *
+ * ```no_run
+ * // For example, to draw horizontal strips on a `PhotonImage`:
+ * use photon_rs::effects::horizontal_strips;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * horizontal_strips(&mut img, 8u8);
+ * ```
+ */
+export function horizontal_strips(photon_image: PhotonImage, num_strips: number): void;
+/**
+ * Horizontal strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `num_strips` - The numbder of strips
+ * * `color` - Color of strips.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to draw blue horizontal strips on a `PhotonImage`:
+ * use photon_rs::effects::color_horizontal_strips;
+ * use photon_rs::native::open_image;
+ * use photon_rs::Rgb;
+ *
+ * let color = Rgb::new(255u8, 0u8, 0u8);
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * color_horizontal_strips(&mut img, 8u8, color);
+ * ```
+ */
+export function color_horizontal_strips(photon_image: PhotonImage, num_strips: number, color: Rgb): void;
+/**
+ * Vertical strips. Divide an image into a series of equal-width strips, for an artistic effect.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `num_strips` - The numbder of strips
+ * # Example
+ *
+ * ```no_run
+ * // For example, to draw vertical strips on a `PhotonImage`:
+ * use photon_rs::effects::vertical_strips;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * vertical_strips(&mut img, 8u8);
+ * ```
+ */
+export function vertical_strips(photon_image: PhotonImage, num_strips: number): void;
+/**
+ * Vertical strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `num_strips` - The numbder of strips
+ * * `color` - Color of strips.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to draw red vertical strips on a `PhotonImage`:
+ * use photon_rs::effects::color_vertical_strips;
+ * use photon_rs::native::open_image;
+ * use photon_rs::Rgb;
+ *
+ * let color = Rgb::new(255u8, 0u8, 0u8);
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * color_vertical_strips(&mut img, 8u8, color);
+ * ```
+ */
+export function color_vertical_strips(photon_image: PhotonImage, num_strips: number, color: Rgb): void;
+/**
+ * Turn an image into an oil painting
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * * `radius` - Radius of each paint particle
+ * * `intesnity` - How artsy an Image should be
+ * # Example
+ *
+ * ```no_run
+ * // For example, to oil an image of type `PhotonImage`:
+ * use photon_rs::effects::oil;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * oil(&mut img, 4i32, 55.0);
+ * ```
+ */
+export function oil(photon_image: PhotonImage, radius: number, intensity: number): void;
+/**
+ * Turn an image into an frosted glass see through
+ *
+ * # Arguments
+ * * `img` - A PhotonImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to turn an image of type `PhotonImage` into frosted glass see through:
+ * use photon_rs::effects::frosted_glass;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * frosted_glass(&mut img);
+ * ```
+ */
+export function frosted_glass(photon_image: PhotonImage): void;
+/**
+ * Pixelize an image.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage that contains a view into the image.
+ * * `pixel_size` - Targeted pixel size of generated image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to turn an image of type `PhotonImage` into a pixelized image with 50 pixels blocks:
+ * use photon_rs::effects::pixelize;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * pixelize(&mut img, 50);
+ * ```
+ */
+export function pixelize(photon_image: PhotonImage, pixel_size: number): void;
+/**
+ * Normalizes an image by remapping its range of pixels values. Only RGB
+ * channels are processed and each channel is stretched to \[0, 255\] range
+ * independently. This process is also known as contrast stretching.
+ * # Arguments
+ * * `photon_image` - A PhotonImage that contains a view into the image.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to turn an image of type `PhotonImage` into a normalized image:
+ * use photon_rs::effects::normalize;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * normalize(&mut img);
+ * ```
+ */
+export function normalize(photon_image: PhotonImage): void;
+/**
+ * Applies Floyd-Steinberg dithering to an image.
+ * Only RGB channels are processed, alpha remains unchanged.
+ * # Arguments
+ * * `photon_image` - A PhotonImage that contains a view into the image.
+ * * `depth` - bits per channel. Clamped between 1 and 8.
+ * # Example
+ *
+ * ```no_run
+ * // For example, to turn an image of type `PhotonImage` into a dithered image:
+ * use photon_rs::effects::dither;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * let depth = 1;
+ * dither(&mut img, depth);
+ * ```
+ */
+export function dither(photon_image: PhotonImage, depth: number): void;
+export function duotone(photon_image: PhotonImage, color_a: Rgb, color_b: Rgb): void;
 export enum SamplingFilter {
   Nearest = 1,
   Triangle = 2,
