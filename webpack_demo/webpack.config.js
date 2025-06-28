@@ -12,8 +12,23 @@ var mainConfig = {
     filename: "bundle.js"
   },
   devServer: {
-    contentBase: dist,
+    static: {
+      directory: dist
+    },
   },
+  mode: "none",  
+  experiments: {
+    asyncWebAssembly: true,
+  },
+  ignoreWarnings: [
+    (warning) => {
+      const msg = warning.message;
+      return (
+        msg.includes("The following asset(s) exceed the recommended size limit (244 KiB).")
+      );
+    },
+  ],
+  
   module: {
     rules: [
       {
@@ -30,6 +45,9 @@ var mainConfig = {
          ]
        }
     ]
+  },
+  resolve: {
+     extensions: [".js", ".wasm"]
   },
   plugins: [
     new HtmlWebpackPlugin({
