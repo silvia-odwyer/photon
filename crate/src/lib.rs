@@ -42,6 +42,9 @@
 use base64::{decode, encode};
 use image::DynamicImage::ImageRgba8;
 use image::GenericImage;
+use image::codecs::jpeg::JpegEncoder;
+use image::codecs::avif::AvifEncoder;
+use image::{ExtendedColorType, ImageEncoder};
 use serde::{Deserialize, Serialize};
 use std::io::Cursor;
 
@@ -187,7 +190,7 @@ impl PhotonImage {
         img = ImageRgba8(img.to_rgba8());
 
         let mut buffer = vec![];
-        img.write_to(&mut Cursor::new(&mut buffer), image::ImageOutputFormat::Png)
+        img.write_to(&mut Cursor::new(&mut buffer), image::ImageFormat::Png)
             .unwrap();
         let base64 = encode(&buffer);
 
@@ -201,19 +204,21 @@ impl PhotonImage {
         let mut img = helpers::dyn_image_from_raw(self);
         img = ImageRgba8(img.to_rgba8());
         let mut buffer = vec![];
-        img.write_to(&mut Cursor::new(&mut buffer), image::ImageOutputFormat::Png)
-            .unwrap();
+        img.write_to(&mut Cursor::new(&mut buffer), image::ImageFormat::Png).unwrap();
         buffer
     }
 
     /// Convert the PhotonImage to raw bytes. Returns a JPEG.
     pub fn get_bytes_jpeg(&self, quality: u8) -> Vec<u8> {
-        let mut img = helpers::dyn_image_from_raw(self);
-        img = ImageRgba8(img.to_rgba8());
-        let mut buffer = vec![];
-        let out_format = image::ImageOutputFormat::Jpeg(quality);
-        img.write_to(&mut Cursor::new(&mut buffer), out_format)
-            .unwrap();
+        let img = helpers::dyn_image_from_raw(self);
+
+        // JPEG has no alpha; convert to RGB8.
+        let rgb = img.to_rgb8();
+        let (w, h) = rgb.dimensions();
+
+        let mut buffer = Vec::new();
+        let encoder = JpegEncoder::new_with_quality(&mut buffer, quality);
+        encoder.write_image(rgb.as_raw(), w, h, ExtendedColorType::Rgb8).unwrap();
         buffer
     }
 
@@ -222,9 +227,22 @@ impl PhotonImage {
         let mut img = helpers::dyn_image_from_raw(self);
         img = ImageRgba8(img.to_rgba8());
         let mut buffer = vec![];
-        let out_format = image::ImageOutputFormat::WebP;
-        img.write_to(&mut Cursor::new(&mut buffer), out_format)
-            .unwrap();
+        let out_format = image::ImageFormat::WebP;
+        img.write_to(&mut Cursor::new(&mut buffer), out_format).unwrap();
+        buffer
+    }
+
+    /// Convert the PhotonImage to raw bytes. Returns an AVIF.
+    pub fn get_bytes_avif(&self, speed: u8, quality: u8) -> Vec<u8> {
+        let img = helpers::dyn_image_from_raw(self);
+
+        // AVIF supports alpha; preserve it.
+        let rgba = img.to_rgba8();
+        let (w, h) = rgba.dimensions();
+
+        let mut buffer = Vec::new();
+        let encoder = AvifEncoder::new_with_speed_quality(&mut buffer, speed, quality);
+        encoder.write_image(rgba.as_raw(), w, h, ExtendedColorType::Rgba8).unwrap();
         buffer
     }
 

@@ -3,3 +3,4 @@
 members = [
     "crate"
 ]
+resolver = "2"
