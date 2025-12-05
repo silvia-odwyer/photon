@@ -37,7 +37,9 @@ import("../../crate/pkg").then(module => {
 
   // Setup event listeners
   let hue_rotate_elem = document.getElementById("hue_rotate");
-  hue_rotate_elem.addEventListener('click', function(){console.time("js_edit_time"); editImage(canvas, ctx); console.timeEnd("js_edit_time")}, false);
+  if (hue_rotate_elem) {
+    hue_rotate_elem.addEventListener('click', function(){console.time("js_edit_time"); editImage(canvas, ctx); console.timeEnd("js_edit_time")}, false);
+  }
 
   let filter_buttons = document.getElementsByClassName("filter");
   for (let i = 0; i < filter_buttons.length; i++) {
@@ -162,6 +164,27 @@ import("../../crate/pkg").then(module => {
                       "inc_brightness": function() {return module.inc_brightness(rust_image, 20)},
                       "inc_lum": function() {return module.inc_luminosity(rust_image)},
                       "grayscale_human_corrected": function() {return module.grayscale_human_corrected(rust_image)},
+                      "apply_exposure": function() {return module.apply_exposure(rust_image, 1.5)},
+                      "apply_white_balance": function() {return module.apply_white_balance(rust_image, -20.0, 5.0)},
+                      "apply_vibrance": function() {return module.apply_vibrance(rust_image, 30.0)},
+                      "apply_clarity": function() {return module.apply_clarity(rust_image, 25.0)},
+                      "apply_texture": function() {return module.apply_texture(rust_image, 30.0)},
+                      "apply_dehaze": function() {return module.apply_dehaze(rust_image, 50.0)},
+                      "apply_vignette": function() {return module.apply_vignette(rust_image, 50.0, 30.0, 50.0)},
+                      "apply_tone_zones": function() {return module.apply_tone_zones(rust_image, 10, 20, -10, 5)},
+                      "apply_tone_curve": function() {
+                        let lut = Array.from({length: 256}, (_, i) => Math.min(255, Math.floor(i * 1.2)));
+                        return module.apply_tone_curve(rust_image, lut);
+                      },
+                      "apply_color_grading": function() {return module.apply_color_grading(rust_image, 200.0, 50.0, -20.0, 0.0, 30.0, 10.0, 30.0, 40.0, 15.0, 50.0, 0.0)},
+                      "apply_sharpening": function() {return module.apply_sharpening(rust_image, 100.0, 1.0, 2.0, 50.0)},
+                      "apply_noise_reduction": function() {return module.apply_noise_reduction(rust_image, 40.0, 50.0, 50.0)},
+                      "apply_noise_reduction_bilateral": function() {return module.apply_noise_reduction_bilateral(rust_image, 40.0, 50.0, 50.0)},
+                      "apply_noise_reduction_wavelets": function() {return module.apply_noise_reduction_wavelets(rust_image, 50.0, 30.0)},
+                      "apply_noise_reduction_median": function() {return module.apply_noise_reduction_median(rust_image, 2)},
+                      "apply_noise_reduction_nlm": function() {return module.apply_noise_reduction_nlm(rust_image, 50.0, 3, 5)},
+                      "apply_chromatic_aberration": function() {return module.apply_chromatic_aberration(rust_image, 50.0, 30.0)},
+                      "apply_lens_correction": function() {return module.apply_lens_correction(rust_image, -20.0, 30.0)},
                       "blend": function() {return module.blend(rust_image, rust_image2, "over")},
                       "overlay": function() {return module.blend(rust_image, rust_image2, "overlay")},
                       "atop": function() {return module.blend(rust_image, rust_image2, "atop")},

@@ -546,8 +546,10 @@ fn set_panic_hook() {
     console_error_panic_hook::set_once();
 }
 
+pub mod adjustments;
 pub mod channels;
 pub mod colour_spaces;
+pub mod corrections;
 pub mod conv;
 pub mod effects;
 pub mod filters;

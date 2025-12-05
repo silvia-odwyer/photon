@@ -3,8 +3,10 @@ mod test {
 
     use image::ImageBuffer;
 
+    use crate::adjustments::*;
     use crate::channels::*;
     use crate::colour_spaces::*;
+    use crate::corrections::*;
     use crate::transform::{resample, seam_carve};
     use crate::PhotonImage;
 
@@ -404,5 +406,334 @@ mod test {
             assert_eq!(result.get_height(), new_h as u32);
             assert_eq!(result.get_raw_pixels(), correct_pix);
         }
+    }
+
+    // Standard test image used across tests (4x4 pixels)
+    fn get_test_image() -> PhotonImage {
+        let width = 4;
+        let height = 4;
+        let raw_pix = vec![
+            134, 122, 131, 255, 131, 131, 139, 255, 135, 134, 137, 255, 138, 134, 130,
+            255, 126, 125, 119, 255, 131, 134, 129, 255, 137, 134, 132, 255, 130, 126,
+            130, 255, 132, 125, 132, 255, 122, 142, 129, 255, 134, 135, 128, 255, 138,
+            120, 125, 255, 125, 134, 110, 255, 121, 122, 137, 255, 141, 140, 141, 255,
+            125, 144, 120, 255,
+        ];
+        PhotonImage::new(raw_pix, width, height)
+    }
+
+    #[test]
+    fn test_apply_exposure() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_exposure(&mut img, 1.0);
+        
+        // After +1 EV exposure, pixels should be brighter
+        // We can't do exact comparison due to gamma correction, but we can check it changed
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero exposure (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_exposure(&mut img2, 0.0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_white_balance() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_white_balance(&mut img, 20.0, 10.0);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero adjustment (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_white_balance(&mut img2, 0.0, 0.0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_vibrance() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_vibrance(&mut img, 30.0);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero vibrance (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_vibrance(&mut img2, 0.0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_clarity() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_clarity(&mut img, 25.0);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero clarity (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_clarity(&mut img2, 0.0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_texture() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_texture(&mut img, 30.0);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero texture (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_texture(&mut img2, 0.0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_dehaze() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_dehaze(&mut img, 50.0);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero dehaze (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_dehaze(&mut img2, 0.0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_vignette() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_vignette(&mut img, 50.0, 30.0, 50.0);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero strength (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_vignette(&mut img2, 0.0, 30.0, 50.0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_tone_zones() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_tone_zones(&mut img, 10, 20, -10, 5);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero adjustments (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_tone_zones(&mut img2, 0, 0, 0, 0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_color_grading() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        // Use parameters that will definitely change the image (non-zero saturation and luminance)
+        apply_color_grading(&mut img, 200.0, 50.0, -20.0, 0.0, 30.0, 10.0, 30.0, 40.0, 15.0, 50.0, 0.0);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+    }
+
+    #[test]
+    fn test_apply_sharpening() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_sharpening(&mut img, 100.0, 1.0, 2.0, 50.0);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero amount (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_sharpening(&mut img2, 0.0, 1.0, 2.0, 50.0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_noise_reduction() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_noise_reduction(&mut img, 40.0, 50.0, 50.0);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero noise reduction (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_noise_reduction(&mut img2, 0.0, 0.0, 50.0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_noise_reduction_bilateral() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_noise_reduction_bilateral(&mut img, 40.0, 50.0, 50.0);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero noise reduction (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_noise_reduction_bilateral(&mut img2, 0.0, 0.0, 50.0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_noise_reduction_wavelets() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_noise_reduction_wavelets(&mut img, 50.0, 30.0);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero strength (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_noise_reduction_wavelets(&mut img2, 0.0, 30.0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_noise_reduction_median() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_noise_reduction_median(&mut img, 2);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero radius (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_noise_reduction_median(&mut img2, 0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_noise_reduction_nlm() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_noise_reduction_nlm(&mut img, 50.0, 3, 5);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero strength (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_noise_reduction_nlm(&mut img2, 0.0, 3, 5);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_tone_curve() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        // Create a non-linear tone curve (brightening curve) that will definitely change the image
+        let mut lut = Vec::new();
+        for i in 0..256 {
+            // Brightening curve: output is brighter than input
+            lut.push((i as f32 * 1.2).min(255.0) as u8);
+        }
+        
+        apply_tone_curve(&mut img, lut);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+    }
+
+    #[test]
+    fn test_apply_chromatic_aberration() {
+        // Create an image with purple/green pixels to test chromatic aberration
+        let width = 4;
+        let height = 4;
+        let mut raw_pix = vec![
+            150, 50, 150, 255,  // Purple pixel (high R and B, low G)
+            50, 150, 50, 255,   // Green pixel (high G, low R and B)
+            131, 131, 139, 255, 135, 134, 137, 255, 138, 134, 130,
+            255, 126, 125, 119, 255, 131, 134, 129, 255, 137, 134, 132, 255, 130, 126,
+            130, 255, 132, 125, 132, 255, 122, 142, 129, 255, 134, 135, 128, 255, 138,
+            120, 125, 255, 125, 134, 110, 255, 121, 122, 137, 255, 141, 140, 141, 255,
+            125, 144, 120, 255,
+        ];
+        let mut img = PhotonImage::new(raw_pix.clone(), width, height);
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_chromatic_aberration(&mut img, 50.0, 30.0);
+        
+        // Should change the image (purple and green pixels should be corrected)
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero amounts (should not change)
+        let mut img2 = PhotonImage::new(raw_pix, width, height);
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_chromatic_aberration(&mut img2, 0.0, 0.0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
+    }
+
+    #[test]
+    fn test_apply_lens_correction() {
+        let mut img = get_test_image();
+        let original_pixels = img.raw_pixels.clone();
+        
+        apply_lens_correction(&mut img, -20.0, 30.0);
+        
+        // Should change the image
+        assert_ne!(img.raw_pixels, original_pixels);
+        
+        // Test zero amounts (should not change)
+        let mut img2 = get_test_image();
+        let original_pixels2 = img2.raw_pixels.clone();
+        apply_lens_correction(&mut img2, 0.0, 0.0);
+        assert_eq!(img2.raw_pixels, original_pixels2);
     }
 }
