@@ -396,6 +396,37 @@ export function base64_to_image(base64: string): PhotonImage;
 export function base64_to_vec(base64: string): Uint8Array;
 
 /**
+ * Apply Bayer ordered dithering to an image.
+ *
+ * Ordered dithering quantizes each pixel's colour channels independently by
+ * comparing the channel value (plus a spatially-varying threshold from the
+ * 8×8 Bayer matrix) against the nearest quantization level.  Unlike
+ * Floyd-Steinberg error diffusion, every pixel is processed in isolation,
+ * making this algorithm branch-free and cache-friendly.
+ *
+ * # Arguments
+ * * `photon_image` - A mutable reference to the [`PhotonImage`] to process.
+ * * `bit_depth`    - Target bits per channel (clamped to 1–8).
+ *                    `1` → 2 levels (pure black/white per channel),
+ *                    `4` → 16 levels, `8` → no quantization.
+ * * `spread`       - Dithering spread in the range `[0.0, 1.0]`.
+ *                    `1.0` is the canonical Bayer threshold; lower values
+ *                    reduce the visible halftone pattern for a subtler look.
+ *
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::effects::bayer_dither;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * // 2-bit depth, full Bayer spread — strong ordered dither
+ * bayer_dither(&mut img, 2, 1.0);
+ * ```
+ */
+export function bayer_dither(photon_image: PhotonImage, bit_depth: number, spread: number): void;
+
+/**
  * Blend two images together.
  *
  * The `blend_mode` (3rd param) determines which blending mode to use; change this for varying effects.
@@ -457,6 +488,31 @@ export function box_blur(photon_image: PhotonImage): void;
  * ```
  */
 export function cali(img: PhotonImage): void;
+
+/**
+ * Apply a cinematic film look to an image.
+ *
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::filters::cinematic;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * cinematic(&mut img);
+ * ```
+ *
+ * The same effect is also available through the generic dispatcher:
+ *
+ * ```no_run
+ * use photon_rs::filters::filter;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * filter(&mut img, "cinematic");
+ * ```
+ */
+export function cinematic(img: PhotonImage): void;
 
 /**
  * Horizontal strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
@@ -1107,6 +1163,36 @@ export function edge_one(photon_image: PhotonImage): void;
  * ```
  */
 export function emboss(photon_image: PhotonImage): void;
+
+/**
+ * Apply a cinematic film grain effect to an image.
+ *
+ * Simulates analog photographic grain by adding spatially-varying noise that is weighted by each
+ * pixel's perceptual luminance: grain is strongest in the midtones and naturally falls off toward the
+ * shadows and highlights matching the characteristic response of real photographic emulsions.
+ *
+ * # Arguments
+ * * `photon_image` - A mutable reference to the [`PhotonImage`] to process.
+ * * `intensity`    - Grain strength in the range `[0.0, 1.0]`.
+ *                    `0.1` – `0.3` is a realistic film look; `1.0` is extreme.
+ * * `monochrome`   - When `true`, a single noise sample is shared across R, G and B (silver-halide style, one PRNG call per pixel).
+ *                    When `false`, each channel gets an independent sample, producing the subtle colour fringing of
+ *                    multi-layer film stocks (three PRNG calls per pixel).
+ *
+ * * `seed`         - Initial PRNG seed. Use a fixed value for reproducible results or any non-zero runtime value for variation.
+ *                    Supplying `0` falls back to an internal safe constant.
+ *
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::noise::film_grain;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * film_grain(&mut img, 0.15, true, 42);
+ * ```
+ */
+export function film_grain(photon_image: PhotonImage, intensity: number, monochrome: boolean, seed: number): void;
 
 /**
  * Apply a filter to an image. Over 20 filters are available.
@@ -2989,6 +3075,22 @@ export function to_raw_pixels(imgdata: ImageData): Uint8Array;
  * ```
  */
 export function vertical_strips(photon_image: PhotonImage, num_strips: number): void;
+
+/**
+ * Apply a radial vignette effect to an image.
+ *
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::effects::vignette;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * // Moderate vignette — corners darken by ~60 %
+ * vignette(&mut img, 0.6);
+ * ```
+ */
+export function vignette(photon_image: PhotonImage, intensity: number): void;
 
 /**
  * Add a watermark to an image.

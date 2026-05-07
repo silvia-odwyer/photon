@@ -6,7 +6,6 @@
  */
 class PhotonImage {
     static __wrap(ptr) {
-        ptr = ptr >>> 0;
         const obj = Object.create(PhotonImage.prototype);
         obj.__wbg_ptr = ptr;
         PhotonImageFinalization.register(obj, obj.__wbg_ptr, obj);
@@ -121,7 +120,7 @@ class PhotonImage {
         const ptr0 = passArray8ToWasm0(raw_pixels, wasm.__wbindgen_malloc);
         const len0 = WASM_VECTOR_LEN;
         const ret = wasm.photonimage_new(ptr0, len0, width, height);
-        this.__wbg_ptr = ret >>> 0;
+        this.__wbg_ptr = ret;
         PhotonImageFinalization.register(this, this.__wbg_ptr, this);
         return this;
     }
@@ -222,7 +221,7 @@ class Rgb {
      */
     constructor(r, g, b) {
         const ret = wasm.rgb_new(r, g, b);
-        this.__wbg_ptr = ret >>> 0;
+        this.__wbg_ptr = ret;
         RgbFinalization.register(this, this.__wbg_ptr, this);
         return this;
     }
@@ -306,7 +305,7 @@ class Rgba {
      */
     constructor(r, g, b, a) {
         const ret = wasm.rgba_new(r, g, b, a);
-        this.__wbg_ptr = ret >>> 0;
+        this.__wbg_ptr = ret;
         RgbaFinalization.register(this, this.__wbg_ptr, this);
         return this;
     }
@@ -679,6 +678,44 @@ function base64_to_vec(base64) {
 exports.base64_to_vec = base64_to_vec;
 
 /**
+ * Apply Bayer ordered dithering to an image.
+ *
+ * Ordered dithering quantizes each pixel's colour channels independently by
+ * comparing the channel value (plus a spatially-varying threshold from the
+ * 8×8 Bayer matrix) against the nearest quantization level.  Unlike
+ * Floyd-Steinberg error diffusion, every pixel is processed in isolation,
+ * making this algorithm branch-free and cache-friendly.
+ *
+ * # Arguments
+ * * `photon_image` - A mutable reference to the [`PhotonImage`] to process.
+ * * `bit_depth`    - Target bits per channel (clamped to 1–8).
+ *                    `1` → 2 levels (pure black/white per channel),
+ *                    `4` → 16 levels, `8` → no quantization.
+ * * `spread`       - Dithering spread in the range `[0.0, 1.0]`.
+ *                    `1.0` is the canonical Bayer threshold; lower values
+ *                    reduce the visible halftone pattern for a subtler look.
+ *
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::effects::bayer_dither;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * // 2-bit depth, full Bayer spread — strong ordered dither
+ * bayer_dither(&mut img, 2, 1.0);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} bit_depth
+ * @param {number} spread
+ */
+function bayer_dither(photon_image, bit_depth, spread) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.bayer_dither(photon_image.__wbg_ptr, bit_depth, spread);
+}
+exports.bayer_dither = bayer_dither;
+
+/**
  * Blend two images together.
  *
  * The `blend_mode` (3rd param) determines which blending mode to use; change this for varying effects.
@@ -760,6 +797,36 @@ function cali(img) {
     wasm.cali(img.__wbg_ptr);
 }
 exports.cali = cali;
+
+/**
+ * Apply a cinematic film look to an image.
+ *
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::filters::cinematic;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * cinematic(&mut img);
+ * ```
+ *
+ * The same effect is also available through the generic dispatcher:
+ *
+ * ```no_run
+ * use photon_rs::filters::filter;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * filter(&mut img, "cinematic");
+ * ```
+ * @param {PhotonImage} img
+ */
+function cinematic(img) {
+    _assertClass(img, PhotonImage);
+    wasm.cinematic(img.__wbg_ptr);
+}
+exports.cinematic = cinematic;
 
 /**
  * Horizontal strips. Divide an image into a series of equal-width strips, for an artistic effect. Sepcify a color as well.
@@ -1643,6 +1710,44 @@ function emboss(photon_image) {
     wasm.emboss(photon_image.__wbg_ptr);
 }
 exports.emboss = emboss;
+
+/**
+ * Apply a cinematic film grain effect to an image.
+ *
+ * Simulates analog photographic grain by adding spatially-varying noise that is weighted by each
+ * pixel's perceptual luminance: grain is strongest in the midtones and naturally falls off toward the
+ * shadows and highlights matching the characteristic response of real photographic emulsions.
+ *
+ * # Arguments
+ * * `photon_image` - A mutable reference to the [`PhotonImage`] to process.
+ * * `intensity`    - Grain strength in the range `[0.0, 1.0]`.
+ *                    `0.1` – `0.3` is a realistic film look; `1.0` is extreme.
+ * * `monochrome`   - When `true`, a single noise sample is shared across R, G and B (silver-halide style, one PRNG call per pixel).
+ *                    When `false`, each channel gets an independent sample, producing the subtle colour fringing of
+ *                    multi-layer film stocks (three PRNG calls per pixel).
+ *
+ * * `seed`         - Initial PRNG seed. Use a fixed value for reproducible results or any non-zero runtime value for variation.
+ *                    Supplying `0` falls back to an internal safe constant.
+ *
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::noise::film_grain;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * film_grain(&mut img, 0.15, true, 42);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} intensity
+ * @param {boolean} monochrome
+ * @param {number} seed
+ */
+function film_grain(photon_image, intensity, monochrome, seed) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.film_grain(photon_image.__wbg_ptr, intensity, monochrome, seed);
+}
+exports.film_grain = film_grain;
 
 /**
  * Apply a filter to an image. Over 20 filters are available.
@@ -4179,6 +4284,28 @@ function vertical_strips(photon_image, num_strips) {
 exports.vertical_strips = vertical_strips;
 
 /**
+ * Apply a radial vignette effect to an image.
+ *
+ * # Example
+ *
+ * ```no_run
+ * use photon_rs::effects::vignette;
+ * use photon_rs::native::open_image;
+ *
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * // Moderate vignette — corners darken by ~60 %
+ * vignette(&mut img, 0.6);
+ * ```
+ * @param {PhotonImage} photon_image
+ * @param {number} intensity
+ */
+function vignette(photon_image, intensity) {
+    _assertClass(photon_image, PhotonImage);
+    wasm.vignette(photon_image.__wbg_ptr, intensity);
+}
+exports.vignette = vignette;
+
+/**
  * Add a watermark to an image.
  *
  * # Arguments
@@ -4208,52 +4335,51 @@ function watermark(img, watermark, x, y) {
     wasm.watermark(img.__wbg_ptr, watermark.__wbg_ptr, x, y);
 }
 exports.watermark = watermark;
-
 function __wbg_get_imports() {
     const import0 = {
         __proto__: null,
-        __wbg___wbindgen_debug_string_5398f5bb970e0daa: function(arg0, arg1) {
+        __wbg___wbindgen_debug_string_edece8177ad01481: function(arg0, arg1) {
             const ret = debugString(arg1);
             const ptr1 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
             const len1 = WASM_VECTOR_LEN;
             getDataViewMemory0().setInt32(arg0 + 4 * 1, len1, true);
             getDataViewMemory0().setInt32(arg0 + 4 * 0, ptr1, true);
         },
-        __wbg___wbindgen_is_undefined_52709e72fb9f179c: function(arg0) {
+        __wbg___wbindgen_is_undefined_35bb9f4c7fd651d5: function(arg0) {
             const ret = arg0 === undefined;
             return ret;
         },
-        __wbg___wbindgen_throw_6ddd609b62940d55: function(arg0, arg1) {
+        __wbg___wbindgen_throw_9c31b086c2b26051: function(arg0, arg1) {
             throw new Error(getStringFromWasm0(arg0, arg1));
         },
-        __wbg_appendChild_8cb157b6ec5612a6: function() { return handleError(function (arg0, arg1) {
+        __wbg_appendChild_6e88800a9a8fb360: function() { return handleError(function (arg0, arg1) {
             const ret = arg0.appendChild(arg1);
             return ret;
         }, arguments); },
-        __wbg_body_5eb99e7257e5ae34: function(arg0) {
+        __wbg_body_2ac005c657a3d103: function(arg0) {
             const ret = arg0.body;
             return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
         },
-        __wbg_createElement_9b0aab265c549ded: function() { return handleError(function (arg0, arg1, arg2) {
+        __wbg_createElement_d10771800cfb6e7e: function() { return handleError(function (arg0, arg1, arg2) {
             const ret = arg0.createElement(getStringFromWasm0(arg1, arg2));
             return ret;
         }, arguments); },
-        __wbg_data_40ab3982572daa21: function(arg0, arg1) {
+        __wbg_data_d3e23b46b9ff9577: function(arg0, arg1) {
             const ret = arg1.data;
             const ptr1 = passArray8ToWasm0(ret, wasm.__wbindgen_malloc);
             const len1 = WASM_VECTOR_LEN;
             getDataViewMemory0().setInt32(arg0 + 4 * 1, len1, true);
             getDataViewMemory0().setInt32(arg0 + 4 * 0, ptr1, true);
         },
-        __wbg_document_c0320cd4183c6d9b: function(arg0) {
+        __wbg_document_3540635616a18455: function(arg0) {
             const ret = arg0.document;
             return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
         },
-        __wbg_drawImage_91631f4ec3c9e0a8: function() { return handleError(function (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9) {
-            arg0.drawImage(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
-        }, arguments); },
-        __wbg_drawImage_efaa3d089b70b010: function() { return handleError(function (arg0, arg1, arg2, arg3) {
+        __wbg_drawImage_cc363a1d7c7add77: function() { return handleError(function (arg0, arg1, arg2, arg3) {
             arg0.drawImage(arg1, arg2, arg3);
+        }, arguments); },
+        __wbg_drawImage_ed1280f17c51149a: function() { return handleError(function (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9) {
+            arg0.drawImage(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
         }, arguments); },
         __wbg_error_a6fa202b58aa1cd3: function(arg0, arg1) {
             let deferred0_0;
@@ -4266,27 +4392,27 @@ function __wbg_get_imports() {
                 wasm.__wbindgen_free(deferred0_0, deferred0_1, 1);
             }
         },
-        __wbg_getContext_f04bf8f22dcb2d53: function() { return handleError(function (arg0, arg1, arg2) {
+        __wbg_getContext_e1463ff7aa682d57: function() { return handleError(function (arg0, arg1, arg2) {
             const ret = arg0.getContext(getStringFromWasm0(arg1, arg2));
             return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
         }, arguments); },
-        __wbg_getImageData_88e532fe2924188e: function() { return handleError(function (arg0, arg1, arg2, arg3, arg4) {
+        __wbg_getImageData_b8c207c89b969d79: function() { return handleError(function (arg0, arg1, arg2, arg3, arg4) {
             const ret = arg0.getImageData(arg1, arg2, arg3, arg4);
             return ret;
         }, arguments); },
-        __wbg_height_05531443b91baa6e: function(arg0) {
+        __wbg_height_4758eef353c25bbc: function(arg0) {
             const ret = arg0.height;
             return ret;
         },
-        __wbg_height_6568c4427c3b889d: function(arg0) {
+        __wbg_height_9edadb8dd6231945: function(arg0) {
             const ret = arg0.height;
             return ret;
         },
-        __wbg_height_a6fcb48398bd1539: function(arg0) {
+        __wbg_height_aef2a2eb10d0d530: function(arg0) {
             const ret = arg0.height;
             return ret;
         },
-        __wbg_instanceof_CanvasRenderingContext2d_08b9d193c22fa886: function(arg0) {
+        __wbg_instanceof_CanvasRenderingContext2d_d4be74cff7165c1e: function(arg0) {
             let result;
             try {
                 result = arg0 instanceof CanvasRenderingContext2D;
@@ -4296,7 +4422,7 @@ function __wbg_get_imports() {
             const ret = result;
             return ret;
         },
-        __wbg_instanceof_HtmlCanvasElement_26125339f936be50: function(arg0) {
+        __wbg_instanceof_HtmlCanvasElement_a02da0a417f1bf3f: function(arg0) {
             let result;
             try {
                 result = arg0 instanceof HTMLCanvasElement;
@@ -4306,7 +4432,7 @@ function __wbg_get_imports() {
             const ret = result;
             return ret;
         },
-        __wbg_instanceof_Window_23e677d2c6843922: function(arg0) {
+        __wbg_instanceof_Window_faa5cf994f49cca7: function(arg0) {
             let result;
             try {
                 result = arg0 instanceof Window;
@@ -4316,7 +4442,7 @@ function __wbg_get_imports() {
             const ret = result;
             return ret;
         },
-        __wbg_length_ea16607d7b61445b: function(arg0) {
+        __wbg_length_56fcd3e2b7e0299d: function(arg0) {
             const ret = arg0.length;
             return ret;
         },
@@ -4324,27 +4450,27 @@ function __wbg_get_imports() {
             const ret = new Error();
             return ret;
         },
-        __wbg_new_5f486cdf45a04d78: function(arg0) {
+        __wbg_new_7ddec6de44ff8f5d: function(arg0) {
             const ret = new Uint8Array(arg0);
             return ret;
         },
-        __wbg_new_with_u8_clamped_array_and_sh_5d9be5b17e50951c: function() { return handleError(function (arg0, arg1, arg2, arg3) {
+        __wbg_new_with_u8_clamped_array_and_sh_13504c3c5394c7c9: function() { return handleError(function (arg0, arg1, arg2, arg3) {
             const ret = new ImageData(getClampedArrayU8FromWasm0(arg0, arg1), arg2 >>> 0, arg3 >>> 0);
             return ret;
         }, arguments); },
-        __wbg_prototypesetcall_d62e5099504357e6: function(arg0, arg1, arg2) {
+        __wbg_prototypesetcall_5f9bdc8d75e07276: function(arg0, arg1, arg2) {
             Uint8Array.prototype.set.call(getArrayU8FromWasm0(arg0, arg1), arg2);
         },
-        __wbg_putImageData_1750176f4dd07174: function() { return handleError(function (arg0, arg1, arg2, arg3) {
+        __wbg_putImageData_947c369295a5768a: function() { return handleError(function (arg0, arg1, arg2, arg3) {
             arg0.putImageData(arg1, arg2, arg3);
         }, arguments); },
-        __wbg_set_height_b6548a01bdcb689a: function(arg0, arg1) {
+        __wbg_set_height_bdd58e6b04e88cca: function(arg0, arg1) {
             arg0.height = arg1 >>> 0;
         },
-        __wbg_set_textContent_1e964492a2410e92: function(arg0, arg1, arg2) {
+        __wbg_set_textContent_9c5d65d703443b6d: function(arg0, arg1, arg2) {
             arg0.textContent = arg1 === 0 ? undefined : getStringFromWasm0(arg1, arg2);
         },
-        __wbg_set_width_c0fcaa2da53cd540: function(arg0, arg1) {
+        __wbg_set_width_25112eb6bf1148df: function(arg0, arg1) {
             arg0.width = arg1 >>> 0;
         },
         __wbg_stack_3b0d974bbf31e44f: function(arg0, arg1) {
@@ -4354,31 +4480,31 @@ function __wbg_get_imports() {
             getDataViewMemory0().setInt32(arg0 + 4 * 1, len1, true);
             getDataViewMemory0().setInt32(arg0 + 4 * 0, ptr1, true);
         },
-        __wbg_static_accessor_GLOBAL_8adb955bd33fac2f: function() {
-            const ret = typeof global === 'undefined' ? null : global;
-            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
-        },
-        __wbg_static_accessor_GLOBAL_THIS_ad356e0db91c7913: function() {
+        __wbg_static_accessor_GLOBAL_THIS_02344c9b09eb08a9: function() {
             const ret = typeof globalThis === 'undefined' ? null : globalThis;
             return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
         },
-        __wbg_static_accessor_SELF_f207c857566db248: function() {
+        __wbg_static_accessor_GLOBAL_ac6d4ac874d5cd54: function() {
+            const ret = typeof global === 'undefined' ? null : global;
+            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
+        },
+        __wbg_static_accessor_SELF_9b2406c23aeb2023: function() {
             const ret = typeof self === 'undefined' ? null : self;
             return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
         },
-        __wbg_static_accessor_WINDOW_bb9f1ba69d61b386: function() {
+        __wbg_static_accessor_WINDOW_b34d2126934e16ba: function() {
             const ret = typeof window === 'undefined' ? null : window;
             return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
         },
-        __wbg_width_462295a1353ea71b: function(arg0) {
+        __wbg_width_0501569208b20317: function(arg0) {
             const ret = arg0.width;
             return ret;
         },
-        __wbg_width_4d6fc7fecd877217: function(arg0) {
+        __wbg_width_14ddc8f4e1a3dcbe: function(arg0) {
             const ret = arg0.width;
             return ret;
         },
-        __wbg_width_6a767700990b90f4: function(arg0) {
+        __wbg_width_e987166926c3367c: function(arg0) {
             const ret = arg0.width;
             return ret;
         },
@@ -4400,13 +4526,13 @@ function __wbg_get_imports() {
 
 const PhotonImageFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
-    : new FinalizationRegistry(ptr => wasm.__wbg_photonimage_free(ptr >>> 0, 1));
+    : new FinalizationRegistry(ptr => wasm.__wbg_photonimage_free(ptr, 1));
 const RgbFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
-    : new FinalizationRegistry(ptr => wasm.__wbg_rgb_free(ptr >>> 0, 1));
+    : new FinalizationRegistry(ptr => wasm.__wbg_rgb_free(ptr, 1));
 const RgbaFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
-    : new FinalizationRegistry(ptr => wasm.__wbg_rgba_free(ptr >>> 0, 1));
+    : new FinalizationRegistry(ptr => wasm.__wbg_rgba_free(ptr, 1));
 
 function addToExternrefTable0(obj) {
     const idx = wasm.__externref_table_alloc();
@@ -4504,8 +4630,7 @@ function getDataViewMemory0() {
 }
 
 function getStringFromWasm0(ptr, len) {
-    ptr = ptr >>> 0;
-    return decodeText(ptr, len);
+    return decodeText(ptr >>> 0, len);
 }
 
 let cachedUint8ArrayMemory0 = null;
@@ -4611,5 +4736,6 @@ let WASM_VECTOR_LEN = 0;
 const wasmPath = `${__dirname}/photon-node_bg.wasm`;
 const wasmBytes = require('fs').readFileSync(wasmPath);
 const wasmModule = new WebAssembly.Module(wasmBytes);
-let wasm = new WebAssembly.Instance(wasmModule, __wbg_get_imports()).exports;
+let wasmInstance = new WebAssembly.Instance(wasmModule, __wbg_get_imports());
+let wasm = wasmInstance.exports;
 wasm.__wbindgen_start();
