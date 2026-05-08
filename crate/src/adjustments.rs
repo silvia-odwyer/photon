@@ -234,7 +234,11 @@ pub fn apply_white_balance(photon_image: &mut PhotonImage, temperature: f32, tin
     let src_white = xy_to_xyz(src_x, src_y);
     let dst_white = xy_to_xyz(dst_x, dst_y);
 
-    // Create Bradford adaptation matrix
+    // Create Bradford adaptation matrix: src=D65, dst=target_temp.
+    // This renders the image *as if* it were captured under target_temp, which matches the
+    // stated slider semantics (negative = warmer output, positive = cooler output).
+    // NOTE: this is the inverse of Lightroom's convention (where higher temp = warmer).
+    // If you want Lightroom-style semantics, swap the arguments: (&dst_white, &src_white).
     let adapt_matrix = create_bradford_matrix(&src_white, &dst_white);
 
     // Tint adjustment factor (green-magenta axis)
@@ -312,7 +316,7 @@ fn rgb_to_hsl(r: f32, g: f32, b: f32) -> (f32, f32, f32) {
     let h = if delta == 0.0 {
         0.0
     } else if max == r {
-        (((g - b) / delta) % 6.0) * 60.0
+        ((g - b) / delta).rem_euclid(6.0) * 60.0
     } else if max == g {
         (((b - r) / delta) + 2.0) * 60.0
     } else {
@@ -675,6 +679,11 @@ pub fn apply_dehaze(photon_image: &mut PhotonImage, amount: f32) {
         }
     }
 
+    // Clamp each channel to ≥1 to avoid division by zero on monochromatic or synthetic images.
+    let al_r = atmospheric_light[0].max(1) as f32;
+    let al_g = atmospheric_light[1].max(1) as f32;
+    let al_b = atmospheric_light[2].max(1) as f32;
+
     // Apply dark channel prior dehaze
     for i in 0..pixel_count {
         let idx = i * 4;
@@ -683,23 +692,16 @@ pub fn apply_dehaze(photon_image: &mut PhotonImage, amount: f32) {
         let b = pixels[idx + 2] as f32;
 
         // Estimate transmission using dark channel prior
-        let dark_channel = (r / atmospheric_light[0] as f32)
-            .min(g / atmospheric_light[1] as f32)
-            .min(b / atmospheric_light[2] as f32);
+        let dark_channel = (r / al_r).min(g / al_g).min(b / al_b);
 
-        let transmission = 1.0 - dehaze_amount * dark_channel;
-        let t = transmission.max(0.1); // Prevent division by zero
+        // Clamp to [0.1, 1.0]: lower bound prevents division by zero, upper bound keeps
+        // negative-dehaze (haze addition) physically valid.
+        let t = (1.0 - dehaze_amount * dark_channel).clamp(0.1, 1.0);
 
-        // Recover scene radiance
-        let new_r = ((r - atmospheric_light[0] as f32 * (1.0 - t)) / t
-            + atmospheric_light[0] as f32 * (1.0 - t))
-            .clamp(0.0, 255.0);
-        let new_g = ((g - atmospheric_light[1] as f32 * (1.0 - t)) / t
-            + atmospheric_light[1] as f32 * (1.0 - t))
-            .clamp(0.0, 255.0);
-        let new_b = ((b - atmospheric_light[2] as f32 * (1.0 - t)) / t
-            + atmospheric_light[2] as f32 * (1.0 - t))
-            .clamp(0.0, 255.0);
+        // Recover scene radiance using standard DCP formula: J = (I - A) / t + A
+        let new_r = ((r - al_r) / t + al_r).clamp(0.0, 255.0);
+        let new_g = ((g - al_g) / t + al_g).clamp(0.0, 255.0);
+        let new_b = ((b - al_b) / t + al_b).clamp(0.0, 255.0);
 
         pixels[idx] = new_r as u8;
         pixels[idx + 1] = new_g as u8;
@@ -1050,7 +1052,7 @@ pub fn apply_color_grading(
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn apply_tone_curve(photon_image: &mut PhotonImage, lookup_table: Vec<u8>) {
     if lookup_table.len() != 256 {
-        panic!("Lookup table must contain exactly 256 values");
+        return;
     }
 
     // Work directly with raw pixels for maximum performance
@@ -1196,7 +1198,10 @@ pub fn apply_sharpening(
                     - luminance[(y - 1) * width + (x + 1)];
 
                 let edge_strength = (gx * gx + gy * gy).sqrt() / 255.0;
-                edge_mask[y * width + x] = edge_strength.powf(1.0 - masking / 100.0);
+                // Higher masking → larger exponent → flat areas (low edge_strength) get
+                // suppressed more strongly, concentrating sharpening on edges.
+                // masking=0 is handled above (mask stays 1.0); masking=100 → exponent=5.
+                edge_mask[y * width + x] = edge_strength.powf(1.0 + masking / 25.0);
             }
         }
     }
@@ -1264,7 +1269,7 @@ pub fn apply_noise_reduction_bilateral(
 
     // Bilateral filter parameters
     let spatial_sigma = 2.0; // Spatial domain falloff
-    let lum_intensity_sigma = 25.0 * (1.0 - detail / 100.0); // Intensity domain falloff
+    let lum_intensity_sigma = (25.0 * (1.0 - detail / 100.0)).max(1e-6); // Intensity domain falloff; clamped to avoid NaN at detail=100
     let color_intensity_sigma = 15.0;
 
     let lum_strength = luminance / 100.0;
@@ -1273,6 +1278,8 @@ pub fn apply_noise_reduction_bilateral(
     let original_pixels = pixels.clone();
 
     // Bilateral filter implementation
+    // Neighborhood size based on noise reduction strength — hoisted outside pixel loop
+    let radius = 2 + ((luminance.max(color) / 50.0) as usize);
     for y in 0..height {
         for x in 0..width {
             let center_idx = (y * width + x) * 4;
@@ -1286,9 +1293,6 @@ pub fn apply_noise_reduction_bilateral(
             let mut sum_g = 0.0;
             let mut sum_b = 0.0;
             let mut sum_weight = 0.0;
-
-            // Neighborhood size based on noise reduction strength
-            let radius = 2 + ((luminance.max(color) / 50.0) as usize);
 
             for ny in y.saturating_sub(radius)..=(y + radius).min(height - 1) {
                 for nx in x.saturating_sub(radius)..=(x + radius).min(width - 1) {
@@ -1561,26 +1565,28 @@ pub fn apply_noise_reduction_median(photon_image: &mut PhotonImage, radius: usiz
     let original_pixels = pixels.clone();
 
     // Apply median filter to each channel
+    // Max kernel: (2*3+1)^2 = 49 entries — fixed stack array avoids per-pixel heap allocation
+    let mut neighbors = [0u32; 49];
     for channel in 0..3 {
         for y in 0..height {
             for x in 0..width {
-                let mut neighbors = Vec::new();
+                let mut count = 0usize;
 
                 // Collect neighbors
                 for ny in y.saturating_sub(radius)..=(y + radius).min(height - 1) {
                     for nx in x.saturating_sub(radius)..=(x + radius).min(width - 1) {
                         let idx = (ny * width + nx) * 4;
-                        neighbors.push(original_pixels[idx + channel] as u32);
+                        neighbors[count] = original_pixels[idx + channel] as u32;
+                        count += 1;
                     }
                 }
 
                 // Calculate median
-                neighbors.sort();
-                let median = if neighbors.len() % 2 == 0 {
-                    (neighbors[neighbors.len() / 2 - 1] + neighbors[neighbors.len() / 2])
-                        / 2
+                neighbors[..count].sort_unstable();
+                let median = if count % 2 == 0 {
+                    (neighbors[count / 2 - 1] + neighbors[count / 2]) / 2
                 } else {
-                    neighbors[neighbors.len() / 2]
+                    neighbors[count / 2]
                 };
 
                 let idx = (y * width + x) * 4;

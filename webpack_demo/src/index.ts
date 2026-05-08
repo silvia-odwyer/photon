@@ -281,6 +281,9 @@ const applyEffect = (event: Event, photon: ExtendedPhotonModule) => {
 		add_noise_rand: () => {
 			console.warn("add_noise_rand is unsupported in this WASM build.");
 		},
+		apply_vibrance: () => photon.apply_vibrance(rustImage, 50.0),
+		apply_dehaze: () => photon.apply_dehaze(rustImage, 60.0),
+		apply_vignette: () => photon.apply_vignette(rustImage, 50.0, 30.0, 50.0),
 	};
 
 	const handler = filters[filterName];
