@@ -4,11 +4,11 @@
 
 use crate::iter::ImageIterator;
 use crate::{helpers, PhotonImage};
-use image::{DynamicImage, Rgba};
+use image::{DynamicImage, GrayImage, Luma, Rgba};
 use imageproc::distance_transform::Norm;
 use imageproc::drawing::draw_text_mut;
 use imageproc::morphology::dilate_mut;
-use rusttype::{Font, Scale};
+use ab_glyph::{FontArc, PxScale};
 
 #[cfg(feature = "enable_wasm")]
 use wasm_bindgen::prelude::*;
@@ -45,34 +45,19 @@ pub fn draw_text_with_border(
 ) {
     let mut image = helpers::dyn_image_from_raw(photon_img).to_rgba8();
 
-    let mut image2: DynamicImage =
-        DynamicImage::new_luma8(image.width(), image.height());
+    let mut mask: GrayImage = GrayImage::new(image.width(), image.height());
+    let font_bytes: &[u8] = include_bytes!("../fonts/Roboto-Regular.ttf");
+    let font = FontArc::try_from_slice(font_bytes).expect("invalid font bytes");
 
-    let font = Vec::from(include_bytes!("../fonts/Roboto-Regular.ttf") as &[u8]);
-    let font = Font::try_from_bytes(&font).unwrap();
-    let scale = Scale {
-        x: font_size * 1.0,
-        y: font_size,
-    };
-    draw_text_mut(
-        &mut image2,
-        Rgba([255u8, 255u8, 255u8, 255u8]),
-        x,
-        y,
-        scale,
-        &font,
-        text,
-    );
+    let scale: PxScale = PxScale::from(font_size);
+    draw_text_mut(&mut mask, Luma([255u8]), x, y, scale, &font, text);
+    dilate_mut(&mut mask, Norm::LInf, 4u8);
 
-    let mut image2 = image2.to_luma8();
-    dilate_mut(&mut image2, Norm::LInf, 4u8);
-
-    // Add a border to the text.
-    for (x, y) in ImageIterator::with_dimension(&image2.dimensions()) {
-        let pixval = 255 - image2.get_pixel(x, y)[0];
+    for (px, py) in ImageIterator::with_dimension(&mask.dimensions()) {
+        let v = mask.get_pixel(px, py)[0];
+        let pixval = 255u8 - v;
         if pixval != 255 {
-            let new_pix = Rgba([pixval, pixval, pixval, 255]);
-            image.put_pixel(x, y, new_pix);
+            image.put_pixel(px, py, Rgba([pixval, pixval, pixval, 255]));
         }
     }
 
@@ -85,7 +70,8 @@ pub fn draw_text_with_border(
         &font,
         text,
     );
-    let dynimage = image::DynamicImage::ImageRgba8(image);
+
+    let dynimage = DynamicImage::ImageRgba8(image);
     photon_img.raw_pixels = dynimage.into_bytes();
 }
 
@@ -121,12 +107,10 @@ pub fn draw_text(
 ) {
     let mut image = helpers::dyn_image_from_raw(photon_img).to_rgba8();
 
-    let font = Vec::from(include_bytes!("../fonts/Roboto-Regular.ttf") as &[u8]);
-    let font = Font::try_from_bytes(&font).unwrap();
-    let scale = Scale {
-        x: font_size * 1.0,
-        y: font_size,
-    };
+    let font_bytes: &[u8] = include_bytes!("../fonts/Roboto-Regular.ttf");
+    let font = FontArc::try_from_slice(font_bytes).expect("invalid font bytes");
+
+    let scale: PxScale = PxScale::from(font_size);
 
     draw_text_mut(
         &mut image,
@@ -137,6 +121,7 @@ pub fn draw_text(
         &font,
         text,
     );
-    let dynimage = image::DynamicImage::ImageRgba8(image);
+
+    let dynimage = DynamicImage::ImageRgba8(image);
     photon_img.raw_pixels = dynimage.into_bytes();
 }
