@@ -1399,6 +1399,41 @@ export function draw_text(photon_img: PhotonImage, text: string, x: number, y: n
  */
 export function draw_text_with_border(photon_img: PhotonImage, text: string, x: number, y: number, font_size: number): void;
 
+/**
+ * Add text to an image with a custom color.
+ * The only font available as of now is Roboto.
+ * Note: A graphic design/text-drawing library is currently being developed, so stay tuned.
+ *
+ * # Arguments
+ * * `photon_image` - A PhotonImage.
+ * * `text` - Text string to be drawn to the image.
+ * * `x` - x-coordinate of where first letter's 1st pixel should be drawn.
+ * * `y` - y-coordinate of where first letter's 1st pixel should be drawn.
+ * * `font_size` - Font size in pixels of the text to be drawn.
+ * * `color` - RGBA color value for the text.
+ *
+ * # Example
+ *
+ * ```no_run
+ * // For example to draw the string "Welcome to Photon!" at 10, 10:
+ * use photon_rs::native::open_image;
+ * use photon_rs::Rgba;
+ * use photon_rs::text::draw_text_with_color;
+ *
+ * // Open the image. A PhotonImage is returned.
+ * let mut img = open_image("img.jpg").expect("File should open");
+ * draw_text_with_color(
+ *     &mut img,
+ *     "Welcome to Photon!",
+ *     10_i32,
+ *     10_i32,
+ *     90_f32,
+ *     Rgba::new(100u8, 100u8, 100u8, 255u8),
+ * );
+ * ```
+ */
+export function draw_text_with_color(photon_img: PhotonImage, text: string, x: number, y: number, font_size: number, color: Rgba): void;
+
 export function duotone(photon_image: PhotonImage, color_a: Rgb, color_b: Rgb): void;
 
 /**
