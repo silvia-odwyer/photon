@@ -630,29 +630,24 @@ pub fn sobel_vertical(photon_image: &mut PhotonImage) {
 /// ```
 #[cfg_attr(feature = "enable_wasm", wasm_bindgen)]
 pub fn sobel_global(photon_image: &mut PhotonImage) {
-    let original_pixels = std::mem::take(&mut photon_image.raw_pixels);
+    let original_pixels = photon_image.raw_pixels.clone();
     let len = original_pixels.len();
 
     let mut buf_x = vec![0u8; len];
     let mut buf_y = vec![0u8; len];
-    let mut tmp = vec![0u8; len];
 
     // Horizontal pass
-    tmp.copy_from_slice(&original_pixels);
-    std::mem::swap(&mut tmp, &mut photon_image.raw_pixels);
+    photon_image.raw_pixels.copy_from_slice(&original_pixels);
     sobel_horizontal(photon_image);
-    // After swap: photon_image.raw_pixels has filtered result, tmp has original
     buf_x.copy_from_slice(&photon_image.raw_pixels);
 
     // Vertical pass
-    std::mem::swap(&mut tmp, &mut photon_image.raw_pixels);
+    photon_image.raw_pixels.copy_from_slice(&original_pixels);
     sobel_vertical(photon_image);
-    // After swap: photon_image.raw_pixels has filtered result, tmp has original
     buf_y.copy_from_slice(&photon_image.raw_pixels);
 
     // Restore original pixels
-    std::mem::swap(&mut tmp, &mut photon_image.raw_pixels);
-    drop(tmp);
+    photon_image.raw_pixels.copy_from_slice(&original_pixels);
 
     // Compute Sobel magnitude
     for i in 0..len {

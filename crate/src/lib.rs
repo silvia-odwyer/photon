@@ -560,6 +560,7 @@ pub mod monochrome;
 pub mod multiple;
 pub mod native;
 pub mod noise;
+pub mod pipeline;
 mod tests;
 pub mod text;
 pub mod transform;
