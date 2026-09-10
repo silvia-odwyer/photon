@@ -235,12 +235,19 @@ impl PhotonImage {
         // write_to owns the lossy/lossless encoder choice, so one clone is
         // the floor here.
         let img = ImageRgba8(
-            image::ImageBuffer::from_raw(self.width, self.height, self.raw_pixels.clone())
-                .unwrap(),
+            image::ImageBuffer::from_raw(
+                self.width,
+                self.height,
+                self.raw_pixels.clone(),
+            )
+            .unwrap(),
         );
         let mut buffer = vec![];
-        img.write_to(&mut Cursor::new(&mut buffer), image::ImageOutputFormat::WebP)
-            .unwrap();
+        img.write_to(
+            &mut Cursor::new(&mut buffer),
+            image::ImageOutputFormat::WebP,
+        )
+        .unwrap();
         buffer
     }
 
