@@ -1,5 +1,7 @@
 //! Image transformations, ie: scale, crop, resize, etc.,
 
+// Only resize_img_browser still needs helpers.
+#[cfg(all(target_arch = "wasm32", not(target_os = "wasi")))]
 use crate::helpers;
 use crate::iter::ImageIterator;
 use crate::{PhotonImage, Rgba};
@@ -272,19 +274,20 @@ pub fn resize(
 ) -> PhotonImage {
     let sampling_filter = filter_type_from_sampling_filter(sampling_filter);
 
-    let dyn_img = helpers::dyn_image_from_raw(photon_img);
-    let resized_img = ImageRgba8(image::imageops::resize(
-        &dyn_img,
-        width,
-        height,
-        sampling_filter,
-    ));
+    // Zero-copy view; imageops::resize only needs a GenericImageView.
+    let view: ImageBuffer<image::Rgba<u8>, &[u8]> = ImageBuffer::from_raw(
+        photon_img.width,
+        photon_img.height,
+        photon_img.raw_pixels.as_slice(),
+    )
+    .unwrap();
+    let resized_img = image::imageops::resize(&view, width, height, sampling_filter);
 
     let width = resized_img.width();
     let height = resized_img.height();
 
     PhotonImage {
-        raw_pixels: resized_img.into_bytes(),
+        raw_pixels: resized_img.into_raw(),
         width,
         height,
     }

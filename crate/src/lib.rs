@@ -40,8 +40,11 @@
 //! View the [official demo of WASM in action](https://silvia-odwyer.github.io/photon).
 
 use base64::{decode, encode};
+use image::codecs::jpeg::JpegEncoder;
+use image::codecs::png::PngEncoder;
 use image::DynamicImage::ImageRgba8;
 use image::GenericImage;
+use image::ImageEncoder;
 use serde::{Deserialize, Serialize};
 use std::io::Cursor;
 
@@ -103,12 +106,17 @@ impl PhotonImage {
 
         let img = image::load_from_memory(slice).unwrap();
 
-        let raw_pixels = img.to_rgba8().to_vec();
+        let width = img.width();
+        let height = img.height();
+
+        // Consume the decode instead of cloning it; transient full-frame
+        // copies permanently grow wasm linear memory.
+        let raw_pixels = img.into_rgba8().into_raw();
 
         PhotonImage {
             raw_pixels,
-            width: img.width(),
-            height: img.height(),
+            width,
+            height,
         }
     }
 
@@ -184,12 +192,7 @@ impl PhotonImage {
 
     /// Convert the PhotonImage to base64.
     pub fn get_base64(&self) -> String {
-        let mut img = helpers::dyn_image_from_raw(self);
-        img = ImageRgba8(img.to_rgba8());
-
-        let mut buffer = vec![];
-        img.write_to(&mut Cursor::new(&mut buffer), image::ImageOutputFormat::Png)
-            .unwrap();
+        let buffer = self.get_bytes();
         let base64 = encode(&buffer);
 
         let res_base64 = format!("data:image/png;base64,{}", base64.replace("\r\n", ""));
@@ -199,33 +202,52 @@ impl PhotonImage {
 
     /// Convert the PhotonImage to raw bytes. Returns PNG.
     pub fn get_bytes(&self) -> Vec<u8> {
-        let mut img = helpers::dyn_image_from_raw(self);
-        img = ImageRgba8(img.to_rgba8());
+        // Encode straight from raw_pixels; a DynamicImage round-trip would
+        // clone the frame twice.
         let mut buffer = vec![];
-        img.write_to(&mut Cursor::new(&mut buffer), image::ImageOutputFormat::Png)
+        PngEncoder::new(Cursor::new(&mut buffer))
+            .write_image(
+                &self.raw_pixels,
+                self.width,
+                self.height,
+                image::ColorType::Rgba8,
+            )
             .unwrap();
         buffer
     }
 
     /// Convert the PhotonImage to raw bytes. Returns a JPEG.
     pub fn get_bytes_jpeg(&self, quality: u8) -> Vec<u8> {
-        let mut img = helpers::dyn_image_from_raw(self);
-        img = ImageRgba8(img.to_rgba8());
         let mut buffer = vec![];
-        let out_format = image::ImageOutputFormat::Jpeg(quality);
-        img.write_to(&mut Cursor::new(&mut buffer), out_format)
+        JpegEncoder::new_with_quality(Cursor::new(&mut buffer), quality)
+            .write_image(
+                &self.raw_pixels,
+                self.width,
+                self.height,
+                image::ColorType::Rgba8,
+            )
             .unwrap();
         buffer
     }
 
     /// Convert the PhotonImage to raw bytes. Returns a WEBP.
     pub fn get_bytes_webp(&self) -> Vec<u8> {
-        let mut img = helpers::dyn_image_from_raw(self);
-        img = ImageRgba8(img.to_rgba8());
+        // write_to owns the lossy/lossless encoder choice, so one clone is
+        // the floor here.
+        let img = ImageRgba8(
+            image::ImageBuffer::from_raw(
+                self.width,
+                self.height,
+                self.raw_pixels.clone(),
+            )
+            .unwrap(),
+        );
         let mut buffer = vec![];
-        let out_format = image::ImageOutputFormat::WebP;
-        img.write_to(&mut Cursor::new(&mut buffer), out_format)
-            .unwrap();
+        img.write_to(
+            &mut Cursor::new(&mut buffer),
+            image::ImageOutputFormat::WebP,
+        )
+        .unwrap();
         buffer
     }
 
