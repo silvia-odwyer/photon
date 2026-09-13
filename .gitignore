@@ -13,6 +13,11 @@ photon-docs/site
 output*.jpg
 output*.png
 .vscode
+*.csv
 
 # Jetbrains IDE
 .idea/
+
+# Nix
+.direnv
+result
