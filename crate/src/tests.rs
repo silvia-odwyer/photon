@@ -1396,6 +1396,19 @@ mod test {
         assert_eq!(img.raw_pixels.len(), (width * height * 4) as usize);
     }
 
+    #[test]
+    fn test_lens_correction_ignores_degenerate_images() {
+        for (width, height) in [(0, 0), (1, 1), (1, 2), (2, 1)] {
+            let raw_pixels = vec![128; width * height * 4];
+            let original = raw_pixels.clone();
+            let mut img = PhotonImage::new(raw_pixels, width as u32, height as u32);
+
+            apply_lens_correction(&mut img, 10.0, 10.0);
+
+            assert_eq!(img.raw_pixels, original);
+        }
+    }
+
     // ============================================
     // 补充导入缺失的函数
     // ============================================
