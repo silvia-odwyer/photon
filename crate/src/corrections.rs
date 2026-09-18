@@ -95,6 +95,14 @@ pub fn apply_lens_correction(
 
     let width = photon_image.width as usize;
     let height = photon_image.height as usize;
+
+    // Bilinear interpolation needs a pixel to the right and below the
+    // current source pixel. Avoid underflow in the bounds check below and
+    // avoid normalizing against a zero radius for degenerate images.
+    if width < 2 || height < 2 {
+        return;
+    }
+
     let pixel_count = width * height;
 
     // Allocate output buffer - compute results first, then write to avoid read/write conflicts
